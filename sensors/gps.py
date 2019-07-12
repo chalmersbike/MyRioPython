@@ -47,8 +47,6 @@ PGCMD_NOANTENNA = "$PGCMD,33,0*6D" # don't show antenna status messages
 
 class GPS(object):
 
-    gps = None
-
     def __init__(self):
         # Open the serial connection at the default baudrate of 9600
         self.ser1 = serial.Serial(port, 9600, timeout=1000)
@@ -68,13 +66,16 @@ class GPS(object):
         # Choose the frequency of the GPS data output
         self.ser1.write(PMTK_SET_NMEA_UPDATE_5HZ + "\r\n") # select a 5Hz output rate
 
-        self.lat_ini, self.lon_ini = self.get_latlon()
+        self.latitude = 0
+        self.longitude = 0
+        while ((self.latitude == 0) and (self.longitude == 0)):
+            self.lat_ini, self.lon_ini = self.get_latlon()
 
 
     def get_position(self):
         lat, lon = self.get_latlon()
-        dx = (lon - self.lon_ini) * 40000 * math.cos((lat + self.lat_ini) * math.pi / 360) / 360
-        dy = (lat - self.lat_ini) * 40000 / 360
+        dx = 1000 * (lon - self.lon_ini) * 40000 * math.cos((lat + self.lat_ini) * math.pi / 360) / 360
+        dy = 1000 * (lat - self.lat_ini) * 40000 / 360
         return dx, dy
 
 
@@ -90,6 +91,13 @@ class GPS(object):
 
             line = line[0].split(",", 19) # Split comma-separated values
             self.process_data(line) # Process data
+
+        self.latitude = float(self.latitude)
+        self.longitude =  float(self.longitude)
+        # Process the latitude and longitude
+        self.latitude = int(self.latitude / 100) + (self.latitude % 100) / 60
+        self.longitude = int(self.longitude / 100) + (self.longitude % 100) / 60
+
         return self.latitude, self.longitude
 
 
@@ -155,12 +163,11 @@ class GPS(object):
                 self.SNR4 = gsv[19]
         elif line[0] == '$GPRMC':
             rmc = line
-            print rmc
             self.UTC = rmc[1]
             self.status = rmc[2]
-            self.Latitude = rmc[3]
+            self.latitude = rmc[3]
             self.NS_indicator = rmc[4]
-            self.Longitude = rmc[5]
+            self.longitude = rmc[5]
             self.EW_indicator = rmc[6]
             self.Speed_over_Ground = rmc[7]
             self.Course_over_Ground = rmc[8]
@@ -179,5 +186,6 @@ class GPS(object):
             self.Units2 = vtg[8]
             self.Mode = vtg[9]
         else:
-            print "Exception happens"
-            print line
+            print "Bad GPS data"
+            #print "Exception happens"
+            #print line
