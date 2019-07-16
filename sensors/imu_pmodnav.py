@@ -44,7 +44,7 @@ class IMU(object):
         self.i2c.write8(GYRO_CONFIG, 0b11100000)  # Set gyroscope sensitivity to +/- 245 dps
 
         self.temp_sensitivity = 16.0            # from LSM9DS1's datasheet
-        self.acc_sensitivity = 4 * 1000 / 65536 # 4000mg (+/- 2g) range on 2 bytes (2^16 = 65536)
+        self.acc_sensitivity = 4 * 1000.0 / 65536 # 4000mg (+/- 2g) range on 2 bytes (2^16 = 65536)
         self.gyro_sensitivity = 0.00875 / 1000  # from LSM9DS1's datasheet
 
     def get_imu_data(self):

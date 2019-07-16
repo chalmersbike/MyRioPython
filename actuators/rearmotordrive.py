@@ -1,9 +1,9 @@
-import serial, time, numpy
+import serial, time
 import Adafruit_BBIO.UART as UART
 import Adafruit_BBIO.ADC as ADC
 
 
-REAR_MOTOR_PORT = '/dev/ttyO4'
+REAR_MOTOR_PORT = '/dev/ttyO1'
 COMMUNICATION_FREQUENCY = 115200
 
 PWM_STOP = 1050
@@ -15,7 +15,7 @@ class RearMotorDrive(object):
     serial = None
 
     def __init__(self):
-        UART.setup("UART4")
+        UART.setup("UART1")
         ADC.setup()
         self.serial = serial.Serial(port=REAR_MOTOR_PORT, baudrate=COMMUNICATION_FREQUENCY)
         self.serial.close()

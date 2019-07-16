@@ -55,7 +55,6 @@ class GPS(object):
         self.ser1.write(PMTK_SET_BAUD_115200 + "\r\n")
 
         # Restart the serial connection
-        self.ser1.flush()
         self.ser1.close()
         self.ser1 = serial.Serial(port, 115200, timeout=1000)
 
@@ -65,18 +64,22 @@ class GPS(object):
 
         # Choose the frequency of the GPS data output
         self.ser1.write(PMTK_SET_NMEA_UPDATE_5HZ + "\r\n") # select a 5Hz output rate
+        self.ser1.flush()
 
         self.latitude = 0
         self.longitude = 0
+        self.found_satelite = 1
         while ((self.latitude == 0) and (self.longitude == 0)):
             self.lat_ini, self.lon_ini = self.get_latlon()
 
 
     def get_position(self):
         lat, lon = self.get_latlon()
-        dx = 1000 * (lon - self.lon_ini) * 40000 * math.cos((lat + self.lat_ini) * math.pi / 360) / 360
-        dy = 1000 * (lat - self.lat_ini) * 40000 / 360
-        return dx, dy
+        if self.found_satelite == 1:
+            self.dx = 1000 * (lon - self.lon_ini) * 40000 * math.cos((lat + self.lat_ini) * math.pi / 360) / 360
+            self.dy = 1000 * (lat - self.lat_ini) * 40000 / 360
+
+        return self.dx, self.dy
 
 
     def get_latlon(self):
@@ -91,12 +94,21 @@ class GPS(object):
 
             line = line[0].split(",", 19) # Split comma-separated values
             self.process_data(line) # Process data
-
-        self.latitude = float(self.latitude)
-        self.longitude =  float(self.longitude)
+        # print line
+        # print self.latitude
+        if self.latitude is not '':
+            self.latitude = float(self.latitude)
+            self.longitude =  float(self.longitude)
         # Process the latitude and longitude
-        self.latitude = int(self.latitude / 100) + (self.latitude % 100) / 60
-        self.longitude = int(self.longitude / 100) + (self.longitude % 100) / 60
+            self.latitude = int(self.latitude / 100) + (self.latitude % 100) / 60
+            self.longitude = int(self.longitude / 100) + (self.longitude % 100) / 60
+        else:
+            print 'No available Satelites, automatically set longitude and latitude to be ZERO \n Wait for a while or CHANGE your POSITION'
+            self.latitude = 0
+            self.longitude = 0
+            self.found_satelite = 0
+
+
 
         return self.latitude, self.longitude
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from sensors import Encoder, HallSensor, A_IMU, SafetyStop
+from sensors import Encoder, HallSensor, IMU, SafetyStop, GPS
 import Adafruit_BBIO.GPIO as GPIO
 
 from actuators import RearMotorDrive, SteeringMotor
@@ -51,7 +51,7 @@ class Test(object):
                 time.sleep(0.5)
 
         input1 = raw_input('Press ENTER to start IMU test, move the bike body for the reading!')
-        self.a_imu = A_IMU()
+        self.a_imu = IMU()
         start_time = time.time()
         if not input1:
             for x in range(1,20):
@@ -66,11 +66,30 @@ class Test(object):
                 self.imudata = self.a_imu.get_imu_data()
                 print 'Time=%g\t'% (time.time() - start_time)
                 # print(self.imudata)
-                print 'Phi_CompFilter_RollAccComp=%g\tPhi_CompFilter = %g\tGyroX = %g\tAccX = %g\tAyRollComp = %g\tAy = %g\tAz = %g\tGyroIntg = %g\t' % (
+                print 'Temp=%g\tAx = %g\tAy = %g\tAz = %g\tGx = %g\tGy = %g\tGz = %g\t' % (
                     self.imudata[0], self.imudata[1], self.imudata[2], self.imudata[3],
-                    self.imudata[4], self.imudata[5], self.imudata[6], self.imudata[7])
+                    self.imudata[4], self.imudata[5], self.imudata[6])
 
                 time.sleep(0.5)
+
+
+        input2 = raw_input('Press ENTER to start GPS test, you can enter the #reading if you want')
+        gps = GPS()
+        start_time = time.time()
+        if not input2:
+            for x in range(1,10):
+                self.gpspos =  gps.get_position()
+                print 'Time=%f\t'% (time.time() - start_time)
+                print 'Temp=%g\tAx = %g\t' % (self.gpspos[0], self.gpspos[1])
+                # print(self.imudata)
+                time.sleep(1)
+        else:
+            for x in range(1,int(input2)):
+                self.gpspos = gps.get_position()
+                print 'Time=%f\t' % (time.time() - start_time)
+                print 'Temp=%g\tAx = %g\t' % (self.gpspos[0], self.gpspos[1])
+                # print(self.imudata)
+                time.sleep(1)
 
         input1 = raw_input('If all the tests are passed, then you may check the rear motor and steering motor. HOWEVER THEY ARE RISKY! PRESS ENTER TO CONTINUE')
         if not input1:
