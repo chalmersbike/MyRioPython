@@ -1,3 +1,5 @@
+sys.path.append('../')
+
 from time import sleep
 
 import Adafruit_BBIO.GPIO as GPIO

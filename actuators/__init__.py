@@ -1,4 +1,3 @@
-from rearmotor import RearMotor
 from steeringmotor import SteeringMotor
 # from linearactuator import LinearActuator
 from rearmotordrive import RearMotorDrive

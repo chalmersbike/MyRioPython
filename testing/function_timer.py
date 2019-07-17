@@ -1,6 +1,8 @@
 # This test can time function calls as modules. Useful for comparing calculations. This code should probably be
 # transferred across to the controller and called at will
 
+sys.path.append('../')
+
 import math
 import time
 from functools import wraps

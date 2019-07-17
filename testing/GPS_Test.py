@@ -1,4 +1,7 @@
 #!/usr/bin/python
+
+sys.path.append('../')
+
 import Adafruit_BBIO.UART as UART
 import serial
 import time

@@ -1,4 +1,6 @@
-from steeringmotor import SteeringMotor
+sys.path.append('../')
+
+from actuators.steeringmotor import SteeringMotor
 # from sensor import  Encoder
 
 import time

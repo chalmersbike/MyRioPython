@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+
+sys.path.append('../')
+
 BUS = 1
 SMPLRT_DIV = 0X19 #陀螺仪采样率典型值为0X07 1000/(1+7)=125HZ
 CONFIG = 0X12 # Filter Setting

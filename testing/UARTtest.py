@@ -1,4 +1,6 @@
 #!/usr/bin/python
+sys.path.append('../')
+
 import Adafruit_BBIO.UART as UART
 import serial
 # from serial import Serial

@@ -1,10 +1,10 @@
 # Test for shimano rear motor.
 # Spins until E-STOP is pressed or CTRL-C
 
+sys.path.append('../')
+
 import sys
 import time
-
-sys.path.append('../')
 
 from bike import Bike
 

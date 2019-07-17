@@ -1,3 +1,5 @@
+sys.path.append('../')
+
 import  Adafruit_BBIO.PWM as PWM
 import time
 

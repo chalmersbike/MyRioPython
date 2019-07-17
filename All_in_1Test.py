@@ -101,7 +101,7 @@ class Test(object):
                 exit()
             elif float(input1) >1 and  float(input1) < 10:
                 input_velocity = float(input1)
-                raw_input('You need to be careful on the velocity reading, if they deviate too much, maybe there is problem in gear setting, see rearmotor.py!')
+                raw_input('You need to be careful on the velocity reading, if they deviate too much, maybe there is problem in gear setting, see rearmotordrive.py!')
                 start_time = time.time()
                 self.rear_motor.set_velocity(input_velocity)
                 time_now = start_time
