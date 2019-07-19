@@ -1,3 +1,5 @@
+sys.path.append('../')
+
 from actuators import Steering
 from sensors import Encoder, SafetyStop
 import time

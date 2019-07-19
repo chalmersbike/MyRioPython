@@ -1,3 +1,5 @@
+sys.path.append('../')
+
 from actuators import RearMotorDrive
 import time
 from sensors import HallSensor
