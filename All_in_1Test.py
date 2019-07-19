@@ -29,7 +29,7 @@ class Test(object):
         if not number_samples_HallSensor:
             number_samples_HallSensor = 20
 
-        for x in range(1,int(number_samples_HallSensor):
+        for x in range(1,int(number_samples_HallSensor)+1):
             print 'Time=%f\t Vel = %f\n' % (time.time()-start_time,self.hall_sensor.get_velocity())
             time.sleep(0.5)
 
@@ -40,7 +40,7 @@ class Test(object):
         print 'ENCODER FREQNECY = %f \n' % (self.encoder.encoder.frequency)
         if not number_samples_Encoder:
             number_samples_Encoder = 20
-        for x in range(1,int(number_samples_Encoder)):
+        for x in range(1,int(number_samples_Encoder)+1):
             print 'Time=%f\t delta = %f\n' % (time.time() - start_time, 57.29577 * self.encoder.get_angle())
             time.sleep(0.5)
 
@@ -50,12 +50,10 @@ class Test(object):
         start_time = time.time()
         if not number_samples_IMU:
             number_samples_IMU = 20
-        for x in range(1,int(number_samples_IMU)):
+        for x in range(1,int(number_samples_IMU)+1):
             self.imudata = self.a_imu.get_imu_data()
-            print 'Time = %g\tTemp = %g\tAx = %g\tAy = %g\tAz = %g\tGx = %g\tGy = %g\tGz = %g\t' % (
-                time.time() - start_time), self.imudata[0], self.imudata[1], self.imudata[2], self.imudata[3],
-                self.imudata[4], self.imudata[5], self.imudata[6])
-             time.sleep(0.5)
+            print 'Time = %g\tTemp = %g\tAx = %g\tAy = %g\tAz = %g\tGx = %g\tGy = %g\tGz = %g\t' % (time.time() - start_time, self.imudata[0], self.imudata[1], self.imudata[2], self.imudata[3],self.imudata[4], self.imudata[5], self.imudata[6])
+            time.sleep(0.5)
 
         # GPS
         number_samples_GPS = raw_input('Input the number of samples of press ENTER for 20 samples for the GPS test, move the GPS for the reading! ')
@@ -63,7 +61,7 @@ class Test(object):
         start_time = time.time()
         if not number_samples_GPS:
             number_samples_GPS = 20
-        for x in range(1,int(number_samples_GPS)):
+        for x in range(1,int(number_samples_GPS)+1):
             self.gpspos = gps.get_position()
             print 'Time=%f\t' % (time.time() - start_time)
             print 'Temp=%g\tAx = %g\t' % (self.gpspos[0], self.gpspos[1])

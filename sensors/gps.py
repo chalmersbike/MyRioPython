@@ -68,14 +68,14 @@ class GPS(object):
 
         self.latitude = 0
         self.longitude = 0
-        self.found_satelite = 1
+        self.found_satellite = 1
         while ((self.latitude == 0) and (self.longitude == 0)):
             self.lat_ini, self.lon_ini = self.get_latlon()
-
+        print 'GPS initialized, obtained initial latitude and longitude'
 
     def get_position(self):
         lat, lon = self.get_latlon()
-        if self.found_satelite == 1:
+        if self.found_satellite == 1:
             self.dx = 1000 * (lon - self.lon_ini) * 40000 * math.cos((lat + self.lat_ini) * math.pi / 360) / 360
             self.dy = 1000 * (lat - self.lat_ini) * 40000 / 360
 
@@ -86,6 +86,8 @@ class GPS(object):
         readall = self.ser1.readline().split('\r\n')  # Read data from the GPS
         # print 'Communication costs ' + str(ReadFintime-starttime) # print communication time
 
+        print readall
+        
         # Process data
         for i in range(0, len(readall) - 1):
             line = readall[i]      # Extract one NMEA sentence from the received data
@@ -106,9 +108,7 @@ class GPS(object):
             print 'No available Satelites, automatically set longitude and latitude to be ZERO \n Wait for a while or CHANGE your POSITION'
             self.latitude = 0
             self.longitude = 0
-            self.found_satelite = 0
-
-
+            self.found_satellite = 0
 
         return self.latitude, self.longitude
 
