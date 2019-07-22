@@ -1,3 +1,4 @@
+import sys
 sys.path.append('../')
 
 from actuators.steeringmotor import SteeringMotor

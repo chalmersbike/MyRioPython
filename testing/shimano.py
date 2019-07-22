@@ -1,6 +1,7 @@
 # Test for shimano rear motor.
 # Spins until E-STOP is pressed or CTRL-C
 
+import sys
 sys.path.append('../')
 
 import sys
