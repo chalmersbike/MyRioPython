@@ -79,12 +79,12 @@ writer_imu = csv.writer(results_imu)
 writer_imu.writerow(('Time (s)', 'ax (mg)','ay (mg)', 'az (mg)', 'gx (deg/s)', 'gy (deg/s)', 'gz (deg/s)'))
 
 number_samples_IMU = raw_input('Input the number of samples of press ENTER for 20 samples for the IMU test, move the bike body for the reading! ')
-a_imu = IMU()
+imu = IMU()
 start_time = time.time()
 if not number_samples_IMU:
     number_samples_IMU = 20
 for x in range(1, int(number_samples_IMU) + 1):
-    imudata = a_imu.get_imu_data()
+    imudata = imu.get_imu_data()
     print 'Time = %g\tTemp = %g\tAx = %g\tAy = %g\tAz = %g\tGx = %g\tGy = %g\tGz = %g' % (
     time.time() - start_time, imudata[0], imudata[1], imudata[2], imudata[3], imudata[4],
     imudata[5], imudata[6])

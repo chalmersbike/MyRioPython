@@ -2,7 +2,7 @@ import Adafruit_BBIO.GPIO as GPIO
 
 from actuators import RearMotorDrive, SteeringMotor
 from controller import Controller
-from sensors import Encoder, HallSensor, A_IMU, SafetyStop
+from sensors import Encoder, HallSensor, A_IMU, SafetyStop, IMU, GPS
 
 
 class Bike(object):
@@ -13,7 +13,8 @@ class Bike(object):
         self.hall_sensor = HallSensor()
         self.rear_motor = RearMotorDrive()
         self.steering_motor = SteeringMotor()
-        self.a_imu = A_IMU()
+        self.imu = IMU()
+        self.gps = GPS()
         if not debug:
             self.controller = Controller(self)
             self.controller.start()
@@ -38,7 +39,7 @@ class Bike(object):
         return self.hall_sensor.get_velocity()
 
     def get_imu_data(self):
-        return self.a_imu.get_imu_data()
+        return self.imu.get_imu_data()
 
     def emergency_stop_check(self):
         return self.safety_stop.button_check()

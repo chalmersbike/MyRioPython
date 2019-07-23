@@ -39,6 +39,7 @@ from time import sleep
 from constants import *
 from utils import *
 import Adafruit_BBIO.ADC as ADC
+import kalman_filter as kf
 
 from actuators import butter_lowpass,butter_lowpass_filter,moving_average_filter
 
@@ -191,6 +192,9 @@ class Controller(object):
         #self.delta_state_previous = 0
         self.delta_state_list = list()
 
+        # Kalman filter
+        self.kf = Kalman_filter()
+
 
     def worker(self):
         self.time_count = self.time_count_gaining_speed
@@ -206,6 +210,14 @@ class Controller(object):
                 self.states_and_extra_data=self.get_states()
                 self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
                 self.extra_data = self.states_and_extra_data[3][:] # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
+
+                # Get GPS position
+                self.gpspos = gps.get_position()
+                x_measured_GPS = self.gpspos[0]
+                y_measured_GPS = self.gpspos[1]
+
+                # Update Kalman filter
+                self.kf.update(x_measured_GPS, y_measured_GPS, steering_angle, velocity)
 
                 # Find Global Angles and Coordinates
                 if PATH_TYPE == 'CIRCLE' or PATH_TYPE == 'STRAIGHT':
@@ -304,7 +316,10 @@ class Controller(object):
         raw_input('Press ENTER to start')
         print "start in 5 secs"
         time.sleep(5)
-        self.states[0] =self.bike.get_imu_data()[0] # Read the IMU complementary filter Phi as the initial phi estimation
+
+        imu_data = self.bike.get_imu_data()
+        self.states[0] = math.atan2(imu_data[1]/imu_data[2])
+        self.phi_state = self.states[0]
 
         if pid_velocity_active:
             self.writer.writerow(('P = %f' % pid_velocity_P, 'I = %f' % pid_velocity_I, 'D = %f' % pid_velocity_D))
@@ -395,7 +410,10 @@ class Controller(object):
             time_2=time.time()
             self.time_count_gaining_speed += time_2 - time_1
 
-        self.states[0] = self.bike.get_imu_data()[0]  # Reset State as Arduino Roll data again
+
+        imu_data = self.bike.get_imu_data()
+        self.states[0] = math.atan2(imu_data[1]/imu_data[2])
+
         self.active = True
         self.worker()
         # self.thread = Thread(target=lambda: self.worker())
@@ -426,22 +444,18 @@ class Controller(object):
         imu_data = self.bike.get_imu_data()
 
         # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
-        phi_d_state = imu_data[2]
-        ay=imu_data[5-self.roll_comp]  # 4=roll compensated, 5=roll uncompensated
-        az=imu_data[6]
+        # imu_data = [ax ay az gx gy gz]
 
-        b = 1.095 # length between wheel centers [m]
-        CP_acc_g=self.CP_comp*((self.velocity*self.velocity)/b)*math.tan(delta_state*0.94)*(1/9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
-        phi_acc=math.atan2(ay - CP_acc_g*math.cos(self.states[0]),  az + CP_acc_g*math.sin(self.states[0])) # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
-        ## phi_acc=math.atan2(ay,  az)
-        #phi_state = self.complementary_coef * (self.states[0]+phi_d_state*self.TIME_CONSTANT) + (1 - self.complementary_coef) * phi_acc
-        ## phi_state = self.complementary_coef * (imu_data[0]) + (
-        ##             1 - self.complementary_coef) * phi_acc
-        ## phi_state = (imu_data[0])
-        ## phi_state = imu_data[0] # for only roll compensated phi
-        phi_state = imu_data[1] # for uncompensated phi
+        ay = imu_data[1]
+        az = imu_data[2]
+        gx = imu_data[3]
 
-        return [phi_state, delta_state, phi_d_state, imu_data]
+        phi_d_state = gx
+
+        phi_acc = atan2(ay, az)
+        self.phi_state = self.complementary_coef * (self.phi_state + gx * sample_time) + (1 - self.complementary_coef) * phi_acc
+
+        return [self.phi_state, delta_state, phi_d_state, imu_data]
 
     def get_state_references(self, velocity):
 
