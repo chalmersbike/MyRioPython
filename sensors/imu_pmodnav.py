@@ -32,9 +32,14 @@ ADDR_GYRO_ZOUT_H =  0X1D # I2C register address for the higher 8 bits of the z-a
 
 class IMU(object):
 
-    def __init__(self):
+    def __init__(self, count = 1000):
         self.i2c = I2C.Device(I2C_ADDR, BUS)
-
+        self.gx_ofst = 0
+        self.gy_ofst = 0
+        self.gz_ofst = 0
+        # self.ax_ofst = 0
+        # self.ay_ofst = 0
+        # self.az_ofst = 0
         # Check that WHO_AM_I matches the expected value
         who_am_i = self.i2c.readList(ADDR_WHO_AM_I, 1) # read the WHO_AM_I register
         if hex(who_am_i[0]) != str(hex(IDENTITY)):
@@ -47,6 +52,32 @@ class IMU(object):
         self.acc_sensitivity = 4 * 1000.0 / 65536 # 4000mg (+/- 2g) range on 2 bytes (2^16 = 65536)
         self.gyro_sensitivity = 0.00875 / 1000  # from LSM9DS1's datasheet
 
+        print "Starting Calibration Started"
+        gx_c = 0.0
+        gy_c = 0.0
+        gz_c = 0.0
+        # ax_c = 0
+        # ay_c = 0
+        # az_c = 0
+        for i in range(1,count+1,1):
+            imu_c = self.get_imu_data()
+            gx_c = gx_c + imu_c[1]
+            gy_c = gy_c + imu_c[2]
+            gz_c = gz_c + imu_c[3]
+            # ax_c = ax_c + imu_c[4]
+            # ay_c = ay_c + imu_c[5]
+            # az_c = az_c + imu_c[6]
+            time.sleep(0.01)
+        self.gx_ofst = gx_c/count
+        self.gy_ofst = gy_c/ count
+        self.gz_ofst = gz_c/ count
+        # self.ax_ofst = float(ax_c) / count
+        # self.ay_ofst = float(ay_c) / count
+        # self.az_ofst = float(az_c) / count
+
+
+
+
     def get_imu_data(self):
         # Get data from the I2C transmission
         imu_data = (struct.unpack('<hhhhhhh', (self.i2c.readList(ADDR_TEMP_OUT_L, 14))))
@@ -54,9 +85,9 @@ class IMU(object):
         # Process IMU data
         temp = 25 + imu_data[0] / self.temp_sensitivity
 
-        gx = imu_data[1] * self.gyro_sensitivity
-        gy = imu_data[2] * self.gyro_sensitivity
-        gz = imu_data[3] * self.gyro_sensitivity
+        gx = imu_data[1] * self.gyro_sensitivity - self.gx_ofst
+        gy = imu_data[2] * self.gyro_sensitivity - self.gy_ofst
+        gz = imu_data[3] * self.gyro_sensitivity - self.gz_ofst
 
         accx = imu_data[4] * self.acc_sensitivity
         accy = imu_data[5] * self.acc_sensitivity
