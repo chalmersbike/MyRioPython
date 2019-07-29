@@ -6,23 +6,23 @@ from time import sleep
 from constants import *
 from utils import *
 import Adafruit_BBIO.ADC as ADC
-import controller
+from controller import *
 
 
 # Create states-space matrices for the Kalman filter
 A_kalman = np.array([[1, 0, sample_time, 0], [0, 1, 0, sample_time], [0, 0, 1, 0], [0, 0, 0, 1]])
-B_kalman = np.zeros(4,4)
+B_kalman = np.zeros((4,4))
 C_kalman = np.eye(4)
-D_kalman = np.zeros(4,4)
+D_kalman = np.zeros((4,4))
 
 # Noise matrices
 Q_kalman = np.array([[0.0001, 0, 0, 0], [0, 0.0001, 0, 0], [0, 0, 0, 0.1], [0, 0, 0, 0.1]])
 R_kalman = np.array([[0.51, 0, 0, 0], [0, 0.51, 0, 0], [0, 0, 0.0031, 0], [0, 0, 0, 0.0031]])
 
 # Initial conditions for the Kalman filter
-x0_kalman = np.zeros(4,1) # TO CHECK IN SIMULINK
-P0_kalman = np.zeros(4,4) # TO CHECK IN SIMULINK
-K0_kalman = np.zeros(4,4) # TO CHECK IN SIMULINK
+x0_kalman = np.zeros((4,1)) # TO CHECK IN SIMULINK
+P0_kalman = np.zeros((4,4)) # TO CHECK IN SIMULINK
+K0_kalman = np.zeros((4,4)) # TO CHECK IN SIMULINK
 
 
 class Kalman_filter(object):

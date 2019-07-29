@@ -2,7 +2,7 @@ import Adafruit_BBIO.GPIO as GPIO
 
 from actuators import RearMotorDrive, SteeringMotor
 from controller import Controller
-from sensors import Encoder, HallSensor, A_IMU, SafetyStop, IMU, GPS
+from sensors import Encoder, HallSensor, SafetyStop, IMU, GPS
 
 
 class Bike(object):

@@ -1,4 +1,9 @@
 INITIAL_SPEED = 3.9  # m/s
+
+#################################################################################################
+## TEST
+INITIAL_SPEED = 0  # m/s
+#################################################################################################
 fixed_gains = 0 # 1 for velocity independent LQR gains, 0 for velocity dependent LQR gains
 gains= [-20.8204,    5.0703,   -5.1136]  # for 2m/s 25hz
 # gains= [-47.9208,    4.9023,   -9.1986]  # for 2m/s 25hz different too aggressive!
@@ -29,6 +34,12 @@ TEST_TIME = 25.0  # seconds
 speed_up_time = 3.0 # seconds
 deadband = 0.0/57.29577  # rad/s deadband for steering
 
+CURRENT_SENSE_PORT = 'P9_38'
+RPM_SENSE_PORT = 'P9_40'
+# Controller Parameters
+CONTROLLER_FREQUENCY = 25 # 25  #50  # Hz
+sample_time = 1.0/CONTROLLER_FREQUENCY
+
 import csv
 import math
 import time
@@ -43,11 +54,6 @@ import kalman_filter as kf
 
 from actuators import butter_lowpass,butter_lowpass_filter,moving_average_filter
 
-CURRENT_SENSE_PORT = 'P9_38'
-RPM_SENSE_PORT = 'P9_40'
-# Controller Parameters
-CONTROLLER_FREQUENCY = 25 # 25  #50  # Hz
-sample_time = 1.0/CONTROLLER_FREQUENCY
 
 # Test Parameters
 # MAX_HANDLEBAR_ANGLE = ((5.0 / 3.0) * PI) / 6.0  # rad, 50 deg
@@ -217,7 +223,9 @@ class Controller(object):
                 y_measured_GPS = self.gpspos[1]
 
                 # Update Kalman filter
-                self.kf.update(x_measured_GPS, y_measured_GPS, steering_angle, velocity)
+                position_kalman = self.kf.update(x_measured_GPS, y_measured_GPS, steering_angle, velocity)
+
+                print 'x_measured_GPS = %f ; y_measured_GPS = %f ; x_kalman = %f ; y_kalman = %f' % (x_measured_GPS,y_measured_GPS,position_kalman[0],position_kalman[1])
 
                 # Find Global Angles and Coordinates
                 if PATH_TYPE == 'CIRCLE' or PATH_TYPE == 'STRAIGHT':
