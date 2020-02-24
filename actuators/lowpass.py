@@ -2,7 +2,7 @@
 #   creating-lowpass-filter-in-scipy-understanding-methods-and-units
 
 import numpy as np
-from scipy.signal import butter, lfilter, freqz, filtfilt,lfilter_zi
+from scipy.signal import butter, firwin, lfilter, freqz, filtfilt,lfilter_zi
 
 
 def butter_lowpass(cutoff, fs, order=5):
@@ -12,12 +12,19 @@ def butter_lowpass(cutoff, fs, order=5):
     return b, a
 
 
-def butter_lowpass_filter(data, cutoff, fs, order=5):
+def butter_lowpass_filter(data, cutoff, fs, z, order=5):
     b, a = butter_lowpass(cutoff, fs, order=order)
+    print b
+    print a
     # zi = np.ones(max(len(a), len(b)) - 1) * data[0]
-    zi = lfilter_zi(b, a) * data[0]
-    y,_ = lfilter(b, a, data,zi = zi)
+    # z = lfilter_zi(b, a)*0
+    y,z = lfilter(b, a, data,zi = z)
     return y
+
+def firwin_filter(data, numtaps, cutoff, fs, z):
+    b = firwin(numtaps, cutoff,nyq=fs)
+    y,z = lfilter(b, 1, data,zi = z)
+    return y,z
 
 
 def moving_average_filter(data, windowSize=5):

@@ -2,12 +2,14 @@ import Adafruit_BBIO.UART as UART
 import serial
 import math
 import time
-
+import warnings
 # Select the port
-port = "/dev/ttyO5"
+#port = "/dev/ttyO0"
+port = "/dev/ttyS5"
+#port = "/dev/ttyO5"
 
 # Select the sampling time
-samplingTime = 0.2  # secs
+samplingTime = 0.1  # secs
 
 # Define the PMTK configurations strings to send to the GPS according to the NMEA PMTK protocol
 # PMTK Packet User Manual       : https://cdn.sparkfun.com/assets/parts/1/2/2/8/0/PMTK_Packet_User_Manual.pdf
@@ -44,6 +46,8 @@ PMTK_AWAKE           = "$PMTK010,002*2D"   # Wake up
 PGCMD_ANTENNA   = "$PGCMD,33,1*6C" # request for updates on antenna status
 PGCMD_NOANTENNA = "$PGCMD,33,0*6D" # don't show antenna status messages
 
+R = 6371000 # Meters
+deg2rad = math.pi / 180
 
 class GPS(object):
 
@@ -63,22 +67,33 @@ class GPS(object):
         self.ser1.write(PMTK_SET_NMEA_OUTPUT_RMCONLY + "\r\n") # turn on only the GPRMC sentence
 
         # Choose the frequency of the GPS data output
-        self.ser1.write(PMTK_SET_NMEA_UPDATE_5HZ + "\r\n") # select a 5Hz output rate
+        self.ser1.write(PMTK_SET_NMEA_UPDATE_10HZ + "\r\n") # select a 5Hz output rate
         self.ser1.flush()
 
         self.latitude = 0
         self.longitude = 0
         self.found_satellite = 1
-        while ((self.latitude == 0) and (self.longitude == 0)):
-            self.lat_ini, self.lon_ini = self.get_latlon()
+        self.dx = 0
+        self.dy = 0
+        self.x = 0
+        self.y = 0
+        self.x0 = 0
+        self.y0 = 0
+#        while ((self.latitude <= 10) and (self.longitude <= 5)): # The location should be in SWEDEN
+        self.lat_ini, self.lon_ini = self.get_latlon()
+        self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
+        self.y0 = R * self.lat_ini * deg2rad
         print 'GPS initialized, obtained initial latitude and longitude'
 
     def get_position(self):
         lat, lon = self.get_latlon()
         if self.found_satellite == 1:
-            self.dx = 1000 * (lon - self.lon_ini) * 40000 * math.cos((lat + self.lat_ini) * math.pi / 360) / 360
-            self.dy = 1000 * (lat - self.lat_ini) * 40000 / 360
-
+            self.x = R * lon * deg2rad * math.cos(self.lat_ini * deg2rad)
+            self.y = R * lat * deg2rad
+            self.dx = self.x - self.x0
+            self.dy = self.y - self.y0
+        else:
+            print warnings.warn("No Satelite found !")
         return self.dx, self.dy
 
 

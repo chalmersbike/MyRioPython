@@ -1,6 +1,6 @@
 import Adafruit_BBIO.ADC as ADC
 
-OUTPUT_PORT = 'P9_36'
+OUTPUT_PORT = 'P9_39'
 
 
 # A low pass filter is needed for this potentiometer as the signal is very noisy. The components for this filter have

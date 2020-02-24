@@ -12,8 +12,8 @@ import time
 #define PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ  "$PMTK220,5000*1B"   ///< Once every 5 seconds, 200 millihertz.
 #define PMTK_SET_NMEA_UPDATE_1HZ  "$PMTK220,1000*1F"              ///<  1 Hz
 #define PMTK_SET_NMEA_UPDATE_2HZ  "$PMTK220,500*2B"               ///<  2 Hz
-PMTK_SET_NMEA_UPDATE_5HZ = "$PMTK220,200*2C"               #<  5 Hz
-#define PMTK_SET_NMEA_UPDATE_10HZ "$PMTK220,100*2F"               ///< 10 Hz
+# PMTK_SET_NMEA_UPDATE_5HZ = "$PMTK220,200*2C"               #<  5 Hz
+PMTK_SET_NMEA_UPDATE_10HZ = "$PMTK220,100*2F"              # < 10 Hz
 # Position fix update rate commands.
 #define PMTK_API_SET_FIX_CTL_100_MILLIHERTZ  "$PMTK300,10000,0,0,0,0*2C"  ///< Once every 10 seconds, 100 millihertz.
 #define PMTK_API_SET_FIX_CTL_200_MILLIHERTZ  "$PMTK300,5000,0,0,0,0*18"   ///< Once every 5 seconds, 200 millihertz.
@@ -56,14 +56,14 @@ PMTK_SET_NMEA_OUTPUT_RMCONLY = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*2
 #define PMTK_Q_RELEASE "$PMTK605*31"              ///< ask for the release and version
 
 
-#define PGCMD_ANTENNA "$PGCMD,33,1*6C"            ///< request for updates on antenna status
+PGCMD_ANTENNA = "$PGCMD,33,1*6C"            #///< request for updates on antenna status
 #define PGCMD_NOANTENNA "$PGCMD,33,0*6D"          ///< don't show antenna status messages
 
 #define MAXWAITSENTENCE 10   ///< how long to wait when we're looking for a response
 port = "/dev/ttyO5"
 baudrate = 9600
 # UART.setup("UART1")
-write_str = "Hello World\n"
+# write_str = "Hello World\n"
 INPUT_PORT = 'P9_24'
 OUTPUT_PORT = 'P9_26'
 samplingTime = 0.2 # secs
@@ -78,7 +78,8 @@ ser1.flush()
 ser1.close()
 ser1 = serial.Serial(port, 115200, timeout=1000)
 ser1.write(PMTK_SET_NMEA_OUTPUT_RMCONLY + "\r\n")
-ser1.write(PMTK_SET_NMEA_UPDATE_5HZ + "\r\n")
+ser1.write(PMTK_SET_NMEA_UPDATE_10HZ + "\r\n")
+# ser1.write(PGCMD_ANTENNA + "\r\n")
 # ser1 = busio.UART(OUTPUT_PORT,INPUT_PORT, baudrate = 9600, timeout = 3000)
 
 # gps = adafruit_gps.GPS(ser1, debug=False)
