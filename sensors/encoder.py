@@ -16,8 +16,9 @@ class Encoder(object):
         self.encoder.setAbsolute()
         self.calibrate()
 
+
     def calibrate(self):
         self.encoder.zero()
 
     def get_angle(self):
-        return self.encoder.position * TICKS_TO_RADIAN_RATIO
+        return - self.encoder.position * TICKS_TO_RADIAN_RATIO

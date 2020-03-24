@@ -7,6 +7,7 @@ serial1 = serial.Serial(port=REAR_MOTOR_PORT, baudrate=COMMUNICATION_FREQUENCY)
 serial1.close()
 serial1.open()
 character = 'HELLO WORLD\n'
-serial1.write(character)
-time.sleep(0.1)
-print serial1.readline()
+while 1:
+    serial1.write(character)
+    # time.sleep(0.1)
+# print serial1.readline()

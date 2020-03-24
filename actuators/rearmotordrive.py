@@ -1,9 +1,10 @@
-import serial, time, numpy
+import serial, time
 import Adafruit_BBIO.UART as UART
 import Adafruit_BBIO.ADC as ADC
 
 
-REAR_MOTOR_PORT = '/dev/ttyO4'
+#REAR_MOTOR_PORT = '/dev/ttyO1'
+REAR_MOTOR_PORT = '/dev/ttyS1'
 COMMUNICATION_FREQUENCY = 115200
 
 PWM_STOP = 1050
@@ -15,7 +16,7 @@ class RearMotorDrive(object):
     serial = None
 
     def __init__(self):
-        UART.setup("UART4")
+        UART.setup("UART1")
         ADC.setup()
         self.serial = serial.Serial(port=REAR_MOTOR_PORT, baudrate=COMMUNICATION_FREQUENCY)
         self.serial.close()
@@ -31,9 +32,7 @@ class RearMotorDrive(object):
             self.serial.write(character)
 
     def rear_set_rpm(self, rpm):
-        rpm_string = 'run -s ' + str(rpm).zfill(
-            4) + ' -f 5 -pi\n'  # the '%' symbol indicates to the MSP430 that this is a signal for the Shimano motor
-        # print 'pwm_string = %s\n' %(pwm_string)
+        rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 5 -pi\n'
         # pwm_string = "run -s 3 -f 5-pi\n"
         self.serial.write(rpm_string)
         # for character in pwm_string:
@@ -42,9 +41,8 @@ class RearMotorDrive(object):
 
     def set_velocity(self, input_velocity):
         # self.rear_set_pwm(self._m_per_second_to_pwm(input_velocity))
-        self.rear_set_rpm(input_velocity*0.64)
+        self.rear_set_rpm(input_velocity*0.213)
         # for GEAR 6Th the coef vel -> pwm = 0.31
-        # self.rear_set_rpm(input_velocity * 0.31)
 
     def stop(self):
         pwm_string = 'run -stop\n'

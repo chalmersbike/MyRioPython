@@ -11,6 +11,7 @@ PWM_STOP = 1050
 PWM_MIN = 1265  # Corresponds to 3600 RPM which is minimum speed for ESCON 50/4
 PWM_MAX = 2100
 
+#!!!!!!!Not used anymore!!!!!!
 
 class RearMotor(object):
     serial = None

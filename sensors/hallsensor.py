@@ -4,10 +4,10 @@ import Adafruit_BBIO.GPIO as GPIO
 from time import sleep, time
 
 INPUT_PORT = 'P9_23'  # Old value is 9_12, while the pin is broken by Yixiao :-(
-WHEEL_DIAMETER = 0.622  # m (Tyre marking 40-622 = ID of 622mm) + 4mm to center of magnet
+WHEEL_DIAMETER = 0.694  # m (Tyre marking 40-622 = ID of 622mm) + 4mm to center of magnet #0.622 before
 TYRE_RATIO = 0.7 / WHEEL_DIAMETER
-NUMBER_OF_SENSORS = 5
-MAX_ELAPSE_BETWEEN_PULSES = 0.65  # seconds. Stationary if longer then this.
+NUMBER_OF_SENSORS = 3 #5 before
+MAX_ELAPSE_BETWEEN_PULSES = 1  # seconds. Stationary if longer then this. #0.65 before for 5 sensors
 
 WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * math.pi
 DISTANCE_BETWEEN_SENSORS = WHEEL_CIRCUMFERENCE / NUMBER_OF_SENSORS
@@ -24,8 +24,14 @@ class HallSensor(object):
 
     def _initialize_interrupt(self):
         self.last_time_measured = time()
-        # GPIO.add_event_detect(INPUT_PORT, GPIO.FALLING, callback=self.update_velocity)
-        GPIO.add_event_detect(INPUT_PORT, GPIO.FALLING, callback=self.update_velocity,bouncetime=5) # added a 5ms bouncetime to avoid counting the same falling edge multiple times
+        GPIO.add_event_detect(INPUT_PORT, GPIO.FALLING, callback=self.update_velocity,bouncetime=20)# added a 5ms bouncetime to avoid counting the same falling edge multiple times
+        #GPIO.add_event_detect(INPUT_PORT, GPIO.FALLING, callback=self.test)  # added a 5ms bouncetime to avoid counting the same falling edge multiple times
+
+    #def test(self, *args):
+    #    time_measured = time()
+    #    if (time_measured-self.last_time_measured)*1000>20:
+    #        print 'time = %f ; gpio = %d' % (time_measured-self.last_time_measured,GPIO.input(INPUT_PORT))
+    #        self.last_time_measured = time_measured
 
     def update_velocity(self, *args):
         time_measured = time()
@@ -34,7 +40,7 @@ class HallSensor(object):
                          else 0.0 if self.elapse > MAX_ELAPSE_BETWEEN_PULSES
         else (DISTANCE_BETWEEN_SENSORS / self.elapse) * TYRE_RATIO)
         self.last_time_measured = time_measured
-        # print 'MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL'
+        #print 'MAGNET DETECTED! I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL ; t = %f\n' % (self.elapse)
 
     def get_velocity(self):
         self.elapse = time() - self.last_time_measured
