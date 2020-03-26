@@ -20,7 +20,7 @@ class Bike(object):
         # self.gps = GPS()
         self.potent = Potentiometer()
         # self.kf = kf(self)
-        # self.laser_ranger = DualLaserRanger()
+        self.laser_ranger = DualLaserRanger()
         if not debug:
             self.controller = Controller(self)
             self.controller.startup()
