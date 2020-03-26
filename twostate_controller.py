@@ -598,9 +598,10 @@ class Controller(object):
         self.writer.writerow(
             ('Time', 'Calculation Time',  'Measured Velocity', 'Phi', 'Delta', 'Phi Dot',
              'Control Input',
-             'a_x',  'ay', 'az', 'x','y','psi','nu','phi_ref','delta_ref','delta_ctrl_ref','x1_ref','x2_ref','x1','x2','delta_k','potential'))
-             # ,'GPS_timestamp','GPS_x','GPS_y','latitude','longitude'))
-             #,'laserranger'))  # headers
+             'a_x',  'ay', 'az', 'x','y','psi','nu','phi_ref','delta_ref','delta_ctrl_ref','x1_ref','x2_ref','x1','x2','delta_k','potential'
+             # ,'GPS_timestamp','GPS_x','GPS_y','latitude','longitude'
+            ,'laserranger'  # headers
+        ))
 
     def log_regular(self):
         # Log data
@@ -630,9 +631,9 @@ class Controller(object):
                 "{0:.5f}".format(self.x2),
                 "{0:.5f}".format(self.delta_k),
                 "{0:.5f}".format(self.potential)
-            ))
             # self.latest_gps_time,self.gpspos[0],self.gpspos[1],self.bike.gps.latitude,self.bike.gps.longitude))
-            #,self.y_laser_ranger))
+            ,self.y_laser_ranger
+        ))
 
         self.time_log = time.time() - self.time_log
         #print "sensor_reading_time, control calculation, status_check   IMU   log  = %g \t %g \t %g \t %g \t %g \t" % (
