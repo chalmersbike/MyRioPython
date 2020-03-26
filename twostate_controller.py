@@ -64,7 +64,9 @@ class Controller(object):
             self.state_calculate()
             # Get y position on the roller
             # print "reading Laser at %d" %(time.time() - self.gaining_speed_start)
-            self.y_laser_ranger = self.bike.laser_ranger.get_y()
+            if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
+                self.y_laser_ranger = self.bike.laser_ranger.get_y()
+                self.time_laserranger = time.time()
             self.state_references = self.get_state_references(self.velocity)
             # self.gps_read()
             # Find Global Angles and Coordinates
@@ -149,7 +151,9 @@ class Controller(object):
 
                 # print "reading Laser at %f" % (time.time() - self.gaining_speed_start)
                 # Get y position on the roller
-                self.y_laser_ranger = self.bike.laser_ranger.get_y()
+                if (time.time()-self.time_laserranger) > 1.1*self.bike.laser_ranger.timing:
+                    self.y_laser_ranger = self.bike.laser_ranger.get_y()
+                    self.time_laserranger = time.time()
 
                 # PID Velocity Control
                 if pid_velocity_active:
@@ -516,6 +520,10 @@ class Controller(object):
         self.smith_x = np.zeros([2, smith_delay])
         self.smith_delta = np.zeros([1, smith_delay * 2])
         self.delta_k = 0
+
+        # Laser Ranger
+        self.time_laserranger = 0
+
 
     def initial_Estop_Check(self):
         self.ESTOP = self.bike.emergency_stop_check()

@@ -4,7 +4,7 @@ from actuators import RearMotorDrive, Steering
 from twostate_controller import Controller
 # from twostate_controller_wtout_pred import Controller
 
-from sensors import Encoder, HallSensor, IMU, SafetyStop, GPS
+from sensors import Encoder, HallSensor, IMU, SafetyStop, GPS, DualLaserRanger
 #from kalman_filter import Kalman_filter as kf
 #import pysnooper
 
