@@ -42,7 +42,7 @@ class RearMotorDrive(object):
 
     def set_velocity(self, input_velocity):
         # self.rear_set_pwm(self._m_per_second_to_pwm(input_velocity))
-        self.rear_set_rpm(input_velocity*0.64)
+        self.rear_set_rpm(input_velocity*0.2)
         # for GEAR 6Th the coef vel -> pwm = 0.31
         # self.rear_set_rpm(input_velocity * 0.31)
 

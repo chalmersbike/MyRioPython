@@ -3,11 +3,11 @@ import math
 import Adafruit_BBIO.GPIO as GPIO
 from time import sleep, time
 
-INPUT_PORT = 'P9_23'  # Old value is 9_12, while the pin is broken by Yixiao :-(
-WHEEL_DIAMETER = 0.622  # m (Tyre marking 40-622 = ID of 622mm) + 4mm to center of magnet
+INPUT_PORT = 'P9_30'  # Old value is 9_12, while the pin is broken by Yixiao :-(
+WHEEL_DIAMETER = 0.694  # m (Tyre marking 40-622 = ID of 622mm) + 4mm to center of magnet
 TYRE_RATIO = 0.7 / WHEEL_DIAMETER
-NUMBER_OF_SENSORS = 5
-MAX_ELAPSE_BETWEEN_PULSES = 0.65  # seconds. Stationary if longer then this.
+NUMBER_OF_SENSORS = 3
+MAX_ELAPSE_BETWEEN_PULSES = 1  # seconds. Stationary if longer then this.
 
 WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * math.pi
 DISTANCE_BETWEEN_SENSORS = WHEEL_CIRCUMFERENCE / NUMBER_OF_SENSORS
@@ -25,7 +25,7 @@ class HallSensor(object):
     def _initialize_interrupt(self):
         self.last_time_measured = time()
         # GPIO.add_event_detect(INPUT_PORT, GPIO.FALLING, callback=self.update_velocity)
-        GPIO.add_event_detect(INPUT_PORT, GPIO.FALLING, callback=self.update_velocity,bouncetime=5) # added a 5ms bouncetime to avoid counting the same falling edge multiple times
+        GPIO.add_event_detect(INPUT_PORT, GPIO.RISING, callback=self.update_velocity,bouncetime=30) # added a 5ms bouncetime to avoid counting the same falling edge multiple times
 
     def update_velocity(self, *args):
         time_measured = time()
