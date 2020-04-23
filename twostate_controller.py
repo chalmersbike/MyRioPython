@@ -10,13 +10,13 @@ from utils import *
 import numpy as np
 import Adafruit_BBIO.ADC as ADC
 # from actuators import butter_lowpass,butter_lowpass_filter,moving_average_filter
-# import pysnooper
+import pysnooper
 
 from scipy import signal
 import numpy as np
 
 
-# @pysnooper.snoop('./log/file.log')
+# @pysnooper.snoop()
 class Controller(object):
 
     def __init__(self, bike):
@@ -94,8 +94,7 @@ class Controller(object):
             # Check for extreme PHI
             if self.states[0] > MAX_LEAN_ANGLE or self.states[0] < MIN_LEAN_ANGLE:
                 self.stop()
-                print
-                'Exceeded MAX/MIN LEAN ANGLE'
+                print 'Exceeded MAX/MIN LEAN ANGLE'
 
             self.status_check_time = time.time() - start_time_current_loop - self.sensor_reading_time
             # Do a speed test
@@ -119,8 +118,7 @@ class Controller(object):
 
             # Log data
 
-        print
-        '\nGaining speed phase over\n'
+        print 'Gaining speed phase over\n'
 
         self.states[0] = self.bike.get_imu_data()[0]  # Reset State as Arduino Roll data again
         self.controller_active = True
@@ -653,13 +651,13 @@ class Controller(object):
         # self.sensor_reading_time, self.control_cal_time, self.status_check_time,self.time_get_states,self.time_log)
 
         # Check the calculation time
-        if self.calculation_time > sample_time:
+        # if self.calculation_time > sample_time:
             # print "Warning: The calculation time exceeds the sampling time!"
-            self.exceedscount += 1
+            # self.exceedscount += 1
             # print "sensor_reading_time, control calculation, status_check = %g \t %g \t %g" % (self.sensor_reading_time, self.control_cal_time, self.status_check_time)
             # if self.exceedscount > 10:
-            #     print "Error: Too long calculation time, experiment aborted"
-            #     self.stop()
+                # print "Error: Too long calculation time, experiment aborted"
+                # self.stop()
 
         # print out data
         # print 'Time = %f\t Calculation time = %f' %(self.time_count, self.calculation_time)
@@ -748,45 +746,44 @@ class Controller(object):
         # self.steering_rate = self.pid_balance_control_signal
 
         # Chalmers Controller Structure 2 : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
-        # # self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 5 - 2.5) * deg2rad * 2 # Potentiometer gives a position reference between -5deg and 5deg
-        # self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
-        # self.pid_balance_outerloop.setReference(self.potential)
-        # self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
-        # self.pid_balance_control_signal = self.pid_balance.update(states[2])
-        # self.steering_rate = self.pid_balance_control_signal
-
-        # PATH TRACKING Chalmers Controller Structure 2 : yref = potentiometer ; phiref = PID (y) ; phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
-        self.potential = ((
-                                      self.bike.potent.read_pot_value() / 0.29) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
-
-        # Choice of path, variable path_choice is set in param.py file
-        if path_choice == 'pot':
-            # Position reference from potentiometer
-            self.pos_ref = self.potential
-        elif path_choice == 'sine':
-            # Position reference is a sine wave
-            # Frequency is path_sine_freq
-            # Amplitude is path_sine_amp
-            self.pos_ref = path_sine_amp * math.sin(self.time_count * 2 * math.pi * path_sine_freq)
-        elif path_choice == 'overtaking':
-            # Position reference is an overtaking (set parameters in param.py file)
-            # All sections going straight last time_path_stay
-            # All inclined sections last time_path_slope
-            # Slope of the inclined sections is slope
-            self.pos_ref = slope * (self.time_count - time_path_stay) * (
-                        time_path_stay < self.time_count < (time_path_stay + time_path_slope)) \
-                           + slope * time_path_slope * ((time_path_stay + time_path_slope) < self.time_count < (
-                        2 * time_path_stay + time_path_slope)) \
-                           + (slope * time_path_slope - slope * (
-                        self.time_count - (2 * time_path_stay + time_path_slope))) * (
-                                       (2 * time_path_stay + time_path_slope) < self.time_count < (
-                                           2 * time_path_stay + 2 * time_path_slope))
-
-        self.pid_lateral_position.setReference(self.pos_ref)
-        self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
+        # self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 5 - 2.5) * deg2rad * 2 # Potentiometer gives a position reference between -5deg and 5deg
+        self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
+        self.pid_balance_outerloop.setReference(self.potential)
         self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
         self.pid_balance_control_signal = self.pid_balance.update(states[2])
         self.steering_rate = self.pid_balance_control_signal
+
+        # # PATH TRACKING Chalmers Controller Structure 2 : yref = potentiometer ; phiref = PID (y) ; phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
+        # self.potential = ((self.bike.potent.read_pot_value() / 0.29) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
+        #
+        # # Choice of path, variable path_choice is set in param.py file
+        # if path_choice == 'pot':
+        #     # Position reference from potentiometer
+        #     self.pos_ref = self.potential
+        # elif path_choice == 'sine':
+        #     # Position reference is a sine wave
+        #     # Frequency is path_sine_freq
+        #     # Amplitude is path_sine_amp
+        #     self.pos_ref = path_sine_amp * math.sin(self.time_count * 2 * math.pi * path_sine_freq)
+        # elif path_choice == 'overtaking':
+        #     # Position reference is an overtaking (set parameters in param.py file)
+        #     # All sections going straight last time_path_stay
+        #     # All inclined sections last time_path_slope
+        #     # Slope of the inclined sections is slope
+        #     self.pos_ref = slope * (self.time_count - time_path_stay) * (
+        #                 time_path_stay < self.time_count < (time_path_stay + time_path_slope)) \
+        #                    + slope * time_path_slope * ((time_path_stay + time_path_slope) < self.time_count < (
+        #                 2 * time_path_stay + time_path_slope)) \
+        #                    + (slope * time_path_slope - slope * (
+        #                 self.time_count - (2 * time_path_stay + time_path_slope))) * (
+        #                                (2 * time_path_stay + time_path_slope) < self.time_count < (
+        #                                    2 * time_path_stay + 2 * time_path_slope))
+        #
+        # self.pid_lateral_position.setReference(self.pos_ref)
+        # self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
+        # self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
+        # self.pid_balance_control_signal = self.pid_balance.update(states[2])
+        # self.steering_rate = self.pid_balance_control_signal
 
         # MDH Controller structure : delta = PID(phi) ; deltadot = PID(delta)
         # self.pid_balance_control_signal = self.pid_balance.update(states[0])

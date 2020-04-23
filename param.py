@@ -145,7 +145,8 @@ deadband = 0.0/57.29577  # rad/s deadband for steering
 CURRENT_SENSE_PORT = 'P9_38'
 RPM_SENSE_PORT = 'P9_40'
 # Controller Parameters
-CONTROLLER_FREQUENCY = 100 # 25  #50  # Hz
+# CONTROLLER_FREQUENCY = 100 # 25  #50  # Hz
+CONTROLLER_FREQUENCY = 50 # 25  #50  # Hz
 sample_time = 1.0/CONTROLLER_FREQUENCY
 
 # Test Parameters
@@ -221,7 +222,8 @@ windowSize = 10
 # PID Balance Controller Parameters
 pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 # pid_balance_P = 0.7
-pid_balance_P = 5.0
+# pid_balance_P = 5.0
+pid_balance_P = 1.57
 pid_balance_I = 0.0
 pid_balance_D = 0.0
 # pid_balance_P = 3.418/5
@@ -231,8 +233,9 @@ pid_balance_sample_time = 1.0 / CONTROLLER_FREQUENCY
 
 # PID Balance Outer Loop Controller Parameters
 pid_balance_outerloop_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
-pid_balance_outerloop_P = 1.0
-pid_balance_outerloop_I = 0.05
+# pid_balance_outerloop_P = 1.0
+pid_balance_outerloop_P = 0.57
+pid_balance_outerloop_I = 0.0
 pid_balance_outerloop_D = 0.0
 pid_balance_outerloop_sample_time = 1.0 / CONTROLLER_FREQUENCY
 

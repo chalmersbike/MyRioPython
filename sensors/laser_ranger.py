@@ -102,9 +102,9 @@ class DualLaserRanger(object):
     def get_y(self):
         if time.time() - self.last_read_time > self.timing:
             self.last_read_time = time.time()
-            print "Reading the laser data"
+            # print "Reading the laser data"
             dist = self.get_distance()
-            print dist
+            # print dist
             # return (distances[1] - distances[0])/2 # TRUE if the sensor readings are reliable
 
             if dist[0] < 1000 and dist[1] < 1000:
