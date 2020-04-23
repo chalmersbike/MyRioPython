@@ -177,6 +177,14 @@ pid_velocity_sample_time = 1.0 / CONTROLLER_FREQUENCY
 PATH_TYPE = 'NONE'  # [NONE, CIRCLE, STRAIGHT]
 # PATH_TYPE = 'STRAIGHT'  # [NONE, CIRCLE, STRAIGHT]
 PATH_RADIUS = 20.0  # m
+time_path_stay = 10.0 # s
+time_path_slope = 10.0 # s
+slope = 1/100.0
+path_sine_amp = 0.15 # m
+path_sine_freq = 1/10.0 # Hz
+path_choice = 'pot'
+#path_choice = 'overtaking'
+#path_choice = 'sine'
 
 # PID Lateral Position Controller Parameters
 pid_lateral_position_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.

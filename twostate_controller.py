@@ -457,6 +457,7 @@ class Controller(object):
         self.steering_rate_previous = 0.0
         self.steering_rate_filt = 0.0
         self.steering_rate_filt_previous = 0.0
+        self.pos_ref = 0
 
         # Controller
         self.controller_active = False
@@ -757,7 +758,31 @@ class Controller(object):
         # PATH TRACKING Chalmers Controller Structure 2 : yref = potentiometer ; phiref = PID (y) ; phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
         self.potential = ((
                                       self.bike.potent.read_pot_value() / 0.29) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
-        self.pid_lateral_position.setReference(self.potential)
+
+        # Choice of path, variable path_choice is set in param.py file
+        if path_choice == 'pot':
+            # Position reference from potentiometer
+            self.pos_ref = self.potential
+        elif path_choice == 'sine':
+            # Position reference is a sine wave
+            # Frequency is path_sine_freq
+            # Amplitude is path_sine_amp
+            self.pos_ref = path_sine_amp * math.sin(self.time_count * 2 * math.pi * path_sine_freq)
+        elif path_choice == 'overtaking':
+            # Position reference is an overtaking (set parameters in param.py file)
+            # All sections going straight last time_path_stay
+            # All inclined sections last time_path_slope
+            # Slope of the inclined sections is slope
+            self.pos_ref = slope * (self.time_count - time_path_stay) * (
+                        time_path_stay < self.time_count < (time_path_stay + time_path_slope)) \
+                           + slope * time_path_slope * ((time_path_stay + time_path_slope) < self.time_count < (
+                        2 * time_path_stay + time_path_slope)) \
+                           + (slope * time_path_slope - slope * (
+                        self.time_count - (2 * time_path_stay + time_path_slope))) * (
+                                       (2 * time_path_stay + time_path_slope) < self.time_count < (
+                                           2 * time_path_stay + 2 * time_path_slope))
+
+        self.pid_lateral_position.setReference(self.pos_ref)
         self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
         self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
         self.pid_balance_control_signal = self.pid_balance.update(states[2])
