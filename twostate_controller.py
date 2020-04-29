@@ -30,11 +30,9 @@ class Controller(object):
 
         self.initial_Estop_Check()  # Check if the Estop Engaged
         self.descr = raw_input('type the description if necessary, Press ENTER to start,')
-        print
-        "start in %i secs" % start_up_interval
+        print "start in %i secs" % start_up_interval
         time.sleep(start_up_interval)
-        self.states[0] = self.bike.get_imu_data()[
-            0]  # Read the IMU complementary filter Phi as the initial phi estimation
+        self.states[0] = self.bike.get_imu_data()[0]  # Read the IMU complementary filter Phi as the initial phi estimation
 
         self.log_headerline()
 
@@ -49,12 +47,10 @@ class Controller(object):
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
                 self.stop()
-                print
-                'EMERGENCY STOP'
+                print 'EMERGENCY STOP'
                 break
             else:
-                print
-                'GAINING SPEED'
+                print 'GAINING SPEED'
 
             # Get states and calculate state_references
             self.velocity = self.bike.get_velocity()
@@ -64,8 +60,7 @@ class Controller(object):
             self.time_get_states = time.time() - self.time_get_states
 
             self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
-            self.extra_data = self.states_and_extra_data[3][
-                              :]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
+            self.extra_data = self.states_and_extra_data[3][:]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
             self.sensor_reading_time = time.time() - start_time_current_loop
             self.state_calculate()
             # Get y position on the roller
@@ -89,8 +84,7 @@ class Controller(object):
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
                 self.stop()
-                print
-                'EMERGENCY STOP'
+                print 'EMERGENCY STOP'
                 break
 
             # Check for extreme PHI
@@ -145,8 +139,7 @@ class Controller(object):
                 self.velocity = self.bike.get_velocity()
                 self.states_and_extra_data = self.get_states()
                 self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
-                self.extra_data = self.states_and_extra_data[3][
-                                  :]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
+                self.extra_data = self.states_and_extra_data[3][:]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
                 self.sensor_reading_time = time.time() - start_time_current_loop
                 self.state_calculate()
                 # self.gps_read()
@@ -187,28 +180,24 @@ class Controller(object):
                 self.control_cal_time = time.time() - start_time_current_loop - self.sensor_reading_time
             except (ValueError, KeyboardInterrupt):
                 self.stop()
-                print
-                'BREAK'
+                print 'BREAK'
 
             # Check for ESTOP
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
                 self.stop()
-                print
-                'EMERGENCY STOP'
+                print 'EMERGENCY STOP'
                 break
 
             # Check for extreme PHI
             if self.states[0] > MAX_LEAN_ANGLE or self.states[0] < MIN_LEAN_ANGLE:
                 self.stop()
-                print
-                'Exceeded MAX/MIN LEAN ANGLE'
+                print 'Exceeded MAX/MIN LEAN ANGLE'
 
             # End test time condition
             if self.time_count > TEST_TIME:
                 self.stop()
-                print
-                'Exceeded TEST TIME'
+                print 'Exceeded TEST TIME'
                 break
             self.status_check_time = time.time() - start_time_current_loop - self.control_cal_time - self.sensor_reading_time
             # Calculation Time
@@ -392,13 +381,11 @@ class Controller(object):
             max_handlebar_angle = MAX_HANDLEBAR_ANGLE
             min_handlebar_angle = MIN_HANDLEBAR_ANGLE
         if handlebar_angle > max_handlebar_angle:
-            print
-            'Exceeded MAX_HANDLEBAR_ANGLE of %f deg' % (max_handlebar_angle * 57.3)
+            print 'Exceeded MAX_HANDLEBAR_ANGLE of %f deg' % (max_handlebar_angle * 57.3)
             self.upperSaturation = True
             self.bike.stop_all()
         elif handlebar_angle < min_handlebar_angle:
-            print
-            'Exceeded MIN_HANDLEBAR_ANGLE of %f deg' % (max_handlebar_angle * 57.3)
+            print 'Exceeded MIN_HANDLEBAR_ANGLE of %f deg' % (max_handlebar_angle * 57.3)
             self.lowerSaturation = True
             self.bike.stop_all()
         else:
@@ -539,13 +526,11 @@ class Controller(object):
     def initial_Estop_Check(self):
         self.ESTOP = self.bike.emergency_stop_check()
         if self.ESTOP:
-            print
-            'WARNING: EMERGENCY STOP ACTIVE. TEST WILL ABORT IF NOT ACTIVATED NOW'
+            print 'WARNING: EMERGENCY STOP ACTIVE. TEST WILL ABORT IF NOT ACTIVATED NOW'
             input_estop = raw_input('Press ENTER to continue')
             if input_estop:
                 self.stop()
-                print
-                'Experiment Terminated'
+                print 'Experiment Terminated'
 
     # def log_headerline(self):
     #     # Data logging setup
