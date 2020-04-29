@@ -145,8 +145,8 @@ deadband = 0.0/57.29577  # rad/s deadband for steering
 CURRENT_SENSE_PORT = 'P9_38'
 RPM_SENSE_PORT = 'P9_40'
 # Controller Parameters
-# CONTROLLER_FREQUENCY = 100 # 25  #50  # Hz
-CONTROLLER_FREQUENCY = 50 # 25  #50  # Hz
+CONTROLLER_FREQUENCY = 100 # 25  #50  # Hz
+# CONTROLLER_FREQUENCY = 50 # 25  #50  # Hz
 sample_time = 1.0/CONTROLLER_FREQUENCY
 
 # Test Parameters

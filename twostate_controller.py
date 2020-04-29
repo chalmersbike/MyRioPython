@@ -2,7 +2,7 @@ from param import *
 import csv
 import math
 import time
-
+import  Adafruit_BBIO.PWM as PWM
 from time import sleep
 
 from constants import *
@@ -15,7 +15,9 @@ import pysnooper
 from scipy import signal
 import numpy as np
 
-
+pwmchannel = 'EHRPWM2B'
+pwmfrequency = 500
+pwmidle_duty = 50
 # @pysnooper.snoop()
 class Controller(object):
 
@@ -129,9 +131,11 @@ class Controller(object):
         self.pid_balance.clear()
         self.pid_steeringangle.clear()
 
+
     # @pysnooper.snoop()
     def run(self):
         self.pid_steeringangle.clear()
+        PWM.start(pwmchannel, pwmidle_duty, pwmfrequency)
         while self.controller_active:
             start_time_current_loop = time.time()
 

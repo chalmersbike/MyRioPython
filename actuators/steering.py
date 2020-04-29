@@ -3,7 +3,8 @@ import  Adafruit_BBIO.PWM as PWM
 import time
 import Adafruit_BBIO.GPIO as GPIO
 channel = 'EHRPWM2B'
-frequency = 50
+# channel = 'P8_13'
+frequency = 500
 Pin_enable = 'P8_15'
 idle_duty = 50
 
@@ -30,11 +31,13 @@ class SteeringMotor(object):
     def set_angular_velocity(self, angular_velocity):
         rpm_conversion = angular_velocity / 6.28 * 60 * 111.0
         duty_cycle = 50 + rpm_conversion * 40.0 / 1000.0
+
         # print rpm_conversion, duty_cycle
         if duty_cycle > 90:
             duty_cycle = 90
         elif duty_cycle < 10:
             duty_cycle = 10
+
         PWM.set_duty_cycle(channel, duty_cycle)
 
         
