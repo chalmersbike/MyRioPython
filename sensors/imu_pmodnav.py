@@ -135,6 +135,10 @@ class IMU(object):
         self.gy_ofst = 0.0
         self.gz_ofst = 0.0
         self.acc_roll_ofst = 0.0
+        if not horizontal:
+            print 'searching for calibration file at', os.getcwd()
+            with open('./sensors/Acc_Cali.txt', 'r') as f:
+                self.acc_roll_ofst = float(f.read())
 
         self.calibrate(horizontal)
         read = self.get_reading()
@@ -145,7 +149,7 @@ class IMU(object):
         self.phi_gyro = self.phi
         self.last_read = time.time()
 
-    def calibrate(self, horizontal=False, pitch_horizontal=False):
+    def calibrate(self,horizontal = False, pitch_horizontal = False):
         gx_ofst = 0.0
         gy_ofst = 0.0
         gz_ofst = 0.0
@@ -158,23 +162,35 @@ class IMU(object):
         else:
             calibration_samples = CALIBRATION_SAMPLES
 
-        for i in range(1, calibration_samples + 1):
+        for i in range(1,calibration_samples+1):
             print 'waiting for Calibration'
             read = self.get_reading()
             ang_vel = read[4:7]
             acc = read[1:4]
 
-            gx_ofst += ang_vel[0] / calibration_samples
-            gy_ofst += ang_vel[1] / calibration_samples
-            gz_ofst += ang_vel[2] / calibration_samples
-            ax_ofst += acc[0] / calibration_samples
-            ay_ofst += acc[1] / calibration_samples
-            az_ofst += acc[2] / calibration_samples
+            gx_ofst += ang_vel[0]/calibration_samples
+            gy_ofst += ang_vel[1]/calibration_samples
+            gz_ofst += ang_vel[2]/calibration_samples
+            ax_ofst += acc[0]/calibration_samples
+            ay_ofst += acc[1]/calibration_samples
+            az_ofst += acc[2]/calibration_samples
             time.sleep(0.01)
         self.gx_ofst = gx_ofst
         self.gy_ofst = gy_ofst
         self.gz_ofst = gz_ofst
         print "Gyroscope Calibration finished"
+        if horizontal is True:
+            self.acc_roll_ofst = math.atan2(ay_ofst, math.sqrt(ax_ofst**2 + az_ofst**2))
+            print 'Accelermeter Calibrated, new roll angle offset is', self.acc_roll_ofst
+
+            if pitch_horizontal is True:
+                self.acc_pitch_ofst = math.atan2(ax_ofst, math.sqrt(ay_ofst**2 + az_ofst**2))
+
+            with open('./sensors/Acc_Cali.txt', 'w') as f:
+                f.write(str(self.acc_roll_ofst))
+
+        else:
+            print "Accelermeter not Calibrated, using", self.acc_roll_ofst, "as roll angle offset"
 
     def get_roll_angle(self):
         read = self.get_reading()

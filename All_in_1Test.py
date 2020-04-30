@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-from sensors import Encoder, HallSensor, A_IMU, SafetyStop
+from sensors import Encoder, HallSensor, SafetyStop
 import Adafruit_BBIO.GPIO as GPIO
-
-from actuators import RearMotorDrive, SteeringMotor
-from controller import Controller
+from sensors import IMU as A_IMU
+from actuators import RearMotorDrive
+from actuators import Steering as SteeringMotor
+# from controller import Controller
 from time import sleep
 import time
 # INITIAL_SPEED = 3.9
@@ -51,7 +52,7 @@ class Test(object):
                 time.sleep(0.5)
 
         input1 = raw_input('Press ENTER to start IMU test, move the bike body for the reading!')
-        self.a_imu = A_IMU()
+        self.a_imu = A_IMU(horizontal = False)
         start_time = time.time()
         if not input1:
             for x in range(1,20):

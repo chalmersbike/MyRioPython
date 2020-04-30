@@ -18,6 +18,6 @@ class SafetyStop(object):
             self.ESTOP = False
         else:
             self.ESTOP = True
-        #self.ESTOP = False
+        self.ESTOP = False
 
         return self.ESTOP

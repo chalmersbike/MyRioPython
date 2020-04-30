@@ -735,8 +735,8 @@ class Controller(object):
         # self.steering_rate = self.pid_balance_control_signal
 
         # Chalmers Controller Structure 2 : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
-        # self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 5 - 2.5) * deg2rad * 2 # Potentiometer gives a position reference between -5deg and 5deg
-        self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
+        self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 5 - 2.5) * deg2rad * 3 # Potentiometer gives a position reference between -5deg and 5deg
+        #self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
         self.pid_balance_outerloop.setReference(self.potential)
         self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
         self.pid_balance_control_signal = self.pid_balance.update(states[2])
