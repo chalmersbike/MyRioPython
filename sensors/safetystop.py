@@ -1,20 +1,24 @@
 import math
-
 import Adafruit_BBIO.GPIO as GPIO
 from time import sleep, time
-INPUT_PORT = 'P9_15'
+
 
 class SafetyStop(object):
     ESTOP = False
 
     def __init__(self):
-        GPIO.setup(INPUT_PORT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        #GPIO.setup(INPUT_PORT, GPIO.IN)
-        print "GPIO P3_1 has been configed Pulled UP"
+        GPIO.setup(safetyStop_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        if safetyStop_pullUpDown == 'up':
+            GPIO.setup(safetyStop_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        elif safetyStop_pullUpDown == 'down':
+            GPIO.setup(safetyStop_port, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        else:
+            print "Safety stop : Chosen safety stop pull-up or pull-down type is not valid : %s. Choosing pull-up instead" %(safetyStop_pullUpDown)
+            GPIO.setup(safetyStop_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def button_check(self):
         # If GPIO.input == 0 it means the stop button has been pressed
-        if GPIO.input(INPUT_PORT):
+        if GPIO.input(safetyStop_port):
             self.ESTOP = False
         else:
             self.ESTOP = True

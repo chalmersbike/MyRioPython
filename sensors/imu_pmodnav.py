@@ -5,32 +5,13 @@ import spidev
 import math
 import warnings
 import os
-# from magum import Magum
-
 import time
 
-rad2deg = 180 / 3.1415
-deg2rad = 3.1415 / 180
-h = 0.215  # IMU height
-CALIBRATION_SAMPLES = 500
-COMPLEMENTARY_RATIO = 0.05
-# User-defined variables
-# Gyro
-gyro_range = 245  # [245 , 500 , 2000] deg/s
-gyro_odr = 6  # [0-6]
-# 0 = gyro off    3 = 119Hz    6 = 952Hz
-# 1 = 14.9Hz      4 = 238Hz
-# 2 = 59.5Hz      5 = 476Hz
 
-# Accel
-accel_range = 2  # [2 , 4 , 8 , 16] g
-accel_odr = 6  # [1 - 6]
-# 0 = accel off   3 = 119Hz    6 = 952Hz
-# 1 = 10Hz        4 = 238Hz
-# 2 = 50Hz        5 = 476Hz
-
-
-# Define IMU constants
+########################################################################################################################
+########################################################################################################################
+# IMU registers and acceptable values
+# DO NOT MODIFY
 WHO_AM_I_RG = 0x0F
 WHO_AM_I = 0x68
 CTRL_REG1_G = 0x10
@@ -77,119 +58,112 @@ ODR_ACCELEROMETER_SWITCHER = {
     5: 476,
     6: 952,
 }
+########################################################################################################################
+########################################################################################################################
 
 
 class IMU(object):
-
     def __init__(self, horizontal=False):
         self.spi = spidev.SpiDev()
         self.spi.open(1, 0)
         #self.spi.max_speed_hz = 8000000
         # Get gyro seetings
-        self.gyro_sensitivity = SENSITIVITY_GYROSCOPE_SWITCHER.get(gyro_range, 0.00875)
-        print 'Gyro range : %d deg/s ; Gyro sensitivity : %f (deg/s)/LSB ; Gyro ODR : %.1f Hz' % (
-            gyro_range, self.gyro_sensitivity, ODR_GYROSCOPE_SWITCHER.get(gyro_odr, 0))
+        self.gyro_sensitivity = SENSITIVITY_GYROSCOPE_SWITCHER.get(imu_gyroscopeRange, 0.00875)
+        print 'IMU : Gyro range : %d deg/s ; Gyro sensitivity : %f (deg/s)/LSB ; Gyro ODR : %.1f Hz' % (
+            imu_gyroscopeRange, self.gyro_sensitivity, ODR_GYROSCOPE_SWITCHER.get(imu_gyroscopeODR, 0))
         # Get accel setting
-        self.accel_sensitivity = SENSITIVITY_ACCELEROMETER_SWITCHER.get(accel_range, 0.000061)
-        print 'Accel range : %d g ; Accel sensitivity : %f g/LSB ; Accel ODR : %.1f Hz' % (
-            accel_range, self.accel_sensitivity, ODR_ACCELEROMETER_SWITCHER.get(accel_odr, 0))
+        self.accel_sensitivity = SENSITIVITY_ACCELEROMETER_SWITCHER.get(imu_accelerometerRange, 0.000061)
+        print 'IMU : Accel range : %d g ; Accel sensitivity : %f g/LSB ; Accel ODR : %.1f Hz' % (
+            imu_accelerometerRange, self.accel_sensitivity, ODR_ACCELEROMETER_SWITCHER.get(imu_accelerometerODR, 0))
 
         # Read WHO_AM_I
         who_am_i = self.spi.xfer2([0x80 | WHO_AM_I_RG, 0x00])
         who_am_i = who_am_i[1]
         if who_am_i == WHO_AM_I:
-            print 'WHO_AM_I correctly read !'
+            if debug:
+                print 'IMU : WHO_AM_I correctly read !'
         else:
-            #warnings.warn('WHO_AM_I incorrect !')
-            print 'WHO_AM_I incorrect !'
-            print who_am_i
-            raw_input('SPI failure?')
+            #warnings.warn('IMU : WHO_AM_I incorrect !')
+            print 'IMU : WHO_AM_I incorrect ! Read %s, expected %s' %(hex(who_am_i),hex(WHO_AM_I))
+            raw_input('IMU : SPI failure?')
 
         # Initialize gyro
         gyro_init = 0b00000000
-        gyro_init = gyro_init | (gyro_odr << 5)
-        gyro_init = gyro_init | (SCALE_GYROSCOPE_SWITCHER.get(gyro_range, 0b00) << 3)
+        gyro_init = gyro_init | (imu_gyroscopeODR << 5)
+        gyro_init = gyro_init | (SCALE_GYROSCOPE_SWITCHER.get(imu_gyroscopeRange, 0b00) << 3)
         self.spi.xfer2([CTRL_REG1_G, gyro_init])
         # Verify gyro initialization
         buf = self.spi.xfer2([0x80 | CTRL_REG1_G, 0x00])
         if buf[1] == gyro_init:
-            print 'Gyro correctly initialized !'
+            if debug:
+                print 'IMU : Gyro correctly initialized !'
         else:
-            #warnings.warn('Gyro incorrectly initialized !')
-            print 'Gyro incorrectly initialized !'
-            print buf[1]
-            raw_input('SPI failure?')
+            print 'IMU : Gyro incorrectly initialized !'
+            # print buf[1]
+            # raw_input('IMU : SPI failure?')
 
         # Initialize accel
         accel_init = 0b00000000
-        accel_init = accel_init | (accel_odr << 5)
-        accel_init = accel_init | (SCALE_ACCELEROMETER_SWITCHER.get(accel_range, 0b00) << 3)
+        accel_init = accel_init | (imu_accelerometerODR << 5)
+        accel_init = accel_init | (SCALE_ACCELEROMETER_SWITCHER.get(imu_accelerometerRange, 0b00) << 3)
         self.spi.xfer2([CTRL_REG6_XL, accel_init])
         # Verify accel initialization
         buf = self.spi.xfer2([0x80 | CTRL_REG6_XL, 0x00])
         if buf[1] == accel_init:
-            print 'Accel correctly initialized !'
+            if debug:
+                print 'IMU : Accel correctly initialized !'
         else:
-            print 'Accel incorrectly initialized !'
-        self.gx_ofst = 0.0
-        self.gy_ofst = 0.0
-        self.gz_ofst = 0.0
-        self.acc_roll_ofst = 0.0
+            print 'IMU : Accel incorrectly initialized !'
+            # print buf[1]
+            # raw_input('IMU : SPI failure?')
+
+
+        self.gx_offset = 0.0
+        self.gy_offset = 0.0
+        self.gz_offset = 0.0
+        self.acc_roll_offset = 0.0
 
         self.calibrate(horizontal)
         read = self.get_reading()
         ax = read[1]
         ay = read[2]
         az = read[3]
-        self.phi = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_ofst
+        self.phi = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
         self.phi_gyro = self.phi
         self.last_read = time.time()
 
     def calibrate(self, horizontal=False, pitch_horizontal=False):
-        gx_ofst = 0.0
-        gy_ofst = 0.0
-        gz_ofst = 0.0
-        ax_ofst = 0.0
-        ay_ofst = 0.0
-        az_ofst = 0.0
+        gx_offset = 0.0
+        gy_offset = 0.0
+        gz_offset = 0.0
+        ax_offset = 0.0
+        ay_offset = 0.0
+        az_offset = 0.0
         # More samples for accelermeter calibration
         if horizontal is True:
-            calibration_samples = CALIBRATION_SAMPLES * 4
+            calibration_samples = imu_calibrationSamples * 4
         else:
-            calibration_samples = CALIBRATION_SAMPLES
+            calibration_samples = imu_calibrationSamples
 
         for i in range(1, calibration_samples + 1):
-            print 'waiting for Calibration'
+            if debug:
+                print 'IMU : Waiting for calibration data'
             read = self.get_reading()
             ang_vel = read[4:7]
             acc = read[1:4]
 
-            gx_ofst += ang_vel[0] / calibration_samples
-            gy_ofst += ang_vel[1] / calibration_samples
-            gz_ofst += ang_vel[2] / calibration_samples
-            ax_ofst += acc[0] / calibration_samples
-            ay_ofst += acc[1] / calibration_samples
-            az_ofst += acc[2] / calibration_samples
+            gx_offset += ang_vel[0] / calibration_samples
+            gy_offset += ang_vel[1] / calibration_samples
+            gz_offset += ang_vel[2] / calibration_samples
+            ax_offset += acc[0] / calibration_samples
+            ay_offset += acc[1] / calibration_samples
+            az_offset += acc[2] / calibration_samples
             time.sleep(0.01)
-        self.gx_ofst = gx_ofst
-        self.gy_ofst = gy_ofst
-        self.gz_ofst = gz_ofst
-        print "Gyroscope Calibration finished"
-
-    def get_roll_angle(self):
-        read = self.get_reading()
-        dT = time.time() - self.last_read
-        self.last_read = time.time()
-        gx = read[4]
-        ay = read[2]
-        az = read[3]
-        self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_ofst
-        self.phi = self.phi_acc * COMPLEMENTARY_RATIO + (self.phi + gx * (dT)) * (1 - COMPLEMENTARY_RATIO)
-        self.phi_gyro += dT * gx
-
-    def get_roll_angular_velocity(self):
-        read = self.get_reading()
-        return read[4], read[5], read[6]
+        self.gx_offset = gx_offset
+        self.gy_offset = gy_offset
+        self.gz_offset = gz_offset
+        if debug:
+            print "IMU : Gyroscope calibration finished"
 
     def get_imu_data(self):
         read = self.get_reading()
@@ -201,12 +175,21 @@ class IMU(object):
         gx = read[4]
         gy = read[5]
         gz = read[6]
-        self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_ofst
-        self.phi = self.phi_acc * COMPLEMENTARY_RATIO + (self.phi + gx * (dT)) * (1 - COMPLEMENTARY_RATIO)
+
+        # CP_acc_g = self.CP_comp * ((self.velocity * self.velocity) / b) * math.tan(delta_state * 0.94) * (
+        #         1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
+        # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(self.states[0]), az + CP_acc_g * math.sin(self.states[                                                                                                    0]))  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
+        self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
+
+        self.phi = self.phi_acc * imu_complementaryFilterRatio + (self.phi + gx * (dT)) * (1 - imu_complementaryFilterRatio)
         self.phi_gyro += dT * gx
 
-        # return [phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z, phi_int]
-        return self.phi, self.phi, gx, ax, ay, ay, az, self.phi_gyro
+        # return [phi_comp, phi_gyro, gx (phidot), gy, gz, a_x, ay, a_z]
+        return self.phi, self.phi_gyro, gx, gy, gz, ax, ay, ay, az
+
+
+
+
 
     def get_reading(self):
         # Read data
@@ -234,9 +217,9 @@ class IMU(object):
             gx *= self.gyro_sensitivity * deg2rad
             gy *= self.gyro_sensitivity * deg2rad
             gz *= self.gyro_sensitivity * deg2rad
-            gx -= self.gx_ofst
-            gy -= self.gy_ofst
-            gz -= self.gz_ofst
+            gx -= self.gx_offset
+            gy -= self.gy_offset
+            gz -= self.gz_offset
             # Read accel to buffer
             buf = self.spi.xfer2([0x80 | OUT_X_L_XL, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
             # Calculate accel values from buffer

@@ -3,11 +3,12 @@ import serial
 import math
 import time
 import warnings
-# Select the port
-port = "/dev/ttyO1"
 
-# Select the sampling time
-samplingTime = 0.1  # secs
+
+########################################################################################################################
+########################################################################################################################
+# GPS predefined messages
+# DO NOT MODIFY
 
 # Define the PMTK configurations strings to send to the GPS according to the NMEA PMTK protocol
 # PMTK Packet User Manual       : https://cdn.sparkfun.com/assets/parts/1/2/2/8/0/PMTK_Packet_User_Manual.pdf
@@ -44,30 +45,73 @@ PMTK_AWAKE           = "$PMTK010,002*2D"   # Wake up
 PGCMD_ANTENNA   = "$PGCMD,33,1*6C" # request for updates on antenna status
 PGCMD_NOANTENNA = "$PGCMD,33,0*6D" # don't show antenna status messages
 
-R = 6371000 # Meters
-deg2rad = math.pi / 180
+########################################################################################################################
+########################################################################################################################
+
+
 
 class GPS(object):
-
     def __init__(self):
         # Open the serial connection at the default baudrate of 9600
-        self.ser1 = serial.Serial(port, 9600, timeout=1000)
+        self.ser_gps = serial.Serial(gps_port, 9600, timeout=1000)
 
-        # Change the baud rate to 115200 bps
-        self.ser1.write(PMTK_SET_BAUD_115200 + "\r\n")
+        if gps_baudrate == 115200:
+            # Change the baud rate to 115200 bps
+            self.ser_gps.write(PMTK_SET_BAUD_115200 + "\r\n")
+        elif gps_baudrate == 57600:
+            # Change the baud rate to 57600 bps
+            self.ser_gps.write(PMTK_SET_BAUD_57600 + "\r\n")
+        elif gps_baudrate == 9600:
+            # Change the baud rate to 9600 bps
+            self.ser_gps.write(PMTK_SET_BAUD_9600 + "\r\n")
+        else:
+            print "GPS : Chosen GPS baudrate is not valid : %i. Choosing 115200 instead" %(gps_baudrate)
+            # Change the baud rate to 115200 bps
+            self.ser_gps.write(PMTK_SET_BAUD_115200 + "\r\n")
 
         # Restart the serial connection
-        self.ser1.close()
-        self.ser1 = serial.Serial(port, 115200, timeout=1000)
+        self.ser_gps.close()
+        self.ser_gps = serial.Serial(gps_port, gps_baudrate, timeout=1000)
 
         # Choose the type of the GPS data output
-        # self.ser1.write(PMTK_SET_NMEA_OUTPUT_RMCGGA+ "\r\n")   # turn on GPRMC and GPGGA
-        self.ser1.write(PMTK_SET_NMEA_OUTPUT_RMCONLY + "\r\n") # turn on only the GPRMC sentence
+        if gps_typeOutputData == 'RMCGGA':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_RMCGGA + "\r\n")    # turn on GPRMC and GPGGA
+        elif gps_typeOutputData == 'RMCONLY':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_RMCONLY + "\r\n")   # turn on only the GPRMC sentence
+        elif gps_typeOutputData == 'ALLDATA':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_ALLDATA + "\r\n")   # turn on ALL THE DATA
+        elif gps_typeOutputData == 'OFF':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_OFF + "\r\n")       # turn off output
+        elif gps_typeOutputData == 'GLLONLY':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_GLLONLY + "\r\n")   # turn on only the GPGLL sentence
+        elif gps_typeOutputData == 'VTGONLY':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_VTGONLY + "\r\n")   # turn on only the GPVTG
+        elif gps_typeOutputData == 'GGAONLY':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_GGAONLY + "\r\n")   # turn on just the GPGGA
+        elif gps_typeOutputData == 'GSAONLY':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_GSAONLY + "\r\n")   # turn on just the GPGSA
+        elif gps_typeOutputData == 'GSVONLY':
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_GSVONLY + "\r\n")   # turn on just the GPGSV
+        else:
+            print "GPS : Chosen GPS output data type is not valid : %s. Choosing RMCONLY instead" %(gps_typeOutputData)
+            self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_RMCONLY + "\r\n")  # turn on only the GPRMC sentence
 
         # Choose the frequency of the GPS data output
-        self.ser1.write(PMTK_SET_NMEA_UPDATE_10HZ + "\r\n") # select a 5Hz output rate
-        self.ser1.flush()
+        if gps_dataUpdateRate == 1:
+            self.ser_gps.write(PMTK_SET_NMEA_UPDATE_1HZ + "\r\n")  # select a 1Hz output rate
+        elif gps_dataUpdateRate == 2:
+            self.ser_gps.write(PMTK_SET_NMEA_UPDATE_2HZ + "\r\n")  # select a 2Hz output rate
+        elif gps_dataUpdateRate == 5:
+            self.ser_gps.write(PMTK_SET_NMEA_UPDATE_5HZ + "\r\n")  # select a 5Hz output rate
+        elif gps_dataUpdateRate == 10:
+            self.ser_gps.write(PMTK_SET_NMEA_UPDATE_10HZ + "\r\n")  # select a 10Hz output rate
+        else:
+            print "GPS : Chosen GPS data update rate is not valid : %iHz. Choosing 10Hz instead" %(gps_dataUpdateRate)
+            self.ser_gps.write(PMTK_SET_NMEA_UPDATE_10HZ + "\r\n")  # select a 10Hz output rate
 
+        self.ser_gps.flush()
+
+        # Initialize variables
         self.latitude = 0
         self.longitude = 0
         self.found_satellite = 1
@@ -81,7 +125,8 @@ class GPS(object):
         self.lat_ini, self.lon_ini = self.get_latlon()
         self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
         self.y0 = R * self.lat_ini * deg2rad
-        print 'GPS initialized, obtained initial latitude and longitude'
+        if debug:
+            print 'GPS : GPS initialized, obtained initial latitude and longitude'
 
     def get_position(self):
         lat, lon = self.get_latlon()
@@ -91,12 +136,12 @@ class GPS(object):
             self.dx = self.x - self.x0
             self.dy = self.y - self.y0
         else:
-            print warnings.warn("No Satelite found !")
+            print warnings.warn("GPS : No Satelite found !")
         return self.dx, self.dy
 
 
     def get_latlon(self):
-        readall = self.ser1.readline().split('\r\n')  # Read data from the GPS
+        readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
         # print 'Communication costs ' + str(ReadFintime-starttime) # print communication time
 
         print readall
@@ -118,7 +163,7 @@ class GPS(object):
             self.latitude = int(self.latitude / 100) + (self.latitude % 100) / 60
             self.longitude = int(self.longitude / 100) + (self.longitude % 100) / 60
         else:
-            print 'No available Satelites, automatically set longitude and latitude to be ZERO \n Wait for a while or CHANGE your POSITION'
+            print 'GPS : No available Satelites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION'
             self.latitude = 0
             self.longitude = 0
             self.found_satellite = 0
@@ -211,6 +256,7 @@ class GPS(object):
             self.Units2 = vtg[8]
             self.Mode = vtg[9]
         else:
-            print "Bad GPS data"
-            #print "Exception happens"
-            #print line
+            if debug:
+                print "GPS : Bad GPS data"
+                #print "GPS : Exception happens"
+                #print line

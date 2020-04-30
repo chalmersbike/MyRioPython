@@ -6,7 +6,7 @@ from actuators import RearMotorDrive, SteeringMotor
 from controller import Controller
 from time import sleep
 import time
-# INITIAL_SPEED = 3.9
+# initial_speed = 3.9
 class Test(object):
     def __init__(self):
         self.safety_stop = SafetyStop()
