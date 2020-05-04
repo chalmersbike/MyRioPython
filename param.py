@@ -7,9 +7,13 @@ balancing_controller_structure = 'technion'     # Choice of the balancing contro
                                                     # Chalmers Controller structure : deltadot = PID(phidot)
                                                     # Technion Controller Structure : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
                                                     # MDH Controller structure : delta = PID(phi) ; deltadot = PID(delta)
-path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
+
 controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
+
+path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
+lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
+heading_controller = 0                          # 1 = use heading controller ; 0 = do not use heading controller
 
 initial_speed = 4       # [m/s] Forward speed of the bike
 

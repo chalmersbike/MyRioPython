@@ -178,7 +178,7 @@ class IMU(object):
 
         # CP_acc_g = self.CP_comp * ((self.velocity * self.velocity) / b) * math.tan(delta_state * 0.94) * (
         #         1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
-        # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(self.states[0]), az + CP_acc_g * math.sin(self.states[                                                                                                    0]))  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
+        # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(self.states[0]), az + CP_acc_g * math.sin(self.states[0]))  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
         self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
 
         self.phi = self.phi_acc * imu_complementaryFilterRatio + (self.phi + gx * (dT)) * (1 - imu_complementaryFilterRatio)
@@ -194,54 +194,53 @@ class IMU(object):
     def get_reading(self):
         # Read data
         # for i in range(0,255):
-        for i in range(0, 20):
-            # Get time
-            time_loop = time.time()
+        # for i in range(0, 20):
+        # Get time
+        time_loop = time.time()
 
-            # Read gyro to buffer
-            buf = self.spi.xfer2([0x80 | OUT_X_L_G, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
-            # Calculate gyro values from buffer
-            gx = (buf[2] << 8) | buf[1]
-            gy = (buf[4] << 8) | buf[3]
-            gz = (buf[6] << 8) | buf[5]
-            # Apply two's complement
-            if (gx & (1 << (16 - 1))) != 0:
-                gx -= (1 << 16)
-            if (gy & (1 << (16 - 1))) != 0:
-                gy -= (1 << 16)
-            if (gz & (1 << (16 - 1))) != 0:
-                gz -= (1 << 16)
-            # the PmodNav is left-axised. the IMU x,y heading has been invertedly installed
-            gx = -gx
+        # Read gyro to buffer
+        buf = self.spi.xfer2([0x80 | OUT_X_L_G, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+        # Calculate gyro values from buffer
+        gx = (buf[2] << 8) | buf[1]
+        gy = (buf[4] << 8) | buf[3]
+        gz = (buf[6] << 8) | buf[5]
+        # Apply two's complement
+        if (gx & (1 << (16 - 1))) != 0:
+            gx -= (1 << 16)
+        if (gy & (1 << (16 - 1))) != 0:
+            gy -= (1 << 16)
+        if (gz & (1 << (16 - 1))) != 0:
+            gz -= (1 << 16)
+        # the PmodNav is left-axised. the IMU x,y heading has been invertedly installed
+        gx = -gx
 
-            gx *= self.gyro_sensitivity * deg2rad
-            gy *= self.gyro_sensitivity * deg2rad
-            gz *= self.gyro_sensitivity * deg2rad
-            gx -= self.gx_offset
-            gy -= self.gy_offset
-            gz -= self.gz_offset
-            # Read accel to buffer
-            buf = self.spi.xfer2([0x80 | OUT_X_L_XL, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
-            # Calculate accel values from buffer
-            ax = (buf[2] << 8) | buf[1]
-            ay = (buf[4] << 8) | buf[3]
-            az = (buf[6] << 8) | buf[5]
-            # Apply two's complement
-            if (ax & (1 << (16 - 1))) != 0:
-                ax -= (1 << 16)
-            if (ay & (1 << (16 - 1))) != 0:
-                ay -= (1 << 16)
-            if (az & (1 << (16 - 1))) != 0:
-                az -= (1 << 16)
-            # the PmodNav is left-axised. the IMU x,y heading has been invertedly installed
-            ax = -ax
-            ax *= self.accel_sensitivity
-            ay *= self.accel_sensitivity
-            az *= self.accel_sensitivity
+        gx *= self.gyro_sensitivity * deg2rad
+        gy *= self.gyro_sensitivity * deg2rad
+        gz *= self.gyro_sensitivity * deg2rad
+        gx -= self.gx_offset
+        gy -= self.gy_offset
+        gz -= self.gz_offset
+        # Read accel to buffer
+        buf = self.spi.xfer2([0x80 | OUT_X_L_XL, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+        # Calculate accel values from buffer
+        ax = (buf[2] << 8) | buf[1]
+        ay = (buf[4] << 8) | buf[3]
+        az = (buf[6] << 8) | buf[5]
+        # Apply two's complement
+        if (ax & (1 << (16 - 1))) != 0:
+            ax -= (1 << 16)
+        if (ay & (1 << (16 - 1))) != 0:
+            ay -= (1 << 16)
+        if (az & (1 << (16 - 1))) != 0:
+            az -= (1 << 16)
+        # the PmodNav is left-axised. the IMU x,y heading has been invertedly installed
+        ax = -ax
+        ax *= self.accel_sensitivity
+        ay *= self.accel_sensitivity
+        az *= self.accel_sensitivity
 
-            # Print data
-            # print 'i = %d ; t = %f ; ax = %f ; ay = %f ; az = %f ; gx = %f ; gy = %f ; gz = %f' % (
-            # i, time.time() - time_loop, ax, ay, az, gx, gy, gz)
+        # Print data
+        # print 'i = %d ; t = %f ; ax = %f ; ay = %f ; az = %f ; gx = %f ; gy = %f ; gz = %f' % (
+        # i, time.time() - time_loop, ax, ay, az, gx, gy, gz)
 
-            return time.time() - time_loop, ax, ay, az, gx, gy, gz
-
+        return time.time() - time_loop, ax, ay, az, gx, gy, gz

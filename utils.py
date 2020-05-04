@@ -147,7 +147,7 @@ def generate_straight_path():
     return x_ref, y_ref
 
 
-def calculate__path_error(path_type, distance_travelled, x, y, psi, path_radius):
+def calculate_path_error(path_type, distance_travelled, x, y, psi, path_radius):
     """
     This function corresponds to the following blocks in Simulink model:
         Reference Position and Direction in Global CS with variable Look Ahead
@@ -167,6 +167,34 @@ def calculate__path_error(path_type, distance_travelled, x, y, psi, path_radius)
         lateral_error = y
         angular_error = psi
         return lateral_error, angular_error, 0.0
+
+    # Choice of path, variable path_choice is set in param.py file
+    if path_choice == 'pot':
+        # Position reference from potentiometer
+        if potentiometer_use:
+            self.potential = ((
+                                          self.bike.potent.read_pot_value() / 0.29) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
+        else:
+            self.potential = 0
+        self.pos_ref = self.potential
+    elif path_choice == 'sine':
+        # Position reference is a sine wave
+        # Frequency is path_sine_freq
+        # Amplitude is path_sine_amp
+        self.pos_ref = path_sine_amp * math.sin(self.time_count * 2 * math.pi * path_sine_freq)
+    elif path_choice == 'overtaking':
+        # Position reference is an overtaking (set parameters in param.py file)
+        # All sections going straight last time_path_stay
+        # All inclined sections last time_path_slope
+        # Slope of the inclined sections is slope
+        self.pos_ref = slope * (self.time_count - time_path_stay) * (
+                time_path_stay < self.time_count < (time_path_stay + time_path_slope)) \
+                       + slope * time_path_slope * ((time_path_stay + time_path_slope) < self.time_count < (
+                2 * time_path_stay + time_path_slope)) \
+                       + (slope * time_path_slope - slope * (
+                self.time_count - (2 * time_path_stay + time_path_slope))) * (
+                               (2 * time_path_stay + time_path_slope) < self.time_count < (
+                               2 * time_path_stay + 2 * time_path_slope))
 
 
 ########################################################################################################################

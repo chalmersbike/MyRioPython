@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-from sensors import Encoder, HallSensor, A_IMU, SafetyStop
+from sensors import Encoder, HallSensor, SafetyStop
 import Adafruit_BBIO.GPIO as GPIO
-
-from actuators import RearMotorDrive, SteeringMotor
-from controller import Controller
+from sensors import IMU
+from actuators import RearMotorDrive
+from actuators import Steering as SteeringMotor
 from time import sleep
 import time
-# initial_speed = 3.9
+# INITIAL_SPEED = 3.9
 class Test(object):
     def __init__(self):
         self.safety_stop = SafetyStop()
@@ -14,11 +14,11 @@ class Test(object):
         ESign = self.safety_stop.button_check()
         while not ESign:
 
-            print 'The EStop was not pressed!'
+            print('The EStop was not pressed!')
             time.sleep(0.5)
             ESign = self.safety_stop.button_check()
         if ESign:
-            print 'Estop detected, please reset it if you want to test the motors'
+            print('Estop detected, please reset it if you want to test the motors')
 
         input1 = raw_input('Press ENTER or #sample to start hallsensor test,rotate the rear wheel for the reading!')
 
@@ -26,49 +26,49 @@ class Test(object):
         start_time = time.time()
         if not input1:
             for x in range(1,20):
-                print 'Time=%f\t Vel = %f\n' % (time.time()-start_time,self.hall_sensor.get_velocity())
+                print('Time=%f\t Vel = %f\n' % (time.time()-start_time,self.hall_sensor.get_velocity()))
                 time.sleep(0.5)
         else:
             for x in range(1,int(input1)):
 
-                print 'Time=%f\t Vel = %f\n' % (time.time()-start_time, self.hall_sensor.get_velocity())
+                print('Time=%f\t Vel = %f\n' % (time.time()-start_time, self.hall_sensor.get_velocity()))
                 time.sleep(0.5)
 
 
         input1 = raw_input('Press ENTER to start Encoder test,rotate the handle bar for the reading!')
         self.encoder = Encoder()
         start_time = time.time()
-        print 'ENCODER FREQNECY = %f \n' % (self.encoder.encoder.frequency)
+        print('ENCODER FREQNECY = %f \n' % (self.encoder.encoder.frequency))
         if not input1:
             for x in range(1,20):
-                print 'Time=%f\t delta = %f\n' % (time.time() - start_time, 57.29577*self.encoder.get_angle())
+                print('Time=%f\t delta = %f\n' % (time.time() - start_time, 57.29577*self.encoder.get_angle()))
 
                 time.sleep(0.5)
         else:
             for x in range(1,int(input1)):
                 # print self.encoder.get_angle()
-                print 'Time=%f\t delta = %f\n' % (time.time() - start_time, 57.29577 * self.encoder.get_angle())
+                print('Time=%f\t delta = %f\n' % (time.time() - start_time, 57.29577 * self.encoder.get_angle()))
                 time.sleep(0.5)
 
         input1 = raw_input('Press ENTER to start IMU test, move the bike body for the reading!')
-        self.a_imu = A_IMU()
+        self.imu = IMU(horizontal = False)
         start_time = time.time()
         if not input1:
             for x in range(1,20):
-                self.imudata = self.a_imu.get_imu_data()
-                print 'Time=%f\t'% (time.time() - start_time)
+                self.imudata = self.imu.get_imu_data()
+                print('Time=%f\t'% (time.time() - start_time))
                 print(self.imudata)
                 # print(self.imudata)
                 time.sleep(0.5)
         else:
             for x in range(1,int(input1)):
                 # self.bike.get_imu_data()
-                self.imudata = self.a_imu.get_imu_data()
-                print 'Time=%g\t'% (time.time() - start_time)
+                self.imudata = self.imu.get_imu_data()
+                print('Time=%g\t'% (time.time() - start_time))
                 # print(self.imudata)
-                print 'Phi_CompFilter_RollAccComp=%g\tPhi_CompFilter = %g\tGyroX = %g\tAccX = %g\tAyRollComp = %g\tAy = %g\tAz = %g\tGyroIntg = %g\t' % (
+                print('Phi_CompFilter_RollAccComp=%g\tPhi_CompFilter = %g\tGyroX = %g\tAccX = %g\tAyRollComp = %g\tAy = %g\tAz = %g\tGyroIntg = %g\t' % (
                     self.imudata[0], self.imudata[1], self.imudata[2], self.imudata[3],
-                    self.imudata[4], self.imudata[5], self.imudata[6], self.imudata[7])
+                    self.imudata[4], self.imudata[5], self.imudata[6], self.imudata[7]))
 
                 time.sleep(0.5)
 
@@ -78,7 +78,7 @@ class Test(object):
             input1 = raw_input('enter a velocity between 1-3.9, the test will last 30 secs')
             self.rear_motor = RearMotorDrive()
             if not input1:
-                print 'Press enter to exit'
+                print('Press enter to exit')
                 exit()
             elif float(input1) >1 and  float(input1) < 10:
                 input_velocity = float(input1)
@@ -88,9 +88,9 @@ class Test(object):
                 time_now = start_time
                 while time_now  - start_time < 30:
                     time_now = time.time()
-                    self.imudata = self.a_imu.get_imu_data()
-                    print 'Time=%f\tVel = %f\tphi = %f\tdelta = %f\t' % (
-                    time_now - start_time, self.hall_sensor.get_velocity(), 57.29577 *self.imudata[0], 57.29577 *  self.encoder.get_angle())
+                    self.imudata = self.imu.get_imu_data()
+                    print('Time=%f\tVel = %f\tphi = %f\tdelta = %f\t' % (
+                    time_now - start_time, self.hall_sensor.get_velocity(), 57.29577 *self.imudata[0], 57.29577 *  self.encoder.get_angle()))
                     # Without IMU Reading
                     # print 'Time=%f\tVel = %f\tdelta = %f\tCurrent = %f\tRPM = %f\t' % (
                     #     time_now - start_time, self.hall_sensor.get_velocity(),
@@ -99,14 +99,14 @@ class Test(object):
 
                     if self.safety_stop.button_check():
                         self.rear_motor.stop()
-                        print 'Emergency Enabled'
+                        print('Emergency Enabled')
                         exit()
                         break
                     time.sleep(0.1)
                 self.rear_motor.stop()
 
-                print 'Now all tests has been done, except the steering motor, please do it carefully by running the easy_start and disconnect the rear motor'
+                print('Now all tests has been done, except the steering motor, please do it carefully by running the easy_start and disconnect the rear motor')
             else:
-                print 'Test Finished'
+                print('Test Finished')
         else:
-            print 'It is done, the process will be killed, GOOD LUCK!'
+            print('It is done, the process will be killed, GOOD LUCK!')

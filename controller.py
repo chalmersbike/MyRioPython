@@ -39,9 +39,7 @@ class Controller(object):
 
         # Let the bike get to speed
         self.gaining_speed_start = time.time()
-
         self.bike.set_velocity(initial_speed)
-
         while self.time_count < speed_up_time:
             start_time_current_loop = time.time()
             self.ESTOP = self.bike.emergency_stop_check()
@@ -304,6 +302,9 @@ class Controller(object):
         self.pid_steeringangle.setSampleTime(pid_steeringangle_sample_time)
         self.pid_steeringangle.setReference(0.0)
         self.pid_steeringangle_control_signal = 0.0  # This signal is called "Delta Reference" in Simulink.
+
+        self.balancing_setpoint = 0
+
         # Global Angles and Coordinates
         self.psi = 0.0
         self.nu = 0.0
@@ -339,49 +340,32 @@ class Controller(object):
     ####################################################################################################################
     ####################################################################################################################
     # Get bike states references
-    def get_state_references(self, velocity):
-        if PATH_TYPE == 'CIRCLE' or PATH_TYPE == 'STRAIGHT':
-            lateral_error, angular_error, psi_ref = calculate__path_error(PATH_TYPE, self.distance_travelled, self.x,
+    def get_balancing_setpoint(self, velocity):
+        if path_tracking:
+            if gps_use:
+                # We are outside so we get the lateral and angular errors from GPS measurements
+                lateral_error, angular_error, psi_ref = calculate_path_error(PATH_TYPE, self.distance_travelled, self.x,
                                                                           self.y, self.psi, PATH_RADIUS)
+            elif laserRanger_use:
+                # We are on the roller so we neglect the angular error and the lateral error is given by the position
+                # measured by the laser rangers
+                lateral_error = self.y_laser_ranger
+                angular_error = 0
+            else:
+                lateral_error = 0
+                angular_error = 0
+                
+            # PID Lateral Position Controller
+            self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-lateral_error)
 
-            # lateral_error = self.y_laser_ranger
+            # PID Direction/Heading Controller
+            self.pid_direction_control_signal = self.pid_direction.update(-angular_error)
 
-            # PID Control Lateral Position Block in Simulink
-            self.pid_lateral_position_control_signal = self.pid_lateral_position.update(
-                lateral_error)  # Negative input due to PID code. See initiliazation for more info.
-            # self.pid_lateral_position_control_signal = self.pid_lateral_position.update(
-            #    lateral_error)  # Negative input due to PID code. See initiliazation for more info.
-
-            # PID Control Direction Block in Simulink
-            self.pid_direction_control_signal = self.pid_direction.update(
-                -(-self.pid_lateral_position_control_signal + psi_ref - self.nu))  # Negative input due to PID code.
-            # self.pid_direction_control_signal = self.pid_direction.update(
-            #    (-self.pid_lateral_position_control_signal + psi_ref - self.nu))  # Negative input due to PID code.
-
-            # PID Control Steering Block in Simulink
-            self.pid_steering_control_signal = self.pid_steering.update(
-                -(self.pid_direction_control_signal - self.states[1]))
-            # self.pid_steering_control_signal = self.pid_steering.update(
-            #    (self.pid_direction_control_signal - self.states[1]))
-
-            delta_ref = self.pid_steering_control_signal
-            phi_ref = -math.atan(((np.power(velocity, 2) / (GRAVITY * LENGTH_B)) * delta_ref))
-
-            # print('lateral_error = ' + str(lateral_error) + ' ; angular_error = ' + str(angular_error) + ' ; psi_ref = ' + str(delta_ref) + ' ; psi_ref = ' + str(delta_ref) + ' ; pid_lateral_position_control_signal = ' + str(self.pid_lateral_position_control_signal) + str(psi_ref) + ' ; pid_direction_control_signal = ' + str(self.pid_direction_control_signal) + ' ; pid_steering_control_signal = ' + str(self.pid_steering_control_signal ))
+            # Parallel path tracking controller structure
+            balancing_setpoint = self.pid_lateral_position_control_signal + self.pid_direction_control_signal
         else:
-            # delta_ref = ((self.bike.potent.read_pot_value()/0.29)*5 - 2.5) * deg2rad *2
-            delta_ref = 0.0
-            phi_ref = 0.0
-        # v = self.velocity
-        # phi = phi_ref
-        # delta = delta_ref
-        # Phi_dot = 0.0
-        # if v < 2:
-        #     v = 2
-        # self.x1ref = (num11 * v ** 2 * delta + num12 * phi + num13 * v * Phi_dot) / (den11 * v + den12 * v ** 3)
-        # self.x2ref = (num21 * v * delta + num22 * v * phi - num23 * Phi_dot) / (den21 * v + den22 * v ** 3)
-        self.delta_ref = delta_ref
-        return [phi_ref, delta_ref, 0.0]
+            balancing_setpoint = 0
+        return balancing_setpoint
 
 
     ####################################################################################################################
@@ -506,36 +490,33 @@ class Controller(object):
                                            (2 * time_path_stay + time_path_slope) < self.time_count < (
                                                2 * time_path_stay + 2 * time_path_slope))
             self.pid_lateral_position.setReference(self.pos_ref)
+            self.balancing_setpoint = self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
+        elif potentiometer_use:
+            self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 2.5 - 1.25) * deg2rad * 2  # Potentiometer gives a position reference between -2.5deg and 2.5deg
+            self.balancing_setpoint = self.potential
+        else:
+            self.balancing_setpoint = 0
 
         if balancing_controller_structure == 'chalmers':
             # Chalmers Controller structure : deltadot = PID(phidot)
+            self.pid_balance.setReference(self.balancing_setpoint)
             self.pid_balance_control_signal = self.pid_balance.update(states[2])
             self.steering_rate = self.pid_balance_control_signal
         elif balancing_controller_structure == 'technion':
             # Technion Controller Structure : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
-            if path_tracking:
-                self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
-            else:
-                if potentiometer_use:
-                    self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 2.5 - 1.25) * deg2rad * 2  # Potentiometer gives a position reference between -2.5deg and 2.5deg
-                else:
-                    self.potential = 0
-                self.pid_balance_outerloop.setReference(self.potential)
+            self.pid_balance_outerloop.setReference(self.balancing_setpoint)
             self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
             self.pid_balance_control_signal = self.pid_balance.update(states[2])
             self.steering_rate = self.pid_balance_control_signal
         elif balancing_controller_structure == 'mdh':
             # MDH Controller structure : delta = PID(phi) ; deltadot = PID(delta)
+            self.pid_balance.setReference(self.balancing_setpoint)
             self.pid_balance_control_signal = self.pid_balance.update(states[0])
             self.steering_rate = self.pos2vel(self.pid_balance_control_signal)
         else:
             print("Bike controller structure choice is not valid : \"%s\"; Using Technion's structure as default.\n" % (balancing_controller_structure))
             # Technion Controller Structure : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
-            if potentiometer_use:
-                self.potential = -((self.bike.potent.read_pot_value() / 0.29) * 2.5 - 1.25) * deg2rad * 2  # Potentiometer gives a position reference between -2.5deg and 2.5deg
-            else:
-                self.potential = 0
-            self.pid_balance_outerloop.setReference(self.potential)
+            self.pid_balance_outerloop.setReference(self.balancing_setpoint)
             self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
             self.pid_balance_control_signal = self.pid_balance.update(states[2])
             self.steering_rate = self.pid_balance_control_signal
