@@ -171,7 +171,7 @@ class IMU(object):
         # Accelerometer calibration
         if horizontal is True:
             self.acc_roll_offset = math.atan2(ay_offset, math.sqrt(ax_offset**2 + az_offset**2))
-            print('Accelerometer Calibrated, new roll angle offset is ', self.acc_roll_offset)
+            print('Accelerometer Calibrated, new roll angle offset is %.5f' %(self.acc_roll_offset))
 
             if pitch_horizontal is True:
                 self.acc_pitch_offset = math.atan2(ax_offset, math.sqrt(ay_offset**2 + az_offset**2))
@@ -179,7 +179,7 @@ class IMU(object):
             with open('./sensors/Acc_Cali.txt', 'w') as f:
                 f.write(str(self.acc_roll_offset))
         else:
-            print("Accelerometer not Calibrated, using ", self.acc_roll_offset, " as roll angle offset")
+            print('Accelerometer not Calibrated, using %.5f as roll angle offset' %(self.acc_roll_offset))
 
     def get_imu_data(self):
         read = self.get_reading()
