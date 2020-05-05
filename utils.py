@@ -130,7 +130,6 @@ def global_angles_and_coordinates(velocity, time_constant, length_a, length_b, s
     y_dot = velocity * math.sin(nu)
     y += y_dot * time_constant
 
-    print 'x = ' + str(x) + ' ; y = ' + str(y) + ' ; nu = ' + str(nu) + ' ; psi = ' + str(psi)
     return x, y, psi, nu
 
 

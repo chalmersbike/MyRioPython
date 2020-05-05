@@ -139,18 +139,22 @@ class Controller(object):
         self.pid_balance_outerloop.clear()
         self.pid_steeringangle.clear()
         self.pid_lateral_position.clear()
-        self.pid_direction_position.clear()
+        self.pid_direction.clear()
 
-        time_start_run = time.time()
+        self.gaining_speed_start = time.time()
 
-        while self.controller_active:
+        while self.controller_active or not self.gainingSpeedOver_flag:
             time_start_current_loop = time.time()
 
             try:
 
                 # Get states and calculate state_references
                 self.velocity = self.bike.get_velocity()
+
+                self.time_get_states = time.time()
                 self.states_and_extra_data = self.get_states()
+                self.time_get_states = time.time() - self.time_get_states
+
                 self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
                 self.extra_data = self.states_and_extra_data[3][:]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
                 self.sensor_reading_time = time.time() - time_start_current_loop
@@ -179,12 +183,12 @@ class Controller(object):
                 self.sensor_reading_time = time.time() - time_start_current_loop
 
 
-                if (time.time() - time_start_run < speed_up_time) and not gainingSpeedOver_flag:
+                if (self.time_count < speed_up_time) and not self.gainingSpeedOver_flag:
                     # Do not start controllers until bike ran for enough time to get up to speed
                     print('Gaining speed ...')
-                elif (time.time() - time_start_run >= speed_up_time) and not gainingSpeedOver_flag:
+                elif (self.time_count >= speed_up_time) and not self.gainingSpeedOver_flag:
                     # Once enough time has passed, start controller
-                    gainingSpeedOver_flag = true
+                    self.gainingSpeedOver_flag = True
 
                     self.controller_active = True
 
@@ -194,7 +198,7 @@ class Controller(object):
                     self.pid_balance_outerloop.clear()
                     self.pid_steeringangle.clear()
                     self.pid_lateral_position.clear()
-                    self.pid_direction_position.clear()
+                    self.pid_direction.clear()
 
                     # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
                     # TO DO : CHECK WHY THIS HAPPENS !
@@ -264,8 +268,7 @@ class Controller(object):
     # Initialize bike variables
     def variable_init(self):
         # Gaining speed
-        gainingSpeedOver_flag = false
-        time_start_run = 0.0
+        self.gainingSpeedOver_flag = False
 
         # Bike
         self.time_count = 0.0
