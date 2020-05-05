@@ -22,6 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from param import *
 import time
 from ctypes import *
 import smbus

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+from param import *
 from sensors import Encoder, HallSensor, SafetyStop
 import Adafruit_BBIO.GPIO as GPIO
 from sensors import IMU
-from actuators import RearMotorDrive
-from actuators import Steering as SteeringMotor
+from actuators import DriveMotor, SteeringMotor
 from time import sleep
 import time
 # INITIAL_SPEED = 3.9

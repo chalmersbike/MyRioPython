@@ -1,3 +1,4 @@
+from param import *
 import serial, time, numpy
 import Adafruit_BBIO.UART as UART
 import Adafruit_BBIO.ADC as ADC

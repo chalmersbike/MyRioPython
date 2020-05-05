@@ -1,5 +1,7 @@
 from math import pi as PI
 import numpy as np
+from param import initial_speed, controller_frequency
+
 
 ########################################################################################################################
 # Bike Parameters

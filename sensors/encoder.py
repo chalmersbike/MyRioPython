@@ -1,3 +1,4 @@
+from param import *
 import math
 import time
 

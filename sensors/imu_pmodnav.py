@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+from param import *
 import time
 import spidev
 import math

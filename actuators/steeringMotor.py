@@ -1,3 +1,4 @@
+from param import *
 import serial, time
 import Adafruit_BBIO.PWM as PWM
 import time

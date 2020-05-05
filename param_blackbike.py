@@ -1,5 +1,7 @@
 from math import pi as PI
 import numpy as np
+from param import initial_speed, controller_frequency
+
 
 ########################################################################################################################
 # Bike Parameters
@@ -141,7 +143,7 @@ pid_velocity_reference = initial_speed  # m/s
 pid_velocity_P = 3.0
 pid_velocity_I = 0.01
 pid_velocity_D = 0.0
-pid_velocity_sample_time = 1.0 / CONTROLLER_FREQUENCY
+pid_velocity_sample_time = 1.0 / controller_frequency
 
 
 ########################################################################################################################
@@ -151,13 +153,13 @@ pid_steering_reference = 0.0  # PID code uses constant reference setpoint and fe
 pid_steering_P = 10.0
 pid_steering_I = 10.0
 pid_steering_D = 0.0
-pid_steering_sample_time = 1.0 / CONTROLLER_FREQUENCY
+pid_steering_sample_time = 1.0 / controller_frequency
 
 # STEERING ANGLE CONTROL
 pid_steeringangle_P = 20.0
 pid_steeringangle_I = 0.0
 pid_steeringangle_D = 0.0
-pid_steeringangle_sample_time = 1.0 / CONTROLLER_FREQUENCY
+pid_steeringangle_sample_time = 1.0 / controller_frequency
 
 
 ########################################################################################################################
@@ -167,14 +169,14 @@ pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink e
 pid_balance_P = 1.57
 pid_balance_I = 0.0
 pid_balance_D = 0.0
-pid_balance_sample_time = 1.0 / CONTROLLER_FREQUENCY
+pid_balance_sample_time = 1.0 / controller_frequency
 
 # PID Balance Outer Loop Controller Parameters
 pid_balance_outerloop_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 pid_balance_outerloop_P = 0.57
 pid_balance_outerloop_I = 0.0
 pid_balance_outerloop_D = 0.0
-pid_balance_outerloop_sample_time = 1.0 / CONTROLLER_FREQUENCY
+pid_balance_outerloop_sample_time = 1.0 / controller_frequency
 
 
 ########################################################################################################################
@@ -196,11 +198,11 @@ pid_lateral_position_reference = 0.0  # error = Reference - feedback_value. In S
 pid_lateral_position_P = 0.2
 pid_lateral_position_I = 0.0
 pid_lateral_position_D = 0.0
-pid_lateral_position_sample_time = 1.0 / CONTROLLER_FREQUENCY
+pid_lateral_position_sample_time = 1.0 / controller_frequency
 
 # PID Direction Controller Parameters
 pid_direction_reference = 0.0  # PID code uses constant reference setpoint and feedback. Since this controller doesn't have a constant setpoint, we only use the feedback value.
 pid_direction_P = 0.8
 pid_direction_I = 0.4
 pid_direction_D = 0.0
-pid_direction_sample_time = 1.0 / CONTROLLER_FREQUENCY
+pid_direction_sample_time = 1.0 / controller_frequency

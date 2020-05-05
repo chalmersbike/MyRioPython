@@ -1,3 +1,4 @@
+from constants import *
 from math import pi as PI
 import numpy as np
 
@@ -36,9 +37,9 @@ laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
 
 # Load bike specific parameters
 if bike == 'blackbike':
-    import param_blackbike
+    from param_blackbike import *
 elif bike == 'redbike':
-    import param_redbike
+    from param_redbike import *
 else:
     print "Bike choice is not valid : \"%s\"; Using black bike as default.\n" % (bike)
-    import param_blackbike
+    from param_blackbike import *

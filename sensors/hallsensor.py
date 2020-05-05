@@ -1,3 +1,4 @@
+from param import *
 import math
 import Adafruit_BBIO.GPIO as GPIO
 from time import sleep, time

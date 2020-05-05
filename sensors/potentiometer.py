@@ -1,3 +1,4 @@
+from param import *
 import Adafruit_BBIO.ADC as ADC
 
 
