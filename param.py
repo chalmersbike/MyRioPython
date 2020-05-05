@@ -18,22 +18,21 @@ heading_controller = 0                          # 1 = use heading controller ; 0
 
 initial_speed = 4       # [m/s] Forward speed of the bike
 
-# test_duration = 5555.0  # [s] Duration of the test
-test_duration = 25.0    # [s] Duration of the test
+test_duration = 5555.0  # [s] Duration of the test
 start_up_interval = 5   # [s] Time to wait before running drive motor after receiving input from user to run the bike
 speed_up_time = 3.0     # [s] Time to run the drive motor without steering controller to get bike up to speed
 max_exceed_count = 10   # Number of times where calculation time can exceed sampling time before aborting experiment
 
-debug = 1               # 1 = debug print outputs are enabled ; 0 = debug print outputs are disabled
+debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print outputs are disabled
 
 # Choice to use Potentiometer
-potentiometer_use = 0   # 1 = use potentiometer ; 0 = do not use potentiometer
+potentiometer_use = 1   # 1 = use potentiometer ; 0 = do not use potentiometer
 
 # Choice to use GPS (for outdoors use only) or not
 gps_use = 0             # 1 = use GPS ; 0 = do not use GPS
 
 # Choice to use Laser Ranger (for indoors use on roller only) or not
-laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
+laserRanger_use = 1     # 1 = use laser rangers ; 0 = do not use laser rangers
 
 
 # Load bike specific parameters

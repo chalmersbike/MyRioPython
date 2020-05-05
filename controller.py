@@ -21,11 +21,16 @@ class Controller(object):
         self.initial_Estop_Check()  # Check if the Estop Engaged
 
         # Get experiment (if any) of the experiment
-        self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
+        self.descr = raw_input('\nType a description for the experiment if necessary. Press ENTER to start the experiment. ')
 
         # Wait before starting experiment
-        print("Experiment starting in %is" % start_up_interval)
-        time.sleep(start_up_interval)
+        print("")
+        for i in range(0,start_up_interval):
+            time.sleep(1)
+            print("Experiment starting in %is" % (start_up_interval-i))
+        print("")
+        # print("\nExperiment starting in %is\n" % start_up_interval)
+        # time.sleep(start_up_interval)
 
         # Read the IMU complementary filter Phi as the initial phi estimation
         self.states[0] = self.bike.get_imu_data()[0]
@@ -117,7 +122,7 @@ class Controller(object):
 
             # Log data
 
-        print('Gaining speed phase over')
+        print('Gaining speed phase over\n')
 
         self.states[0] = self.bike.get_imu_data()[0]  # Reset State as Arduino Roll data again
         self.controller_active = True
@@ -168,12 +173,12 @@ class Controller(object):
                 self.distance_travelled += self.velocity * sample_time
 
                 # Get y position on the roller
-                if potentiometer_use:
+                if laserRanger_use:
                     if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
+                        self.time_laserranger = time.time()
                         self.y_laser_ranger = self.bike.laser_ranger.get_y()
                 else:
                     self.y_laser_ranger = 0
-                self.time_laserranger = time.time()
 
                 # PID Velocity Control
                 if pid_velocity_active:
@@ -186,9 +191,11 @@ class Controller(object):
                 if (self.time_count < speed_up_time) and not self.gainingSpeedOver_flag:
                     # Do not start controllers until bike ran for enough time to get up to speed
                     print('Gaining speed ...')
+                    self.bike.set_velocity(initial_speed)
                 elif (self.time_count >= speed_up_time) and not self.gainingSpeedOver_flag:
                     # Once enough time has passed, start controller
                     self.gainingSpeedOver_flag = True
+                    print('Gaining speed phase over')
 
                     self.controller_active = True
 
@@ -269,6 +276,8 @@ class Controller(object):
     def variable_init(self):
         # Gaining speed
         self.gainingSpeedOver_flag = False
+
+        self.potential = 0.0
 
         # Bike
         self.time_count = 0.0
@@ -372,7 +381,7 @@ class Controller(object):
     def get_states(self):
         delta_state = self.bike.get_handlebar_angle()
 
-        # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, a_x, ay, a_z]
+        # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         imu_data = self.bike.get_imu_data()
         phi_state = imu_data[0]
         phi_d_state = imu_data[2]

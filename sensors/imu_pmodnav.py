@@ -152,9 +152,8 @@ class IMU(object):
             calibration_samples = imu_calibrationSamples
 
         # Gyroscope calibration
+        print('IMU : Waiting for calibration data')
         for i in range(1, calibration_samples + 1):
-            if debug:
-                print('IMU : Waiting for calibration data')
             read = self.get_reading()
             ang_vel = read[4:7]
             acc = read[1:4]
@@ -169,13 +168,12 @@ class IMU(object):
         self.gx_offset = gx_offset
         self.gy_offset = gy_offset
         self.gz_offset = gz_offset
-        if debug:
-            print("IMU : Gyroscope calibration finished")
+        print("IMU : Gyroscope calibration finished")
 
         # Accelerometer calibration
         if horizontal:
             self.acc_roll_offset = math.atan2(ay_offset, math.sqrt(ax_offset**2 + az_offset**2))
-            print('Accelerometer Calibrated, new roll angle offset is %.5f' %(self.acc_roll_offset))
+            print('Accelerometer Calibrated, new roll angle offset is %.5f\n' %(self.acc_roll_offset))
 
             if pitch_horizontal is True:
                 self.acc_pitch_offset = math.atan2(ax_offset, math.sqrt(ay_offset**2 + az_offset**2))
@@ -183,7 +181,7 @@ class IMU(object):
             with open('./sensors/Acc_Cali.txt', 'w') as f:
                 f.write(str(self.acc_roll_offset))
         else:
-            print('Accelerometer not Calibrated, using %.5f as roll angle offset' %(self.acc_roll_offset))
+            print('IMU : Accelerometer not Calibrated, using %.5f as roll angle offset\n' %(self.acc_roll_offset))
 
     def get_imu_data(self):
         read = self.get_reading()
@@ -204,7 +202,7 @@ class IMU(object):
         self.phi = self.phi_acc * imu_complementaryFilterRatio + (self.phi + gx * (dT)) * (1 - imu_complementaryFilterRatio)
         self.phi_gyro += dT * gx
 
-        # return [phi_comp, phi_gyro, gx (phidot), gy, gz, a_x, ay, a_z]
+        # return [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, ay, az]
 
     def get_reading(self):

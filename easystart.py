@@ -1,4 +1,4 @@
-print 'Starting Bike with controller ACTIVE'
+print 'Starting Bike with controller ACTIVE\n'
 
 from bike import Bike
 from controller import Controller

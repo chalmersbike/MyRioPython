@@ -35,7 +35,7 @@ class HallSensor(object):
         self.elapse = time_measured - self.last_time_measured
         self.velocity = (0.0 if not self.elapse
                          else 0.0 if self.elapse > hallSensor_maxElapseBetweenPulses
-        else (hall_Sensor_distanceBetweenMagnets / self.elapse) * TYRE_RATIO)
+        else (hall_Sensor_distanceBetweenMagnets / self.elapse) * tyre_ratio)
         self.last_time_measured = time_measured
         # print 'MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL'
 
