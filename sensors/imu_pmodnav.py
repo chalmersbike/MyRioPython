@@ -70,22 +70,22 @@ class IMU(object):
         #self.spi.max_speed_hz = 8000000
         # Get gyro seetings
         self.gyro_sensitivity = SENSITIVITY_GYROSCOPE_SWITCHER.get(imu_gyroscopeRange, 0.00875)
-        print 'IMU : Gyro range : %d deg/s ; Gyro sensitivity : %f (deg/s)/LSB ; Gyro ODR : %.1f Hz' % (
-            imu_gyroscopeRange, self.gyro_sensitivity, ODR_GYROSCOPE_SWITCHER.get(imu_gyroscopeODR, 0))
+        print('IMU : Gyro range : %d deg/s ; Gyro sensitivity : %f (deg/s)/LSB ; Gyro ODR : %.1f Hz' % (
+            imu_gyroscopeRange, self.gyro_sensitivity, ODR_GYROSCOPE_SWITCHER.get(imu_gyroscopeODR, 0)))
         # Get accel setting
         self.accel_sensitivity = SENSITIVITY_ACCELEROMETER_SWITCHER.get(imu_accelerometerRange, 0.000061)
-        print 'IMU : Accel range : %d g ; Accel sensitivity : %f g/LSB ; Accel ODR : %.1f Hz' % (
-            imu_accelerometerRange, self.accel_sensitivity, ODR_ACCELEROMETER_SWITCHER.get(imu_accelerometerODR, 0))
+        print('IMU : Accel range : %d g ; Accel sensitivity : %f g/LSB ; Accel ODR : %.1f Hz' % (
+            imu_accelerometerRange, self.accel_sensitivity, ODR_ACCELEROMETER_SWITCHER.get(imu_accelerometerODR, 0)))
 
         # Read WHO_AM_I
         who_am_i = self.spi.xfer2([0x80 | WHO_AM_I_RG, 0x00])
         who_am_i = who_am_i[1]
         if who_am_i == WHO_AM_I:
             if debug:
-                print 'IMU : WHO_AM_I correctly read !'
+                print('IMU : WHO_AM_I correctly read !')
         else:
             #warnings.warn('IMU : WHO_AM_I incorrect !')
-            print 'IMU : WHO_AM_I incorrect ! Read %s, expected %s' %(hex(who_am_i),hex(WHO_AM_I))
+            print('IMU : WHO_AM_I incorrect ! Read %s, expected %s' %(hex(who_am_i),hex(WHO_AM_I)))
             raw_input('IMU : SPI failure?')
 
         # Initialize gyro
@@ -97,9 +97,9 @@ class IMU(object):
         buf = self.spi.xfer2([0x80 | CTRL_REG1_G, 0x00])
         if buf[1] == gyro_init:
             if debug:
-                print 'IMU : Gyro correctly initialized !'
+                print('IMU : Gyro correctly initialized !')
         else:
-            print 'IMU : Gyro incorrectly initialized !'
+            print('IMU : Gyro incorrectly initialized !')
             # print buf[1]
             # raw_input('IMU : SPI failure?')
 
@@ -112,9 +112,9 @@ class IMU(object):
         buf = self.spi.xfer2([0x80 | CTRL_REG6_XL, 0x00])
         if buf[1] == accel_init:
             if debug:
-                print 'IMU : Accel correctly initialized !'
+                print('IMU : Accel correctly initialized !')
         else:
-            print 'IMU : Accel incorrectly initialized !'
+            print('IMU : Accel incorrectly initialized !')
             # print buf[1]
             # raw_input('IMU : SPI failure?')
 
@@ -140,15 +140,17 @@ class IMU(object):
         ax_offset = 0.0
         ay_offset = 0.0
         az_offset = 0.0
-        # More samples for accelermeter calibration
+
+        # More samples for accelerometer calibration
         if horizontal is True:
             calibration_samples = imu_calibrationSamples * 4
         else:
             calibration_samples = imu_calibrationSamples
 
+        # Gyroscope calibration
         for i in range(1, calibration_samples + 1):
             if debug:
-                print 'IMU : Waiting for calibration data'
+                print('IMU : Waiting for calibration data')
             read = self.get_reading()
             ang_vel = read[4:7]
             acc = read[1:4]
@@ -164,7 +166,20 @@ class IMU(object):
         self.gy_offset = gy_offset
         self.gz_offset = gz_offset
         if debug:
-            print "IMU : Gyroscope calibration finished"
+            print("IMU : Gyroscope calibration finished")
+
+        # Accelerometer calibration
+        if horizontal is True:
+            self.acc_roll_offset = math.atan2(ay_offset, math.sqrt(ax_offset**2 + az_offset**2))
+            print('Accelerometer Calibrated, new roll angle offset is ', self.acc_roll_offset)
+
+            if pitch_horizontal is True:
+                self.acc_pitch_offset = math.atan2(ax_offset, math.sqrt(ay_offset**2 + az_offset**2))
+
+            with open('./sensors/Acc_Cali.txt', 'w') as f:
+                f.write(str(self.acc_roll_offset))
+        else:
+            print("Accelerometer not Calibrated, using ", self.acc_roll_offset, " as roll angle offset")
 
     def get_imu_data(self):
         read = self.get_reading()
