@@ -24,7 +24,7 @@ class Bike(object):
 
         # Run bike and controllers
         self.controller = Controller(self)
-        self.controller.startup()
+        # self.controller.startup()
         self.controller.run()
 
     # Safety Stop

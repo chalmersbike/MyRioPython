@@ -17,11 +17,6 @@ class Controller(object):
         self.bike = bike
         self.variable_init()
 
-
-    ####################################################################################################################
-    ####################################################################################################################
-    # Start-up bike
-    def startup(self):
         # Check Estop before starting the experiment
         self.initial_Estop_Check()  # Check if the Estop Engaged
 
@@ -38,11 +33,16 @@ class Controller(object):
         # Create log file and add header line
         self.log_headerline()
 
+
+    ####################################################################################################################
+    ####################################################################################################################
+    # Start-up bike
+    def startup(self):
         # Let the bike get to speed
         self.gaining_speed_start = time.time()
         self.bike.set_velocity(initial_speed)
         while self.time_count < speed_up_time:
-            start_time_current_loop = time.time()
+            time_start_current_loop = time.time()
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
                 self.stop()
@@ -61,8 +61,7 @@ class Controller(object):
             self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
             self.extra_data = self.states_and_extra_data[3][:]
 
-            self.sensor_reading_time = time.time() - start_time_current_loop
-            # self.state_calculate()
+            self.sensor_reading_time = time.time() - time_start_current_loop
             # Get y position on the roller
             # print("Reading Laser at %d" %(time.time() - self.gaining_speed_start))
             if laserRanger_use:
@@ -96,23 +95,23 @@ class Controller(object):
                 self.stop()
                 print('Exceeded min/max lean (roll) angle, aborting the experiment')
 
-            self.status_check_time = time.time() - start_time_current_loop - self.sensor_reading_time
+            self.status_check_time = time.time() - time_start_current_loop - self.sensor_reading_time
             # Do a speed test
             # self.bike.set_velocity(initial_speed)
             pid_velocity_reference = initial_speed
             self.lqr_balance_control_signal = 0
 
             # # Calculation Time
-            # self.calculation_time = time.time() - start_time_current_loop
+            # self.calculation_time = time.time() - time_start_current_loop
             # self.time_count = time.time() - self.gaining_speed_start
             # # Log data
             # self.log_regular() # timestamp self.time_count, self.calculation_time
             # # self.status_print()
 
             self.time_count = time.time() - self.gaining_speed_start
-            self.calculation_time = time.time() - start_time_current_loop  # The time elapsed
+            self.calculation_time = time.time() - time_start_current_loop  # The time elapsed
             self.log_regular()  # self.time_count, self.calculation_time
-            self.calculation_time = time.time() - start_time_current_loop  # The time elapsed
+            self.calculation_time = time.time() - time_start_current_loop  # The time elapsed
             if self.calculation_time < sample_time:
                 time.sleep((sample_time - self.calculation_time))
 
@@ -135,14 +134,17 @@ class Controller(object):
     # Run bike
     # @pysnooper.snoop()
     def run(self):
+        self.pid_velocity.clear()
+        self.pid_balance.clear()
+        self.pid_balance_outerloop.clear()
         self.pid_steeringangle.clear()
+        self.pid_lateral_position.clear()
+        self.pid_direction_position.clear()
 
-        # Restart PWM here because it gets deactivated at the some point before in the code
-        # TO DO : CHECK WHY THIS HAPPENS !
-        PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
+        time_start_run = time.time()
 
         while self.controller_active:
-            start_time_current_loop = time.time()
+            time_start_current_loop = time.time()
 
             try:
 
@@ -151,17 +153,16 @@ class Controller(object):
                 self.states_and_extra_data = self.get_states()
                 self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
                 self.extra_data = self.states_and_extra_data[3][:]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
-                self.sensor_reading_time = time.time() - start_time_current_loop
+                self.sensor_reading_time = time.time() - time_start_current_loop
 
                 # self.gps_read()
                 # Find Global Angles and Coordinates
-                if PATH_TYPE == 'CIRCLE' or PATH_TYPE == 'STRAIGHT':
-                    self.x, self.y, self.psi, self.nu = global_angles_and_coordinates(self.velocity, sample_time,
-                                                                                      LENGTH_A, LENGTH_B,
-                                                                                      self.states[1],
-                                                                                      self.psi, self.x, self.y)
+                self.x, self.y, self.psi, self.nu = global_angles_and_coordinates(self.velocity, sample_time,
+                                                                                  LENGTH_A, LENGTH_B,
+                                                                                  self.states[1],
+                                                                                  self.psi, self.x, self.y)
+                self.distance_travelled += self.velocity * sample_time
 
-                # print("Reading Laser at %f" % (time.time() - self.gaining_speed_start))
                 # Get y position on the roller
                 if potentiometer_use:
                     if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
@@ -175,17 +176,38 @@ class Controller(object):
                     self.pid_velocity_control_signal = self.pid_velocity.update(self.velocity)
                     self.bike.set_velocity(self.pid_velocity_control_signal)
 
-                if PATH_TYPE == 'CIRCLE' or PATH_TYPE == 'STRAIGHT':
-                    self.distance_travelled += self.velocity * sample_time
-                self.sensor_reading_time = time.time() - start_time_current_loop
+                self.sensor_reading_time = time.time() - time_start_current_loop
 
-                # Check steering angle
-                self.keep_handlebar_angle_within_safety_margins(self.states[1])
 
-                # Balancing and path tracking control
-                self.keep_the_bike_stable(self.states)
+                if (time.time() - time_start_run < speed_up_time) and not gainingSpeedOver_flag:
+                    # Do not start controllers until bike ran for enough time to get up to speed
+                    print('Gaining speed ...')
+                elif (time.time() - time_start_run >= speed_up_time) and not gainingSpeedOver_flag:
+                    # Once enough time has passed, start controller
+                    gainingSpeedOver_flag = true
 
-                self.control_cal_time = time.time() - start_time_current_loop - self.sensor_reading_time
+                    self.controller_active = True
+
+                    # Clear PID controllers memory
+                    self.pid_velocity.clear()
+                    self.pid_balance.clear()
+                    self.pid_balance_outerloop.clear()
+                    self.pid_steeringangle.clear()
+                    self.pid_lateral_position.clear()
+                    self.pid_direction_position.clear()
+
+                    # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
+                    # TO DO : CHECK WHY THIS HAPPENS !
+                    PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
+                else:
+                    # Check steering angle
+                    self.keep_handlebar_angle_within_safety_margins(self.states[1])
+
+                    # Balancing and path tracking control
+                    self.bike.steering_motor.enable()
+                    self.keep_the_bike_stable(self.states)
+
+                self.control_cal_time = time.time() - time_start_current_loop - self.sensor_reading_time
             except (ValueError, KeyboardInterrupt):
                 self.stop()
                 print('Error or keyboard interrupt, aborting the experiment')
@@ -208,9 +230,9 @@ class Controller(object):
                 print('Exceeded test duration, aborting the experiment')
                 break
 
-            self.status_check_time = time.time() - start_time_current_loop - self.control_cal_time - self.sensor_reading_time
+            self.status_check_time = time.time() - time_start_current_loop - self.control_cal_time - self.sensor_reading_time
             # Calculation Time
-            # self.calculation_time = time.time() - start_time_current_loop
+            # self.calculation_time = time.time() - time_start_current_loop
             # self.time_count = time.time() - self.gaining_speed_start
             #
             # # Log data
@@ -218,12 +240,12 @@ class Controller(object):
             # self.status_print()
 
             # Control Frequency
-            self.calculation_time = time.time() - start_time_current_loop
+            self.calculation_time = time.time() - time_start_current_loop
             self.time_count = time.time() - self.gaining_speed_start
             # Log data
             self.log_regular()  # self.time_count, self.calculation_time
 
-            self.calculation_time = time.time() - start_time_current_loop
+            self.calculation_time = time.time() - time_start_current_loop
             # print('Time spent' + str(self.calculation_time))
             if self.calculation_time < sample_time:
                 time.sleep((sample_time - self.calculation_time))
@@ -241,6 +263,10 @@ class Controller(object):
     ####################################################################################################################
     # Initialize bike variables
     def variable_init(self):
+        # Gaining speed
+        gainingSpeedOver_flag = false
+        time_start_run = 0.0
+
         # Bike
         self.time_count = 0.0
         self.controller_start_time = 0.0
@@ -285,7 +311,7 @@ class Controller(object):
         self.pid_balance_outerloop = PID(pid_balance_outerloop_P, pid_balance_outerloop_I, pid_balance_outerloop_D)
         self.pid_balance_outerloop.setSampleTime(pid_balance_outerloop_sample_time)
         self.pid_balance_outerloop.setReference(pid_balance_outerloop_reference)
-        self.pid_balance__outerloop_control_signal = 0.0  # control signal calculated by PID
+        self.pid_balance_outerloop_control_signal = 0.0  # control signal calculated by PID
 
         # PID Velocity Controller
         self.pid_velocity = PID(pid_velocity_P, pid_velocity_I, pid_velocity_D)
@@ -568,7 +594,7 @@ class Controller(object):
         self.writer.writerow(['Description : ' + str(self.descr)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'phi', 'delta', 'phidot',
-                               'ControlInput', 'a_x', 'ay', 'az', 'x', 'y', 'psi', 'nu']
+                               'ControlInput', 'ax', 'ay', 'az', 'x', 'y', 'psi', 'nu']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
