@@ -123,6 +123,10 @@ class IMU(object):
         self.gy_offset = 0.0
         self.gz_offset = 0.0
         self.acc_roll_offset = 0.0
+        if not horizontal:
+            print 'searching for calibration file at', os.getcwd()
+            with open('./sensors/Acc_Cali.txt', 'r') as f:
+                self.acc_roll_offset = float(f.read())
 
         self.calibrate(horizontal)
         read = self.get_reading()
@@ -169,7 +173,7 @@ class IMU(object):
             print("IMU : Gyroscope calibration finished")
 
         # Accelerometer calibration
-        if horizontal is True:
+        if horizontal:
             self.acc_roll_offset = math.atan2(ay_offset, math.sqrt(ax_offset**2 + az_offset**2))
             print('Accelerometer Calibrated, new roll angle offset is %.5f' %(self.acc_roll_offset))
 
@@ -201,11 +205,7 @@ class IMU(object):
         self.phi_gyro += dT * gx
 
         # return [phi_comp, phi_gyro, gx (phidot), gy, gz, a_x, ay, a_z]
-        return self.phi, self.phi_gyro, gx, gy, gz, ax, ay, ay, az
-
-
-
-
+        return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, ay, az]
 
     def get_reading(self):
         # Read data

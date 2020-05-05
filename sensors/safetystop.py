@@ -23,6 +23,10 @@ class SafetyStop(object):
             self.ESTOP = False
         else:
             self.ESTOP = True
-        #self.ESTOP = False
+
+        # FOR TESTING PURPOSE ONLY, WILL IGNORE THE EMERGENCY STOP TO FORCEFULLY RUN THE CODE
+        # The motors will still be electrically disconnected if the emergency stop is pressed
+        # print('ESTOP FORCEFULLY SET TO BE IGNORED FOR CODE TESTING')
+        self.ESTOP = False
 
         return self.ESTOP

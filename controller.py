@@ -7,6 +7,7 @@ import math
 import time
 import numpy as np
 import Adafruit_BBIO.ADC as ADC
+import Adafruit_BBIO.PWM as PWM
 import pysnooper
 from scipy import signal
 
@@ -25,7 +26,7 @@ class Controller(object):
         self.initial_Estop_Check()  # Check if the Estop Engaged
 
         # Get experiment (if any) of the experiment
-        self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment.')
+        self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
 
         # Wait before starting experiment
         print("Experiment starting in %is" % start_up_interval)
@@ -45,7 +46,7 @@ class Controller(object):
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
                 self.stop()
-                print('Emergency stop pressed, aborting experiment')
+                print('Emergency stop pressed, aborting the experiment')
                 break
             else:
                 print('Gaining speed ...')
@@ -59,13 +60,19 @@ class Controller(object):
 
             self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
             self.extra_data = self.states_and_extra_data[3][:]
+
             self.sensor_reading_time = time.time() - start_time_current_loop
-            self.state_calculate()
+            # self.state_calculate()
             # Get y position on the roller
             # print("Reading Laser at %d" %(time.time() - self.gaining_speed_start))
-            if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
-                self.y_laser_ranger = self.bike.laser_ranger.get_y()
-                self.time_laserranger = time.time()
+            if laserRanger_use:
+                if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
+                    self.y_laser_ranger = self.bike.laser_ranger.get_y()
+                    self.time_laserranger = time.time()
+            else:
+                self.y_laser_ranger = 0
+                self.time_laserranger = 0
+
             # self.gps_read()
             # Find Global Angles and Coordinates
             if PATH_TYPE == 'CIRCLE' or PATH_TYPE == 'STRAIGHT':
@@ -81,13 +88,13 @@ class Controller(object):
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
                 self.stop()
-                print('Emergency stop pressed, aborting experiment')
+                print('Emergency stop pressed, aborting the experiment')
                 break
 
             # Check for extreme PHI
             if self.states[0] > MAX_LEAN_ANGLE or self.states[0] < MIN_LEAN_ANGLE:
                 self.stop()
-                print('Exceeded min/max lean (roll) angle, aborting experiment')
+                print('Exceeded min/max lean (roll) angle, aborting the experiment')
 
             self.status_check_time = time.time() - start_time_current_loop - self.sensor_reading_time
             # Do a speed test
@@ -129,6 +136,11 @@ class Controller(object):
     # @pysnooper.snoop()
     def run(self):
         self.pid_steeringangle.clear()
+
+        # Restart PWM here because it gets deactivated at the some point before in the code
+        # TO DO : CHECK WHY THIS HAPPENS !
+        PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
+
         while self.controller_active:
             start_time_current_loop = time.time()
 
@@ -138,8 +150,7 @@ class Controller(object):
                 self.velocity = self.bike.get_velocity()
                 self.states_and_extra_data = self.get_states()
                 self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
-                self.extra_data = self.states_and_extra_data[3:]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
-                #self.extra_data = self.states_and_extra_data[3][:]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
+                self.extra_data = self.states_and_extra_data[3][:]  # imu_data=[phi_roll_compensated, phi_uncompensated, phi_dot, a_x, a_y_roll_compensated, a_y, a_z]
                 self.sensor_reading_time = time.time() - start_time_current_loop
 
                 # self.gps_read()
@@ -152,9 +163,12 @@ class Controller(object):
 
                 # print("Reading Laser at %f" % (time.time() - self.gaining_speed_start))
                 # Get y position on the roller
-                if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
-                    self.y_laser_ranger = self.bike.laser_ranger.get_y()
-                    self.time_laserranger = time.time()
+                if potentiometer_use:
+                    if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
+                        self.y_laser_ranger = self.bike.laser_ranger.get_y()
+                else:
+                    self.y_laser_ranger = 0
+                self.time_laserranger = time.time()
 
                 # PID Velocity Control
                 if pid_velocity_active:
@@ -186,12 +200,12 @@ class Controller(object):
             # Check for extreme PHI
             if self.states[0] > MAX_LEAN_ANGLE or self.states[0] < MIN_LEAN_ANGLE:
                 self.stop()
-                print('Exceeded min/max lean (roll) angle, aborting experiment')
+                print('Exceeded min/max lean (roll) angle, aborting the experiment')
 
             # End test time condition
             if self.time_count > test_duration:
                 self.stop()
-                print('Exceeded test duration, stopping experiment')
+                print('Exceeded test duration, aborting the experiment')
                 break
 
             self.status_check_time = time.time() - start_time_current_loop - self.control_cal_time - self.sensor_reading_time
@@ -257,9 +271,9 @@ class Controller(object):
         # Controller
         self.controller_active = False
         self.calculation_time = 0.0
-        self.complementary_coef = comp_coef
-        self.CP_comp = centripetal_compensation
-        self.roll_comp = roll_compensation
+        self.complementary_coef = imu_complementaryFilterRatio
+        self.CP_comp = imu_centripetal_compensation
+        self.roll_comp = imu_roll_compensation
 
         # PID Balance Controller
         self.pid_balance = PID(pid_balance_P, pid_balance_I, pid_balance_D)
@@ -433,11 +447,11 @@ class Controller(object):
             max_handlebar_angle = MAX_HANDLEBAR_ANGLE
             min_handlebar_angle = MIN_HANDLEBAR_ANGLE
         if handlebar_angle > max_handlebar_angle:
-            print('Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting experiment' % (max_handlebar_angle * rad2deg))
+            print('Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg))
             self.upperSaturation = True
             self.bike.stop_all()
         elif handlebar_angle < min_handlebar_angle:
-            print('Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting experiment' % (max_handlebar_angle * rad2deg))
+            print('Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg))
             self.lowerSaturation = True
             self.bike.stop_all()
         else:
@@ -455,7 +469,7 @@ class Controller(object):
             input_estop = raw_input('Press ENTER to continue')
             if input_estop:
                 self.stop()
-                print('Emergency stop was not released, aborting experiment')
+                print('Emergency stop was not released, aborting the experiment')
 
 
     ####################################################################################################################
@@ -551,6 +565,8 @@ class Controller(object):
         results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
         self.writer = csv.writer(results_csv)
 
+        self.writer.writerow(['Description : ' + str(self.descr)])
+
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'phi', 'delta', 'phidot',
                                'ControlInput', 'a_x', 'ay', 'az', 'x', 'y', 'psi', 'nu']
 
@@ -617,5 +633,5 @@ class Controller(object):
                 print("sensor_reading_time, control calculation, status_check = %g \t %g \t %g" 
                       % (self.sensor_reading_time, self.control_cal_time, self.status_check_time))
                 if self.exceedscount > max_exceed_count:
-                    print("Calculation time exceeded sampling time too often (%d times) , aborting experiment" % (max_exceed_count))
+                    print("Calculation time exceeded sampling time too often (%d times) , aborting the experiment" % (max_exceed_count))
                     self.stop()

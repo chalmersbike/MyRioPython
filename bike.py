@@ -1,4 +1,5 @@
 import Adafruit_BBIO.GPIO as GPIO
+from param import *
 from sensors import Encoder, HallSensor, IMU, SafetyStop, Potentiometer, DualLaserRanger, GPS
 from actuators import DriveMotor, SteeringMotor
 from controller import Controller
