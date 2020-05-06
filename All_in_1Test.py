@@ -51,8 +51,8 @@ class Test(object):
                 time.sleep(0.5)
 
         input1 = raw_input('Press ENTER to start IMU test, move the bike body for the reading!')
-        # self.imu = IMU(horizontal = False)
-        self.imu = IMU(horizontal = True)
+        self.imu = IMU(horizontal = False)
+        # self.imu = IMU(horizontal = True)
         start_time = time.time()
         if not input1:
             for x in range(1,20):

@@ -199,11 +199,11 @@ class IMU(object):
         # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(self.states[0]), az + CP_acc_g * math.sin(self.states[0]))  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
         self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
 
-        self.phi = self.phi_acc * imu_complementaryFilterRatio + (self.phi + gx * (dT)) * (1 - imu_complementaryFilterRatio)
+        self.phi = self.phi_acc * (1-imu_complementaryFilterRatio) + (self.phi + gx * (dT)) * imu_complementaryFilterRatio
         self.phi_gyro += dT * gx
 
-        # return [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
-        return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, ay, az]
+        # [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
+        return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az]
 
     def get_reading(self):
         # Read data

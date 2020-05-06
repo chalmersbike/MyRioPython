@@ -16,7 +16,7 @@ wheel_circumference = wheel_diameter * PI   # [m] Wheel circumference
 imu_height = 0.215                          # [m] IMU height
 
 # Complementary filter
-comp_coef = 0.985               # Coefficient of complementary filter
+comp_coef = 0.95               # Coefficient of complementary filter
 centripetal_compensation = 1    # 1 = turn on centripetal acceleration compensation ; 0 = turn off
 roll_compensation = 1           # 1 = turn on roll acceleration compensation ; 0 = turn off
 
