@@ -5,6 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
+!vl53l0x_python.so
 
 # Distribution / packaging
 .Python
