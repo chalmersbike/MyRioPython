@@ -122,8 +122,7 @@ class Controller(object):
 
                     # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
                     # TO DO : CHECK WHY THIS HAPPENS !
-                    # 07/05/2020: Does not happen anymore after using a new BBBlack on black bike
-                    # PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
+                    PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
                 else:
                     # Check steering angle
                     self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
@@ -461,7 +460,7 @@ class Controller(object):
             self.pid_lateral_position.setReference(self.pos_ref)
             self.balancing_setpoint = self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
         elif potentiometer_use:
-            self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2  # Potentiometer gives a position reference between -2.5deg and 2.5deg
+            self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 1 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
         else:
             self.balancing_setpoint = 0
@@ -529,7 +528,7 @@ class Controller(object):
         self.writer.writerow(['Description : ' + str(self.descr)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'phi', 'delta', 'phidot',
-                               'ControlInput', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
+                               'ControlInput', 'BalancingSetpoint' 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
@@ -551,6 +550,7 @@ class Controller(object):
             "{0:.5f}".format(self.steeringAngle),
             "{0:.5f}".format(self.rollRate),
             "{0:.5f}".format(self.pid_balance_control_signal),
+            "{0:.5f}".format(self.balancing_setpoint),
             "{0:.5f}".format(self.gy),
             "{0:.5f}".format(self.gz),
             "{0:.5f}".format(self.ax),
@@ -589,12 +589,12 @@ class Controller(object):
                 self.sensor_reading_time, self.control_cal_time, self.time_get_states,
                 self.time_log))
 
-            # Check the calculation time
-            if self.loop_time > sample_time:
-                print("Warning: The calculation time exceeds the sampling time!")
-                self.exceedscount += 1
-                print("sensor_reading_time   control calculation = %g \t %g"
-                      % (self.sensor_reading_time, self.control_cal_time))
-                if self.exceedscount > max_exceed_count:
-                    print("Calculation time exceeded sampling time too often (%d times) , aborting the experiment" % (max_exceed_count))
-                    self.stop()
+        # Check the calculation time
+        if self.loop_time > sample_time:
+            print("Warning: The calculation time exceeds the sampling time!")
+            self.exceedscount += 1
+            print("sensor_reading_time   control calculation = %g \t %g"
+                  % (self.sensor_reading_time, self.control_cal_time))
+            # if self.exceedscount > max_exceed_count:
+            #     print("Calculation time exceeded sampling time too often (%d times) , aborting the experiment" % (max_exceed_count))
+            #     self.stop()

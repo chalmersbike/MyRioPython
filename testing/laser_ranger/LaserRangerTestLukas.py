@@ -1,3 +1,6 @@
+import sys
+sys.path.append("/home/debian/chalmersbike")
+import param
 from sensors import DualLaserRanger
 import time
 import csv
@@ -14,7 +17,7 @@ class Test(object):
         time_last_read = 0
         if number_samples_Laser_ranger is not 0:
             # Setup CSV file
-            results_laser_ranger = open('Tests_Lukas/%s-SensorTest_Lukas_Laser.csv' % timestr, 'wb')
+            results_laser_ranger = open('./%s-SensorTest_Lukas_Laser.csv' % timestr, 'wb')
             writer_laser_ranger = csv.writer(results_laser_ranger)
             writer_laser_ranger.writerow(('Time (s)', 'Laser reading 1', 'Laser reading 2', 'Position'))
         for x in range(1, int(number_samples_Laser_ranger) + 1):
