@@ -138,14 +138,11 @@ class GPS(object):
             self.dy = self.y - self.y0
         else:
             print warnings.warn("GPS : No Satelite found !")
-        return self.dx, self.dy
+        return self.dx, self.dy, lat, lon
 
 
     def get_latlon(self):
         readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
-        # print 'Communication costs ' + str(ReadFintime-starttime) # print communication time
-
-        print readall
         
         # Process data
         for i in range(0, len(readall) - 1):

@@ -171,8 +171,7 @@ def calculate_path_error(path_type, distance_travelled, x, y, psi, path_radius):
     if path_choice == 'pot':
         # Position reference from potentiometer
         if potentiometer_use:
-            self.potential = ((
-                                          self.bike.potent.read_pot_value() / 0.29) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
+            self.potential = ((self.bike.potent.read_pot_value() / 0.29) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
         else:
             self.potential = 0
         self.pos_ref = self.potential

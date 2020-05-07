@@ -127,6 +127,7 @@ laserRanger_sensor2_accuracyMode = 4                    # Laser ranger sensor 2 
 ########################################################################################################################
 # Potentiometer
 potentiometer_port = 'P9_36'    # Potentiometer analog input port
+potentiometer_maxVoltage = 0.29 # [V] Maximum voltage measured at the potentiometer's output
 
 
 ########################################################################################################################

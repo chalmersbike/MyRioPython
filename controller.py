@@ -34,7 +34,8 @@ class Controller(object):
         # time.sleep(start_up_interval)
 
         # Read the IMU complementary filter Phi as the initial phi estimation
-        self.states[0] = self.bike.get_imu_data()[0]
+        self.roll = self.bike.get_imu_data()[0]
+        self.states[0] = self.bike.get_imu_data()[0] # TO BE REMOVED
 
         # Create log file and add header line
         self.log_headerline()
@@ -45,6 +46,7 @@ class Controller(object):
     # Run bike
     # @pysnooper.snoop()
     def run(self):
+        # Clear PID controller memory
         self.pid_velocity.clear()
         self.pid_balance.clear()
         self.pid_balance_outerloop.clear()
@@ -55,44 +57,51 @@ class Controller(object):
         self.gaining_speed_start = time.time()
 
         while self.controller_active or not self.gainingSpeedOver_flag:
-            time_start_current_loop = time.time()
+            self.time_start_current_loop = time.time()
 
             try:
-                # Get states and calculate state_references
+                # Get velocity
                 self.velocity = self.bike.get_velocity()
 
+                # Get states
                 self.time_get_states = time.time()
-                self.states_and_extra_data = self.get_states()
+                self.get_states()
                 self.time_get_states = time.time() - self.time_get_states
 
-                self.states = self.states_and_extra_data[0:3]  # [roll_angle, handlebar_angle, roll_angular_velocity]
-                self.extra_data = self.states_and_extra_data[3][:]  # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
-                self.sensor_reading_time = time.time() - time_start_current_loop
-
-                # self.gps_read()
-                # Find Global Angles and Coordinates
-                self.x, self.y, self.psi, self.nu = global_angles_and_coordinates(self.velocity, sample_time,
-                                                                                  LENGTH_A, LENGTH_B,
-                                                                                  self.states[1],
-                                                                                  self.psi, self.x, self.y)
+                # Compute Global Angles and Coordinates
+                self.x_estimated, self.y_estimated, self.psi_estimated, self.nu_estimated = global_angles_and_coordinates(self.velocity, sample_time,
+                                                                                                                          LENGTH_A, LENGTH_B,
+                                                                                                                          self.states[1],self.psi_estimated,
+                                                                                                                          self.x_estimated, self.y_estimated)
                 self.distance_travelled += self.velocity * sample_time
 
-                # Get y position on the roller
+                # Get position from GPS
+                if gps_use:
+                    self.bike.get_gps_data()
+                else:
+                    self.x_measured_GPS = 0.0
+                    self.y_measured_GPS = 0.0
+                    self.lat_measured_GPS = 0.0
+                    self.lon_measured_GPS = 0.0
+                    self.gps_timestamp = 0.0
+
+                # Get laser ranger position (y position on the roller)
                 if laserRanger_use:
                     if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
                         self.time_laserranger = time.time()
-                        self.y_laser_ranger = self.bike.laser_ranger.get_y()
+                        self.y_laser_ranger = self.bike.get_laserRanger_data()
                 else:
                     self.y_laser_ranger = 0
+
+                # Compute time needed to read from all sensors
+                self.sensor_reading_time = time.time() - self.time_start_current_loop
 
                 # PID Velocity Control
                 if pid_velocity_active:
                     self.pid_velocity_control_signal = self.pid_velocity.update(self.velocity)
                     self.bike.set_velocity(self.pid_velocity_control_signal)
 
-                self.sensor_reading_time = time.time() - time_start_current_loop
-
-
+                # Let bike get up to speed for a few seconds before starting controllers
                 if (self.time_count < speed_up_time) and not self.gainingSpeedOver_flag:
                     # Do not start controllers until bike ran for enough time to get up to speed
                     print('Gaining speed ...')
@@ -114,34 +123,28 @@ class Controller(object):
 
                     # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
                     # TO DO : CHECK WHY THIS HAPPENS !
+                    # 07/05/2020: Does not happen anymore after using a new BBBlack on black bike
                     # PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
                 else:
                     # Check steering angle
-                    self.keep_handlebar_angle_within_safety_margins(self.states[1])
+                    self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
 
                     # Balancing and path tracking control
                     self.bike.steering_motor.enable()
-                    self.keep_the_bike_stable(self.states)
+                    self.keep_the_bike_stable()
 
-                self.control_cal_time = time.time() - time_start_current_loop - self.sensor_reading_time
+                # Compute time needed to run controllers
+                self.control_cal_time = time.time() - self.time_start_current_loop - self.sensor_reading_time
             except (ValueError, KeyboardInterrupt):
                 self.stop()
                 print('Error or keyboard interrupt, aborting the experiment')
 
-            self.status_check_time = time.time() - time_start_current_loop - self.control_cal_time - self.sensor_reading_time
-            # Calculation Time
-            # self.calculation_time = time.time() - time_start_current_loop
-            # self.time_count = time.time() - self.gaining_speed_start
-            #
-            # # Log data
-            # self.log_regular() #self.time_count, self.calculation_time
-            # self.status_print()
-
             # Control Frequency
-            self.calculation_time = time.time() - time_start_current_loop
+            self.loop_time = time.time() - self.time_start_current_loop
             self.time_count = time.time() - self.gaining_speed_start
+            
             # Log data
-            self.log_regular()  # self.time_count, self.calculation_time
+            self.log_regular() 
 
             # Check for ESTOP
             self.ESTOP = self.bike.emergency_stop_check()
@@ -151,7 +154,7 @@ class Controller(object):
                 break
 
             # Check for extreme PHI
-            if self.states[0] > MAX_LEAN_ANGLE or self.states[0] < MIN_LEAN_ANGLE:
+            if self.roll > MAX_LEAN_ANGLE or self.roll < MIN_LEAN_ANGLE:
                 self.stop()
                 print('Exceeded min/max lean (roll) angle, aborting the experiment')
 
@@ -161,10 +164,11 @@ class Controller(object):
                 print('Exceeded test duration, aborting the experiment')
                 break
 
-            self.calculation_time = time.time() - time_start_current_loop
-            # print('Time spent' + str(self.calculation_time))
-            if self.calculation_time < sample_time:
-                time.sleep((sample_time - self.calculation_time))
+            # Compute total time for current loop
+            self.loop_time = time.time() - self.time_start_current_loop
+            # Sleep to match sampling time
+            if self.loop_time < sample_time:
+                time.sleep((sample_time - self.loop_time))
 
 
     ####################################################################################################################
@@ -192,36 +196,49 @@ class Controller(object):
         # Laser Ranger
         self.time_laserranger = 0
 
+        # GPS
+        self.gpspos = 0.0
+        self.x_measured_GPS = 0.0
+        self.y_measured_GPS = 0.0
+        self.lat_measured_GPS = 0.0
+        self.lon_measured_GPS = 0.0
+        self.gps_timestamp = 0.0
+
         # Emergency Stop
         self.ESTOP = False
 
         # Global Angles and Coordinates
         self.distance_travelled = 0.0
-        self.psi = 0.0
-        self.nu = 0.0
+        self.psi_estimated = 0.0
+        self.nu_estimated = 0.0
         if PATH_TYPE == 'CIRCLE':
-            self.x = PATH_RADIUS
+            self.x_estimated = PATH_RADIUS
         else:
-            self.x = 0.0
-        self.y = 0.0
+            self.x_estimated = 0.0
+        self.y_estimated = 0.0
 
         # Time Measurement and Timing of Loops
         self.time_count = 0.0
-        self.calculation_time = 0.0
+        self.loop_time = 0.0
         self.sensor_reading_time = 0
-        self.status_check_time = 0
         self.control_cal_time = 0
-        self.latest_gps_time = 0
+        self.gps_timestamp = 0
         self.exceedscount = 0
 
         # Bike States
-        self.states = [0.0, 0.0, 0.0]
+        self.roll = 0.0
+        self.roll_gyro = 0.0
+        self.rollRate = 0.0
+        self.gy = 0.0
+        self.gz = 0.0
+        self.ax = 0.0
+        self.ay = 0.0
+        self.az = 0.0
         self.velocity = 0.0
         self.AngVel = 0.0
 
         # Controller
         self.controller_active = False
-        self.calculation_time = 0.0
 
         # Balancing Controller
         self.balancing_setpoint = 0
@@ -274,45 +291,20 @@ class Controller(object):
     ####################################################################################################################
     # Get bike states
     def get_states(self):
-        delta_state = self.bike.get_handlebar_angle()
+        self.steeringAngle = self.bike.get_handlebar_angle()
 
         # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
-        imu_data = self.bike.get_imu_data()
-        phi_state = imu_data[0]
-        phi_d_state = imu_data[2]
+        self.imu_data = self.bike.get_imu_data()
 
-        return [phi_state, delta_state, phi_d_state, imu_data]
-
-
-    ####################################################################################################################
-    ####################################################################################################################
-    # Get bike states references
-    def get_balancing_setpoint(self, velocity):
-        if path_tracking:
-            if gps_use:
-                # We are outside so we get the lateral and angular errors from GPS measurements
-                lateral_error, angular_error, psi_ref = calculate_path_error(PATH_TYPE, self.distance_travelled, self.x,
-                                                                          self.y, self.psi, PATH_RADIUS)
-            elif laserRanger_use:
-                # We are on the roller so we neglect the angular error and the lateral error is given by the position
-                # measured by the laser rangers
-                lateral_error = self.y_laser_ranger
-                angular_error = 0
-            else:
-                lateral_error = 0
-                angular_error = 0
-                
-            # PID Lateral Position Controller
-            self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-lateral_error)
-
-            # PID Direction/Heading Controller
-            self.pid_direction_control_signal = self.pid_direction.update(-angular_error)
-
-            # Parallel path tracking controller structure
-            balancing_setpoint = self.pid_lateral_position_control_signal + self.pid_direction_control_signal
-        else:
-            balancing_setpoint = 0
-        return balancing_setpoint
+        # Extract states
+        self.roll = self.imu_data[0]
+        self.roll_gyro = self.imu_data[1]
+        self.rollRate = self.imu_data[2]
+        self.gy = self.imu_data[3]
+        self.gz = self.imu_data[4]
+        self.ax = self.imu_data[5]
+        self.ay = self.imu_data[6]
+        self.az = self.imu_data[7]
 
 
     ####################################################################################################################
@@ -324,12 +316,12 @@ class Controller(object):
         self.gpspos = self.bike.gps.get_position()
         self.x_measured_GPS = self.gpspos[0]
         self.y_measured_GPS = self.gpspos[1]
-        self.latest_gps_time = self.bike.gps.lastread - self.gaining_speed_start  # The gps timestamp
+        self.lat_measured_GPS = self.gpspos[2]
+        self.lon_measured_GPS = self.gpspos[3]
+        self.gps_timestamp = self.bike.gps.lastread - self.gaining_speed_start  # The gps timestamp
         # Update Kalman filter
         # position_kalman = self.bike.kf.update(x_measured_GPS, y_measured_GPS, self.states[1], self.velocity)
         # print('x_measured_GPS = %f ; y_measured_GPS = %f ; x_kalman = %f ; y_kalman = %f' % (self.x_measured_GPS, self.y_measured_GPS, position_kalman[0], position_kalman[1]))
-        if debug:
-            print('GPS : x_measured_GPS = %f ; y_measured_GPS = %f ;' % (self.x_measured_GPS, self.y_measured_GPS))
 
 
     ####################################################################################################################
@@ -407,14 +399,45 @@ class Controller(object):
 
     ####################################################################################################################
     ####################################################################################################################
-    # Balancing and path tracking controllers
-    def keep_the_bike_stable(self, states):
+    # Get bike states references
+    def get_balancing_setpoint(self):
+        if path_tracking:
+            if gps_use:
+                # We are outside so we get the lateral and angular errors from GPS measurements
+                lateral_error, angular_error, psi_ref = calculate_path_error(PATH_TYPE, self.distance_travelled, self.x_estimated,
+                                                                          self.y_estimated, self.psi_estimated, PATH_RADIUS)
+            elif laserRanger_use:
+                # We are on the roller so we neglect the angular error and the lateral error is given by the position
+                # measured by the laser rangers
+                lateral_error = self.y_laser_ranger
+                angular_error = 0
+            else:
+                lateral_error = 0
+                angular_error = 0
+
+            # PID Lateral Position Controller
+            self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-lateral_error)
+
+            # PID Direction/Heading Controller
+            self.pid_direction_control_signal = self.pid_direction.update(-angular_error)
+
+            # Parallel path tracking controller structure
+            balancing_setpoint = self.pid_lateral_position_control_signal + self.pid_direction_control_signal
+        else:
+            balancing_setpoint = 0
+        return balancing_setpoint
+
+
+    ####################################################################################################################
+    ####################################################################################################################
+    # Balancing controller
+    def keep_the_bike_stable(self):
         if path_tracking:
             # Choice of path, variable path_choice is set in param.py file
             if path_choice == 'pot':
                 # Position reference from potentiometer
                 if potentiometer_use:
-                    self.pot = ((self.bike.potent.read_pot_value() / 0.29) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
+                    self.pot = ((self.bike.get_potentiometer_value / potentiometer_maxVoltage) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
                 else:
                     self.pot = 0
                 self.pos_ref = self.pot
@@ -439,33 +462,35 @@ class Controller(object):
             self.pid_lateral_position.setReference(self.pos_ref)
             self.balancing_setpoint = self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
         elif potentiometer_use:
-            self.pot = -((self.bike.potent.read_pot_value() / 0.29) * 2.5 - 1.25) * deg2rad * 2  # Potentiometer gives a position reference between -2.5deg and 2.5deg
+            self.pot = -((self.bike.get_potentiometer_value / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2  # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
         else:
             self.balancing_setpoint = 0
 
+        # self.balancing_setpoint = get_balancing_setpoint()
+
         if balancing_controller_structure == 'chalmers':
             # Chalmers Controller structure : deltadot = PID(phidot)
             self.pid_balance.setReference(self.balancing_setpoint)
-            self.pid_balance_control_signal = self.pid_balance.update(states[2])
+            self.pid_balance_control_signal = self.pid_balance.update(self.rollRate)
             self.steering_rate = self.pid_balance_control_signal
         elif balancing_controller_structure == 'technion':
             # Technion Controller Structure : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
             self.pid_balance_outerloop.setReference(self.balancing_setpoint)
-            self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
-            self.pid_balance_control_signal = self.pid_balance.update(states[2])
+            self.pid_balance.setReference(self.pid_balance_outerloop.update(self.roll))
+            self.pid_balance_control_signal = self.pid_balance.update(self.rollRate)
             self.steering_rate = self.pid_balance_control_signal
         elif balancing_controller_structure == 'mdh':
             # MDH Controller structure : delta = PID(phi) ; deltadot = PID(delta)
             self.pid_balance.setReference(self.balancing_setpoint)
-            self.pid_balance_control_signal = self.pid_balance.update(states[0])
+            self.pid_balance_control_signal = self.pid_balance.update(self.roll)
             self.steering_rate = self.pos2vel(self.pid_balance_control_signal)
         else:
             print("Bike controller structure choice is not valid : \"%s\"; Using Technion's structure as default.\n" % (balancing_controller_structure))
             # Technion Controller Structure : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
             self.pid_balance_outerloop.setReference(self.balancing_setpoint)
-            self.pid_balance.setReference(self.pid_balance_outerloop.update(states[0]))
-            self.pid_balance_control_signal = self.pid_balance.update(states[2])
+            self.pid_balance.setReference(self.pid_balance_outerloop.update(self.roll))
+            self.pid_balance_control_signal = self.pid_balance.update(self.rollRate)
             self.steering_rate = self.pid_balance_control_signal
 
         # Low-pass filter
@@ -482,10 +507,14 @@ class Controller(object):
         # else:
         #     self.controller_set_handlebar_angular_velocity(0)
 
+
+    ####################################################################################################################
+    ####################################################################################################################
+    # Steering Angle to Steering Rate Controller
     def pos2vel(self, AngRef):
         self.pid_steeringangle.setReference(AngRef)
-        # self.AngVel = self.pid_steeringangle.update(-self.states[1])
-        self.AngVel = self.pid_steeringangle.update(self.states[1])
+        # self.AngVel = self.pid_steeringangle.update(-self.steeringAngle)
+        self.AngVel = self.pid_steeringangle.update(self.steeringAngle)
         return self.AngVel
 
 
@@ -501,12 +530,12 @@ class Controller(object):
         self.writer.writerow(['Description : ' + str(self.descr)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'phi', 'delta', 'phidot',
-                               'ControlInput', 'ax', 'ay', 'az', 'x', 'y', 'psi', 'nu']
+                               'ControlInput', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
         if gps_use:
-            self.log_header_str += ['GPS_timestamp', 'GPS_x', 'GPS_y', 'latitude', 'longitude']
+            self.log_header_str += ['GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude']
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
 
@@ -517,30 +546,32 @@ class Controller(object):
         self.time_log = time.time()
         self.log_str = [
             "{0:.5f}".format(self.time_count),
-            "{0:.5f}".format(self.calculation_time),
+            "{0:.5f}".format(self.loop_time),
             "{0:.5f}".format(self.velocity),
-            "{0:.5f}".format(self.states[0]),
-            "{0:.5f}".format(self.states[1]),
-            "{0:.5f}".format(self.states[2]),
+            "{0:.5f}".format(self.roll),
+            "{0:.5f}".format(self.steeringAngle),
+            "{0:.5f}".format(self.rollRate),
             "{0:.5f}".format(self.pid_balance_control_signal),
-            "{0:.5f}".format(self.extra_data[5]),
-            "{0:.5f}".format(self.extra_data[6]),
-            "{0:.5f}".format(self.extra_data[7]),
-            "{0:.5f}".format(self.x),
-            "{0:.5f}".format(self.y),
-            "{0:.5f}".format(self.psi),
-            "{0:.5f}".format(self.nu)
+            "{0:.5f}".format(self.gy),
+            "{0:.5f}".format(self.gz),
+            "{0:.5f}".format(self.ax),
+            "{0:.5f}".format(self.ay),
+            "{0:.5f}".format(self.az),
+            "{0:.5f}".format(self.x_estimated),
+            "{0:.5f}".format(self.y_estimated),
+            "{0:.5f}".format(self.psi_estimated),
+            "{0:.5f}".format(self.nu_estimated)
         ]
 
         if potentiometer_use:
             self.log_str += ["{0:.5f}".format(self.pot)]
         if gps_use:
             self.log_str += [
-                "{0:.5f}".format(self.latest_gps_time),
-                "{0:.5f}".format(self.gpspos[0]),
-                "{0:.5f}".format(self.gpspos[1]),
-                "{0:.5f}".format(self.bike.gps.latitude),
-                "{0:.5f}".format(self.bike.gps.longitude)
+                "{0:.5f}".format(self.gps_timestamp),
+                "{0:.5f}".format(self.x_measured_GPS),
+                "{0:.5f}".format(self.y_measured_GPS),
+                "{0:.5f}".format(self.lat_measured_GPS),
+                "{0:.5f}".format(self.lon_measured_GPS)
             ]
         if laserRanger_use:
             self.log_str += [
@@ -555,16 +586,16 @@ class Controller(object):
 
         if debug:
             # Print sensor reading time, control calculation time, IMU data reading time and logging time
-            print("sensor_reading_time, control calculation, status_check   IMU   log  = %g \t %g \t %g \t %g \t %g \t" % (
-                self.sensor_reading_time, self.control_cal_time, self.status_check_time, self.time_get_states,
+            print("sensor_reading_time   control calculation   IMU   log  = %g \t %g \t %g \t %g \t" % (
+                self.sensor_reading_time, self.control_cal_time, self.time_get_states,
                 self.time_log))
 
             # Check the calculation time
-            if self.calculation_time > sample_time:
+            if self.loop_time > sample_time:
                 print("Warning: The calculation time exceeds the sampling time!")
                 self.exceedscount += 1
-                print("sensor_reading_time, control calculation, status_check = %g \t %g \t %g" 
-                      % (self.sensor_reading_time, self.control_cal_time, self.status_check_time))
+                print("sensor_reading_time   control calculation = %g \t %g"
+                      % (self.sensor_reading_time, self.control_cal_time))
                 if self.exceedscount > max_exceed_count:
                     print("Calculation time exceeded sampling time too often (%d times) , aborting the experiment" % (max_exceed_count))
                     self.stop()

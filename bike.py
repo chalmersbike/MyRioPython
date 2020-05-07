@@ -43,6 +43,21 @@ class Bike(object):
     def get_imu_data(self):
         return self.imu.get_imu_data()
 
+    # GPS
+    if gps_use:
+        def get_gps_data(self):
+            return self.bike.gps.get_position()
+
+    # Laser Ranger
+    if laserRanger_use:
+        def get_laserRanger_data(self):
+            return self.bike.laser_ranger.get_y()
+
+    # Potentiometer
+    if potentiometer_use:
+        def get_potentiometer_value(self):
+            return self.bike.potent.read_pot_value()
+
     # Drive Motor
     def set_velocity(self, input_velocity):
         self.drive_motor.set_velocity(input_velocity)
