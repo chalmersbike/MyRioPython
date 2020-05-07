@@ -22,7 +22,7 @@ class Controller(object):
         self.initial_Estop_Check()  # Check if the Estop Engaged
 
         # Get experiment (if any) of the experiment
-        self.descr = raw_input('\nType a description for the experiment if necessary. Press ENTER to start the experiment. ')
+        self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
 
         # Wait before starting experiment
         print("")
@@ -35,7 +35,6 @@ class Controller(object):
 
         # Read the IMU complementary filter Phi as the initial phi estimation
         self.roll = self.bike.get_imu_data()[0]
-        self.states[0] = self.bike.get_imu_data()[0] # TO BE REMOVED
 
         # Create log file and add header line
         self.log_headerline()
@@ -71,7 +70,7 @@ class Controller(object):
                 # Compute Global Angles and Coordinates
                 self.x_estimated, self.y_estimated, self.psi_estimated, self.nu_estimated = global_angles_and_coordinates(self.velocity, sample_time,
                                                                                                                           LENGTH_A, LENGTH_B,
-                                                                                                                          self.states[1],self.psi_estimated,
+                                                                                                                          self.steeringAngle,self.psi_estimated,
                                                                                                                           self.x_estimated, self.y_estimated)
                 self.distance_travelled += self.velocity * sample_time
 
@@ -437,7 +436,7 @@ class Controller(object):
             if path_choice == 'pot':
                 # Position reference from potentiometer
                 if potentiometer_use:
-                    self.pot = ((self.bike.get_potentiometer_value / potentiometer_maxVoltage) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
+                    self.pot = ((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
                 else:
                     self.pot = 0
                 self.pos_ref = self.pot
@@ -462,7 +461,7 @@ class Controller(object):
             self.pid_lateral_position.setReference(self.pos_ref)
             self.balancing_setpoint = self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
         elif potentiometer_use:
-            self.pot = -((self.bike.get_potentiometer_value / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2  # Potentiometer gives a position reference between -2.5deg and 2.5deg
+            self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2  # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
         else:
             self.balancing_setpoint = 0

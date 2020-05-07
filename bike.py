@@ -46,27 +46,27 @@ class Bike(object):
     # GPS
     if gps_use:
         def get_gps_data(self):
-            return self.bike.gps.get_position()
+            return self.gps.get_position()
 
     # Laser Ranger
     if laserRanger_use:
         def get_laserRanger_data(self):
-            return self.bike.laser_ranger.get_y()
+            return self.laser_ranger.get_y()
 
     # Potentiometer
     if potentiometer_use:
         def get_potentiometer_value(self):
-            return self.bike.potent.read_pot_value()
+            return self.potent.read_pot_value()
 
     # Drive Motor
     def set_velocity(self, input_velocity):
         self.drive_motor.set_velocity(input_velocity)
 
+    # Steering Motor
     def set_handlebar_angular_velocity(self, angular_velocity):
         self.steering_motor.set_angular_velocity(angular_velocity)
         self.handlebar_angular_velocity = angular_velocity
 
-    # Steering Motor
     def get_handlebar_angular_velocity(self):
         return self.handlebar_angular_velocity
 
