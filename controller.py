@@ -13,6 +13,7 @@ from scipy import signal
 
 # @pysnooper.snoop()
 class Controller(object):
+    # @pysnooper.snoop()
     def __init__(self, bike):
         self.bike = bike
         self.variable_init()
@@ -25,9 +26,9 @@ class Controller(object):
 
         # Wait before starting experiment
         print("")
-        for i in range(0,int(math.ceil(a))):
+        for i in range(0,int(math.ceil(start_up_interval))):
             time.sleep(1)
-            print("Experiment starting in %is" % (int(math.ceil(a))-i))
+            print("Experiment starting in %is" % (int(math.ceil(start_up_interval))-i))
         print("")
         # print("\nExperiment starting in %is\n" % start_up_interval)
         # time.sleep(start_up_interval)
@@ -113,7 +114,7 @@ class Controller(object):
 
                     # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
                     # TO DO : CHECK WHY THIS HAPPENS !
-                    PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
+                    # PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
                 else:
                     # Check steering angle
                     self.keep_handlebar_angle_within_safety_margins(self.states[1])
