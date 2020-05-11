@@ -36,6 +36,22 @@ class Controller(object):
         # Read the IMU complementary filter Phi as the initial phi estimation
         self.roll = self.bike.get_imu_data()[0]
 
+        # Load path
+        if path_file != 'pot':
+            try:
+                self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
+                self.path_time = self.path_data[:,0]
+                self.path_x = self.path_data[:,1]
+                self.path_y = self.path_data[:,2]
+                self.path_psi = self.path_data[:,3]
+            except:
+                print("Path file not found, setting all reference to 0 as default")
+                self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
+                self.path_time = self.path_data[:,0]
+                self.path_x = self.path_data[:,1]
+                self.path_y = self.path_data[:,2]
+                self.path_psi = self.path_data[:,3]
+
         # Create log file and add header line
         self.log_headerline()
 
@@ -123,6 +139,9 @@ class Controller(object):
                     # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
                     # TO DO : CHECK WHY THIS HAPPENS !
                     PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
+
+                    # Time at which the controller starts running
+                    self.time_start_controller = time.tme()
                 else:
                     # Check steering angle
                     self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
@@ -192,7 +211,7 @@ class Controller(object):
         self.pot = 0.0
 
         # Laser Ranger
-        self.time_laserranger = 0
+        self.time_laserranger = 0.0
 
         # GPS
         self.gpspos = 0.0
@@ -201,6 +220,9 @@ class Controller(object):
         self.lat_measured_GPS = 0.0
         self.lon_measured_GPS = 0.0
         self.gps_timestamp = 0.0
+        self.psi_measured_GPS = 0.0
+        self.x_measured_GPS_old = 0.0
+        self.y_measured_GPS_old = 0.0
 
         # Emergency Stop
         self.ESTOP = False
@@ -218,10 +240,11 @@ class Controller(object):
         # Time Measurement and Timing of Loops
         self.time_count = 0.0
         self.loop_time = 0.0
-        self.sensor_reading_time = 0
-        self.control_cal_time = 0
-        self.gps_timestamp = 0
-        self.exceedscount = 0
+        self.sensor_reading_time = 0.0
+        self.control_cal_time = 0.0
+        self.gps_timestamp = 0.0
+        self.exceedscount = 0.0
+        self.time_start_controller = 0.0
 
         # Bike States
         self.roll = 0.0
@@ -239,14 +262,24 @@ class Controller(object):
         self.controller_active = False
 
         # Balancing Controller
-        self.balancing_setpoint = 0
+        self.balancing_setpoint = 0.0
         self.steering_rate = 0.0
         self.steering_rate_previous = 0.0
         self.steering_rate_filt = 0.0
         self.steering_rate_filt_previous = 0.0
 
         # Path Trakcing Controller
-        self.pos_ref = 0
+        self.pos_ref = 0.0
+        self.path_data = [0.0,0.0,0.0,0.0]
+        self.path_time = 0.0
+        self.path_x = 0.0
+        self.path_y = 0.0
+        self.path_psi = 0.0
+        self.x_ref = 0.0
+        self.y_ref = 0.0
+        self.psi_ref = 0.0
+        self.lateral_error = 0.0
+        self.heading_error = 0.0
 
         # PID Balance Controller
         self.pid_balance = PID(pid_balance_P, pid_balance_I, pid_balance_D)
@@ -314,9 +347,15 @@ class Controller(object):
         self.gpspos = self.bike.gps.get_position()
         self.x_measured_GPS = self.gpspos[0]
         self.y_measured_GPS = self.gpspos[1]
+        self.psi_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_old,self.x_measured_GPS - self.x_measured_GPS_old)
         self.lat_measured_GPS = self.gpspos[2]
         self.lon_measured_GPS = self.gpspos[3]
         self.gps_timestamp = self.bike.gps.lastread - self.gaining_speed_start  # The gps timestamp
+
+        # Save previous x and y positions to use in heading computation
+        self.x_measured_GPS_old = self.x_measured_GPS
+        self.y_measured_GPS_old = self.y_measured_GPS
+
         # Update Kalman filter
         # position_kalman = self.bike.kf.update(x_measured_GPS, y_measured_GPS, self.states[1], self.velocity)
         # print('x_measured_GPS = %f ; y_measured_GPS = %f ; x_kalman = %f ; y_kalman = %f' % (self.x_measured_GPS, self.y_measured_GPS, position_kalman[0], position_kalman[1]))
@@ -400,72 +439,115 @@ class Controller(object):
     # Get bike states references
     def get_balancing_setpoint(self):
         if path_tracking:
+            # Get reference position and heading
+            if path_file == 'pot':
+                self.x_ref = 0.0
+                self.psi_ref = 0.0
+                if potentiometer_use:
+                    self.pot = ((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
+                    self.y_ref = self.pot
+                else:
+                    self.y_ref = 0.0
+            else:
+                self.x_ref = np.interp(time.time() - self.time_start_controller,path_time,path_x)
+                self.y_ref = np.interp(time.time() - self.time_start_controller, path_time, path_y)
+                self.psi_ref = np.interp(time.time() - self.time_start_controller, path_time, path_psi)
+
+            # Compute position and heading errors
             if gps_use:
-                # We are outside so we get the lateral and angular errors from GPS measurements
-                lateral_error, angular_error, psi_ref = calculate_path_error(PATH_TYPE, self.distance_travelled, self.x_estimated,
-                                                                          self.y_estimated, self.psi_estimated, PATH_RADIUS)
+                # We are outside so we get the position and heading measurement from the GPS
+                self.x_error = self.x_ref - self.x_measured_GPS
+                self.y_error = self.y_ref - self.y_measured_GPS
+                self.psi_error = self.psi_ref - self.psi_measured_GPS
             elif laserRanger_use:
                 # We are on the roller so we neglect the angular error and the lateral error is given by the position
                 # measured by the laser rangers
-                lateral_error = self.y_laser_ranger
-                angular_error = 0
+                self.x_error = 0
+                self.y_error = self.y_ref - self.y_laser_ranger
+                self.psi_error = 0
             else:
-                lateral_error = 0
-                angular_error = 0
+                self.x_error = 0
+                self.y_error = 0
+                self.psi_error = 0
+                
+            # Compute lateral and heading errors
+            self.lateral_error = self.x_error * np.sin(self.psi_ref) + self.y_error * np.cos(self.psi_ref)
+            self.heading_error = self.psi_error
 
-            # PID Lateral Position Controller
-            self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-lateral_error)
-
-            # PID Direction/Heading Controller
-            self.pid_direction_control_signal = self.pid_direction.update(-angular_error)
-
-            # Parallel path tracking controller structure
-            balancing_setpoint = self.pid_lateral_position_control_signal + self.pid_direction_control_signal
-        else:
-            balancing_setpoint = 0
-        return balancing_setpoint
-
-
-    ####################################################################################################################
-    ####################################################################################################################
-    # Balancing controller
-    def keep_the_bike_stable(self):
-        if path_tracking:
-            # Choice of path, variable path_choice is set in param.py file
-            if path_choice == 'pot':
-                # Position reference from potentiometer
-                if potentiometer_use:
-                    self.pot = ((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
+            if path_tracking_structure == 'parallel':
+                # PID Lateral Position Controller
+                self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not maesurement
+                # PID Direction/Heading Controller
+                self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not maesurement
+                # Compute balancing setpoint
+                self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
+            elif path_tracking_structure == 'series':
+                # PID Lateral Position Controller
+                self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not maesurement
+                if heading_controller:
+                    # PID Direction/Heading Controller
+                    self.pid_direction.setReference(lateralError_controller * self.pid_lateral_position_control_signal)
+                    self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not maesurement
+                    # Compute balancing setpoint
+                    self.balancing_setpoint = self.pid_direction_control_signal
                 else:
-                    self.pot = 0
-                self.pos_ref = self.pot
-            elif path_choice == 'sine':
-                # Position reference is a sine wave
-                # Frequency is path_sine_freq
-                # Amplitude is path_sine_amp
-                self.pos_ref = path_sine_amp * math.sin(self.time_count * 2 * math.pi * path_sine_freq)
-            elif path_choice == 'overtaking':
-                # Position reference is an overtaking (set parameters in param.py file)
-                # All sections going straight last time_path_stay
-                # All inclined sections last time_path_slope
-                # Slope of the inclined sections is slope
-                self.pos_ref = slope * (self.time_count - time_path_stay) * (
-                            time_path_stay < self.time_count < (time_path_stay + time_path_slope)) \
-                               + slope * time_path_slope * ((time_path_stay + time_path_slope) < self.time_count < (
-                            2 * time_path_stay + time_path_slope)) \
-                               + (slope * time_path_slope - slope * (
-                            self.time_count - (2 * time_path_stay + time_path_slope))) * (
-                                           (2 * time_path_stay + time_path_slope) < self.time_count < (
-                                               2 * time_path_stay + 2 * time_path_slope))
-            self.pid_lateral_position.setReference(self.pos_ref)
-            self.balancing_setpoint = self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
+                    # Compute balancing setpoint
+                    self.balancing_setpoint = self.pid_lateral_position_control_signal
+            else:
+                print("Path tracking controller structure choice is not valid : \"%s\"; Using parallel structure as default.\n" % (balancing_controller_structure))
+                # PID Lateral Position Controller
+                self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not maesurement
+                # PID Direction/Heading Controller
+                self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not maesurement
+                # Compute balancing setpoint
+                self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 1 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
         else:
             self.balancing_setpoint = 0
 
-        # self.balancing_setpoint = get_balancing_setpoint()
+
+    ####################################################################################################################
+    ####################################################################################################################
+    # Balancing controller
+    def keep_the_bike_stable(self):
+        # if path_tracking:
+        #     # Choice of path, variable path_choice is set in param.py file
+        #     if path_choice == 'pot':
+        #         # Position reference from potentiometer
+        #         if potentiometer_use:
+        #             self.pot = ((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
+        #         else:
+        #             self.pot = 0
+        #         self.pos_ref = self.pot
+        #     elif path_choice == 'sine':
+        #         # Position reference is a sine wave
+        #         # Frequency is path_sine_freq
+        #         # Amplitude is path_sine_amp
+        #         self.pos_ref = path_sine_amp * math.sin(self.time_count * 2 * math.pi * path_sine_freq)
+        #     elif path_choice == 'overtaking':
+        #         # Position reference is an overtaking (set parameters in param.py file)
+        #         # All sections going straight last time_path_stay
+        #         # All inclined sections last time_path_slope
+        #         # Slope of the inclined sections is slope
+        #         self.pos_ref = slope * (self.time_count - time_path_stay) * (
+        #                     time_path_stay < self.time_count < (time_path_stay + time_path_slope)) \
+        #                        + slope * time_path_slope * ((time_path_stay + time_path_slope) < self.time_count < (
+        #                     2 * time_path_stay + time_path_slope)) \
+        #                        + (slope * time_path_slope - slope * (
+        #                     self.time_count - (2 * time_path_stay + time_path_slope))) * (
+        #                                    (2 * time_path_stay + time_path_slope) < self.time_count < (
+        #                                        2 * time_path_stay + 2 * time_path_slope))
+        #     self.pid_lateral_position.setReference(self.pos_ref)
+        #     self.balancing_setpoint = self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
+        # elif potentiometer_use:
+        #     self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 1 # Potentiometer gives a position reference between -2.5deg and 2.5deg
+        #     self.balancing_setpoint = self.pot
+        # else:
+        #     self.balancing_setpoint = 0
+
+        get_balancing_setpoint()
 
         if balancing_controller_structure == 'chalmers':
             # Chalmers Controller structure : deltadot = PID(phidot)
@@ -536,6 +618,8 @@ class Controller(object):
             self.log_header_str += ['GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude']
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
+        if path_tracking:
+            self.log_header_str += ['x_ref', 'y_ref', 'psi_ref', 'lateral_error', 'heading_error']
 
         self.writer.writerow(self.log_header_str)
 
@@ -562,6 +646,14 @@ class Controller(object):
             "{0:.5f}".format(self.nu_estimated)
         ]
 
+        if path_tracking:
+            self.log_str += [
+                "{0:.5f}".format(self.x_ref),
+                "{0:.5f}".format(self.y_ref),
+                "{0:.5f}".format(self.psi_ref),
+                "{0:.5f}".format(self.lateral_error),
+                "{0:.5f}".format(self.heading_error)
+            ]
         if potentiometer_use:
             self.log_str += ["{0:.5f}".format(self.pot)]
         if gps_use:

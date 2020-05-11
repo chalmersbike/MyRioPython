@@ -193,6 +193,18 @@ def calculate_path_error(path_type, distance_travelled, x, y, psi, path_radius):
                 self.time_count - (2 * time_path_stay + time_path_slope))) * (
                                (2 * time_path_stay + time_path_slope) < self.time_count < (
                                2 * time_path_stay + 2 * time_path_slope))
+    elif path_choice == 'file':
+        lateral_error = 0.0
+        angular_error = 0.0
+        psi_ref = 0.0
+        return lateral_error, angular_error, psi_ref
+    else:
+        lateral_error = 0.0
+        angular_error = 0.0
+        psi_ref = 0.0
+        return lateral_error, angular_error, psi_ref
+
+
 
 
 ########################################################################################################################
