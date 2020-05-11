@@ -528,7 +528,7 @@ class Controller(object):
         self.writer.writerow(['Description : ' + str(self.descr)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'Roll', 'SteeringAngle', 'RollRate',
-                               'ControlInput', 'BalancingSetpoint' 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
+                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
