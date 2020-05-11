@@ -49,8 +49,10 @@ steeringMotor_IdleDuty = 50.0           # Steering Motor PWM duty cycle for idli
 steeringMotor_PWMforMaxOutput = 90.0    # Steering Motor PWM duty cycle for maximum output (max speed/current)
 steeringMotor_PWMforMinOutput = 10.0    # Steering Motor PWM duty cycle for minimum output (min speed/current)
 
-steeringMotor_SpeedMaxOutput = 1000.0   # [rpm] Steering Motor maximum speed
-steeringMotor_SpeedMinOutput = -1000.0  # [rpm] Steering Motor minimum speed
+# steeringMotor_SpeedMaxOutput = 1000.0   # [rpm] Steering Motor maximum speed
+# steeringMotor_SpeedMinOutput = -1000.0  # [rpm] Steering Motor minimum speed
+steeringMotor_SpeedMaxOutput = 200.0   # [rpm] Steering Motor maximum speed
+steeringMotor_SpeedMinOutput = -200.0  # [rpm] Steering Motor minimum speed
 
 steeringMotor_CurrentMaxOutput = 1.0    # [A] Steering Motor maximum current
 steeringMotor_CurrentMinOutput = -1.0   # [A] Steering Motor minimum current
@@ -168,6 +170,7 @@ pid_steeringangle_sample_time = 1.0 / controller_frequency
 # PID Balance Inner Loop Controller Parameters
 pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 pid_balance_P = 1.57
+#pid_balance_P = 5.0 # Gain tested with Peo
 pid_balance_I = 0.0
 pid_balance_D = 0.0
 pid_balance_sample_time = 1.0 / controller_frequency
@@ -175,6 +178,7 @@ pid_balance_sample_time = 1.0 / controller_frequency
 # PID Balance Outer Loop Controller Parameters
 pid_balance_outerloop_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 pid_balance_outerloop_P = 0.57
+#pid_balance_outerloop_P = 1.0 # Gain tested with Peo
 pid_balance_outerloop_I = 0.0
 pid_balance_outerloop_D = 0.0
 pid_balance_outerloop_sample_time = 1.0 / controller_frequency
