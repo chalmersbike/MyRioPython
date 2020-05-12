@@ -113,3 +113,4 @@ ENV/
 
 #.csv
 *.csv
+!*path*.csv
