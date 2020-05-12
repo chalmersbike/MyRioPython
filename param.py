@@ -12,10 +12,10 @@ balancing_controller_structure = 'technion'     # Choice of the balancing contro
 controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
 
-path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
 path_tracking_structure = 'parallel'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
                                                 # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
-lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
+lateralError_controller = 1                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 0                          # 1 = use heading controller ; 0 = do not use heading controller
 path_file = 'straight.csv'                      # Name of the file path with ".csv" extension.
                                                 # Must be placed in "paths" folder.

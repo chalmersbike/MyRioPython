@@ -141,8 +141,8 @@ class Controller(object):
                     PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
 
                     # Time at which the controller starts running
-                    self.time_start_controller = time.tme()
-                else:
+                    self.time_start_controller = time.time()
+                elif self.controller_active:
                     # Check steering angle
                     self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
 
@@ -449,9 +449,9 @@ class Controller(object):
                 else:
                     self.y_ref = 0.0
             else:
-                self.x_ref = np.interp(time.time() - self.time_start_controller,path_time,path_x)
-                self.y_ref = np.interp(time.time() - self.time_start_controller, path_time, path_y)
-                self.psi_ref = np.interp(time.time() - self.time_start_controller, path_time, path_psi)
+                self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time,self.path_x)
+                self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time,self.path_y)
+                self.psi_ref = np.interp(time.time() - self.time_start_controller,self.path_time,self.path_psi)
 
             # Compute position and heading errors
             if gps_use:
@@ -547,7 +547,7 @@ class Controller(object):
         # else:
         #     self.balancing_setpoint = 0
 
-        get_balancing_setpoint()
+        self.get_balancing_setpoint()
 
         if balancing_controller_structure == 'chalmers':
             # Chalmers Controller structure : deltadot = PID(phidot)
@@ -646,14 +646,6 @@ class Controller(object):
             "{0:.5f}".format(self.nu_estimated)
         ]
 
-        if path_tracking:
-            self.log_str += [
-                "{0:.5f}".format(self.x_ref),
-                "{0:.5f}".format(self.y_ref),
-                "{0:.5f}".format(self.psi_ref),
-                "{0:.5f}".format(self.lateral_error),
-                "{0:.5f}".format(self.heading_error)
-            ]
         if potentiometer_use:
             self.log_str += ["{0:.5f}".format(self.pot)]
         if gps_use:
@@ -669,6 +661,14 @@ class Controller(object):
                 "{0:.5f}".format(self.bike.laser_ranger.distance1),
                 "{0:.5f}".format(self.bike.laser_ranger.distance2),
                 "{0:.5f}".format(self.y_laser_ranger)
+            ]
+        if path_tracking:
+            self.log_str += [
+                "{0:.5f}".format(self.x_ref),
+                "{0:.5f}".format(self.y_ref),
+                "{0:.5f}".format(self.psi_ref),
+                "{0:.5f}".format(self.lateral_error),
+                "{0:.5f}".format(self.heading_error)
             ]
 
         self.writer.writerow(self.log_str)
