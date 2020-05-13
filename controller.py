@@ -11,7 +11,7 @@ import Adafruit_BBIO.PWM as PWM
 import pysnooper
 from scipy import signal
 
-# @pysnooper.snoop()
+#@pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
     def __init__(self, bike):
@@ -24,20 +24,10 @@ class Controller(object):
         # Get experiment (if any) of the experiment
         self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
 
-        # Wait before starting experiment
-        print("")
-        for i in range(0,int(math.ceil(start_up_interval))):
-            time.sleep(1)
-            print("Experiment starting in %is" % (int(math.ceil(start_up_interval))-i))
-        print("")
-        # print("\nExperiment starting in %is\n" % start_up_interval)
-        # time.sleep(start_up_interval)
-
-        # Read the IMU complementary filter Phi as the initial phi estimation
-        self.roll = self.bike.get_imu_data()[0]
-
         # Load path
+
         if path_file != 'pot':
+            print("Loading path ...")
             try:
                 self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
                 self.path_time = self.path_data[:,0]
@@ -51,9 +41,22 @@ class Controller(object):
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
+            print("Path Loaded, starting experiment.")
 
         # Create log file and add header line
         self.log_headerline()
+
+        # Read the IMU complementary filter Phi as the initial phi estimation
+        self.roll = self.bike.get_imu_data()[0]
+
+        # Wait before starting experiment
+        print("")
+        for i in range(0,int(math.ceil(start_up_interval))):
+            time.sleep(1)
+            print("Experiment starting in %is" % (int(math.ceil(start_up_interval))-i))
+        print("")
+        # print("\nExperiment starting in %is\n" % start_up_interval)
+        # time.sleep(start_up_interval)
 
 
     ####################################################################################################################
@@ -502,7 +505,7 @@ class Controller(object):
                 # Compute balancing setpoint
                 self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
         elif potentiometer_use:
-            self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 1 # Potentiometer gives a position reference between -2.5deg and 2.5deg
+            self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
         else:
             self.balancing_setpoint = 0
@@ -624,6 +627,8 @@ class Controller(object):
         self.writer.writerow(self.log_header_str)
 
     def log_regular(self):
+        print("time = %f ; roll = %f ; steering = %f" % (self.time_count,self.roll,self.steeringAngle))
+
         # Log data
         self.time_log = time.time()
         self.log_str = [
