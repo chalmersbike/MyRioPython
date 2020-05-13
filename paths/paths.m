@@ -1,13 +1,13 @@
 % Define the time vector for the simulation
 % Remove 10s from sim_time to give time to the bike to balance
-time_array = 0:Ts:5*(sim_time-time_balance);
+time_array = 0:Ts:(sim_time-time_balance);
 length1 = floor((sim_time-time_balance)/Ts);
 
 switch path    
     case 1
         % Straight Path ===================================================
         path_x = v*time_array;
-        path_y = path_x; 
+        path_y = 0*path_x; 
     
     case 2 
         % Circle ==========================================================
@@ -26,7 +26,7 @@ switch path
         % Sinusoidal Path =================================================
         path_x = v*time_array;
 %         path_y = sin(path_x*1);
-        path_y = 0.15*sin(path_x/100);
+        path_y = 0.1*sin(path_x/30);
         
     case 5
         % _/-\_ integrated from heading ===================================
