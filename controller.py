@@ -10,6 +10,7 @@ import Adafruit_BBIO.ADC as ADC
 import Adafruit_BBIO.PWM as PWM
 import pysnooper
 from scipy import signal
+import bisect
 
 #@pysnooper.snoop()
 class Controller(object):
@@ -35,7 +36,7 @@ class Controller(object):
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
             except:
-                print("Path file not found, setting all reference to 0 as default")
+                print("Path file not found, setting all path references to 0 as default")
                 self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
                 self.path_time = self.path_data[:,0]
                 self.path_x = self.path_data[:,1]
@@ -452,9 +453,10 @@ class Controller(object):
                 else:
                     self.y_ref = 0.0
             else:
-                self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time,self.path_x)
-                self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time,self.path_y)
-                self.psi_ref = np.interp(time.time() - self.time_start_controller,self.path_time,self.path_psi)
+                idx_path_currentTime = bisect.bisect_left(self.path_time,time.time() - self.time_start_controller)+np.array([-1,0])
+                self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_x[idx_path_currentTime])
+                self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_y[idx_path_currentTime])
+                self.psi_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_psi[idx_path_currentTime])
 
             # Compute position and heading errors
             if gps_use:
