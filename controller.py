@@ -35,6 +35,7 @@ class Controller(object):
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
+                print("Path Loaded, starting experiment.")
             except:
                 print("Path file not found, setting all path references to 0 as default")
                 self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
@@ -42,7 +43,6 @@ class Controller(object):
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
-            print("Path Loaded, starting experiment.")
 
         # Create log file and add header line
         self.log_headerline()
@@ -629,7 +629,7 @@ class Controller(object):
         self.writer.writerow(self.log_header_str)
 
     def log_regular(self):
-        print("time = %f ; roll = %f ; steering = %f" % (self.time_count,self.roll,self.steeringAngle))
+        #print("time = %f ; roll = %f ; steering = %f" % (self.time_count,self.roll,self.steeringAngle))
 
         # Log data
         self.time_log = time.time()
