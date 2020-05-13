@@ -105,12 +105,14 @@ class Controller(object):
                     self.gps_timestamp = 0.0
 
                 # Get laser ranger position (y position on the roller)
+                time_laserranger = time.time()
                 if laserRanger_use:
                     if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
                         self.time_laserranger = time.time()
                         self.y_laser_ranger = self.bike.get_laserRanger_data()
                 else:
                     self.y_laser_ranger = 0
+                print("time laser ranger = %f" %(time.time()-time_laserranger))
 
                 # Compute time needed to read from all sensors
                 self.sensor_reading_time = time.time() - self.time_start_current_loop
@@ -156,7 +158,9 @@ class Controller(object):
 
                 # Compute time needed to run controllers
                 self.control_cal_time = time.time() - self.time_start_current_loop - self.sensor_reading_time
-            except (ValueError, KeyboardInterrupt):
+            #except (ValueError, KeyboardInterrupt):
+            except:
+                print("Number of times sampling time was exceeded : %d" %(self.exceedscount))
                 self.stop()
                 print('Error or keyboard interrupt, aborting the experiment')
 
@@ -181,8 +185,9 @@ class Controller(object):
 
             # End test time condition
             if self.time_count > test_duration:
-                self.stop()
+                # Print number of times sampling time was exceeded if experiment is aborted early
                 print('Exceeded test duration, aborting the experiment')
+                self.stop()
                 break
 
             # Compute total time for current loop
@@ -191,6 +196,8 @@ class Controller(object):
             if self.loop_time < sample_time:
                 time.sleep((sample_time - self.loop_time))
 
+        # Print number of times sampling time was exceeded after experiment is over
+        print("Number of times sampling time was exceeded : %d" % (self.exceedscount))
 
     ####################################################################################################################
     ####################################################################################################################
@@ -682,18 +689,17 @@ class Controller(object):
 
         self.time_log = time.time() - self.time_log
 
-        if debug:
+        if debug or (self.loop_time > sample_time):
+            if self.loop_time > sample_time:
+                print("Warning: The calculation time exceeds the sampling time!")
+                self.exceedscount += 1
+
             # Print sensor reading time, control calculation time, IMU data reading time and logging time
             print("sensor_reading_time   control calculation   IMU   log  = %g \t %g \t %g \t %g \t" % (
                 self.sensor_reading_time, self.control_cal_time, self.time_get_states,
                 self.time_log))
 
-        # Check the calculation time
-        if self.loop_time > sample_time:
-            print("Warning: The calculation time exceeds the sampling time!")
-            self.exceedscount += 1
-            print("sensor_reading_time   control calculation = %g \t %g"
-                  % (self.sensor_reading_time, self.control_cal_time))
+            # Stop experiment if exceeded sampling time too many times
             # if self.exceedscount > max_exceed_count:
             #     print("Calculation time exceeded sampling time too often (%d times) , aborting the experiment" % (max_exceed_count))
             #     self.stop()

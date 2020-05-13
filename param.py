@@ -17,7 +17,7 @@ path_tracking_structure = 'parallel'            # 'parallel' : direction and lat
                                                 # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
 lateralError_controller = 1                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 0                          # 1 = use heading controller ; 0 = do not use heading controller
-path_file = 'overtaking_path.csv'                    # Name of the file path with ".csv" extension.
+path_file = 'circle_path.csv'                    # Name of the file path with ".csv" extension.
                                                 # Must be placed in "paths" folder.
                                                 # Must be a CSV with 4 columns : Time, x, y, heading
                                                 # Can also be 'pot' to use the potentiometer as y position on the roller
