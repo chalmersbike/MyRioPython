@@ -68,7 +68,10 @@ def i2c_write(address, reg, data_p, length):
 
 
 # Load VL53L0X shared lib
+# Modified library to be less verbose
 tof_lib = CDLL("./vl53l0x/VL53L0X_rasp_python/bin/vl53l0x_python.so")
+# Original library from https://github.com/johnbryanmoore/VL53L0X_rasp_python
+# tof_lib = CDLL("../vl53l0x/VL53L0X_rasp_python/bin/vl53l0x_python.so")
 
 # Create read function pointer
 READFUNC = CFUNCTYPE(c_int, c_ubyte, c_ubyte, POINTER(c_ubyte), c_ubyte)

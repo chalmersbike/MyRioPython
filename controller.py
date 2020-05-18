@@ -11,6 +11,7 @@ import Adafruit_BBIO.PWM as PWM
 import pysnooper
 from scipy import signal
 import bisect
+import traceback
 
 #@pysnooper.snoop()
 class Controller(object):
@@ -22,11 +23,7 @@ class Controller(object):
         # Check Estop before starting the experiment
         self.initial_Estop_Check()  # Check if the Estop Engaged
 
-        # Get experiment (if any) of the experiment
-        self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
-
         # Load path
-
         if path_file != 'pot':
             print("Loading path ...")
             try:
@@ -49,6 +46,9 @@ class Controller(object):
 
         # Read the IMU complementary filter Phi as the initial phi estimation
         self.roll = self.bike.get_imu_data()[0]
+
+        # Get experiment (if any) of the experiment
+        self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
 
         # Wait before starting experiment
         print("")
@@ -112,10 +112,9 @@ class Controller(object):
                         self.y_laser_ranger = self.bike.get_laserRanger_data()
                 else:
                     self.y_laser_ranger = 0
-                print("time laser ranger = %f" %(time.time()-time_laserranger))
-
                 # Compute time needed to read from all sensors
                 self.sensor_reading_time = time.time() - self.time_start_current_loop
+                print("Laser ranger reading time : %f" %(time.time()-self.time_laserranger))
 
                 # PID Velocity Control
                 if pid_velocity_active:
@@ -159,10 +158,16 @@ class Controller(object):
                 # Compute time needed to run controllers
                 self.control_cal_time = time.time() - self.time_start_current_loop - self.sensor_reading_time
             #except (ValueError, KeyboardInterrupt):
-            except:
+            except Exception as e:
                 print("Number of times sampling time was exceeded : %d" %(self.exceedscount))
+
+                # e = sys.exc_info()[0]
+                print("Detected error :")
+                print(e)
+                print(traceback.print_exc())
+
                 self.stop()
-                print('Error or keyboard interrupt, aborting the experiment')
+                # print('Error or keyboard interrupt, aborting the experiment')
 
             # Control Frequency
             self.loop_time = time.time() - self.time_start_current_loop
@@ -460,10 +465,15 @@ class Controller(object):
                 else:
                     self.y_ref = 0.0
             else:
-                idx_path_currentTime = bisect.bisect_left(self.path_time,time.time() - self.time_start_controller)+np.array([-1,0])
-                self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_x[idx_path_currentTime])
-                self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_y[idx_path_currentTime])
-                self.psi_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_psi[idx_path_currentTime])
+                if (time.time() - self.time_start_controller) > self.path_time[-1]:
+                    self.x_ref = self.path_x[-1]
+                    self.y_ref = self.path_y[-1]
+                    self.psi_ref = self.path_psi[-1]
+                else:
+                    idx_path_currentTime = bisect.bisect_left(self.path_time,time.time() - self.time_start_controller)+np.array([-1,0])
+                    self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_x[idx_path_currentTime])
+                    self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_y[idx_path_currentTime])
+                    self.psi_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_psi[idx_path_currentTime])
 
             # Compute position and heading errors
             if gps_use:

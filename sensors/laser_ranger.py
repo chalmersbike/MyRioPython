@@ -39,7 +39,7 @@ VL53L0X_HIGH_SPEED_MODE = 4         # High Speed mode
 
 i2cbus = smbus.SMBus(1)
 
-# @pysnooper.snoop()
+#@pysnooper.snoop()
 class DualLaserRanger(object):
     def __init__(self):
         # Setup GPIO for shutdown pins on each VL53L0X
@@ -114,7 +114,7 @@ class DualLaserRanger(object):
             self.timing = 20000
         if debug:
             print ("Laser ranger : Timing %d ms" % (self.timing / 1000))
-        self.timing = self.timing / 1000000.00 + 0.1
+        self.timing = self.timing / 1000000.00
 
         self.distance1 = 0
         self.distance2 = 0
