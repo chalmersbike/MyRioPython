@@ -630,7 +630,10 @@ class Controller(object):
         results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
         self.writer = csv.writer(results_csv)
 
-        self.writer.writerow(['Description : ' + str(self.descr)])
+        if path_tracking:
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_lateral_position_P = ' + str(pid_lateral_position_P) + ' ; pid_lateral_position_D = ' + str(pid_lateral_position_D)])
+        else:
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
