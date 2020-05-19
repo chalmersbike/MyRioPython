@@ -22,6 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import sys
+sys.path.append(sys.path[0]+'/../../')
 import time
 from sensors import VL53L0X
 import Adafruit_BBIO.GPIO as GPIO

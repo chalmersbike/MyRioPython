@@ -24,7 +24,7 @@ class Controller(object):
         self.initial_Estop_Check()  # Check if the Estop Engaged
 
         # Load path
-        if path_file != 'pot':
+        if path_tracking and path_file != 'pot':
             print("Loading path ...")
             try:
                 self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
@@ -41,14 +41,14 @@ class Controller(object):
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
 
-        # Create log file and add header line
-        self.log_headerline()
-
         # Read the IMU complementary filter Phi as the initial phi estimation
         self.roll = self.bike.get_imu_data()[0]
 
         # Get experiment (if any) of the experiment
         self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
+
+        # Create log file and add header line
+        self.log_headerline()
 
         # Wait before starting experiment
         print("")
@@ -107,7 +107,8 @@ class Controller(object):
                 # Get laser ranger position (y position on the roller)
                 time_laserranger = time.time()
                 if laserRanger_use:
-                    if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
+                    #if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
+                    if (time.time() - self.time_laserranger) > 10 * sample_time:
                         self.time_laserranger = time.time()
                         self.y_laser_ranger = self.bike.get_laserRanger_data()
                 else:

@@ -6,3 +6,4 @@ from potentiometer import Potentiometer
 from gps import GPS
 from laser_ranger import DualLaserRanger
 from laser_ranger_single import SingleLaserRanger
+from VL53L0X import VL53L0X
