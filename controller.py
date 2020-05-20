@@ -631,9 +631,9 @@ class Controller(object):
         self.writer = csv.writer(results_csv)
 
         if path_tracking:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_lateral_position_P = ' + str(pid_lateral_position_P) + ' ; pid_lateral_position_D = ' + str(pid_lateral_position_D)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_outerloop_P = ' + str(pid_balance_outerloop_P) + ' ; pid_lateral_position_P = ' + str(pid_lateral_position_P) + ' ; pid_lateral_position_D = ' + str(pid_lateral_position_D)])
         else:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_outerloop_P = ' + str(pid_balance_outerloop_P)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
