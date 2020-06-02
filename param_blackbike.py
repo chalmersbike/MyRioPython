@@ -80,7 +80,7 @@ ntrip_port = 80                         # NTRIP Port
 ntrip_mountpoint = "RTCM3_GNSS"         # NTRIP Mountpoint
 ntrip_username = "ChalmersE2RTK"        # Username to connect to NTRIP caster
 ntrip_password = "885511"               # Password to connect to NTRIP caster
-
+ntrip_verbose = 0                       # 1 = NTRIP library is verbose (will output extra information) ; 0 = not verbose
 
 ########################################################################################################################
 # Hall Sensor
