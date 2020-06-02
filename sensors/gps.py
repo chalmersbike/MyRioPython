@@ -4,6 +4,7 @@ import serial
 import math
 import time
 import warnings
+from NtripClient import NtripClient
 
 
 ########################################################################################################################
@@ -129,6 +130,11 @@ class GPS(object):
         if debug:
             print 'GPS : GPS initialized, obtained initial latitude and longitude'
 
+        if ntrip_correction:
+            print("Using NTRIP to improve GPS accuracy")
+            ntripclient = NtripClient(user=ntrip_username+':'+ntrip_password, caster=ntrip_caster_address, port=ntrip_port,
+                                      mountpoint=ntrip_mountpoint, verbose=True)
+
     def get_position(self):
         lat, lon = self.get_latlon()
         if self.found_satellite == 1:
@@ -168,6 +174,17 @@ class GPS(object):
 
         return self.latitude, self.longitude
 
+    def get_raw_data(self):
+        readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
+        return readall
+        # # Process data
+        # for i in range(0, len(readall) - 1):
+        #     line = readall[i]      # Extract one NMEA sentence from the received data
+        #     line = line.split("*") # Remove "*", the final character of a NMEA sentence
+        #     checksum = line[1]     # Get the checksum
+        #
+        #     line = line[0].split(",", 19) # Split comma-separated values
+        # return line
 
     def process_data(self,line):
         if line[0] == '$GPGGA':

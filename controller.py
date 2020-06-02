@@ -105,7 +105,6 @@ class Controller(object):
                     self.gps_timestamp = 0.0
 
                 # Get laser ranger position (y position on the roller)
-                time_laserranger = time.time()
                 if laserRanger_use:
                     #if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
                     if (time.time() - self.time_laserranger) > 10 * sample_time:
@@ -262,6 +261,7 @@ class Controller(object):
         self.gps_timestamp = 0.0
         self.exceedscount = 0.0
         self.time_start_controller = 0.0
+        self.time_pathtracking = 0.0
 
         # Bike States
         self.roll = 0.0
@@ -454,6 +454,7 @@ class Controller(object):
     ####################################################################################################################
     ####################################################################################################################
     # Get bike states references
+    #@pysnooper.snoop()
     def get_balancing_setpoint(self):
         if path_tracking:
             # Get reference position and heading
@@ -497,33 +498,36 @@ class Controller(object):
             self.lateral_error = self.x_error * np.sin(self.psi_ref) + self.y_error * np.cos(self.psi_ref)
             self.heading_error = self.psi_error
 
-            if path_tracking_structure == 'parallel':
-                # PID Lateral Position Controller
-                self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not maesurement
-                # PID Direction/Heading Controller
-                self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not maesurement
-                # Compute balancing setpoint
-                self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
-            elif path_tracking_structure == 'series':
-                # PID Lateral Position Controller
-                self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not maesurement
-                if heading_controller:
+            if (time.time() - self.time_pathtracking) > 10 * sample_time:
+                self.time_pathtracking = time.time()
+
+                if path_tracking_structure == 'parallel':
+                    # PID Lateral Position Controller
+                    self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not measurement
                     # PID Direction/Heading Controller
-                    self.pid_direction.setReference(lateralError_controller * self.pid_lateral_position_control_signal)
-                    self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not maesurement
+                    self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not measurement
                     # Compute balancing setpoint
-                    self.balancing_setpoint = self.pid_direction_control_signal
+                    self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
+                elif path_tracking_structure == 'series':
+                    # PID Lateral Position Controller
+                    self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not measurement
+                    if heading_controller:
+                        # PID Direction/Heading Controller
+                        self.pid_direction.setReference(lateralError_controller * self.pid_lateral_position_control_signal)
+                        self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not measurement
+                        # Compute balancing setpoint
+                        self.balancing_setpoint = self.pid_direction_control_signal
+                    else:
+                        # Compute balancing setpoint
+                        self.balancing_setpoint = self.pid_lateral_position_control_signal
                 else:
+                    print("Path tracking controller structure choice is not valid : \"%s\"; Using parallel structure as default.\n" % (balancing_controller_structure))
+                    # PID Lateral Position Controller
+                    self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not measurement
+                    # PID Direction/Heading Controller
+                    self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not measurement
                     # Compute balancing setpoint
-                    self.balancing_setpoint = self.pid_lateral_position_control_signal
-            else:
-                print("Path tracking controller structure choice is not valid : \"%s\"; Using parallel structure as default.\n" % (balancing_controller_structure))
-                # PID Lateral Position Controller
-                self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not maesurement
-                # PID Direction/Heading Controller
-                self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not maesurement
-                # Compute balancing setpoint
-                self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
+                    self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
@@ -535,41 +539,6 @@ class Controller(object):
     ####################################################################################################################
     # Balancing controller
     def keep_the_bike_stable(self):
-        # if path_tracking:
-        #     # Choice of path, variable path_choice is set in param.py file
-        #     if path_choice == 'pot':
-        #         # Position reference from potentiometer
-        #         if potentiometer_use:
-        #             self.pot = ((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 0.2 - 0.1)  # Potentiometer gives a position reference between -0.1m and 0.1m
-        #         else:
-        #             self.pot = 0
-        #         self.pos_ref = self.pot
-        #     elif path_choice == 'sine':
-        #         # Position reference is a sine wave
-        #         # Frequency is path_sine_freq
-        #         # Amplitude is path_sine_amp
-        #         self.pos_ref = path_sine_amp * math.sin(self.time_count * 2 * math.pi * path_sine_freq)
-        #     elif path_choice == 'overtaking':
-        #         # Position reference is an overtaking (set parameters in param.py file)
-        #         # All sections going straight last time_path_stay
-        #         # All inclined sections last time_path_slope
-        #         # Slope of the inclined sections is slope
-        #         self.pos_ref = slope * (self.time_count - time_path_stay) * (
-        #                     time_path_stay < self.time_count < (time_path_stay + time_path_slope)) \
-        #                        + slope * time_path_slope * ((time_path_stay + time_path_slope) < self.time_count < (
-        #                     2 * time_path_stay + time_path_slope)) \
-        #                        + (slope * time_path_slope - slope * (
-        #                     self.time_count - (2 * time_path_stay + time_path_slope))) * (
-        #                                    (2 * time_path_stay + time_path_slope) < self.time_count < (
-        #                                        2 * time_path_stay + 2 * time_path_slope))
-        #     self.pid_lateral_position.setReference(self.pos_ref)
-        #     self.balancing_setpoint = self.pid_balance_outerloop.setReference(self.pid_lateral_position.update(self.y_laser_ranger))
-        # elif potentiometer_use:
-        #     self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 1 # Potentiometer gives a position reference between -2.5deg and 2.5deg
-        #     self.balancing_setpoint = self.pot
-        # else:
-        #     self.balancing_setpoint = 0
-
         self.get_balancing_setpoint()
 
         if balancing_controller_structure == 'chalmers':

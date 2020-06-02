@@ -70,10 +70,16 @@ steeringEncoder_TicksToRadianRatio = 2 * PI / steeringEncoder_TicksPerRevolution
 
 ########################################################################################################################
 # GPS
-gps_port = "/dev/ttyO1"         # GPS serial port
-gps_baudrate = 9600             # GPS baudrate [baud] : 9600, 57600, 115200
-gps_typeOutputData = 'RMCONLY'  # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
-gps_dataUpdateRate = 10         # GPS data update rate [Hw] : 1, 2, 5, 10
+gps_port = "/dev/ttyO1"                 # GPS serial port
+gps_baudrate = 9600                     # GPS baudrate [baud] : 9600, 57600, 115200
+# gps_typeOutputData = 'RMCONLY'        # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
+gps_typeOutputData = 'GGAONLY'          # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
+gps_dataUpdateRate = 10                 # GPS data update rate [Hw] : 1, 2, 5, 10
+ntrip_caster_address = "192.71.190.141" # Address of the NTRIP caster, can be IP or domain name
+ntrip_port = 80                         # NTRIP Port
+ntrip_mountpoint = "RTCM3_GNSS"         # NTRIP Mountpoint
+ntrip_username = "ChalmersE2RTK"        # Username to connect to NTRIP caster
+ntrip_password = "885511"               # Password to connect to NTRIP caster
 
 
 ########################################################################################################################
@@ -169,16 +175,16 @@ pid_steeringangle_sample_time = 1.0 / controller_frequency
 # Balance Controller
 # PID Balance Inner Loop Controller Parameters
 pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
-#pid_balance_P = 1.57
-pid_balance_P = 5.0 # Gain tested with Peo
+pid_balance_P = 1.57
+#pid_balance_P = 5.0 # Gain tested with Peo
 pid_balance_I = 0.0
 pid_balance_D = 0.0
 pid_balance_sample_time = 1.0 / controller_frequency
 
 # PID Balance Outer Loop Controller Parameters
 pid_balance_outerloop_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
-#pid_balance_outerloop_P = 0.57
-pid_balance_outerloop_P = 1.0 # Gain tested with Peo
+pid_balance_outerloop_P = 0.57
+#pid_balance_outerloop_P = 1.0 # Gain tested with Peo
 pid_balance_outerloop_I = 0.0
 pid_balance_outerloop_D = 0.0
 pid_balance_outerloop_sample_time = 1.0 / controller_frequency
@@ -200,7 +206,7 @@ path_choice = 'pot'
 
 # PID Lateral Position Controller Parameters
 pid_lateral_position_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
-pid_lateral_position_P = -10e-3
+pid_lateral_position_P = -150e-3
 pid_lateral_position_I = 0.0
 pid_lateral_position_D = -10e-1
 pid_lateral_position_sample_time = 1.0 / controller_frequency
