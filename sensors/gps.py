@@ -47,6 +47,11 @@ PMTK_AWAKE           = "$PMTK010,002*2D"   # Wake up
 PGCMD_ANTENNA   = "$PGCMD,33,1*6C" # request for updates on antenna status
 PGCMD_NOANTENNA = "$PGCMD,33,0*6D" # don't show antenna status messages
 
+# DGPS Mode
+PMTK_API_SET_DGPS_MODE_OFF = "$PMTK301,0*2C"  # turn off DGPS mode
+PMTK_API_SET_DGPS_MODE_RTCM = "$PMTK301,1*2D"  # turn on RTCM DGPS data source mode
+PMTK_API_SET_DGPS_MODE_WAAS = "$PMTK301,2*2E"  # turn on WAAS DGPS data source mode
+
 ########################################################################################################################
 ########################################################################################################################
 
@@ -67,7 +72,7 @@ class GPS(object):
             # Change the baud rate to 9600 bps
             self.ser_gps.write(PMTK_SET_BAUD_9600 + "\r\n")
         else:
-            print "GPS : Chosen GPS baudrate is not valid : %i. Choosing 115200 instead" %(gps_baudrate)
+            print("GPS : Chosen GPS baudrate is not valid : %i. Choosing 115200 instead" %(gps_baudrate))
             # Change the baud rate to 115200 bps
             self.ser_gps.write(PMTK_SET_BAUD_115200 + "\r\n")
 
@@ -95,7 +100,7 @@ class GPS(object):
         elif gps_typeOutputData == 'GSVONLY':
             self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_GSVONLY + "\r\n")   # turn on just the GPGSV
         else:
-            print "GPS : Chosen GPS output data type is not valid : %s. Choosing RMCONLY instead" %(gps_typeOutputData)
+            print("GPS : Chosen GPS output data type is not valid : %s. Choosing RMCONLY instead" %(gps_typeOutputData))
             self.ser_gps.write(PMTK_SET_NMEA_OUTPUT_RMCONLY + "\r\n")  # turn on only the GPRMC sentence
 
         # Choose the frequency of the GPS data output
@@ -108,7 +113,7 @@ class GPS(object):
         elif gps_dataUpdateRate == 10:
             self.ser_gps.write(PMTK_SET_NMEA_UPDATE_10HZ + "\r\n")  # select a 10Hz output rate
         else:
-            print "GPS : Chosen GPS data update rate is not valid : %iHz. Choosing 10Hz instead" %(gps_dataUpdateRate)
+            print("GPS : Chosen GPS data update rate is not valid : %iHz. Choosing 10Hz instead" %(gps_dataUpdateRate))
             self.ser_gps.write(PMTK_SET_NMEA_UPDATE_10HZ + "\r\n")  # select a 10Hz output rate
 
         self.ser_gps.flush()
@@ -128,12 +133,25 @@ class GPS(object):
         self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
         self.y0 = R * self.lat_ini * deg2rad
         if debug:
-            print 'GPS : GPS initialized, obtained initial latitude and longitude'
+            print('GPS : GPS initialized, obtained initial latitude and longitude')
 
+        # Initialize NTRIP connection
         if ntrip_correction:
-            print("Using NTRIP to improve GPS accuracy")
-            ntripclient = NtripClient(user=ntrip_username+':'+ntrip_password, caster=ntrip_caster_address, port=ntrip_port,
-                                      mountpoint=ntrip_mountpoint, verbose=True)
+            print("GPS : Using NTRIP to improve GPS accuracy")
+
+            # Choose the DGPS data source mode
+            if gps_DPGSDataSourceMode == 'RTCM':
+                self.ser_gps.write(PMTK_API_SET_DGPS_MODE_RTCM + "\r\n")  # turn on RTCM DGPS data source mode
+            elif gps_typeOutputData == 'WAAS':
+                self.ser_gps.write(PMTK_API_SET_DGPS_MODE_WAAS + "\r\n")  # turn on WAAS DGPS data source mode
+            else:
+                print("GPS : Chosen DGPS data source mode is not valid : %s. Choosing RTCM instead" % (gps_typeOutputData))
+                self.ser_gps.write(PMTK_API_SET_DGPS_MODE_RTCM + "\r\n")  # turn on RTCM DGPS data source mode
+
+            self.ntripclient = NtripClient(user=ntrip_username+':'+ntrip_password, caster=ntrip_caster_address, port=ntrip_port,
+                                      mountpoint=ntrip_mountpoint, verbose=True, lat=lat_ini, lon=lon_ini, height=12) # Average elevation in Göteborg is 12m, some NMEA sentences do not carry elevation so it is hard coded here
+        else:
+            self.ser_gps.write(PMTK_API_SET_DGPS_MODE_OFF + "\r\n")  # turn on RTCM DGPS data source mode
 
     def get_position(self):
         lat, lon = self.get_latlon()
@@ -143,11 +161,14 @@ class GPS(object):
             self.dx = self.x - self.x0
             self.dy = self.y - self.y0
         else:
-            print warnings.warn("GPS : No Satelite found !")
+            print(warnings.warn("GPS : No Satelite found !"))
         return self.dx, self.dy, lat, lon
 
 
     def get_latlon(self):
+        if ntrip_correction:
+            self.ntrip_data = self.ntripclient.readData()
+
         readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
         
         # Process data
@@ -167,7 +188,7 @@ class GPS(object):
             self.latitude = int(self.latitude / 100) + (self.latitude % 100) / 60
             self.longitude = int(self.longitude / 100) + (self.longitude % 100) / 60
         else:
-            print 'GPS : No available Satelites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION'
+            print('GPS : No available Satelites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION')
             self.latitude = 0
             self.longitude = 0
             self.found_satellite = 0
@@ -272,6 +293,6 @@ class GPS(object):
             self.Mode = vtg[9]
         else:
             if debug:
-                print "GPS : Bad GPS data"
-                #print "GPS : Exception happens"
-                #print line
+                print("GPS : Bad GPS data")
+                #print("GPS : Exception happens")
+                #print(line)

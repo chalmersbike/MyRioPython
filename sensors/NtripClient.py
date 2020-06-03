@@ -135,10 +135,33 @@ class NtripClient(object):
                                 sys.stderr.write("RECEIVED \"HTTP/1.1 200 OK\" from NTRIP caster, reading correction data ...\n")
                                 self.socket.sendall(self.getGGAString())
 
+                    if reconnectTry < maxReconnect:
+                        sys.stderr.write("%s No Connection to NtripCaster.  Trying again in %i seconds\n" % (
+                        datetime.datetime.now(), sleepTime))
+                        time.sleep(sleepTime)
+                        sleepTime *= factor
+
+                        if sleepTime > maxReconnectTime:
+                            sleepTime = maxReconnectTime
+
+                    reconnectTry += 1
+                else:
+                    self.socket = None
+                    if self.verbose:
+                        print("Error indicator: ", error_indicator)
+
+                    if reconnectTry < maxReconnect:
+                        sys.stderr.write("%s No Connection to NtripCaster.  Trying again in %i seconds\n" % (
+                        datetime.datetime.now(), sleepTime))
+                        time.sleep(sleepTime)
+                        sleepTime *= factor
+                        if sleepTime > maxReconnectTime:
+                            sleepTime = maxReconnectTime
+                    reconnectTry += 1
+
         except KeyboardInterrupt:
             if self.socket:
                 self.socket.close()
-            sys.exit()
 
     def setPosition(self, lat, lon):
         self.flagN="N"
@@ -171,7 +194,7 @@ class NtripClient(object):
            mountPointString+="Ntrip-Version: Ntrip/2.0\r\n"
         mountPointString+="\r\n"
         if self.verbose:
-           print mountPointString
+           print(mountPointString)
         return mountPointString
 
     def getGGAString(self):
@@ -181,7 +204,7 @@ class NtripClient(object):
         ggaString = "GPGGA,%02d%02d%04.2f,5700.00000000,N,01200.00000000,E,4,10,1.0,0.000,M,0.0,M,," % (now.hour, now.minute, now.second)
         checksum = self.calcultateCheckSum(ggaString)
         if self.verbose:
-            print  "$%s*%s\r\n" % (ggaString, checksum)
+            print ("$%s*%s\r\n" % (ggaString, checksum))
         return "$%s*%s\r\n" % (ggaString, checksum)
 
     def calcultateCheckSum(self, stringToCheck):
@@ -191,58 +214,34 @@ class NtripClient(object):
         return "%02X" % xsum_calc
 
     def readData(self):
-        data = "Initial data"
-        while data:
-            try:
-                data=self.socket.recv(4096)#(self.buffer)
-                # print("Received %d bytes of data" % (len(data)))
-                # self.out.write(data)
-                if self.UDP_socket:
-                    self.UDP_socket.sendto(data, ('<broadcast>', self.UDP_Port))
-    #                            print datetime.datetime.now()-connectTime
-                if maxConnectTime :
-                    if datetime.datetime.now() > connectTime+EndConnect:
-                        if self.verbose:
-                            sys.stderr.write("Connection Timed exceeded\n")
-                        sys.exit(0)
-
-            except socket.timeout:
-                if self.verbose:
-                    sys.stderr.write('Connection TimedOut\n')
-                data=False
-            except socket.error:
-                if self.verbose:
-                    sys.stderr.write('Connection Error\n')
-                data=False
-
-        if self.verbose:
-            sys.stderr.write('Closing Connection\n')
-        self.socket.close()
-        self.socket=None
-
-        if reconnectTry < maxReconnect :
-            sys.stderr.write( "%s No Connection to NtripCaster.  Trying again in %i seconds\n" % (datetime.datetime.now(), sleepTime))
-            time.sleep(sleepTime)
-            sleepTime *= factor
-
-            if sleepTime>maxReconnectTime:
-                sleepTime=maxReconnectTime
-
-        reconnectTry += 1
-    else:
-        self.socket=None
-        if self.verbose:
-            print "Error indicator: ", error_indicator
-
-        if reconnectTry < maxReconnect :
-            sys.stderr.write( "%s No Connection to NtripCaster.  Trying again in %i seconds\n" % (datetime.datetime.now(), sleepTime))
-            time.sleep(sleepTime)
-            sleepTime *= factor
-            if sleepTime>maxReconnectTime:
-                sleepTime=maxReconnectTime
-        reconnectTry += 1
-
-        except KeyboardInterrupt:
+        try:
+            data=self.socket.recv(4096)#(self.buffer)
+            # print("Received %d bytes of data" % (len(data)))
+            # self.out.write(data)
+            if self.UDP_socket:
+                self.UDP_socket.sendto(data, ('<broadcast>', self.UDP_Port))
+                # print datetime.datetime.now()-connectTime
+            return data
+        except socket.timeout:
+            if self.verbose:
+                sys.stderr.write('Connection TimedOut\n')
+                sys.stderr.write('Closing Connection\n')
+            data=False
             if self.socket:
                 self.socket.close()
-            sys.exit()
+                self.socket = None
+        except socket.error:
+            if self.verbose:
+                sys.stderr.write('Connection Error\n')
+                sys.stderr.write('Closing Connection\n')
+            data=False
+            if self.socket:
+                self.socket.close()
+                self.socket = None
+        except KeyboardInterrupt:
+            if self.verbose :
+                sys.stderr.write('Closing Connection\n')
+            if self.socket:
+                sys.stderr.write('Closing Connection\n')
+                self.socket.close()
+                self.socket = None
