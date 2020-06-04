@@ -21,8 +21,11 @@ class Test(object):
         #     writer_gps.writerow(('Time (s)', 'x (m)', 'y (m)', 'latitude', 'longitude'))
         for x in range(1,int(number_samples_GPS)+1):
             gpspos = gps.get_position()
-            gpspos = gps.get_raw_data()
+            # gpspos = gps.get_raw_data()
             print gpspos
+            print(gpspos[0])
+            print(gpspos[1])
+            time.sleep(1)
             # print 'Time=%f\t Temp=%g\tAx = %g\t' % (time.time() - start_time, gpspos[0], gpspos[1])
             # Write to CSV file
             # writer_gps.writerow((time.time() - start_time, gpspos[0], gpspos[1], gps.latitude, gps.longitude))

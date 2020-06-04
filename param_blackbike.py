@@ -72,9 +72,9 @@ steeringEncoder_TicksToRadianRatio = 2 * PI / steeringEncoder_TicksPerRevolution
 # GPS
 gps_port = "/dev/ttyO1"                 # GPS serial port
 gps_baudrate = 9600                     # GPS baudrate [baud] : 9600, 57600, 115200
-# gps_typeOutputData = 'RMCONLY'        # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
-gps_typeOutputData = 'GGAONLY'          # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
-gps_dataUpdateRate = 10                 # GPS data update rate [Hw] : 1, 2, 5, 10
+gps_typeOutputData = 'RMCONLY'        # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
+# gps_typeOutputData = 'GGAONLY'          # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
+gps_dataUpdateRate = 10                 # GPS data update rate [Hz] : 1, 2, 5, 10
 gps_DPGSDataSourceMode = 'WAAS'         # DGPS data source mode : RTCM, WAAS
 ntrip_caster_address = "192.71.190.141" # Address of the NTRIP caster, can be IP or domain name
 ntrip_port = 80                         # NTRIP Port

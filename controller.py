@@ -13,7 +13,7 @@ from scipy import signal
 import bisect
 import traceback
 
-#@pysnooper.snoop()
+# @pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
     def __init__(self, bike):
@@ -96,7 +96,10 @@ class Controller(object):
 
                 # Get position from GPS
                 if gps_use:
-                    self.bike.get_gps_data()
+                    if ((time.time() - self.gaining_speed_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate:
+                        # self.bike.get_gps_data()
+                        self.time_gps = time.time()
+                        self.gps_read()
                 else:
                     self.x_measured_GPS = 0.0
                     self.y_measured_GPS = 0.0
@@ -114,7 +117,11 @@ class Controller(object):
                     self.y_laser_ranger = 0
                 # Compute time needed to read from all sensors
                 self.sensor_reading_time = time.time() - self.time_start_current_loop
-                print("Laser ranger reading time : %f" %(time.time()-self.time_laserranger))
+
+                # if laserRanger_use:
+                #     print("Laser ranger reading time : %f" %(time.time()-self.time_laserranger))
+                # if gps_use:
+                #     print("GPS reading time : %f" %(time.time()-self.time_gps))
 
                 # PID Velocity Control
                 if pid_velocity_active:
@@ -228,8 +235,10 @@ class Controller(object):
 
         # Laser Ranger
         self.time_laserranger = 0.0
+        self.y_laser_ranger = 0.0
 
         # GPS
+        self.time_gps = 0.0
         self.gpspos = 0.0
         self.x_measured_GPS = 0.0
         self.y_measured_GPS = 0.0
@@ -258,7 +267,6 @@ class Controller(object):
         self.loop_time = 0.0
         self.sensor_reading_time = 0.0
         self.control_cal_time = 0.0
-        self.gps_timestamp = 0.0
         self.exceedscount = 0.0
         self.time_start_controller = 0.0
         self.time_pathtracking = 0.0
@@ -367,7 +375,7 @@ class Controller(object):
         self.psi_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_old,self.x_measured_GPS - self.x_measured_GPS_old)
         self.lat_measured_GPS = self.gpspos[2]
         self.lon_measured_GPS = self.gpspos[3]
-        self.gps_timestamp = self.bike.gps.lastread - self.gaining_speed_start  # The gps timestamp
+        self.gps_timestamp = time.time() - self.gaining_speed_start
 
         # Save previous x and y positions to use in heading computation
         self.x_measured_GPS_old = self.x_measured_GPS

@@ -60,7 +60,7 @@ PMTK_API_SET_DGPS_MODE_WAAS = "$PMTK301,2*2E"  # turn on WAAS DGPS data source m
 class GPS(object):
     def __init__(self):
         # Open the serial connection at the default baudrate of 9600
-        self.ser_gps = serial.Serial(gps_port, 9600, timeout=1000)
+        self.ser_gps = serial.Serial(gps_port, 9600, timeout=1)
 
         if gps_baudrate == 115200:
             # Change the baud rate to 115200 bps
@@ -128,10 +128,13 @@ class GPS(object):
         self.y = 0
         self.x0 = 0
         self.y0 = 0
-#        while ((self.latitude <= 10) and (self.longitude <= 5)): # The location should be in SWEDEN
-        self.lat_ini, self.lon_ini = self.get_latlon()
+        self.lat_ini = 0.0
+        self.lon_ini = 0.0
+        while ((self.latitude <= 53) or (self.latitude >= 70) or (self.longitude <= 8) or (self.longitude >= 26)): # The location should be in SWEDEN
+            self.lat_ini, self.lon_ini = self.get_latlon()
         self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
         self.y0 = R * self.lat_ini * deg2rad
+        # print("lat_ini = %f ; lon_ini = %f ; x0 = %f ; y0 = %f" % (lat_ini,lon_ini,x0,y0))
         if debug:
             print('GPS : GPS initialized, obtained initial latitude and longitude')
 
@@ -149,7 +152,8 @@ class GPS(object):
                 self.ser_gps.write(PMTK_API_SET_DGPS_MODE_RTCM + "\r\n")  # turn on RTCM DGPS data source mode
 
             self.ntripclient = NtripClient(user=ntrip_username+':'+ntrip_password, caster=ntrip_caster_address, port=ntrip_port,
-                                      mountpoint=ntrip_mountpoint, verbose=True, lat=lat_ini, lon=lon_ini, height=12) # Average elevation in Göteborg is 12m, some NMEA sentences do not carry elevation so it is hard coded here
+
+                                      mountpoint=ntrip_mountpoint, verbose=True, lat=lat_ini, lon=lon_ini, height=12) # Average elevation in Gothenburg is 12m, some NMEA sentences do not carry elevation so it is hard coded here
         else:
             self.ser_gps.write(PMTK_API_SET_DGPS_MODE_OFF + "\r\n")  # turn on RTCM DGPS data source mode
 
@@ -170,7 +174,7 @@ class GPS(object):
             self.ntrip_data = self.ntripclient.readData()
 
         readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
-        
+
         # Process data
         for i in range(0, len(readall) - 1):
             line = readall[i]      # Extract one NMEA sentence from the received data

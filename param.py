@@ -35,11 +35,11 @@ debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print 
 potentiometer_use = 1   # 1 = use potentiometer ; 0 = do not use potentiometer
 
 # Choice to use GPS (for outdoors use only) or not
-gps_use = 0             # 1 = use GPS ; 0 = do not use GPS
+gps_use = 1             # 1 = use GPS ; 0 = do not use GPS
 ntrip_correction = 0    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
 
 # Choice to use Laser Ranger (for indoors use on roller only) or not
-laserRanger_use = 1     # 1 = use laser rangers ; 0 = do not use laser rangers
+laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
 
 # Load bike specific parameters
 if bike == 'blackbike':
