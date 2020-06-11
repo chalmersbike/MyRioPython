@@ -14,11 +14,11 @@ class Bike(object):
         self.hall_sensor = HallSensor()
         self.imu = IMU()
         if potentiometer_use:
-            self.laser_ranger = DualLaserRanger()
+            self.potent = Potentiometer()
         if gps_use:
             self.gps = GPS()
         if laserRanger_use:
-            self.potent = Potentiometer()
+            self.laser_ranger = DualLaserRanger()
         self.drive_motor = DriveMotor()
         self.steering_motor = SteeringMotor()
 

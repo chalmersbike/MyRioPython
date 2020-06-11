@@ -248,6 +248,9 @@ class Controller(object):
         self.psi_measured_GPS = 0.0
         self.x_measured_GPS_old = 0.0
         self.y_measured_GPS_old = 0.0
+        # self.x_estimated_Odo = 0.0
+        # self.y_estimated_Odo = 0.0
+        # self.psi_estimated_Odo = 0.0
 
         # Emergency Stop
         self.ESTOP = False
@@ -497,6 +500,12 @@ class Controller(object):
                 self.x_error = 0
                 self.y_error = self.y_ref - self.y_laser_ranger
                 self.psi_error = 0
+            elif virtual_odometer:
+                # Using virtual Odometer to do heading control/position control
+                # WHILE it is highly imprecise!!!
+                self.x_error = self.x_ref - self.x_estimated
+                self.y_error = self.y_ref - self.y_estimated
+                self.psi_error = self.psi_ref - self.psi_estimated
             else:
                 self.x_error = 0
                 self.y_error = 0
