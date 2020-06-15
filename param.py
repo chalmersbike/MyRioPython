@@ -13,11 +13,13 @@ controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
 
 path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
+# path_tracking_engaged = 0
+balancing_time = 7.0                            # The time elpased for balancing before the path tracking is engaged.
 path_tracking_structure = 'parallel'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
                                                 # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
 lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 1                          # 1 = use heading controller ; 0 = do not use heading controller
-path_file = 'straight_path.csv'                    # Name of the file path with ".csv" extension.
+path_file = 'ramp_heading_path_test_short_10deg.csv'                    # Name of the file path with ".csv" extension.
                                                 # Must be placed in "paths" folder.
                                                 # Must be a CSV with 4 columns : Time, x, y, heading
                                                 # Can also be 'pot' to use the potentiometer as y position on the roller

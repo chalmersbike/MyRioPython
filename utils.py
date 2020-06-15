@@ -133,6 +133,8 @@ def global_angles_and_coordinates(velocity, time_constant, length_a, length_b, s
     return x, y, psi, nu
 
 
+
+
 def generate_circular_path(path_radius):
     theta = np.linspace(0.0, math.pi, 5000)
     x_ref = path_radius * math.cos(theta)

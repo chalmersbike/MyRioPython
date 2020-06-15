@@ -274,6 +274,7 @@ class Controller(object):
         self.time_start_controller = 0.0
         self.time_pathtracking = 0.0
 
+
         # Bike States
         self.roll = 0.0
         self.roll_gyro = 0.0
@@ -308,6 +309,7 @@ class Controller(object):
         self.psi_ref = 0.0
         self.lateral_error = 0.0
         self.heading_error = 0.0
+        self.path_tracking_engaged = False
 
         # PID Balance Controller
         self.pid_balance = PID(pid_balance_P, pid_balance_I, pid_balance_D)
@@ -467,7 +469,12 @@ class Controller(object):
     # Get bike states references
     #@pysnooper.snoop()
     def get_balancing_setpoint(self):
-        if path_tracking:
+        if path_tracking and not self.path_tracking_engaged:
+            if time.time()-self.time_start_controller > balancing_time:
+                self.path_tracking_engaged = True
+                self.reset_global_angles_and_coordinates()
+                print "Now heading or path tracking is engaged."
+        if self.path_tracking_engaged:
             # Get reference position and heading
             if path_file == 'pot':
                 self.x_ref = 0.0
@@ -703,3 +710,10 @@ class Controller(object):
             # if self.exceedscount > max_exceed_count:
             #     print("Calculation time exceeded sampling time too often (%d times) , aborting the experiment" % (max_exceed_count))
             #     self.stop()
+
+    def reset_global_angles_and_coordinates(self):
+        self.x_estimated = initial_speed * (time.time() - self.time_start_controller)
+        self.y_estimated = 0.0
+        self.psi_estimated = 0.0
+        self.nu_estimated = 0.0
+        print "Odometry reset for heading control"
