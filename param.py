@@ -12,14 +12,15 @@ balancing_controller_structure = 'technion'     # Choice of the balancing contro
 controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
 
-path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
-balancing_time = 7.0                            # The time elpased for balancing before the path tracking is engaged.
+balancing_time = 3.0                            # The time elpased for balancing before the path tracking is engaged.
 path_tracking_structure = 'parallel'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
                                                 # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
 lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 1                          # 1 = use heading controller ; 0 = do not use heading controller
-path_file = 'ramp_heading_path_test_short_10deg.csv'                    # Name of the file path with ".csv" extension.
+path_file = 'ramp_heading_path_test_9secs_5deg.csv'                    # Name of the file path with ".csv" extension.
+# path_file = 'ramp_heading_path_nocoasting_6secs_5deg.csv'                    # Name of the file path with ".csv" extension.
                                                 # Must be placed in "paths" folder.
                                                 # Must be a CSV with 4 columns : Time, x, y, heading
                                                 # Can also be 'pot' to use the potentiometer as y position on the roller
@@ -37,13 +38,17 @@ debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print 
 potentiometer_use = 1   # 1 = use potentiometer ; 0 = do not use potentiometer
 
 # Choice to use GPS (for outdoors use only) or not
-gps_use = 0           # 1 = use GPS ; 0 = do not use GPS
+gps_use = 1           # 1 = use GPS ; 0 = do not use GPS
 ntrip_correction = 0    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
 
 # Choice to use Laser Ranger (for indoors use on roller only) or not
 laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
 
+# Choice to use Virtual OdometerRanger or not
+# Will estimate position and heading from steering angle and velocity
+# WARNING : highly imprecise !!!
 virtual_odometer = 1
+
 # Load bike specific parameters
 if bike == 'blackbike':
     from param_blackbike import *

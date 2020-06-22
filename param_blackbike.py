@@ -49,10 +49,10 @@ steeringMotor_IdleDuty = 50.0           # Steering Motor PWM duty cycle for idli
 steeringMotor_PWMforMaxOutput = 90.0    # Steering Motor PWM duty cycle for maximum output (max speed/current)
 steeringMotor_PWMforMinOutput = 10.0    # Steering Motor PWM duty cycle for minimum output (min speed/current)
 
-# steeringMotor_SpeedMaxOutput = 1000.0   # [rpm] Steering Motor maximum speed
-# steeringMotor_SpeedMinOutput = -1000.0  # [rpm] Steering Motor minimum speed
-steeringMotor_SpeedMaxOutput = 200.0   # [rpm] Steering Motor maximum speed
-steeringMotor_SpeedMinOutput = -200.0  # [rpm] Steering Motor minimum speed
+steeringMotor_SpeedMaxOutput = 1000.0   # [rpm] Steering Motor maximum speed
+steeringMotor_SpeedMinOutput = -1000.0  # [rpm] Steering Motor minimum speed
+# steeringMotor_SpeedMaxOutput = 200.0   # [rpm] Steering Motor maximum speed
+# steeringMotor_SpeedMinOutput = -200.0  # [rpm] Steering Motor minimum speed
 
 steeringMotor_CurrentMaxOutput = 1.0    # [A] Steering Motor maximum current
 steeringMotor_CurrentMinOutput = -1.0   # [A] Steering Motor minimum current
@@ -91,8 +91,8 @@ hallSensor_edgeDetection = 'rising'     # Hall sensor edge dection type : 'risin
 hallSensor_numberOfSensors = 3          # Number of magnets placed on the wheel
 hallSensor_maxElapseBetweenPulses = 1   # [s] Bike is considered stationary (0m/s speed) if time between two pulses is longer than this
 hallSensor_bounceTime = 30              # [ms] Bouncetime between two pulses to avoid reading the same pulse multiple times
-hallSensor_sensorPosition = 0.694       # [m] Distance between center of wheel and center of magnets (Tyre marking 40-622 = ID of 622mm + 4mm to center of magnet)
-hall_Sensor_distanceBetweenMagnets = hallSensor_sensorPosition / hallSensor_numberOfSensors     # [m] Distance between magnets
+hallSensor_sensorPosition = 0.347       # [m] Distance between center of wheel and center of magnets (Tyre marking 40-622 = ID of 622mm + 4mm to center of magnet)
+hall_Sensor_distanceBetweenMagnets = hallSensor_sensorPosition * 2 * PI / hallSensor_numberOfSensors     # [m] Distance between magnets
 
 
 ########################################################################################################################
@@ -216,5 +216,7 @@ pid_lateral_position_sample_time = 1.0 / controller_frequency
 pid_direction_reference = 0.0  # PID code uses constant reference setpoint and feedback. Since this controller doesn't have a constant setpoint, we only use the feedback value.
 pid_direction_P = -1e-1
 pid_direction_I = -1e-2
+# pid_direction_P = -2e-1
+# pid_direction_I = -2e-2
 pid_direction_D = 0.0
 pid_direction_sample_time = 1.0 / controller_frequency
