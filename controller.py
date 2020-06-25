@@ -386,10 +386,11 @@ class Controller(object):
             print('WARNING : [%f] Measured roll rate larger than 20deg/s' % (time.time() - self.gaining_speed_start))
 
 
+
     ####################################################################################################################
     ####################################################################################################################
     # Get position from GPS
-    # @pysnooper.snoop()
+    # @pysnoope            print('WARNING : [%f] Measured roll rate larger than 20deg/s' % (time.time() - self.gaining_speed_start))r.snoop()
     def gps_read(self):
         # Get GPS position
         self.gpspos = self.bike.gps.get_position()
@@ -573,6 +574,15 @@ class Controller(object):
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
+        elif roll_ref_use:
+            if self.time_count < roll_ref_end_time:
+                if self.time_count >  roll_ref_start_time:
+                    self.balancing_setpoint = roll_ref_Mag
+                else:
+                    self.balancing_setpoint = 0
+                # print self.time_count, roll_ref_start_time, roll_ref_end_time
+            else:
+                self.balancing_setpoint = 0
         else:
             self.balancing_setpoint = 0
 
