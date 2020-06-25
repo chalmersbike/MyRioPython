@@ -81,6 +81,14 @@ class Controller(object):
             try:
                 # Get velocity
                 self.velocity = self.bike.get_velocity()
+                if abs(self.velocity) > 1.25*abs(initial_speed):
+                    print('WARNING : [%f] Measured speed larger than 1.25 times reference speed' % (
+                                time.time() - self.gaining_speed_start))
+                if self.velocity-self.velocity_previous > 1.5:
+                    print('WARNING : [%f] Measured speed change between two samples too large' % (
+                            time.time() - self.gaining_speed_start))
+                    self.velocity = 1.5 + self.velocity
+                self.velocity_previous = self.velocity
 
                 # Get states
                 self.time_get_states = time.time()
@@ -113,6 +121,8 @@ class Controller(object):
                     if (time.time() - self.time_laserranger) > 10 * sample_time:
                         self.time_laserranger = time.time()
                         self.y_laser_ranger = self.bike.get_laserRanger_data()
+                        if abs(self.y_laser_ranger)>0.25:
+                            print('WARNING : [%f] Laser ranger position outside of roller' % (time.time() - self.gaining_speed_start))
                 else:
                     self.y_laser_ranger = 0
                 # Compute time needed to read from all sensors
@@ -285,6 +295,7 @@ class Controller(object):
         self.ay = 0.0
         self.az = 0.0
         self.velocity = 0.0
+        self.velocity_previous = 0.0
         self.AngVel = 0.0
 
         # Controller
@@ -353,6 +364,9 @@ class Controller(object):
     # Get bike states
     def get_states(self):
         self.steeringAngle = self.bike.get_handlebar_angle()
+        if self.steeringAngle > MAX_HANDLEBAR_ANGLE or self.steeringAngle < MIN_HANDLEBAR_ANGLE:
+            print('WARNING : [%f] Steering angle exceeded limits' % (
+                    time.time() - self.gaining_speed_start))
 
         # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         self.imu_data = self.bike.get_imu_data()
@@ -624,9 +638,9 @@ class Controller(object):
         self.writer = csv.writer(results_csv)
 
         if path_tracking:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_outerloop_P = ' + str(pid_balance_outerloop_P) + ' ; pid_lateral_position_P = ' + str(pid_lateral_position_P) + ' ; pid_lateral_position_D = ' + str(pid_lateral_position_D)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_outerloop_P = ' + str(pid_balance_outerloop_P) + ' ; pid_lateral_position_P = ' + str(pid_lateral_position_P) + ' ; pid_lateral_position_D = ' + str(pid_lateral_position_D) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
         else:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_outerloop_P = ' + str(pid_balance_outerloop_P)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_outerloop_P = ' + str(pid_balance_outerloop_P) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']

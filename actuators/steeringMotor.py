@@ -21,8 +21,10 @@ class SteeringMotor(object):
         # Constrain duty cycle between steeringMotor_PWMforMinOutput and steeringMotor_PWMforMaxOutput
         if duty_cycle > steeringMotor_PWMforMaxOutput:
             duty_cycle = steeringMotor_PWMforMaxOutput
+            print("Steering Ang.Vel saturated +")
         elif duty_cycle < steeringMotor_PWMforMinOutput:
             duty_cycle = steeringMotor_PWMforMinOutput
+            print("Steering Ang.Vel saturated -")
         # Set PWM duty cycle
         PWM.set_duty_cycle(steeringMotor_Channel, duty_cycle)
 

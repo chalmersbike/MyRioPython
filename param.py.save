@@ -22,9 +22,9 @@ heading_controller = 1                          # 1 = use heading controller ; 0
 # path_file = 'ramp_heading_path_test_9secs_5deg.csv'                    # Name of the file path with ".csv" extension.
 # path_file = 'step_heading_path_9secs_m5deg.csv'
 # path_file = 'step_heading_path_9secs_m10deg.csv'
-path_file = 'step_heading_path_12secs_m5deg.csv'
+# path_file = 'step_heading_path_12secs_m5deg.csv'
 # path_file = 'step_heading_path_12secs_m10deg.csv'
-# path_file = 'straight_path.csv'
+path_file = 'straight_path.csv'
 # path_file = 'ramp_heading_path_nocoasting_6secs_5deg.csv'                    # Name of the file path with ".csv" extension.
                                                 # Must be placed in "paths" folder.
                                                 # Must be a CSV with 4 columns : Time, x, y, heading
