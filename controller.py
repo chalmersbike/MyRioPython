@@ -381,6 +381,10 @@ class Controller(object):
         self.ay = self.imu_data[6]
         self.az = self.imu_data[7]
 
+        # Outlier detection on roll rate
+        if abs(self.rollRate) > 20*deg2rad:
+            print('WARNING : [%f] Measured roll rate larger than 20deg/s' % (time.time() - self.gaining_speed_start))
+
 
     ####################################################################################################################
     ####################################################################################################################
@@ -712,7 +716,7 @@ class Controller(object):
 
         if debug or (self.loop_time > sample_time):
             if self.loop_time > sample_time:
-                print("Warning: The calculation time exceeds the sampling time!")
+                print("WARNING: The calculation time exceeds the sampling time!")
                 self.exceedscount += 1
 
             # Print sensor reading time, control calculation time, IMU data reading time and logging time
