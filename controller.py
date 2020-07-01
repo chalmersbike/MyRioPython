@@ -170,6 +170,7 @@ class Controller(object):
 
                     # Balancing and path tracking control
                     self.bike.steering_motor.enable()
+                    self.update_controller_gains()
                     self.keep_the_bike_stable()
 
                 # Compute time needed to run controllers
@@ -322,17 +323,49 @@ class Controller(object):
         self.heading_error = 0.0
         self.path_tracking_engaged = False
 
+        # Speed lookup table for speed dependant controller gains
+        if isinstance(speed_lookup_controllergains,list):
+            self.speed_lookup_controllergains_np = np.array(speed_lookup_controllergains)
+
         # PID Balance Controller
-        self.pid_balance = PID(pid_balance_P, pid_balance_I, pid_balance_D)
+        self.pid_balance = PID()
         self.pid_balance.setSampleTime(pid_balance_sample_time)
         self.pid_balance.setReference(pid_balance_reference)
         self.pid_balance_control_signal = 0.0  # control signal calculated by PID
+        # If the gains are lists, prepare a numpy array to compute speed dependant gains
+        # otherwise assign the gains to the controller
+        if isinstance(pid_balance_P,list):
+            self.pid_balance_P_np = np.array(pid_balance_P)
+        else:
+            self.pid_balance.setKp(pid_balance_P)
+        if isinstance(pid_balance_I,list):
+            self.pid_balance_I_np = np.array(pid_balance_I)
+        else:
+            self.pid_balance.setKi(pid_balance_I)
+        if isinstance(pid_balance_D,list):
+            self.pid_balance_D_np = np.array(pid_balance_D)
+        else:
+            self.pid_balance.setKd(pid_balance_D)
 
         # PID Balance Controller Outer Loop
-        self.pid_balance_outerloop = PID(pid_balance_outerloop_P, pid_balance_outerloop_I, pid_balance_outerloop_D)
+        self.pid_balance_outerloop = PID()
         self.pid_balance_outerloop.setSampleTime(pid_balance_outerloop_sample_time)
         self.pid_balance_outerloop.setReference(pid_balance_outerloop_reference)
         self.pid_balance_outerloop_control_signal = 0.0  # control signal calculated by PID
+        # If the gains are lists, prepare a numpy array to compute speed dependant gains
+        # otherwise assign the gains to the controller
+        if isinstance(pid_balance_outerloop_P,list):
+            self.pid_balance_outerloop_P_np = np.array(pid_balance_outerloop_P)
+        else:
+            self.pid_balance_outerloop.setKp(pid_balance_outerloop_P)
+        if isinstance(pid_balance_outerloop_I,list):
+            self.pid_balance_outerloop_I_np = np.array(pid_balance_outerloop_I)
+        else:
+            self.pid_balance_outerloop.setKi(pid_balance_outerloop_I)
+        if isinstance(pid_balance_outerloop_D,list):
+            self.pid_balance_outerloop_D_np = np.array(pid_balance_outerloop_D)
+        else:
+            self.pid_balance_outerloop.setKd(pid_balance_outerloop_D)
 
         # PID Velocity Controller
         self.pid_velocity = PID(pid_velocity_P, pid_velocity_I, pid_velocity_D)
@@ -341,16 +374,44 @@ class Controller(object):
         self.pid_velocity_control_signal = 0.0  # control signal calculated by PID
 
         # PID Lateral Position Controller
-        self.pid_lateral_position = PID(pid_lateral_position_P, pid_lateral_position_I, pid_lateral_position_D)
+        self.pid_lateral_position = PID()
         self.pid_lateral_position.setSampleTime(pid_lateral_position_sample_time)
         self.pid_lateral_position.setReference(pid_lateral_position_reference)
         self.pid_lateral_position_control_signal = 0.0  # control signal calculated by PID
+        # If the gains are lists, prepare a numpy array to compute speed dependant gains
+        # otherwise assign the gains to the controller
+        if isinstance(pid_lateral_position_P,list):
+            self.pid_lateral_position_P_np = np.array(pid_lateral_position_P)
+        else:
+            self.pid_lateral_position.setKp(pid_lateral_position_P)
+        if isinstance(pid_lateral_position_I,list):
+            self.pid_lateral_position_I_np = np.array(pid_lateral_position_I)
+        else:
+            self.pid_lateral_position.setKi(pid_lateral_position_I)
+        if isinstance(pid_lateral_position_D,list):
+            self.pid_lateral_position_D_np = np.array(pid_lateral_position_D)
+        else:
+            self.pid_lateral_position.setKd(pid_lateral_position_D)
 
         # PID Direction Controller
-        self.pid_direction = PID(pid_direction_P, pid_direction_I, pid_direction_D)
+        self.pid_direction = PID()
         self.pid_direction.setSampleTime(pid_direction_sample_time)
         self.pid_direction.setReference(pid_direction_reference)
         self.pid_direction_control_signal = 0.0  # control signal calculated by PID
+        # If the gains are lists, prepare a numpy array to compute speed dependant gains
+        # otherwise assign the gains to the controller
+        if isinstance(pid_direction_P,list):
+            self.pid_direction_P_np = np.array(pid_direction_P)
+        else:
+            self.pid_direction.setKp(pid_direction_P)
+        if isinstance(pid_direction_I,list):
+            self.pid_direction_I_np = np.array(pid_direction_I)
+        else:
+            self.pid_direction.setKi(pid_direction_I)
+        if isinstance(pid_direction_D,list):
+            self.pid_direction_D_np = np.array(pid_direction_D)
+        else:
+            self.pid_direction.setKd(pid_direction_D)
 
         # PID Steering Angle Controller
         self.pid_steeringangle = PID(pid_steeringangle_P, pid_steeringangle_I, pid_steeringangle_D)
@@ -390,7 +451,7 @@ class Controller(object):
     ####################################################################################################################
     ####################################################################################################################
     # Get position from GPS
-    # @pysnoope            print('WARNING : [%f] Measured roll rate larger than 20deg/s' % (time.time() - self.gaining_speed_start))r.snoop()
+    # @pysnoope
     def gps_read(self):
         # Get GPS position
         self.gpspos = self.bike.gps.get_position()
@@ -482,6 +543,65 @@ class Controller(object):
                 self.stop()
                 print('Emergency stop was not released, aborting the experiment')
 
+
+    ####################################################################################################################
+    ####################################################################################################################
+    # Update controller gains for current forward speed
+    def update_controller_gains(self):
+        self.velocity = 4 + math.sin(self.time_count)
+        print('vel = %f' % (self.velocity))
+
+        if len(speed_lookup_controllergains):
+            self.idx_speed_lookup = bisect.bisect_left(self.speed_lookup_controllergains_np, self.velocity) + np.array([-1, 0])
+            print('idx_speed_lookup = ' + np.array2string(self.idx_speed_lookup))
+            print(self.speed_lookup_controllergains_np[self.idx_speed_lookup])
+
+        # Balancing controller inner loop
+        if isinstance(pid_balance_P, list):
+            self.pid_balance.setKp(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_balance_P_np[self.idx_speed_lookup]))
+        if isinstance(pid_balance_I, list):
+            self.pid_balance.setKi(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_balance_I_np[self.idx_speed_lookup]))
+        if isinstance(pid_balance_D, list):
+            self.pid_balance.setKd(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_balance_D_np[self.idx_speed_lookup]))
+
+        # Balancing controller outer loop
+        if isinstance(pid_balance_outerloop_P, list):
+            self.pid_balance_outerloop.setKp(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_balance_outerloop_P_np[self.idx_speed_lookup]))
+        if isinstance(pid_balance_outerloop_I, list):
+            self.pid_balance_outerloop.setKi(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_balance_outerloop_I_np[self.idx_speed_lookup]))
+        if isinstance(pid_balance_outerloop_D, list):
+            self.pid_balance_outerloop.setKd(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_balance_outerloop_D_np[self.idx_speed_lookup]))
+
+        # Path tracking lateral position controller
+        if isinstance(pid_lateral_position_P, list):
+            self.pid_lateral_position.setKp(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_lateral_position_P_np[self.idx_speed_lookup]))
+        if isinstance(pid_lateral_position_I, list):
+            self.pid_lateral_position.setKi(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_lateral_position_I_np[self.idx_speed_lookup]))
+        if isinstance(pid_lateral_position_D, list):
+            self.pid_lateral_position.setKd(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_lateral_position_D_np[self.idx_speed_lookup]))
+
+        # Balancing controller inner loop
+        if isinstance(pid_direction_P, list):
+            self.pid_direction.setKp(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_direction_P_np[self.idx_speed_lookup]))
+        if isinstance(pid_direction_I, list):
+            self.pid_direction.setKi(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_direction_I_np[self.idx_speed_lookup]))
+        if isinstance(pid_direction_D, list):
+            self.pid_direction.setKd(np.interp(self.velocity, self.speed_lookup_controllergains_np[self.idx_speed_lookup],
+                                             self.pid_direction_D_np[self.idx_speed_lookup]))
+
+        print('Kpbal = %f ; Kibal = %f ; Kdbal = %f' % (self.pid_balance.Kp,self.pid_balance.Ki,self.pid_balance.Kd))
+        print('Kpbalouter = %f ; Kibalouter = %f ; Kdbalouter = %f' % (self.pid_balance_outerloop.Kp,self.pid_balance_outerloop.Ki,self.pid_balance_outerloop.Kd))
 
     ####################################################################################################################
     ####################################################################################################################
@@ -652,11 +772,11 @@ class Controller(object):
         self.writer = csv.writer(results_csv)
 
         if path_tracking:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_outerloop_P = ' + str(pid_balance_outerloop_P) + ' ; pid_lateral_position_P = ' + str(pid_lateral_position_P) + ' ; pid_lateral_position_D = ' + str(pid_lateral_position_D) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
         else:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; pid_balance_innerloop_P = ' + str(pid_balance_P) + ' ; pid_balance_outerloop_P = ' + str(pid_balance_outerloop_P) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
-        self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'Roll', 'SteeringAngle', 'RollRate',
+        self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
 
         if potentiometer_use:
@@ -666,7 +786,7 @@ class Controller(object):
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
         if path_tracking:
-            self.log_header_str += ['x_ref', 'y_ref', 'psi_ref', 'lateral_error', 'heading_error']
+            self.log_header_str += ['DirectionGains', 'LateralPositionGains', 'x_ref', 'y_ref', 'psi_ref', 'lateral_error', 'heading_error']
 
         self.writer.writerow(self.log_header_str)
 
@@ -679,6 +799,8 @@ class Controller(object):
             "{0:.5f}".format(self.time_count),
             "{0:.5f}".format(self.loop_time),
             "{0:.5f}".format(self.velocity),
+            "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_balance.Kp,self.pid_balance.Ki,self.pid_balance.Kd),
+            "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_balance_outerloop.Kp,self.pid_balance_outerloop.Ki,self.pid_balance_outerloop.Kd),
             "{0:.5f}".format(self.roll),
             "{0:.5f}".format(self.steeringAngle),
             "{0:.5f}".format(self.rollRate),
@@ -713,6 +835,8 @@ class Controller(object):
             ]
         if path_tracking:
             self.log_str += [
+                "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_direction.Kp,self.pid_direction.Ki,self.pid_direction.Kd),
+                "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_lateral_position.Kp,self.pid_lateral_position.Ki,self.pid_lateral_position.Kd),
                 "{0:.5f}".format(self.x_ref),
                 "{0:.5f}".format(self.y_ref),
                 "{0:.5f}".format(self.psi_ref),

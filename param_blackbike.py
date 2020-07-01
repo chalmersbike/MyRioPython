@@ -173,7 +173,13 @@ pid_steeringangle_sample_time = 1.0 / controller_frequency
 
 
 ########################################################################################################################
-# Balance Controller
+# Balancing Controller
+# Controller gains can be speed dependant if they are arrays with multiple values
+# If they contain a single value they are not speed dependant
+
+# Lookup table for speed
+speed_lookup_controllergains = [3,4,5]
+
 # PID Balance Inner Loop Controller Parameters
 pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 pid_balance_P = 1.57
@@ -193,6 +199,8 @@ pid_balance_outerloop_sample_time = 1.0 / controller_frequency
 
 ########################################################################################################################
 # Path Tracking
+# Controller gains can be speed dependant if they are arrays with multiple values
+# If they contain a single value they are not speed dependant
 PATH_TYPE = 'NONE'  # [NONE, CIRCLE, STRAIGHT]
 # PATH_TYPE = 'STRAIGHT'  # [NONE, CIRCLE, STRAIGHT]
 PATH_RADIUS = 20.0  # m
