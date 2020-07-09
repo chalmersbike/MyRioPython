@@ -170,7 +170,7 @@ class Controller(object):
 
                     # Balancing and path tracking control
                     self.bike.steering_motor.enable()
-                    self.update_controller_gains()
+                    # self.update_controller_gains()
                     self.keep_the_bike_stable()
 
                 # Compute time needed to run controllers
@@ -240,6 +240,9 @@ class Controller(object):
         # Gaining Speed Phase
         self.gaining_speed_start = 0.0
         self.gainingSpeedOver_flag = False
+
+        self.roll_ref_imp_doneflag1 = False
+        self.roll_ref_imp_doneflag2 = False
 
         # Potentiometer
         self.pot = 0.0
@@ -694,17 +697,28 @@ class Controller(object):
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
-        elif roll_ref_use:
-            if self.time_count < roll_ref_end_time:
-                if self.time_count >  roll_ref_start_time:
-                    self.balancing_setpoint = roll_ref_Mag
+        else:
+
+            if roll_ref_use and not roll_ref_step_imp_flag:
+                if self.time_count < roll_ref_end_time:
+                    if self.time_count > roll_ref_start_time:
+                        self.balancing_setpoint = roll_ref_Mag
+                    else:
+                        self.balancing_setpoint = 0
+                    # print self.time_count, roll_ref_start_time, roll_ref_end_time
                 else:
                     self.balancing_setpoint = 0
-                # print self.time_count, roll_ref_start_time, roll_ref_end_time
+            elif roll_ref_use and roll_ref_step_imp_flag:
+                if not self.roll_ref_imp_doneflag1 and self.time_count > roll_ref_imp_start_time1:
+                    self.balancing_setpoint = roll_ref_imp_Mag
+                    self.roll_ref_imp_doneflag1 = True
+                elif not self.roll_ref_imp_doneflag2 and self.time_count > roll_ref_imp_start_time2:
+                    self.balancing_setpoint = roll_ref_imp_Mag
+                    self.roll_ref_imp_doneflag2 = True
+                else:
+                    self.balancing_setpoint = 0
             else:
                 self.balancing_setpoint = 0
-        else:
-            self.balancing_setpoint = 0
 
 
     ####################################################################################################################

@@ -1,5 +1,7 @@
 import sys
+import os
 sys.path.append(sys.path[0]+'/../../')
+os.chdir("../../")
 import param
 from sensors import IMU
 import Adafruit_BBIO.GPIO as GPIO
@@ -27,5 +29,5 @@ class Test(object):
 
             # Write to CSV file
             #writer_a_imu.writerow((time.time() - start_time, self.imudata[0], self.imudata[2], self.imudata[5], self.imudata[6], self.imudata[7], self.imudata[1]))
-            time.sleep(0.1)
+            time.sleep(0.01)
 test = Test()

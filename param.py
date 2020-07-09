@@ -13,7 +13,7 @@ balancing_controller_structure = 'technion'     # Choice of the balancing contro
 controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
 
-path_tracking = 1                              # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 0                              # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 3.0                            # The time elpased for balancing before the path tracking is engaged.
 path_tracking_structure = 'parallel'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
@@ -53,13 +53,21 @@ laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
 # Choice to use Virtual OdometerRanger or not
 # Will estimate position and heading from steering angle and velocity
 # WARNING : highly imprecise !!!
-virtual_odometer = 1
+virtual_odometer = 0
 
 # Roll Reference Tracking:
 roll_ref_use = 1
 roll_ref_start_time = 4.0
 roll_ref_end_time = 7.0
 roll_ref_Mag = 2.0 * deg2rad
+
+roll_ref_step_imp_flag = 1 # 0 means step, 1 means impulse
+roll_ref_imp_start_time1 = 4.0
+roll_ref_imp_start_time2 = 7.0
+
+
+roll_ref_imp_Mag = 5.0 * deg2rad
+
 
 # Load bike specific parameters
 if bike == 'blackbike':

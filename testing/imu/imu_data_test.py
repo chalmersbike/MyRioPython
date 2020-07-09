@@ -1,8 +1,9 @@
 import csv
 import sys
 import time
-
+import os
 sys.path.append('../../')
+# os.chdir("../../")
 from bike import Bike
 
 bike = Bike()
@@ -26,7 +27,7 @@ try:
         # writer.writerow((time_count, phi_d_state, phi_state))  # writer.writerow((time_count, phi_d, phi)
 
         #        print phi_d_state
-        time.sleep(0.5)
+        time.sleep(0.01)
         time_count += 0.01
 finally:
     print "done"

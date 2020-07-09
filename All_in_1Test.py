@@ -67,11 +67,11 @@ class Test(object):
                 self.imudata = self.imu.get_imu_data()
                 print('Time=%g\t'% (time.time() - start_time))
                 # print(self.imudata)
-                print('Phi_CompFilter_RollAccComp=%g\tPhi_CompFilter = %g\tGyroX = %g\tAccX = %g\tAyRollComp = %g\tAy = %g\tAz = %g\tGyroIntg = %g\t' % (
+                print('Phi_CompFilter=%g\tPhi_gyro_int = %g\tGyroX = %g\tAccX = %g\tAyRollComp = %g\tAy = %g\tAz = %g\tGyroIntg = %g\t' % (
                     self.imudata[0], self.imudata[1], self.imudata[2], self.imudata[3],
                     self.imudata[4], self.imudata[5], self.imudata[6], self.imudata[7]))
 
-                time.sleep(0.5)
+                time.sleep(0.01)
 
         input1 = raw_input('If all the tests are passed, then you may check the rear motor and steering motor. HOWEVER THEY ARE RISKY! PRESS ENTER TO CONTINUE')
         if not input1:
