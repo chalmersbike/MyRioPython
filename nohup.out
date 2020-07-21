@@ -1,0 +1,28 @@
+Input the number of samples of press ENTER for 50 samples for the GPS test, move the GPS for the reading! Traceback (most recent call last):
+  File "testing/gps/GPSTestLukas.py", line 33, in <module>
+    test = Test()
+  File "testing/gps/GPSTestLukas.py", line 14, in __init__
+    number_samples_GPS = raw_input('Input the number of samples of press ENTER for 50 samples for the GPS test, move the GPS for the reading! ')
+IOError: [Errno 9] Bad file descriptor
+Traceback (most recent call last):
+  File "testing/gps/GPSTestLukas.py", line 34, in <module>
+    test = Test()
+  File "testing/gps/GPSTestLukas.py", line 24, in __init__
+    gpspos = gps.get_position()
+  File "/home/debian/chalmersbike/testing/gps/../../sensors/gps.py", line 161, in get_position
+    lat, lon = self.get_latlon()
+  File "/home/debian/chalmersbike/testing/gps/../../sensors/gps.py", line 176, in get_latlon
+    readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
+  File "/home/debian/.local/lib/python2.7/site-packages/serial/serialposix.py", line 501, in read
+    'device reports readiness to read but returned no data '
+serial.serialutil.SerialException: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+Traceback (most recent call last):
+  File "testing/gps/GPSTestLukas.py", line 34, in <module>
+    test = Test()
+  File "testing/gps/GPSTestLukas.py", line 24, in __init__
+    gpspos = gps.get_position()
+  File "/home/debian/chalmersbike/testing/gps/../../sensors/gps.py", line 161, in get_position
+    lat, lon = self.get_latlon()
+  File "/home/debian/chalmersbike/testing/gps/../../sensors/gps.py", line 182, in get_latlon
+    checksum = line[1]     # Get the checksum
+IndexError: list index out of range
