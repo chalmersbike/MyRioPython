@@ -49,8 +49,8 @@ steeringMotor_IdleDuty = 50.0           # Steering Motor PWM duty cycle for idli
 steeringMotor_PWMforMaxOutput = 90.0    # Steering Motor PWM duty cycle for maximum output (max speed/current)
 steeringMotor_PWMforMinOutput = 10.0    # Steering Motor PWM duty cycle for minimum output (min speed/current)
 
-steeringMotor_SpeedMaxOutput = 1000.0   # [rpm] Steering Motor maximum speed
-steeringMotor_SpeedMinOutput = -1000.0  # [rpm] Steering Motor minimum speed
+steeringMotor_SpeedMaxOutput = 4000.0   # [rpm] Steering Motor maximum speed
+steeringMotor_SpeedMinOutput = -4000.0  # [rpm] Steering Motor minimum speed
 # steeringMotor_SpeedMaxOutput = 200.0   # [rpm] Steering Motor maximum speed
 # steeringMotor_SpeedMinOutput = -200.0  # [rpm] Steering Motor minimum speed
 
