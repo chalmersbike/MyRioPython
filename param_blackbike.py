@@ -21,7 +21,7 @@ MAX_LEAN_ANGLE = 0.6  # rad (35 deg)
 MIN_LEAN_ANGLE = - MAX_LEAN_ANGLE
 # Steering angle limitations
 # MAX_HANDLEBAR_ANGLE = ((5.0 / 3.0) * PI) / 6.0  # rad, 50 deg
-LowSpeedMAX_HANDLEBAR_ANGLE = ((5.0 / 3.0) * PI) / 6.0  # rad, 30 deg
+LowSpeedMAX_HANDLEBAR_ANGLE = ((5.0 / 3.0) * PI) / 6.0  # rad, 50 deg
 HighSpeedMAX_HANDLEBAR_ANGLE = ((1.0/ 3.0) * PI) / 6.0   # rad 10 deg
 MAX_HANDLEBAR_ANGLE = LowSpeedMAX_HANDLEBAR_ANGLE
 MIN_HANDLEBAR_ANGLE = - MAX_HANDLEBAR_ANGLE
@@ -183,7 +183,8 @@ speed_lookup_controllergains = [3,4,5]
 # PID Balance Inner Loop Controller Parameters
 pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 #pid_balance_P = 1.57
-pid_balance_P = 5.0 # Gain tested with Peo
+# pid_balance_P = 5.0 # Gain tested with Peo for vel = 4
+pid_balance_P = 7.0 # when vel = 3
 pid_balance_I = 0.0
 pid_balance_D = 0.0
 pid_balance_sample_time = 1.0 / controller_frequency

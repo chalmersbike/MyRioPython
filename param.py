@@ -31,7 +31,7 @@ path_file = 'step_heading_path_12secs_m5deg.csv'
                                                 # Must be a CSV with 4 columns : Time, x, y, heading
                                                 # Can also be 'pot' to use the potentiometer as y position on the roller
 
-initial_speed = 4       # [m/s] Forward speed of the bike
+initial_speed = 3       # [m/s] Forward speed of the bike
 
 test_duration = 5555.0  # [s] Duration of the test
 start_up_interval = 5   # [s] Time to wait before running drive motor after receiving input from user to run the bike
@@ -57,11 +57,16 @@ virtual_odometer = 0
 
 # Roll Reference Tracking:
 roll_ref_use = 1
+rol_ref_periodic = 1
+roll_ref_period = 3.0
 roll_ref_start_time = 4.0
 roll_ref_end_time = 7.0
-roll_ref_Mag = 2.0 * deg2rad
+#roll_ref_Mag = 0 * deg2rad
+#roll_ref_Mag = -3.0 * deg2rad
+roll_ref_Mag = -5.0 * deg2rad
 
-roll_ref_step_imp_flag = 1 # 0 means step, 1 means impulse
+
+roll_ref_step_imp_flag = 0 # 0 means step, 1 means impulse
 roll_ref_imp_start_time1 = 4.0
 roll_ref_imp_start_time2 = 7.0
 

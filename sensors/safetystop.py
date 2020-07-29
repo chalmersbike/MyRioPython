@@ -30,7 +30,7 @@ class SafetyStop(object):
             self.ESTOP = not self.ESTOP
         self.ESTOP_previous = not bool(GPIO.input(safetyStop_port))
 
-        print("estop_gpio = %r ; estop = %r ; estop_previous = %r" % (bool(GPIO.input(safetyStop_port)),self.ESTOP,self.ESTOP_previous))
+        # print("estop_gpio = %r ; estop = %r ; estop_previous = %r" % (bool(GPIO.input(safetyStop_port)),self.ESTOP,self.ESTOP_previous))
 
         # FOR TESTING PURPOSE ONLY, WILL IGNORE THE EMERGENCY STOP TO FORCEFULLY RUN THE CODE
         # The motors will still be electrically disconnected if the emergency stop is pressed

@@ -185,33 +185,44 @@ class Controller(object):
                 print(traceback.print_exc())
 
                 self.stop()
-                # print('Error or keyboard interrupt, aborting the experiment')
+                exc_msg = 'Error or keyboard interrupt, aborting the experiment'
+                print(exc_msg)
+                self.exception_log(-2, exc_msg)
+
 
             # Control Frequency
             self.loop_time = time.time() - self.time_start_current_loop
             self.time_count = time.time() - self.gaining_speed_start
             
-            # Log data
-            self.log_regular() 
+
 
             # Check for ESTOP
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
                 self.stop()
-                print('Emergency stop pressed, aborting the experiment')
+                exc_msg = 'Emergency stop pressed, aborting the experiment'
+                print(exc_msg)
+                self.exception_log(0,exc_msg)
                 break
 
             # Check for extreme PHI
             if self.roll > MAX_LEAN_ANGLE or self.roll < MIN_LEAN_ANGLE:
                 self.stop()
-                print('Exceeded min/max lean (roll) angle, aborting the experiment')
+                exc_msg = 'Exceeded min/max lean (roll) angle abs %3f > abs %3f, aborting the experiment' %(self.roll, MAX_LEAN_ANGLE)
+                print(exc_msg)
+                self.exception_log(2, exc_msg)
+
 
             # End test time condition
             if self.time_count > test_duration:
                 # Print number of times sampling time was exceeded if experiment is aborted early
-                print('Exceeded test duration, aborting the experiment')
                 self.stop()
+                exc_msg = 'Exceeded test duration, aborting the experiment'
+                print(exc_msg)
+                self.exception_log(-1, exc_msg)
                 break
+            # Log data
+            self.log_regular()
 
             # Compute total time for current loop
             self.loop_time = time.time() - self.time_start_current_loop
@@ -287,6 +298,8 @@ class Controller(object):
         self.exceedscount = 0.0
         self.time_start_controller = 0.0
         self.time_pathtracking = 0.0
+        self.roll_ref_end_time = roll_ref_end_time
+        self.roll_ref_start_time = roll_ref_start_time
 
 
         # Bike States
@@ -325,6 +338,8 @@ class Controller(object):
         self.lateral_error = 0.0
         self.heading_error = 0.0
         self.path_tracking_engaged = False
+        # self.roll_ref_period_mod_switch = False
+        # self.roll_ref_period_mod_switch_time = 0.0
 
         # Speed lookup table for speed dependant controller gains
         if isinstance(speed_lookup_controllergains,list):
@@ -522,13 +537,19 @@ class Controller(object):
             max_handlebar_angle = MAX_HANDLEBAR_ANGLE
             min_handlebar_angle = MIN_HANDLEBAR_ANGLE
         if handlebar_angle > max_handlebar_angle:
-            print('Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg))
+            # print('Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg))
             self.upperSaturation = True
-            self.bike.stop_all()
+            self.bike.stop()
+            exc_msg = 'Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg)
+            print(exc_msg)
+            self.exception_log(1, exc_msg)
         elif handlebar_angle < min_handlebar_angle:
-            print('Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg))
+            # print('Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg))
             self.lowerSaturation = True
-            self.bike.stop_all()
+            self.bike.stop()
+            exc_msg = 'Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg)
+            print(exc_msg)
+            self.exception_log(1, exc_msg)
         else:
             self.upperSaturation = False
             self.lowerSaturation = False
@@ -544,7 +565,9 @@ class Controller(object):
             input_estop = raw_input('Press ENTER to continue')
             if input_estop:
                 self.stop()
-                print('Emergency stop was not released, aborting the experiment')
+                exc_msg = 'Emergency stop was not released, aborting the experiment before it starts'
+                print(exc_msg)
+                self.exception_log(0,exc_msg)
 
 
     ####################################################################################################################
@@ -700,14 +723,26 @@ class Controller(object):
         else:
 
             if roll_ref_use and not roll_ref_step_imp_flag:
-                if self.time_count < roll_ref_end_time:
-                    if self.time_count > roll_ref_start_time:
-                        self.balancing_setpoint = roll_ref_Mag
+                if not rol_ref_periodic:
+                    if self.time_count < self.roll_ref_end_time:
+                        if self.time_count > self.roll_ref_start_time:
+                            self.balancing_setpoint = roll_ref_Mag
+                        else:
+                            self.balancing_setpoint = 0
+                        # print self.time_count, roll_ref_start_time, roll_ref_end_time
                     else:
                         self.balancing_setpoint = 0
-                    # print self.time_count, roll_ref_start_time, roll_ref_end_time
                 else:
-                    self.balancing_setpoint = 0
+                    if self.time_count < self.roll_ref_end_time:
+                        if self.time_count > self.roll_ref_start_time:
+                            self.balancing_setpoint = roll_ref_Mag
+                        else:
+                            self.balancing_setpoint = 0
+                        # print self.time_count, roll_ref_start_time, roll_ref_end_time
+                    else:
+                        self.balancing_setpoint = 0
+                        self.roll_ref_start_time = self.roll_ref_start_time + roll_ref_period
+                        self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_period
             elif roll_ref_use and roll_ref_step_imp_flag:
                 if not self.roll_ref_imp_doneflag1 and self.time_count > roll_ref_imp_start_time1:
                     self.balancing_setpoint = roll_ref_imp_Mag
@@ -782,7 +817,11 @@ class Controller(object):
     def log_headerline(self):
         # Data logging setup
         timestr = time.strftime("%Y%m%d-%H%M%S")
-        results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
+        csv_path = './ExpData_%s/BikeData_%s.csv' % (bike, timestr)
+        print "EXP LOG PATH is: "
+        print csv_path
+        results_csv = open(csv_path, 'wb')
+        # results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
         self.writer = csv.writer(results_csv)
 
         if path_tracking:
@@ -859,7 +898,6 @@ class Controller(object):
             ]
 
         self.writer.writerow(self.log_str)
-
         self.time_log = time.time() - self.time_log
 
         if debug or (self.loop_time > sample_time):
@@ -874,8 +912,11 @@ class Controller(object):
 
             # Stop experiment if exceeded sampling time too many times
             # if self.exceedscount > max_exceed_count:
-            #     print("Calculation time exceeded sampling time too often (%d times) , aborting the experiment" % (max_exceed_count))
+            #     print(")
             #     self.stop()
+            # exc_msg = 'Calculation time exceeded sampling time too often (%d times) , aborting the experiment' % (max_exceed_count)
+            # print(exc_msg)
+            # self.exception_log(3, exc_msg)
 
     def reset_global_angles_and_coordinates(self):
         self.x_estimated = initial_speed * (time.time() - self.time_start_controller)
@@ -883,3 +924,23 @@ class Controller(object):
         self.psi_estimated = 0.0
         self.nu_estimated = 0.0
         print "Odometry reset for heading control"
+
+    def exception_log(self,exc_flag,exc_msg):
+        if exc_flag is 1:
+            exceptioncode = 'Steering Angle exceeds Bound'
+        elif exc_flag is 2:
+            exceptioncode = 'Roll Angle exceeds Bound'
+        elif exc_flag is 0:
+            exceptioncode = 'Emergency Pressed'
+        elif exc_flag is -1:
+            exceptioncode = 'Test finished in the set exp duration'
+        elif exc_flag is -2:
+            exceptioncode = 'Interruption by the program'
+        if exc_flag is 3:
+            exceptioncode = 'samples delayed for too many times'
+        self.log_str = [
+            "{0:.5f}".format(self.time_count),
+            exc_flag,
+            exceptioncode,
+            exc_msg]
+        self.writer.writerow(self.log_str)
