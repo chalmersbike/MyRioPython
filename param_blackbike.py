@@ -184,7 +184,7 @@ speed_lookup_controllergains = [3,4,5]
 pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 #pid_balance_P = 1.57
 # pid_balance_P = 5.0 # Gain tested with Peo for vel = 4
-pid_balance_P = 7.0 # when vel = 3
+pid_balance_P = 5.0 # when vel = 3
 pid_balance_I = 0.0
 pid_balance_D = 0.0
 pid_balance_sample_time = 1.0 / controller_frequency

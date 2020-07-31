@@ -173,6 +173,7 @@ class Controller(object):
                     # self.update_controller_gains()
                     self.keep_the_bike_stable()
 
+
                 # Compute time needed to run controllers
                 self.control_cal_time = time.time() - self.time_start_current_loop - self.sensor_reading_time
             #except (ValueError, KeyboardInterrupt):
@@ -300,12 +301,16 @@ class Controller(object):
         self.time_pathtracking = 0.0
         self.roll_ref_end_time = roll_ref_end_time
         self.roll_ref_start_time = roll_ref_start_time
+        if circle_switch is True:
+            self.roll_ref_start_time1 = roll_ref_start_time1
+            self.roll_ref_start_time2 = roll_ref_start_time2
 
 
         # Bike States
         self.roll = 0.0
         self.roll_gyro = 0.0
         self.rollRate = 0.0
+        self.rollRate_prev = 0.0
         self.gy = 0.0
         self.gz = 0.0
         self.ax = 0.0
@@ -463,6 +468,7 @@ class Controller(object):
         # Outlier detection on roll rate
         if abs(self.rollRate) > 20*deg2rad:
             print('WARNING : [%f] Measured roll rate larger than 20deg/s' % (time.time() - self.gaining_speed_start))
+            self.rollRate = self.rollRate_prev
 
 
 
@@ -722,9 +728,9 @@ class Controller(object):
             self.balancing_setpoint = self.pot
         else:
 
-            if roll_ref_use and not roll_ref_step_imp_flag:
+            if roll_ref_use and not roll_ref_step_imp_flag: # Do step
                 if not rol_ref_periodic:
-                    if self.time_count < self.roll_ref_end_time:
+                    if self.time_count < self.roll_ref_end_time: #__(ref_start_time)------(ref_end_time)_____
                         if self.time_count > self.roll_ref_start_time:
                             self.balancing_setpoint = roll_ref_Mag
                         else:
@@ -733,16 +739,31 @@ class Controller(object):
                     else:
                         self.balancing_setpoint = 0
                 else:
-                    if self.time_count < self.roll_ref_end_time:
-                        if self.time_count > self.roll_ref_start_time:
-                            self.balancing_setpoint = roll_ref_Mag
+                    if not circle_switch:
+                        if self.time_count < self.roll_ref_end_time:
+                            if self.time_count > self.roll_ref_start_time:
+                                self.balancing_setpoint = roll_ref_Mag
+                            else:
+                                self.balancing_setpoint = 0
+                            # print self.time_count, roll_ref_start_time, roll_ref_end_time
                         else:
                             self.balancing_setpoint = 0
-                        # print self.time_count, roll_ref_start_time, roll_ref_end_time
+                            self.roll_ref_start_time = self.roll_ref_start_time + roll_ref_period
+                            self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_period
                     else:
-                        self.balancing_setpoint = 0
-                        self.roll_ref_start_time = self.roll_ref_start_time + roll_ref_period
-                        self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_period
+                        if self.time_count < self.roll_ref_end_time: # One loop Not finished yet
+                            if self.time_count > self.roll_ref_start_time1 and self.time_count < self.roll_ref_start_time2:
+                                self.balancing_setpoint = roll_ref_Mag1
+                            elif self.time_count >= self.roll_ref_start_time2:
+                                self.balancing_setpoint = roll_ref_Mag2
+                            else:
+                                self.balancing_setpoint = 0
+                            # print self.time_count, roll_ref_start_time, roll_ref_end_time
+                        else:
+                            self.balancing_setpoint = roll_ref_Mag1
+                            self.roll_ref_start_time1 = self.roll_ref_start_time1 + roll_ref_totalperiod
+                            self.roll_ref_start_time2 = self.roll_ref_start_time2 + roll_ref_totalperiod
+                            self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_totalperiod
             elif roll_ref_use and roll_ref_step_imp_flag:
                 if not self.roll_ref_imp_doneflag1 and self.time_count > roll_ref_imp_start_time1:
                     self.balancing_setpoint = roll_ref_imp_Mag
@@ -917,6 +938,8 @@ class Controller(object):
             # exc_msg = 'Calculation time exceeded sampling time too often (%d times) , aborting the experiment' % (max_exceed_count)
             # print(exc_msg)
             # self.exception_log(3, exc_msg)
+        self.rollRate_prev = self.rollRate
+
 
     def reset_global_angles_and_coordinates(self):
         self.x_estimated = initial_speed * (time.time() - self.time_start_controller)
@@ -936,8 +959,10 @@ class Controller(object):
             exceptioncode = 'Test finished in the set exp duration'
         elif exc_flag is -2:
             exceptioncode = 'Interruption by the program'
-        if exc_flag is 3:
+        elif exc_flag is 3:
             exceptioncode = 'samples delayed for too many times'
+        else:
+            exceptioncode = 'Exception Not LISTED by exception_log()'
         self.log_str = [
             "{0:.5f}".format(self.time_count),
             exc_flag,

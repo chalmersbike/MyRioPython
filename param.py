@@ -57,16 +57,33 @@ virtual_odometer = 0
 
 # Roll Reference Tracking:
 roll_ref_use = 1
-rol_ref_periodic = 1
-roll_ref_period = 3.0
-roll_ref_start_time = 4.0
-roll_ref_end_time = 7.0
-#roll_ref_Mag = 0 * deg2rad
-#roll_ref_Mag = -3.0 * deg2rad
-roll_ref_Mag = -5.0 * deg2rad
-
-
 roll_ref_step_imp_flag = 0 # 0 means step, 1 means impulse
+rol_ref_periodic = 0
+
+roll_ref_start_time = 6.0
+roll_ref_end_time = 1000.0
+if rol_ref_periodic is 1:
+    roll_ref_period = (roll_ref_end_time - roll_ref_start_time)*2
+roll_ref_Mag = 5.0 * deg2rad
+#roll_ref_Mag = -5.0 * deg2rad
+#roll_ref_Mag = 8.0 * deg2rad
+#roll_ref_Mag = -8.0 * deg2rad
+
+circle_switch = False # You can't use 1 to replace True!
+if circle_switch is True:
+    rol_ref_periodic = 1
+    roll_ref_start_time1 = 6.0
+    roll_ref_Mag1 = -5.0 * deg2rad
+    roll_ref1_period = 24.06 # Time elapsed for one circle at 5.0 degs roll when v= 3
+    roll_ref_start_time2 = roll_ref_start_time1 + roll_ref1_period
+    roll_ref_Mag2 = -8.0 * deg2rad
+    roll_ref2_period = 15.0 # for one circle at 8.0 secs v = 3
+    roll_ref_totalperiod = roll_ref1_period + roll_ref2_period
+    roll_ref_end_time = roll_ref_start_time1 + roll_ref_totalperiod
+
+
+
+
 roll_ref_imp_start_time1 = 4.0
 roll_ref_imp_start_time2 = 7.0
 
