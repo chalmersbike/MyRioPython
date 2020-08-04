@@ -110,7 +110,7 @@ imu_accelerometerODR = 6                    # IMU Output Data Rate of the accele
                                                 # 2 = 50Hz        5 = 476Hz
 
 # Complementary filter
-imu_complementaryFilterRatio = 0.95        # IMU complementary filter ratio
+imu_complementaryFilterRatio = 0.985        # IMU complementary filter ratio
 imu_centripetal_compensation = 1            # 1 = turn on centripetal acceleration compensation ; 0 = turn off
 imu_roll_compensation = 1                   # 1 = turn on roll acceleration compensation ; 0 = turn off
 
