@@ -466,8 +466,8 @@ class Controller(object):
         self.az = self.imu_data[7]
 
         # Outlier detection on roll rate
-        if abs(self.rollRate) > 20*deg2rad:
-            print('WARNING : [%f] Measured roll rate larger than 20deg/s' % (time.time() - self.gaining_speed_start))
+        if abs(self.rollRate) > 20*rad2deg:
+            print('WARNING : [%f] Measured roll rate larger than 20deg/s, at %g deg/s' % (time.time() - self.gaining_speed_start, self.rollRate * rad2deg))
             self.rollRate = self.rollRate_prev
 
 

@@ -56,7 +56,7 @@ laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
 virtual_odometer = 0
 
 # Roll Reference Tracking:
-roll_ref_use = 1
+roll_ref_use = 0
 roll_ref_step_imp_flag = 0 # 0 means step, 1 means impulse
 rol_ref_periodic = 0
 
