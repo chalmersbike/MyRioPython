@@ -81,6 +81,8 @@ class Controller(object):
             try:
                 # Get velocity
                 self.velocity = self.bike.get_velocity()
+                if self.broken_speed_flag:
+                    self.velocity = initial_speed
                 if abs(self.velocity) > 1.25*abs(initial_speed):
                     print('WARNING : [%f] Measured speed larger than 1.25 times reference speed' % (
                                 time.time() - self.gaining_speed_start))
@@ -147,6 +149,11 @@ class Controller(object):
                     # Once enough time has passed, start controller
                     self.gainingSpeedOver_flag = True
                     print('Gaining speed phase over')
+
+                    # Check that speed if high enough
+                    if self.velocity < 0.5*initial_speed:
+                        print("WARNING : speed is lower than half the reference speed. Hall sensors or drive motor might be faulty. Will use reference speed instead of measured speed in calculations.")
+                        self.broken_speed_flag = True
 
                     self.controller_active = True
 
@@ -252,6 +259,7 @@ class Controller(object):
         # Gaining Speed Phase
         self.gaining_speed_start = 0.0
         self.gainingSpeedOver_flag = False
+        self.broken_speed_flag = False
 
         self.roll_ref_imp_doneflag1 = False
         self.roll_ref_imp_doneflag2 = False
