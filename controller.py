@@ -81,7 +81,7 @@ class Controller(object):
             try:
                 # Get velocity
                 self.velocity = self.bike.get_velocity()
-                if self.broken_speed_flag
+                if self.broken_speed_flag:
                     self.velocity = initial_speed
                 if abs(self.velocity) > 1.25*abs(initial_speed):
                     print('WARNING : [%f] Measured speed larger than 1.25 times reference speed' % (
