@@ -56,7 +56,7 @@ class Test(object):
         start_time = time.time()
         if not input1:
             for x in range(1,20):
-                self.imudata = self.imu.get_imu_data()
+                self.imudata = self.imu.get_imu_data(0,0,0)
                 print('Time=%f\t'% (time.time() - start_time))
                 print(self.imudata)
                 # print(self.imudata)
@@ -64,7 +64,7 @@ class Test(object):
         else:
             for x in range(1,int(input1)):
                 # self.bike.get_imu_data()
-                self.imudata = self.imu.get_imu_data()
+                self.imudata = self.imu.get_imu_data(0,0,0)
                 print('Time=%g\t'% (time.time() - start_time))
                 # print(self.imudata)
                 print('Phi_CompFilter=%g\tPhi_gyro_int = %g\tGyroX = %g\tAccX = %g\tAyRollComp = %g\tAy = %g\tAz = %g\tGyroIntg = %g\t' % (

@@ -123,6 +123,7 @@ class IMU(object):
         self.gy_offset = 0.0
         self.gz_offset = 0.0
         self.acc_roll_offset = 0.0
+        self.prev_reading = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         if not horizontal:
             print('IMU : Searching for calibration file %s/sensors/Acc_Cali.txt' %(os.getcwd()))
             with open('./sensors/Acc_Cali.txt', 'r') as f:
@@ -183,7 +184,7 @@ class IMU(object):
         else:
             print('IMU : Accelerometer not calibrated, using %.5f as roll angle offset\n' %(self.acc_roll_offset))
 
-    def get_imu_data(self):
+    def get_imu_data(self, velocity, delta_state, phi):
         read = self.get_reading()
         dT = time.time() - self.last_read
         self.last_read = time.time()
@@ -194,14 +195,23 @@ class IMU(object):
         gy = read[5]
         gz = read[6]
 
-        # CP_acc_g = self.CP_comp * ((self.velocity * self.velocity) / b) * math.tan(delta_state * 0.94) * (
-        #         1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
-        # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(self.states[0]), az + CP_acc_g * math.sin(self.states[0]))  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
-        self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
+        # if gx > 20 * deg2rad:
+        #     print('WARNING : Measured roll rate larger than 20deg/s, at %g deg/s' % ( self.rollRate * rad2deg))
+        #     gx = self.prev_reading[2]
+
+
+        CP_acc_g = ((velocity ** 2) / b) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
+        self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi), az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
+        # self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
+
+        if abs(self.phi_acc) >  80 * deg2rad:
+            print('WARNING : Spike in accelerometer detected, calculated acc roll is  %g deg. \n using previous reading' % (self.phi_acc * rad2deg))
+            self.phi_acc = self.prev_reading[0]
+
 
         self.phi = self.phi_acc * (1-imu_complementaryFilterRatio) + (self.phi + gx * (dT)) * imu_complementaryFilterRatio
         self.phi_gyro += dT * gx
-
+        self.prev_reading = [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az]
         # [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az]
 

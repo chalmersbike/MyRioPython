@@ -40,8 +40,8 @@ class Bike(object):
         return self.hall_sensor.get_velocity()
 
     # IMU
-    def get_imu_data(self):
-        return self.imu.get_imu_data()
+    def get_imu_data(self, velocity, delta_state, phi):
+        return self.imu.get_imu_data(velocity, delta_state, phi)
 
     # GPS
     if gps_use:

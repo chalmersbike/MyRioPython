@@ -42,7 +42,8 @@ class Controller(object):
                 self.path_psi = self.path_data[:,3]
 
         # Read the IMU complementary filter Phi as the initial phi estimation
-        self.roll = self.bike.get_imu_data()[0]
+        self.roll = self.bike.get_imu_data(0, self.steeringAngle, self.roll)[0]
+        # self.roll = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)[0]
 
         # Get experiment (if any) of the experiment
         self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
@@ -327,6 +328,7 @@ class Controller(object):
         self.velocity = 0.0
         self.velocity_previous = 0.0
         self.AngVel = 0.0
+        self.steeringAngle = 0.0
 
         # Controller
         self.controller_active = False
@@ -461,7 +463,8 @@ class Controller(object):
                     time.time() - self.gaining_speed_start))
 
         # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
-        self.imu_data = self.bike.get_imu_data()
+        self.imu_data = self.bike.get_imu_data(0, self.steeringAngle, self.roll)
+        # self.imu_data = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)
 
         # Extract states
         self.roll = self.imu_data[0]
@@ -474,7 +477,7 @@ class Controller(object):
         self.az = self.imu_data[7]
 
         # Outlier detection on roll rate
-        if abs(self.rollRate) > 20*rad2deg:
+        if abs(self.rollRate) > 20*deg2rad:
             print('WARNING : [%f] Measured roll rate larger than 20deg/s, at %g deg/s' % (time.time() - self.gaining_speed_start, self.rollRate * rad2deg))
             self.rollRate = self.rollRate_prev
 
