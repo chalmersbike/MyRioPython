@@ -134,7 +134,7 @@ class IMU(object):
         ax = read[1]
         ay = read[2]
         az = read[3]
-        self.phi = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
+        self.phi = 0.0
         self.phi_gyro = self.phi
         self.last_read = time.time()
 
