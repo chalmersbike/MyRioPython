@@ -67,7 +67,7 @@ class Test(object):
                 self.imudata = self.imu.get_imu_data(0,0,0)
                 print('Time=%g\t'% (time.time() - start_time))
                 # print(self.imudata)
-                print('Phi_CompFilter=%g\tPhi_gyro_int = %g\tGyroX = %g\tAccX = %g\tAyRollComp = %g\tAy = %g\tAz = %g\tGyroIntg = %g\t' % (
+                print('Phi_CompFilter=%g\tPhi_gyro_int = %g\tGyroX = %g\tGyroY = %g\tGyroZ = %g\tAx = %g\tAy = %g\tAz = %g\t' % (
                     self.imudata[0], self.imudata[1], self.imudata[2], self.imudata[3],
                     self.imudata[4], self.imudata[5], self.imudata[6], self.imudata[7]))
 

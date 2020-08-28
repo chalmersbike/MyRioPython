@@ -74,8 +74,9 @@ class Controller(object):
         self.pid_lateral_position.clear()
         self.pid_direction.clear()
 
-        self.gaining_speed_start = time.time()
+        self.bike.steering_motor.enable()
 
+        self.gaining_speed_start = time.time()
         while self.controller_active or not self.gainingSpeedOver_flag:
             self.time_start_current_loop = time.time()
 
@@ -170,6 +171,7 @@ class Controller(object):
                     # TO DO : CHECK WHY THIS HAPPENS !
                     PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
 
+
                     # Time at which the controller starts running
                     self.time_start_controller = time.time()
                 elif self.controller_active:
@@ -177,7 +179,7 @@ class Controller(object):
                     self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
 
                     # Balancing and path tracking control
-                    self.bike.steering_motor.enable()
+                    # self.bike.steering_motor.enable()
                     # self.update_controller_gains()
                     self.keep_the_bike_stable()
 
@@ -463,8 +465,8 @@ class Controller(object):
                     time.time() - self.gaining_speed_start))
 
         # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
-        self.imu_data = self.bike.get_imu_data(0, self.steeringAngle, self.roll)
-        # self.imu_data = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)
+        # self.imu_data = self.bike.get_imu_data(0, self.steeringAngle, self.roll)
+        self.imu_data = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)
 
         # Extract states
         self.roll = self.imu_data[0]
@@ -974,9 +976,10 @@ class Controller(object):
             exceptioncode = 'samples delayed for too many times'
         else:
             exceptioncode = 'Exception Not LISTED by exception_log()'
-        self.log_str = [
-            "{0:.5f}".format(self.time_count),
-            exc_flag,
-            exceptioncode,
-            exc_msg]
-        self.writer.writerow(self.log_str)
+        if self.gainingSpeedOver_flag: # To guarantee no error is printed in data file when there is
+            self.log_str = [
+                "{0:.5f}".format(self.time_count),
+                exc_flag,
+                exceptioncode,
+                exc_msg]
+            self.writer.writerow(self.log_str)
