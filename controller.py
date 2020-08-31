@@ -42,7 +42,7 @@ class Controller(object):
                 self.path_psi = self.path_data[:,3]
 
         # Read the IMU complementary filter Phi as the initial phi estimation
-        self.roll = self.bike.get_imu_data(0, self.steeringAngle, self.roll)[0]
+        # self.roll = self.bike.get_imu_data(0, self.steeringAngle, self.roll)[0]
         # self.roll = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)[0]
 
         # Get experiment (if any) of the experiment
