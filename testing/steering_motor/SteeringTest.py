@@ -1,6 +1,11 @@
-from steeringmotor import SteeringMotor
+import sys
+sys.path.append(sys.path[0]+'/../../')
+# from steeringmotor import SteeringMotor
+from actuators import SteeringMotor
 import time
 mot = SteeringMotor()
-mot.set_angular_velocity(0.1)
-time.sleep(3)
+# mot.set_angular_velocity(0.1)
+mot.enable()
+mot.set_PWM_duty_cycle(90)
+time.sleep(0.05)
 mot.stop()

@@ -331,6 +331,7 @@ class Controller(object):
         self.velocity_previous = 0.0
         self.AngVel = 0.0
         self.steeringAngle = 0.0
+        self.sensor_read_timing = 0.0
 
         # Controller
         self.controller_active = False
@@ -477,6 +478,7 @@ class Controller(object):
         self.ax = self.imu_data[5]
         self.ay = self.imu_data[6]
         self.az = self.imu_data[7]
+        self.sensor_read_timing = self.imu_data[8]
 
         # Outlier detection on roll rate
         if abs(self.rollRate) > 20*deg2rad:
@@ -864,7 +866,7 @@ class Controller(object):
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
-                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated']
+                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated', 'imu_read_timing']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
@@ -901,7 +903,8 @@ class Controller(object):
             "{0:.5f}".format(self.x_estimated),
             "{0:.5f}".format(self.y_estimated),
             "{0:.5f}".format(self.psi_estimated),
-            "{0:.5f}".format(self.nu_estimated)
+            "{0:.5f}".format(self.nu_estimated),
+            "{0:.5f}".format(self.sensor_read_timing)
         ]
 
         if potentiometer_use:

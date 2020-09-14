@@ -35,6 +35,7 @@ initial_speed = 3       # [m/s] Forward speed of the bike
 
 test_duration = 5555.0  # [s] Duration of the test
 start_up_interval = 5   # [s] Time to wait before running drive motor after receiving input from user to run the bike
+#speed_up_time = test_duration   # [s] Duration of the test
 speed_up_time = 3.0     # [s] Time to run the drive motor without steering controller to get bike up to speed
 max_exceed_count = 10   # Number of times where calculation time can exceed sampling time before aborting experiment
 
@@ -57,17 +58,18 @@ virtual_odometer = 0
 
 # Roll Reference Tracking:
 roll_ref_use = 1
-roll_ref_step_imp_flag = 0 # 0 means step, 1 means impulse
+roll_ref_step_imp_flag = 0  # 0 means step, 1 means impulse
 rol_ref_periodic = 0
 
 roll_ref_start_time = 6.0
 roll_ref_end_time = 1000.0
 if rol_ref_periodic is 1:
     roll_ref_period = (roll_ref_end_time - roll_ref_start_time)*2
-roll_ref_Mag = 5.0 * deg2rad
-#roll_ref_Mag = -5.0 * deg2rad
+#roll_ref_Mag = -0.0 * deg2rad
+roll_ref_Mag = -5.0 * deg2rad #  Right side
+# roll_ref_Mag = -8.0 * deg2rad
+# roll_ref_Mag = 5.0 * deg2rad   # Left Side
 #roll_ref_Mag = 8.0 * deg2rad
-#roll_ref_Mag = -8.0 * deg2rad
 
 circle_switch = False # You can't use 1 to replace True!
 if circle_switch is True:

@@ -136,7 +136,10 @@ class IMU(object):
         az = read[3]
         self.phi = 0.0
         self.phi_gyro = self.phi
-        self.last_read = time.time()
+        self.last_read = 0.0
+        self.first_read = True
+        self.first_read_time = 0.0
+
 
     def calibrate(self, horizontal=False, pitch_horizontal=False):
         gx_offset = 0.0
@@ -186,8 +189,15 @@ class IMU(object):
 
     def get_imu_data(self, velocity, delta_state, phi):
         read = self.get_reading()
-        dT = time.time() - self.last_read
-        self.last_read = time.time()
+        if self.first_read is True:
+            dT = 0.01
+            self.first_read = False
+            self.first_read_time = time.time()
+            self.last_read = time.time()
+        else:
+            # dT = time.time() - self.last_read
+            dT = 0.01
+            self.last_read = time.time()
         ax = read[1]
         ay = read[2]
         az = read[3]
@@ -213,7 +223,7 @@ class IMU(object):
         self.phi_gyro += dT * gx
         self.prev_reading = [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az]
         # [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
-        return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az]
+        return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az, self.last_read - self.first_read_time]
 
     def get_reading(self):
         # Read data
