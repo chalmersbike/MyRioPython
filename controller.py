@@ -13,7 +13,7 @@ from scipy import signal
 import bisect
 import traceback
 
-# @pysnooper.snoop()
+@pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
     def __init__(self, bike):
@@ -44,13 +44,14 @@ class Controller(object):
         # Load roll reference
         if rollref_file != 'nofile':
             print("Loading roll reference ...")
+            print(rollref_file)
             try:
                 self.rollref_data = np.genfromtxt('rollref/' + rollref_file, delimiter=",", skip_header=1)
                 self.rollref_time = self.rollref_data[:, 0]
                 self.rollref_roll = self.rollref_data[:, 1]
                 print("Roll referemce loaded, starting experiment.")
             except:
-                print("Path file not found, setting roll reference to 0 as default")
+                print([rollref_file, "Path file not found, setting roll reference to 0 as default"])
                 self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
                 self.rollref_time = self.rollref_data[:, 0]
                 self.rollref_roll = self.rollref_data[:, 1]
@@ -756,7 +757,7 @@ class Controller(object):
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
         else:
-            if rollref_file != 'nofile':
+            if rollref_file == 'nofile':
                 if roll_ref_use and not roll_ref_step_imp_flag: # Do step
                     if not rol_ref_periodic:
                         if self.time_count < self.roll_ref_end_time: #__(ref_start_time)------(ref_end_time)_____

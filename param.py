@@ -32,7 +32,8 @@ path_file = 'step_heading_path_12secs_m5deg.csv'
                                                 # Can also be 'pot' to use the potentiometer as y position on the roller
 
 
-rollref_file = 'rollref_test1.csv'      # Name of the roll reference file with ".csv" extension.
+# rollref_file = 'rollref_test1.csv'      # Name of the roll reference file with ".csv" extension.
+rollref_file = 'roll_ref_sqr_5.csv'      # Name of the roll reference file with ".csv" extension.
 # rollref_file = 'nofile'                 # Must be placed in "rollref" folder.
                                         # Must be a CSV with 2 columns : Time, rollref
                                         # Must contain "rollref" in the name
