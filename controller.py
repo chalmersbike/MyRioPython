@@ -32,7 +32,7 @@ class Controller(object):
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
-                print("Path Loaded, starting experiment.")
+                print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
             except:
                 print("Path file not found, setting all path references to 0 as default")
                 self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
@@ -40,6 +40,20 @@ class Controller(object):
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
+
+        # Load roll reference
+        if rollref_file != 'nofile':
+            print("Loading roll reference ...")
+            try:
+                self.rollref_data = np.genfromtxt('rollref/' + rollref_file, delimiter=",", skip_header=1)
+                self.rollref_time = self.rollref_data[:, 0]
+                self.rollref_roll = self.rollref_data[:, 1]
+                print("Roll referemce loaded, starting experiment.")
+            except:
+                print("Path file not found, setting roll reference to 0 as default")
+                self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
+                self.rollref_time = self.rollref_data[:, 0]
+                self.rollref_roll = self.rollref_data[:, 1]
 
         # Read the IMU complementary filter Phi as the initial phi estimation
         # self.roll = self.bike.get_imu_data(0, self.steeringAngle, self.roll)[0]
@@ -742,20 +756,10 @@ class Controller(object):
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
         else:
-
-            if roll_ref_use and not roll_ref_step_imp_flag: # Do step
-                if not rol_ref_periodic:
-                    if self.time_count < self.roll_ref_end_time: #__(ref_start_time)------(ref_end_time)_____
-                        if self.time_count > self.roll_ref_start_time:
-                            self.balancing_setpoint = roll_ref_Mag
-                        else:
-                            self.balancing_setpoint = 0
-                        # print self.time_count, roll_ref_start_time, roll_ref_end_time
-                    else:
-                        self.balancing_setpoint = 0
-                else:
-                    if not circle_switch:
-                        if self.time_count < self.roll_ref_end_time:
+            if rollref_file != 'nofile':
+                if roll_ref_use and not roll_ref_step_imp_flag: # Do step
+                    if not rol_ref_periodic:
+                        if self.time_count < self.roll_ref_end_time: #__(ref_start_time)------(ref_end_time)_____
                             if self.time_count > self.roll_ref_start_time:
                                 self.balancing_setpoint = roll_ref_Mag
                             else:
@@ -763,33 +767,46 @@ class Controller(object):
                             # print self.time_count, roll_ref_start_time, roll_ref_end_time
                         else:
                             self.balancing_setpoint = 0
-                            self.roll_ref_start_time = self.roll_ref_start_time + roll_ref_period
-                            self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_period
                     else:
-                        if self.time_count < self.roll_ref_end_time: # One loop Not finished yet
-                            if self.time_count > self.roll_ref_start_time1 and self.time_count < self.roll_ref_start_time2:
-                                self.balancing_setpoint = roll_ref_Mag1
-                            elif self.time_count >= self.roll_ref_start_time2:
-                                self.balancing_setpoint = roll_ref_Mag2
+                        if not circle_switch:
+                            if self.time_count < self.roll_ref_end_time:
+                                if self.time_count > self.roll_ref_start_time:
+                                    self.balancing_setpoint = roll_ref_Mag
+                                else:
+                                    self.balancing_setpoint = 0
+                                # print self.time_count, roll_ref_start_time, roll_ref_end_time
                             else:
                                 self.balancing_setpoint = 0
-                            # print self.time_count, roll_ref_start_time, roll_ref_end_time
+                                self.roll_ref_start_time = self.roll_ref_start_time + roll_ref_period
+                                self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_period
                         else:
-                            self.balancing_setpoint = roll_ref_Mag1
-                            self.roll_ref_start_time1 = self.roll_ref_start_time1 + roll_ref_totalperiod
-                            self.roll_ref_start_time2 = self.roll_ref_start_time2 + roll_ref_totalperiod
-                            self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_totalperiod
-            elif roll_ref_use and roll_ref_step_imp_flag:
-                if not self.roll_ref_imp_doneflag1 and self.time_count > roll_ref_imp_start_time1:
-                    self.balancing_setpoint = roll_ref_imp_Mag
-                    self.roll_ref_imp_doneflag1 = True
-                elif not self.roll_ref_imp_doneflag2 and self.time_count > roll_ref_imp_start_time2:
-                    self.balancing_setpoint = roll_ref_imp_Mag
-                    self.roll_ref_imp_doneflag2 = True
+                            if self.time_count < self.roll_ref_end_time: # One loop Not finished yet
+                                if self.time_count > self.roll_ref_start_time1 and self.time_count < self.roll_ref_start_time2:
+                                    self.balancing_setpoint = roll_ref_Mag1
+                                elif self.time_count >= self.roll_ref_start_time2:
+                                    self.balancing_setpoint = roll_ref_Mag2
+                                else:
+                                    self.balancing_setpoint = 0
+                                # print self.time_count, roll_ref_start_time, roll_ref_end_time
+                            else:
+                                self.balancing_setpoint = roll_ref_Mag1
+                                self.roll_ref_start_time1 = self.roll_ref_start_time1 + roll_ref_totalperiod
+                                self.roll_ref_start_time2 = self.roll_ref_start_time2 + roll_ref_totalperiod
+                                self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_totalperiod
+                elif roll_ref_use and roll_ref_step_imp_flag:
+                    if not self.roll_ref_imp_doneflag1 and self.time_count > roll_ref_imp_start_time1:
+                        self.balancing_setpoint = roll_ref_imp_Mag
+                        self.roll_ref_imp_doneflag1 = True
+                    elif not self.roll_ref_imp_doneflag2 and self.time_count > roll_ref_imp_start_time2:
+                        self.balancing_setpoint = roll_ref_imp_Mag
+                        self.roll_ref_imp_doneflag2 = True
+                    else:
+                        self.balancing_setpoint = 0
                 else:
                     self.balancing_setpoint = 0
             else:
-                self.balancing_setpoint = 0
+                idx_rollref_currentTime = bisect.bisect_left(self.rollref_time,time.time() - self.time_start_controller)+np.array([-1,0])
+                self.balancing_setpoint = np.interp(time.time() - self.time_start_controller,self.rollref_time[idx_rollref_currentTime],self.rollref_roll[idx_rollref_currentTime])
 
 
     ####################################################################################################################

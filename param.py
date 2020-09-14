@@ -31,6 +31,13 @@ path_file = 'step_heading_path_12secs_m5deg.csv'
                                                 # Must be a CSV with 4 columns : Time, x, y, heading
                                                 # Can also be 'pot' to use the potentiometer as y position on the roller
 
+
+rollref_file = 'rollref_test1.csv'      # Name of the roll reference file with ".csv" extension.
+# rollref_file = 'nofile'                 # Must be placed in "rollref" folder.
+                                        # Must be a CSV with 2 columns : Time, rollref
+                                        # Must contain "rollref" in the name
+                                        # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
+
 initial_speed = 3       # [m/s] Forward speed of the bike
 
 test_duration = 5555.0  # [s] Duration of the test

@@ -116,3 +116,4 @@ ENV/
 #.csv
 *.csv
 !*path*.csv
+!*rollref*.csv
