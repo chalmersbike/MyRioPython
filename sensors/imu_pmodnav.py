@@ -195,8 +195,8 @@ class IMU(object):
             self.first_read_time = time.time()
             self.last_read = time.time()
         else:
-            # dT = time.time() - self.last_read
-            dT = 0.01
+            dT = time.time() - self.last_read
+            # dT = 0.01
             self.last_read = time.time()
         ax = read[1]
         ay = read[2]
