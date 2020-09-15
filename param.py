@@ -44,6 +44,7 @@ test_duration = 5555.0  # [s] Duration of the test
 start_up_interval = 5   # [s] Time to wait before running drive motor after receiving input from user to run the bike
 #speed_up_time = test_duration   # [s] Duration of the test
 speed_up_time = 3.0     # [s] Time to run the drive motor without steering controller to get bike up to speed
+walk_time = 2.0         # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
 max_exceed_count = 10   # Number of times where calculation time can exceed sampling time before aborting experiment
 
 debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print outputs are disabled

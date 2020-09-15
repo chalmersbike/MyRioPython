@@ -88,7 +88,7 @@ class Controller(object):
         self.pid_lateral_position.clear()
         self.pid_direction.clear()
 
-        self.bike.steering_motor.enable()
+        # self.bike.steering_motor.enable()
 
         self.gaining_speed_start = time.time()
         while self.controller_active or not self.gainingSpeedOver_flag:
@@ -157,11 +157,15 @@ class Controller(object):
                     self.bike.set_velocity(self.pid_velocity_control_signal)
 
                 # Let bike get up to speed for a few seconds before starting controllers
-                if (self.time_count < speed_up_time) and not self.gainingSpeedOver_flag:
+                if (self.time_count < walk_time):
+                    print("Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff")
+                    self.bike.steering_motor.disable()
+                elif (self.time_count < speed_up_time+walk_time and self.time_count >= walk_time) and not self.gainingSpeedOver_flag:
                     # Do not start controllers until bike ran for enough time to get up to speed
+                    self.bike.steering_motor.enable()
                     print('Gaining speed ...')
                     self.bike.set_velocity(initial_speed)
-                elif (self.time_count >= speed_up_time) and not self.gainingSpeedOver_flag:
+                elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
                     # Once enough time has passed, start controller
                     self.gainingSpeedOver_flag = True
                     print('Gaining speed phase over')
