@@ -194,6 +194,10 @@ class Controller(object):
 
                     # Time at which the controller starts running
                     self.time_start_controller = time.time()
+
+                    # Reset estimated roll to zero
+                    self.roll = 0
+                    self.bike.imu.phi = 0
                 elif self.controller_active:
                     # Check steering angle
                     self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
