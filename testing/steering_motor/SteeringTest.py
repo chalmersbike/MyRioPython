@@ -6,6 +6,6 @@ import time
 mot = SteeringMotor()
 # mot.set_angular_velocity(0.1)
 mot.enable()
-mot.set_PWM_duty_cycle(90)
-time.sleep(0.05)
+mot.set_PWM_duty_cycle(55)
+time.sleep(0.2)
 mot.stop()

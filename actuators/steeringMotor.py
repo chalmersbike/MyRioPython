@@ -51,3 +51,6 @@ class SteeringMotor(object):
 
     def enable(self):
         GPIO.output(steeringMotor_PinEnable, GPIO.HIGH)
+
+    def disable(self):
+        GPIO.output(steeringMotor_PinEnable, GPIO.LOW)

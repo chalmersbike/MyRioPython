@@ -33,11 +33,36 @@ path_file = 'step_heading_path_12secs_m5deg.csv'
 
 
 # rollref_file = 'rollref_test1.csv'      # Name of the roll reference file with ".csv" extension.
-rollref_file = 'roll_ref_sqr_5.csv'      # Name of the roll reference file with ".csv" extension.
+# rollref_file = 'roll_ref_sqr_5.csv'      # Name of the roll reference file with ".csv" extension.
 # rollref_file = 'nofile'                 # Must be placed in "rollref" folder.
                                         # Must be a CSV with 2 columns : Time, rollref
                                         # Must contain "rollref" in the name
                                         # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
+
+rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
+# rollref_file = 'roll_ref_l3deg.csv'      # Name of the roll reference file with ".csv" extension.
+# rollref_file = 'roll_ref_l5deg.csv'      # Name of the roll reference file with ".csv" extension.
+# rollref_file = 'roll_ref_l8deg.csv'      # Name of the roll reference file with ".csv" extension.
+# rollref_file = 'roll_ref_l10deg.csv'
+# rollref_file = 'roll_ref_r3deg.csv'
+# rollref_file = 'roll_ref_r5deg.csv'
+# rollref_file = 'roll_ref_r8deg.csv'
+# rollref_file = 'roll_ref_r10deg.csv'
+
+# rollref_file = 'roll_ref_sqr_pm3deg.csv'
+# rollref_file = 'roll_ref_sqr_pm5deg.csv'
+# rollref_file = 'roll_ref_sqr_pm8deg.csv'
+# rollref_file = 'roll_ref_sqr_pm10deg.csv'
+
+# rollref_file = 'roll_ref_sqr_0_l3deg.csv'
+# rollref_file = 'roll_ref_sqr_0_l5deg.csv'
+# rollref_file = 'roll_ref_sqr_0_l8deg.csv'
+# rollref_file = 'roll_ref_sqr_0_l10deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r-3deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r-5deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r-8deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r-10deg.csv'
+
 
 initial_speed = 3       # [m/s] Forward speed of the bike
 
@@ -74,8 +99,8 @@ roll_ref_start_time = 6.0
 roll_ref_end_time = 1000.0
 if rol_ref_periodic is 1:
     roll_ref_period = (roll_ref_end_time - roll_ref_start_time)*2
-#roll_ref_Mag = -0.0 * deg2rad
-roll_ref_Mag = -5.0 * deg2rad #  Right side
+roll_ref_Mag = -0.0 * deg2rad
+# roll_ref_Mag = -5.0 * deg2rad #  Right side
 # roll_ref_Mag = -8.0 * deg2rad
 # roll_ref_Mag = 5.0 * deg2rad   # Left Side
 #roll_ref_Mag = 8.0 * deg2rad
