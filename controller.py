@@ -49,7 +49,7 @@ class Controller(object):
                 self.rollref_data = np.genfromtxt('rollref/' + rollref_file, delimiter=",", skip_header=1)
                 self.rollref_time = self.rollref_data[:, 0]
                 self.rollref_roll = self.rollref_data[:, 1]
-                print("Roll referemce loaded, starting experiment.")
+                print("Roll reference loaded, starting experiment.")
             except:
                 print([rollref_file, "Path file not found, setting roll reference to 0 as default"])
                 self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
@@ -163,7 +163,8 @@ class Controller(object):
                     self.bike.steering_motor.disable()
                 elif (self.time_count < speed_up_time+walk_time and self.time_count >= walk_time) and not self.gainingSpeedOver_flag:
                     # Do not start controllers until bike ran for enough time to get up to speed
-                    self.bike.steering_motor.enable()
+                    # self.bike.steering_motor.enable()
+                    self.bike.steering_motor.disable()
                     print('Gaining speed ...')
                     self.bike.set_velocity(initial_speed)
                 elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
