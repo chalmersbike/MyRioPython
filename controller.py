@@ -98,6 +98,7 @@ class Controller(object):
             try:
                 # Get velocity
                 self.velocity = self.bike.get_velocity()
+                self.velocity_rec = self.velocity
                 if self.broken_speed_flag:
                     self.velocity = initial_speed
                 if abs(self.velocity) > 1.25*abs(initial_speed):
@@ -215,6 +216,7 @@ class Controller(object):
 
                     # Balancing and path tracking control
                     # self.bike.steering_motor.enable()
+                    # self.controller_set_handlebar_angular_velocity(0)
                     # self.update_controller_gains()
                     self.keep_the_bike_stable()
 
@@ -357,6 +359,7 @@ class Controller(object):
         self.roll_gyro = 0.0
         self.rollRate = 0.0
         self.rollRate_prev = 0.0
+        self.rollRate_rec = 0.0
         self.gy = 0.0
         self.gz = 0.0
         self.ax = 0.0
@@ -515,10 +518,12 @@ class Controller(object):
         self.az = self.imu_data[7]
         self.sensor_read_timing = self.imu_data[8]
 
+        self.rollRate_rec =  self.rollRate
         # Outlier detection on roll rate
         if abs(self.rollRate) > 20*deg2rad:
             print('WARNING : [%f] Measured roll rate larger than 20deg/s, at %g deg/s' % (time.time() - self.gaining_speed_start, self.rollRate * rad2deg))
             self.rollRate = self.rollRate_prev
+
 
 
 
@@ -925,12 +930,12 @@ class Controller(object):
         self.log_str = [
             "{0:.5f}".format(self.time_count),
             "{0:.5f}".format(self.loop_time),
-            "{0:.5f}".format(self.velocity),
+            "{0:.5f}".format(self.velocity_rec),
             "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_balance.Kp,self.pid_balance.Ki,self.pid_balance.Kd),
             "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_balance_outerloop.Kp,self.pid_balance_outerloop.Ki,self.pid_balance_outerloop.Kd),
             "{0:.5f}".format(self.roll),
             "{0:.5f}".format(self.steeringAngle),
-            "{0:.5f}".format(self.rollRate),
+            "{0:.5f}".format(self.rollRate_rec),
             "{0:.5f}".format(self.pid_balance_control_signal),
             "{0:.5f}".format(self.balancing_setpoint),
             "{0:.5f}".format(self.gy),

@@ -52,7 +52,7 @@ rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".cs
 # rollref_file = 'roll_ref_sqr_pm3deg.csv'
 # rollref_file = 'roll_ref_sqr_pm5deg.csv'
 # rollref_file = 'roll_ref_sqr_pm8deg.csv'
-# rollref_file = 'roll_ref_sqr_pm10deg.csv'
+rollref_file = 'roll_ref_sqr_pm10deg.csv'
 
 # rollref_file = 'roll_ref_sqr_0_l3deg.csv'
 # rollref_file = 'roll_ref_sqr_0_l5deg.csv'
@@ -79,7 +79,7 @@ debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print 
 potentiometer_use = 0   # 1 = use potentiometer ; 0 = do not use potentiometer
 
 # Choice to use GPS (for outdoors use only) or not
-gps_use = 0           # 1 = use GPS ; 0 = do not use GPS
+gps_use = 1           # 1 = use GPS ; 0 = do not use GPS
 ntrip_correction = 0    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
 
 # Choice to use Laser Ranger (for indoors use on roller only) or not

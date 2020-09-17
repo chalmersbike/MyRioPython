@@ -12,11 +12,11 @@ class Test(object):
         self.safety_stop = SafetyStop()
         input1 = raw_input('Press the EStop and Enter, test the emergency stop is detectable!')
         ESign = self.safety_stop.button_check()
-        while not ESign:
-
+        # while not ESign:
+        if not ESign:
             print('The EStop was not pressed!')
-            time.sleep(0.5)
-            ESign = self.safety_stop.button_check()
+            # time.sleep(0.5)
+            # ESign = self.safety_stop.button_check()
         if ESign:
             print('Estop detected, please reset it if you want to test the motors')
 
