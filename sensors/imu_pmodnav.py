@@ -211,7 +211,7 @@ class IMU(object):
 
 
         CP_acc_g = ((velocity ** 2) / b) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
-        self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi), az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
+        self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi), az - CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
         # self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
 
         if abs(self.phi_acc) >  80 * deg2rad:
@@ -245,8 +245,8 @@ class IMU(object):
             gy -= (1 << 16)
         if (gz & (1 << (16 - 1))) != 0:
             gz -= (1 << 16)
-        # the PmodNav is left-axised. the IMU x,y heading has been invertedly installed
-        gx = -gx
+        # the PmodNav has y pointing to the right of x (left axised) but the bike has y pointing to the left of x (right axised)
+        gy  = -gy
 
         gx *= self.gyro_sensitivity * deg2rad
         gy *= self.gyro_sensitivity * deg2rad
@@ -254,6 +254,7 @@ class IMU(object):
         gx -= self.gx_offset
         gy -= self.gy_offset
         gz -= self.gz_offset
+
         # Read accel to buffer
         buf = self.spi.xfer2([0x80 | OUT_X_L_XL, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
         # Calculate accel values from buffer
@@ -267,8 +268,8 @@ class IMU(object):
             ay -= (1 << 16)
         if (az & (1 << (16 - 1))) != 0:
             az -= (1 << 16)
-        # the PmodNav is left-axised. the IMU x,y heading has been invertedly installed
-        ax = -ax
+        # the PmodNav has y pointing to the right of x (left axised) but the bike has y pointing to the left of x (right axised)
+        ay = -ay
         ax *= self.accel_sensitivity
         ay *= self.accel_sensitivity
         az *= self.accel_sensitivity

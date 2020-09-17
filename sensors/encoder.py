@@ -18,4 +18,4 @@ class Encoder(object):
         self.encoder.zero()
 
     def get_angle(self):
-        return - self.encoder.position * steeringEncoder_TicksToRadianRatio
+        return - -self.encoder.position * steeringEncoder_TicksToRadianRatio
