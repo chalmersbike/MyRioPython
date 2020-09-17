@@ -187,6 +187,9 @@ class Controller(object):
                     self.pid_lateral_position.clear()
                     self.pid_direction.clear()
 
+                    # Enable steering motor
+                    self.bike.steering_motor.enable()
+
                     # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
                     # TO DO : CHECK WHY THIS HAPPENS !
                     PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
@@ -194,6 +197,14 @@ class Controller(object):
 
                     # Time at which the controller starts running
                     self.time_start_controller = time.time()
+
+                    # Abort experiment if bike is in unsafe conditions at this point
+                    # if (abs(self.roll)>20*deg2rad or abs(self.rollRate)>20*deg2rad or abs(self.steeringAngle)>20*deg2rad):
+                    if (abs(self.roll) > 20*deg2rad or abs(self.steeringAngle) > 20*deg2rad):
+                        exc_msg = 'Bike is in unsafe conditions, aborting the experiment'
+                        print(exc_msg)
+                        self.exception_log(-1, exc_msg)
+                        break
 
                     # Reset estimated roll to zero
                     self.roll = 0
