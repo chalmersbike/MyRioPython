@@ -39,29 +39,39 @@ path_file = 'step_heading_path_12secs_m5deg.csv'
                                         # Must contain "rollref" in the name
                                         # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 
-rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
-# rollref_file = 'roll_ref_l3deg.csv'      # Name of the roll reference file with ".csv" extension.
-# rollref_file = 'roll_ref_l5deg.csv'      # Name of the roll reference file with ".csv" extension.
-# rollref_file = 'roll_ref_l8deg.csv'      # Name of the roll reference file with ".csv" extension.
-# rollref_file = 'roll_ref_l10deg.csv'
-# rollref_file = 'roll_ref_r3deg.csv'
-# rollref_file = 'roll_ref_r5deg.csv'
-# rollref_file = 'roll_ref_r8deg.csv'
-# rollref_file = 'roll_ref_r10deg.csv'
 
-# rollref_file = 'roll_ref_sqr_pm3deg.csv'
-# rollref_file = 'roll_ref_sqr_pm5deg.csv'
+
+#rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
+
+# rollref_file = 'roll_ref_2deg.csv'      # Right
+# rollref_file = 'roll_ref_4deg.csv'
+# rollref_file = 'roll_ref_6deg.csv'
+# rollref_file = 'roll_ref_8deg.csv'
+# rollref_file = 'roll_ref_10deg.csv'
+# rollref_file = 'roll_ref_-2deg.csv'     # Left
+# rollref_file = 'roll_ref_-4deg.csv'
+# rollref_file = 'roll_ref_-6deg.csv'
+# rollref_file = 'roll_ref_-8deg.csv'
+# rollref_file = 'roll_ref_-10deg.csv'
+
+
+#rollref_file = 'roll_ref_sqr_pm2deg.csv'
+#rollref_file = 'roll_ref_sqr_pm4deg.csv'
+rollref_file = 'roll_ref_sqr_pm6deg.csv'
 # rollref_file = 'roll_ref_sqr_pm8deg.csv'
-rollref_file = 'roll_ref_sqr_pm10deg.csv'
+#rollref_file = 'roll_ref_sqr_pm10deg.csv'
 
-# rollref_file = 'roll_ref_sqr_0_l3deg.csv'
-# rollref_file = 'roll_ref_sqr_0_l5deg.csv'
+# rollref_file = 'roll_ref_sqr_0_l2deg.csv'
+# rollref_file = 'roll_ref_sqr_0_l4deg.csv'
+# rollref_file = 'roll_ref_sqr_0_l6deg.csv'
 # rollref_file = 'roll_ref_sqr_0_l8deg.csv'
 # rollref_file = 'roll_ref_sqr_0_l10deg.csv'
-# rollref_file = 'roll_ref_sqr_0_r-3deg.csv'
-# rollref_file = 'roll_ref_sqr_0_r-5deg.csv'
-# rollref_file = 'roll_ref_sqr_0_r-8deg.csv'
-# rollref_file = 'roll_ref_sqr_0_r-10deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r2deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r4deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r6deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r8deg.csv'
+# rollref_file = 'roll_ref_sqr_0_r10deg.csv'
+
 
 
 initial_speed = 3       # [m/s] Forward speed of the bike
@@ -79,7 +89,7 @@ debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print 
 potentiometer_use = 0   # 1 = use potentiometer ; 0 = do not use potentiometer
 
 # Choice to use GPS (for outdoors use only) or not
-gps_use = 1           # 1 = use GPS ; 0 = do not use GPS
+gps_use = 1          # 1 = use GPS ; 0 = do not use GPS
 ntrip_correction = 0    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
 
 # Choice to use Laser Ranger (for indoors use on roller only) or not

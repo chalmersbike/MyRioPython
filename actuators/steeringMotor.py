@@ -30,7 +30,7 @@ class SteeringMotor(object):
 
     # @pysnooper.snoop()
     def set_angular_velocity(self, angular_velocity):
-        rpm_conversion = angular_velocity * rads2rpm * steeringMotor_GearRatio
+        rpm_conversion = -angular_velocity * rads2rpm * steeringMotor_GearRatio  # To comply with RighHandRule
         # duty_cycle = steeringMotor_IdleDuty + rpm_conversion * 40.0 / 1000.0
         # rpm_conversion = 0
         duty_cycle = np.interp(rpm_conversion, [steeringMotor_SpeedMinOutput, steeringMotor_SpeedMaxOutput],

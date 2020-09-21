@@ -162,7 +162,16 @@ class Controller(object):
                 if (self.time_count < walk_time):
                     print("Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff")
                     self.bike.steering_motor.disable()
+
+                    # Estimate steering angle offset from mean of steering angle during walk
+                    self.steering_angle_offset = self.steering_angle_offset + self.steeringAngle
+                    self.steering_angle_offset_count = self.steering_angle_offset_count + 1
                 elif (self.time_count < speed_up_time+walk_time and self.time_count >= walk_time) and not self.gainingSpeedOver_flag:
+                    # Compute mean of steering angle during walk
+                    if not self.steering_angle_offset_computed_flag:
+                        self.steering_angle_offset_computed_flag = True
+                        self.steering_angle_offset = self.steering_angle_offset / self.steering_angle_offset_count
+
                     # Do not start controllers until bike ran for enough time to get up to speed
                     # self.bike.steering_motor.enable()
                     self.bike.steering_motor.disable()
@@ -371,6 +380,11 @@ class Controller(object):
         self.steeringAngle = 0.0
         self.sensor_read_timing = 0.0
 
+        # Steering angle offset esimation
+        self.steering_angle_offset = 0
+        self.steering_angle_offset_count = 0
+        self.steering_angle_offset_computed_flag = False
+        
         # Controller
         self.controller_active = False
 
@@ -502,6 +516,9 @@ class Controller(object):
         if self.steeringAngle > MAX_HANDLEBAR_ANGLE or self.steeringAngle < MIN_HANDLEBAR_ANGLE:
             print('WARNING : [%f] Steering angle exceeded limits' % (
                     time.time() - self.gaining_speed_start))
+
+        if self.steering_angle_offset_computed_flag:
+            self.steeringAngle = self.steeringAngle - self.steering_angle_offset
 
         # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         # self.imu_data = self.bike.get_imu_data(0, self.steeringAngle, self.roll)
@@ -831,8 +848,10 @@ class Controller(object):
                 else:
                     self.balancing_setpoint = 0
             else:
-                idx_rollref_currentTime = bisect.bisect_left(self.rollref_time,time.time() - self.time_start_controller)+np.array([-1,0])
-                self.balancing_setpoint = np.interp(time.time() - self.time_start_controller,self.rollref_time[idx_rollref_currentTime],self.rollref_roll[idx_rollref_currentTime])
+                idx_rollref_currentTime = bisect.bisect_left(self.rollref_time, time.time() - self.time_start_controller)+np.array([-1,0])
+                if idx_rollref_currentTime[0]  < 0:
+                    idx_rollref_currentTime[0] = 0
+                self.balancing_setpoint = np.interp(time.time() - self.time_start_controller, self.rollref_time[idx_rollref_currentTime], self.rollref_roll[idx_rollref_currentTime])
 
 
     ####################################################################################################################
@@ -904,7 +923,7 @@ class Controller(object):
         self.writer = csv.writer(results_csv)
 
         if path_tracking:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; steering_angle_offset = ' + str(self.steering_angle_offset) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
         else:
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 

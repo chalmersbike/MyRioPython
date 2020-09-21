@@ -192,7 +192,7 @@ class GPS(object):
             self.latitude = int(self.latitude / 100) + (self.latitude % 100) / 60
             self.longitude = int(self.longitude / 100) + (self.longitude % 100) / 60
         else:
-            print('GPS : No available Satelites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION')
+            print('GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION')
             self.latitude = 0
             self.longitude = 0
             self.found_satellite = 0
