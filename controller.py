@@ -171,6 +171,7 @@ class Controller(object):
                     if not self.steering_angle_offset_computed_flag:
                         self.steering_angle_offset_computed_flag = True
                         self.steering_angle_offset = self.steering_angle_offset / self.steering_angle_offset_count
+                        print('Steering angle offset : %.2f deg' % (self.steering_angle_offset))
 
                     # Do not start controllers until bike ran for enough time to get up to speed
                     # self.bike.steering_motor.enable()
@@ -384,7 +385,7 @@ class Controller(object):
         self.steering_angle_offset = 0
         self.steering_angle_offset_count = 0
         self.steering_angle_offset_computed_flag = False
-        
+
         # Controller
         self.controller_active = False
 
@@ -923,9 +924,9 @@ class Controller(object):
         self.writer = csv.writer(results_csv)
 
         if path_tracking:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; steering_angle_offset = ' + str(self.steering_angle_offset) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
         else:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
         self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated', 'imu_read_timing']
