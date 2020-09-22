@@ -137,6 +137,7 @@ class GPS(object):
         # print("lat_ini = %f ; lon_ini = %f ; x0 = %f ; y0 = %f" % (lat_ini,lon_ini,x0,y0))
         if debug:
             print('GPS : GPS initialized, obtained initial latitude and longitude')
+        print('GPS : GPS initialized, obtained initial latitude and longitude')
 
         # Initialize NTRIP connection
         if ntrip_correction:
@@ -183,7 +184,7 @@ class GPS(object):
 
             line = line[0].split(",", 19) # Split comma-separated values
             self.process_data(line) # Process data
-        # print line
+        print line
         # print self.latitude
         if self.latitude is not '':
             self.latitude = float(self.latitude)

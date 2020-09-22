@@ -160,7 +160,10 @@ class Controller(object):
 
                 # Let bike get up to speed for a few seconds before starting controllers
                 if (self.time_count < walk_time):
-                    print("Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff")
+                    if not self.walk_message_printed_flag:
+                        self.walk_message_printed_flag = True
+                        print("Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff")
+
                     self.bike.steering_motor.disable()
 
                     # Estimate steering angle offset from mean of steering angle during walk
@@ -171,12 +174,16 @@ class Controller(object):
                     if not self.steering_angle_offset_computed_flag:
                         self.steering_angle_offset_computed_flag = True
                         self.steering_angle_offset = self.steering_angle_offset / self.steering_angle_offset_count
-                        print('Steering angle offset : %.2f deg' % (self.steering_angle_offset))
+                        print('Steering angle offset : %.2f deg' % (self.steering_angle_offset*rad2deg))
 
                     # Do not start controllers until bike ran for enough time to get up to speed
                     # self.bike.steering_motor.enable()
                     self.bike.steering_motor.disable()
-                    print('Gaining speed ...')
+
+                    if not self.speed_up_message_printed_flag:
+                        self.speed_up_message_printed_flag = True
+                        print('Gaining speed ...')
+
                     self.bike.set_velocity(initial_speed)
                 elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
                     # Once enough time has passed, start controller
@@ -307,6 +314,8 @@ class Controller(object):
         self.descr = 'NoComments'
 
         # Gaining Speed Phase
+        self.walk_message_printed_flag = False
+        self.speed_up_message_printed_flag = False
         self.gaining_speed_start = 0.0
         self.gainingSpeedOver_flag = False
         self.broken_speed_flag = False
