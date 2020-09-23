@@ -121,6 +121,7 @@ class GPS(object):
         # Initialize variables
         self.latitude = 0
         self.longitude = 0
+        self.status = 'No status'
         self.found_satellite = 1
         self.dx = 0
         self.dy = 0
@@ -167,8 +168,7 @@ class GPS(object):
             self.dy = self.y - self.y0
         else:
             print(warnings.warn("GPS : No Satelite found !"))
-        return self.dx, self.dy, lat, lon
-
+        return self.dx, self.dy, lat, lon,self.status
 
     def get_latlon(self):
         if ntrip_correction:
