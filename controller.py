@@ -332,6 +332,7 @@ class Controller(object):
 
         # GPS
         self.time_gps = 0.0
+        self.gps_nmea_timestamp = 0.0
         self.gpspos = 0.0
         self.x_measured_GPS = 0.0
         self.y_measured_GPS = 0.0
@@ -570,8 +571,12 @@ class Controller(object):
         self.gps_timestamp = time.time() - self.gaining_speed_start
 
         # Read GPS status if it exists
-        if len(self.gpspos) == 5:
+        if len(self.gpspos) >= 5:
             self.gps_status = self.gpspos[4]
+
+        # Read GPS NMEA timestamp if it exists
+        if len(self.gpspos) >= 6:
+            self.gps_nmea_timestamp = self.gpspos[5]
 
         # Save previous x and y positions to use in heading computation
         self.x_measured_GPS_old = self.x_measured_GPS
@@ -948,7 +953,7 @@ class Controller(object):
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
         if gps_use:
-            self.log_header_str += ['GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude','status']
+            self.log_header_str += ['GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude','status','NMEA timestamp']
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
         if path_tracking:
@@ -993,7 +998,10 @@ class Controller(object):
                 "{0:.5f}".format(self.y_measured_GPS),
                 "{0:.5f}".format(self.lat_measured_GPS),
                 "{0:.5f}".format(self.lon_measured_GPS),
-                "{0:.5f}".format(self.gps_status)
+                #"{0:.5f}".format(self.gps_status),
+                self.gps_status,
+                #"{0:.5f}".format(self.gps_nmea_timestamp)
+                self.gps_nmea_timestamp
             ]
         if laserRanger_use:
             self.log_str += [

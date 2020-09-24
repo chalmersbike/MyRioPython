@@ -122,6 +122,7 @@ class GPS(object):
         self.latitude = 0
         self.longitude = 0
         self.status = 'No status'
+        self.utc = 0
         self.found_satellite = 1
         self.dx = 0
         self.dy = 0
@@ -168,7 +169,7 @@ class GPS(object):
             self.dy = self.y - self.y0
         else:
             print(warnings.warn("GPS : No Satelite found !"))
-        return self.dx, self.dy, lat, lon,self.status
+        return self.dx, self.dy, lat, lon,self.status, self.utc
 
     def get_latlon(self):
         if ntrip_correction:
@@ -274,7 +275,7 @@ class GPS(object):
                 self.SNR4 = gsv[19]
         elif line[0] == '$GPRMC':
             rmc = line
-            self.UTC = rmc[1]
+            self.utc = rmc[1]
             self.status = rmc[2]
             self.latitude = rmc[3]
             self.NS_indicator = rmc[4]
