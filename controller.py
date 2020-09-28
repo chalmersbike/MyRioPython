@@ -92,11 +92,12 @@ class Controller(object):
         # self.bike.steering_motor.enable()
 
         # Flush GPS data buffer
-        while self.bike.gps.ser_gps.inWaiting() > 100:
-            self.bike.gps.ser_gps.flushInput()
-            # self.bike.gps.ser_gps.flush()
-        # Wait 0.1s to receive new GPS data
-        time.sleep(0.1)
+        if gps_use:
+            while self.bike.gps.ser_gps.inWaiting() > 100:
+                self.bike.gps.ser_gps.flushInput()
+                # self.bike.gps.ser_gps.flush()
+                # Wait 0.1s to receive new GPS data
+            time.sleep(0.1)
 
         self.gaining_speed_start = time.time()
         while self.controller_active or not self.gainingSpeedOver_flag:
@@ -135,6 +136,14 @@ class Controller(object):
                         # self.bike.get_gps_data()
                         self.time_gps = time.time()
                         self.gps_read()
+
+                        if self.gps_nmea_timestamp_ini == 0.0:
+                            self.gps_nmea_timestamp_ini = self.gps_nmea_timestamp
+
+                        # Check if GPS NMEA timestamp is more than 1s away from BeagleBone timestamp
+
+                        if abs((datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - time_count) > 1:
+                            print("WARNING: the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised.")
                 else:
                     self.x_measured_GPS = 0.0
                     self.y_measured_GPS = 0.0
@@ -339,6 +348,7 @@ class Controller(object):
 
         # GPS
         self.time_gps = 0.0
+        self.gps_nmea_timestamp_ini = 0.0
         self.gps_nmea_timestamp = 0.0
         self.gpspos = 0.0
         self.x_measured_GPS = 0.0
