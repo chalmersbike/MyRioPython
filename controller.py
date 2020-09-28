@@ -12,6 +12,7 @@ import pysnooper
 from scipy import signal
 import bisect
 import traceback
+from datetime import datetime
 
 # @pysnooper.snoop()
 class Controller(object):
@@ -75,7 +76,6 @@ class Controller(object):
         # print("\nExperiment starting in %is\n" % start_up_interval)
         # time.sleep(start_up_interval)
 
-
     ####################################################################################################################
     ####################################################################################################################
     # Run bike
@@ -90,6 +90,13 @@ class Controller(object):
         self.pid_direction.clear()
 
         # self.bike.steering_motor.enable()
+
+        # Flush GPS data buffer
+        while self.bike.gps.ser_gps.inWaiting() > 100:
+            self.bike.gps.ser_gps.flushInput()
+            # self.bike.gps.ser_gps.flush()
+        # Wait 0.1s to receive new GPS data
+        time.sleep(0.1)
 
         self.gaining_speed_start = time.time()
         while self.controller_active or not self.gainingSpeedOver_flag:
@@ -124,7 +131,7 @@ class Controller(object):
 
                 # Get position from GPS
                 if gps_use:
-                    if ((time.time() - self.gaining_speed_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate:
+                    if ((time.time() - self.gaining_speed_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate or self.gps_timestamp <= 0.01:
                         # self.bike.get_gps_data()
                         self.time_gps = time.time()
                         self.gps_read()
@@ -947,7 +954,7 @@ class Controller(object):
         else:
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
-        self.log_header_str = ['Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
+        self.log_header_str = ['Real Time','Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated', 'imu_read_timing']
 
         if potentiometer_use:
@@ -967,6 +974,7 @@ class Controller(object):
         # Log data
         self.time_log = time.time()
         self.log_str = [
+            datetime.now().strftime("%H:%M:%S.%f"),
             "{0:.5f}".format(self.time_count),
             "{0:.5f}".format(self.loop_time),
             "{0:.5f}".format(self.velocity_rec),

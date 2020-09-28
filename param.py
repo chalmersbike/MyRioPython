@@ -40,7 +40,7 @@ path_file = 'step_heading_path_12secs_m5deg.csv'
                                         # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 
 
-
+rollref_file = 'roll_ref_randMagPM2degLP5.csv'
 #rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
 
 # rollref_file = 'roll_ref_2deg.csv'      # Right
@@ -57,7 +57,7 @@ path_file = 'step_heading_path_12secs_m5deg.csv'
 
 #rollref_file = 'roll_ref_sqr_pm2deg.csv'
 #rollref_file = 'roll_ref_sqr_pm4deg.csv'
-rollref_file = 'roll_ref_sqr_pm6deg.csv'
+# rollref_file = 'roll_ref_sqr_pm6deg.csv'
 # rollref_file = 'roll_ref_sqr_pm8deg.csv'
 #rollref_file = 'roll_ref_sqr_pm10deg.csv'
 

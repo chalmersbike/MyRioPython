@@ -175,7 +175,16 @@ class GPS(object):
         if ntrip_correction:
             self.ntrip_data = self.ntripclient.readData()
 
-        readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
+        # readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
+
+        # Read through all received lines until we find the last (most recent) one
+        readall = ''
+        while self.ser_gps.inWaiting() > 0:
+            buffer_string = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
+            # print('buffer: %s' % (buffer_string))
+            readall = buffer_string
+
+        # print('readall: %s' % (readall))
 
         # Process data
         for i in range(0, len(readall) - 1):
@@ -185,7 +194,7 @@ class GPS(object):
 
             line = line[0].split(",", 19) # Split comma-separated values
             self.process_data(line) # Process data
-        print line
+        # print line
         # print self.latitude
         if self.latitude is not '':
             self.latitude = float(self.latitude)
@@ -198,6 +207,8 @@ class GPS(object):
             self.latitude = 0
             self.longitude = 0
             self.found_satellite = 0
+
+        # print line
 
         return self.latitude, self.longitude
 

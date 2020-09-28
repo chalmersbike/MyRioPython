@@ -71,8 +71,9 @@ steeringEncoder_TicksToRadianRatio = 2 * PI / steeringEncoder_TicksPerRevolution
 ########################################################################################################################
 # GPS
 gps_port = "/dev/ttyO1"                 # GPS serial port
-gps_baudrate = 9600                     # GPS baudrate [baud] : 9600, 57600, 115200
-gps_typeOutputData = 'RMCONLY'        # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
+# gps_baudrate = 9600                     # GPS baudrate [baud] : 9600, 57600, 115200
+gps_baudrate = 115200                     # GPS baudrate [baud] : 9600, 57600, 115200
+gps_typeOutputData = 'RMCONLY'          # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
 # gps_typeOutputData = 'GGAONLY'          # Type of the GPS data output : RMCGGA, RMCONLY, ALLDATA, OFF, GLLONLY, VTGONLY, GGAONLY, GSAONLY, GSVONLY
 gps_dataUpdateRate = 10                 # GPS data update rate [Hz] : 1, 2, 5, 10
 gps_DPGSDataSourceMode = 'WAAS'         # DGPS data source mode : RTCM, WAAS

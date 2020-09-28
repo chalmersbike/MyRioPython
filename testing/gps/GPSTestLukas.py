@@ -12,22 +12,24 @@ class Test(object):
     def __init__(self):
         # Test GPS
         number_samples_GPS = 6000
-	#raw_input('Input the number of samples of press ENTER for 50 samples for the GPS test, move the GPS for the reading! ')
+        #raw_input('Input the number of samples of press ENTER for 50 samples for the GPS test, move the GPS for the reading! ')
         gps = GPS()
         start_time = time.time()
         if number_samples_GPS is not 0:
         # Setup CSV file
             results_gps = open(sys.path[0]+'/%s-SensorTest_Lukas_GPS.csv' % timestr, 'wb')
             writer_gps = csv.writer(results_gps)
-            writer_gps.writerow(('Time (s)', 'x (m)', 'y (m)', 'latitude', 'longitude'))
+            writer_gps.writerow(('Time (s)', 'x (m)', 'y (m)', 'latitude', 'longitude', 'status', 'timestamp'))
         for x in range(1,int(number_samples_GPS)+1):
             gpspos = gps.get_position()
-            # gpspos = gps.get_raw_data()
-            # print gpspos
-            # print(gpspos[0])
-            # print(gpspos[1])
-            writer_gps.writerow((time.time() - start_time, gpspos[0], gpspos[1], gps.latitude, gps.longitude))
-            time.sleep(0.1)
+            writer_gps.writerow((time.time() - start_time, gpspos[0], gpspos[1], gpspos[2], gpspos[3], gpspos[4], gpspos[5]))
+
+            time.sleep(1)
+
+            # print(gps.ser_gps.inWaiting())
+            # gps.ser_gps.flushInput()
+            # gps.ser_gps.flushOutput()
+
             # print 'Time=%f\t Temp=%g\tAx = %g\t' % (time.time() - start_time, gpspos[0], gpspos[1])
             # Write to CSV file
 
