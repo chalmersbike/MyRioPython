@@ -55,6 +55,9 @@ class Controller(object):
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
+            self.path_distanceTravelled = np.cumsum(np.sqrt((path_x[2:-1] - path_x[1:-2])**2 + (path_y[2:-1] - path_y[1:-2]**2)))
+            self.path_distanceTravelled = np.append(0,self.path_distanceTravelled)
+            print(self.path_distanceTravelled)
 
         # Load roll reference
         if rollref_file != 'nofile':
@@ -142,7 +145,6 @@ class Controller(object):
                                                                                                                           LENGTH_A, LENGTH_B,
                                                                                                                           self.steeringAngle,self.psi_estimated,
                                                                                                                           self.x_estimated, self.y_estimated)
-                self.distance_travelled += self.velocity * sample_time
 
                 # Get position from GPS
                 if gps_use:
@@ -324,6 +326,9 @@ class Controller(object):
             # Sleep to match sampling time
             if self.loop_time < sample_time:
                 time.sleep((sample_time - self.loop_time))
+
+            # Distance travelled
+            self.distanceTravelled += self.velocity * self.loop_time
 
         # Print number of times sampling time was exceeded after experiment is over
         print("Number of times sampling time was exceeded : %d" % (self.exceedscount))
@@ -779,15 +784,25 @@ class Controller(object):
                 else:
                     self.y_ref = 0.0
             else:
-                if (time.time() - self.time_start_controller) > self.path_time[-1]:
+                if self.distance_travelled >= self.path_distanceTravelled[-1]:
                     self.x_ref = self.path_x[-1]
                     self.y_ref = self.path_y[-1]
                     self.psi_ref = self.path_psi[-1]
                 else:
-                    idx_path_currentTime = bisect.bisect_left(self.path_time,time.time() - self.time_start_controller)+np.array([-1,0])
-                    self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_x[idx_path_currentTime])
-                    self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_y[idx_path_currentTime])
-                    self.psi_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_psi[idx_path_currentTime])
+                    idx_path_currentDistanceTravelled = bisect.bisect_left(self.path_distanceTravelled,self.distance_travelled)+np.array([-1,0])
+                    self.x_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_x[idx_path_currentDistanceTravelled])
+                    self.y_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_y[idx_path_currentDistanceTravelled])
+                    self.psi_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_psi[idx_path_currentDistanceTravelled])
+            # else:
+            #     if (time.time() - self.time_start_controller) > self.path_time[-1]:
+            #         self.x_ref = self.path_x[-1]
+            #         self.y_ref = self.path_y[-1]
+            #         self.psi_ref = self.path_psi[-1]
+            #     else:
+            #         idx_path_currentTime = bisect.bisect_left(self.path_time,time.time() - self.time_start_controller)+np.array([-1,0])
+            #         self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_x[idx_path_currentTime])
+            #         self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_y[idx_path_currentTime])
+            #         self.psi_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_psi[idx_path_currentTime])
 
             # Compute position and heading errors
             if virtual_odometer:
@@ -978,8 +993,8 @@ class Controller(object):
         else:
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
-        self.log_header_str = ['Real Time','Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
-                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated', 'imu_read_timing']
+        self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
+                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'DistanceTravelled','x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated', 'imu_read_timing']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
@@ -1014,6 +1029,7 @@ class Controller(object):
             "{0:.5f}".format(self.ax),
             "{0:.5f}".format(self.ay),
             "{0:.5f}".format(self.az),
+            "{0:.5f}".format(self.distance_travelled),
             "{0:.5f}".format(self.x_estimated),
             "{0:.5f}".format(self.y_estimated),
             "{0:.5f}".format(self.psi_estimated),
