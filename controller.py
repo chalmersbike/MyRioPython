@@ -26,7 +26,7 @@ class Controller(object):
 
         # Load path
         if path_tracking and path_file != 'pot':
-            print("Loading path ...")
+            print("Loading path %s ..." % (path_file))
             try:
                 # self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
                 self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
@@ -49,7 +49,8 @@ class Controller(object):
                 print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
             except:
                 print("Path file not found, setting all path references to 0 as default")
-                self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
+                # self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
+                self.path_data = np.array([[0.0,0.0,0.0,0.0],[1000000.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
                 self.path_time = self.path_data[:,0]
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
@@ -57,8 +58,7 @@ class Controller(object):
 
         # Load roll reference
         if rollref_file != 'nofile':
-            print("Loading roll reference ...")
-            print(rollref_file)
+            print("Loading roll reference %s ..." % (rollref_file))
             try:
                 self.rollref_data = np.genfromtxt('rollref/' + rollref_file, delimiter=",", skip_header=1)
                 self.rollref_time = self.rollref_data[:, 0]
@@ -66,7 +66,8 @@ class Controller(object):
                 print("Roll reference loaded, starting experiment.")
             except:
                 print([rollref_file, "Path file not found, setting roll reference to 0 as default"])
-                self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
+                # self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
+                self.rollref_data = np.array([[0.0, 0.0], [1000000.0, 0.0],]) # Using three rows with zeros for np.interp to work
                 self.rollref_time = self.rollref_data[:, 0]
                 self.rollref_roll = self.rollref_data[:, 1]
 

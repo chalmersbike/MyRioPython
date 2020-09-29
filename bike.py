@@ -6,7 +6,7 @@ from controller import Controller
 import pysnooper
 
 class Bike(object):
-    #@pysnooper.snoop()
+    # @pysnooper.snoop()
     def __init__(self, debug='True'):
         # Initialize sensors and actuators
         self.safety_stop = SafetyStop()
