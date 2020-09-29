@@ -28,11 +28,24 @@ class Controller(object):
         if path_tracking and path_file != 'pot':
             print("Loading path ...")
             try:
+                # self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
                 self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
                 self.path_time = self.path_data[:,0]
-                self.path_x = self.path_data[:,1]
-                self.path_y = self.path_data[:,2]
-                self.path_psi = self.path_data[:,3]
+                if self.path_data[0,1] == 0:
+                    # Case if the path in defined in (x,y,psi)
+                    self.path_x = self.path_data[:,1]
+                    self.path_y = self.path_data[:,2]
+                    self.path_psi = self.path_data[:,3]
+                else:
+                    # Case if the path in defined in (lat,lon)
+                    self.path_lat = self.path_data[:,1]
+                    self.path_lon = self.path_data[:,2]
+                    self.path_x = R * self.path_lon * deg2rad * math.cos(self.path_lat[1] * deg2rad)
+                    self.path_y = R * self.path_lat * deg2rad
+                    self.path_x = self.path_x - self.path_x[0]
+                    self.path_y = self.path_y - self.path_y[0]
+                    self.path_psi = np.arctan2(path_y[2:-1] - path_y[1:-2], (path_x[2:-1] - path_x[1:-2]))
+                    self.path_psi = np.append(self.path_psi, self.path_psi[-1])
                 print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
             except:
                 print("Path file not found, setting all path references to 0 as default")
