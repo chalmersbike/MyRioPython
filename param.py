@@ -13,19 +13,20 @@ balancing_controller_structure = 'technion'     # Choice of the balancing contro
 controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
 
-path_tracking = 0                              # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 1                              # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 3.0                            # The time elpased for balancing before the path tracking is engaged.
 path_tracking_structure = 'parallel'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
                                                 # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
-lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
+lateralError_controller = 1                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 1                          # 1 = use heading controller ; 0 = do not use heading controller
 # path_file = 'ramp_heading_path_test_9secs_5deg.csv'                    # Name of the file path with ".csv" extension.
 # path_file = 'step_heading_path_9secs_m5deg.csv'
 # path_file = 'step_heading_path_9secs_m10deg.csv'
-path_file = 'step_heading_path_12secs_m5deg.csv'
+# path_file = 'step_heading_path_12secs_m5deg.csv'
 # path_file = 'step_heading_path_12secs_m10deg.csv'
 # path_file = 'straight_path.csv'
+path_file = 'latlon_straight_parking.csv'
 # path_file = 'ramp_heading_path_nocoasting_6secs_5deg.csv'                    # Name of the file path with ".csv" extension.
                                                 # Must be placed in "paths" folder.
                                                 # Must be a CSV with 4 columns : Time, x, y, heading
@@ -40,7 +41,7 @@ path_file = 'step_heading_path_12secs_m5deg.csv'
                                         # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 
 
-rollref_file = 'roll_ref_randMagPm10degLP30.csv' # LP 5-30 PM 2-10
+rollref_file = 'roll_ref_randMagPM10degLP30.csv' # LP 5-30 PM 2-10
 #rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
 
 # rollref_file = 'roll_ref_2deg.csv'      # Right
@@ -89,7 +90,7 @@ debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print 
 potentiometer_use = 0   # 1 = use potentiometer ; 0 = do not use potentiometer
 
 # Choice to use GPS (for outdoors use only) or not
-gps_use = 0          # 1 = use GPS ; 0 = do not use GPS
+gps_use = 1          # 1 = use GPS ; 0 = do not use GPS
 ntrip_correction = 0    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
 
 # Choice to use Laser Ranger (for indoors use on roller only) or not

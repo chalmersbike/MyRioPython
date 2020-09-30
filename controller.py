@@ -16,7 +16,7 @@ from datetime import datetime
 
 # @pysnooper.snoop()
 class Controller(object):
-    # @pysnooper.snoop()
+    @pysnooper.snoop()
     def __init__(self, bike):
         self.bike = bike
         self.variable_init()
@@ -29,7 +29,7 @@ class Controller(object):
             print("Loading path %s ..." % (path_file))
             try:
                 # self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
-                self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
+                self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",")
                 self.path_time = self.path_data[:,0]
                 if self.path_data[0,1] == 0:
                     # Case if the path in defined in (x,y,psi)
@@ -40,11 +40,11 @@ class Controller(object):
                     # Case if the path in defined in (lat,lon)
                     self.path_lat = self.path_data[:,1]
                     self.path_lon = self.path_data[:,2]
-                    self.path_x = R * self.path_lon * deg2rad * math.cos(self.path_lat[1] * deg2rad)
+                    self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
                     self.path_y = R * self.path_lat * deg2rad
                     self.path_x = self.path_x - self.path_x[0]
                     self.path_y = self.path_y - self.path_y[0]
-                    self.path_psi = np.arctan2(path_y[2:-1] - path_y[1:-2], (path_x[2:-1] - path_x[1:-2]))
+                    self.path_psi = np.arctan2(self.path_y[1:] - self.path_y[0:-1], (self.path_x[1:] - self.path_x[0:-1]))
                     self.path_psi = np.append(self.path_psi, self.path_psi[-1])
                 print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
             except:
@@ -55,9 +55,8 @@ class Controller(object):
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
                 self.path_psi = self.path_data[:,3]
-            self.path_distanceTravelled = np.cumsum(np.sqrt((path_x[2:-1] - path_x[1:-2])**2 + (path_y[2:-1] - path_y[1:-2]**2)))
+            self.path_distanceTravelled = np.cumsum(np.sqrt((self.path_x[1:] - self.path_x[0:-1])**2 + (self.path_y[1:] - self.path_y[0:-1])**2))
             self.path_distanceTravelled = np.append(0,self.path_distanceTravelled)
-            print(self.path_distanceTravelled)
 
         # Load roll reference
         if rollref_file != 'nofile':
@@ -158,7 +157,7 @@ class Controller(object):
 
                         # Check if GPS NMEA timestamp is more than 1s away from BeagleBone timestamp
 
-                        if abs((datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - time_count) > 1:
+                        if abs((datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count) > 1:
                             print("WARNING: the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised.")
                 else:
                     self.x_measured_GPS = 0.0
@@ -444,6 +443,7 @@ class Controller(object):
         self.steering_rate_filt_previous = 0.0
 
         # Path Trakcing Controller
+        self.distanceTravelled = 0.0
         self.pos_ref = 0.0
         self.path_data = [0.0,0.0,0.0,0.0]
         self.path_time = 0.0
@@ -826,6 +826,11 @@ class Controller(object):
                 self.x_error = 0
                 self.y_error = 0
                 self.psi_error = 0
+
+            # print('x_ref = %f ; x_GPS = %f ; x_error = %f' % (self.x_ref,self.x_measured_GPS,self.x_error))
+            # print('y_ref = %f ; y_GPS = %f ; y_error = %f' % (self.y_ref,self.y_measured_GPS,self.y_error))
+            # print('psi_ref = %f ; psi_GPS = %f ; psi_error = %f' % (self.psi_ref,self.psi_measured_GPS,self.psi_error))
+            # print('')
                 
             # Compute lateral and heading errors
             self.lateral_error = self.x_error * np.sin(self.psi_ref) + self.y_error * np.cos(self.psi_ref)
