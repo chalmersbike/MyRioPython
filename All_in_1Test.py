@@ -71,7 +71,7 @@ class Test(object):
                     self.imudata[0], self.imudata[1], self.imudata[2], self.imudata[3],
                     self.imudata[4], self.imudata[5], self.imudata[6], self.imudata[7]))
 
-                time.sleep(0.01)
+                time.sleep(0.5)
 
         input1 = raw_input('If all the tests are passed, then you may check the rear motor and steering motor. HOWEVER THEY ARE RISKY! PRESS ENTER TO CONTINUE')
         if not input1:

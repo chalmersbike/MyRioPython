@@ -16,7 +16,7 @@ from datetime import datetime
 
 # @pysnooper.snoop()
 class Controller(object):
-    @pysnooper.snoop()
+    # @pysnooper.snoop()
     def __init__(self, bike):
         self.bike = bike
         self.variable_init()
@@ -72,6 +72,20 @@ class Controller(object):
                 self.rollref_data = np.array([[0.0, 0.0], [1000000.0, 0.0],]) # Using three rows with zeros for np.interp to work
                 self.rollref_time = self.rollref_data[:, 0]
                 self.rollref_roll = self.rollref_data[:, 1]
+
+        if strdistbref_file != 'nofile':
+            print("Loading steering rate disturbance reference %s ..." % (strdistbref_file))
+            try:
+                self.strdistbref_data = np.genfromtxt('strratedistbref/' + strdistbref_file, delimiter=",", skip_header=1)
+                self.strdistbref_time = self.strdistbref_data[:, 0]
+                self.strdistbref_str = self.strdistbref_data[:, 1]
+                print("Steering Rate disturbance reference loaded, starting experiment.")
+            except:
+                print([strdistbref_file, "Path file not found, setting roll reference to 0 as default"])
+                # self.strdistbref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
+                self.strdistbref_data = np.array([[0.0, 0.0], [1000000.0, 0.0],]) # Using three rows with zeros for np.interp to work
+                self.strdistbref_time = self.strdistbref_data[:, 0]
+                self.strdistbref_str = self.strdistbref_data[:, 1]
 
         # Read the IMU complementary filter Phi as the initial phi estimation
         # self.roll = self.bike.get_imu_data(0, self.steeringAngle, self.roll)[0]
@@ -583,7 +597,7 @@ class Controller(object):
         self.az = self.imu_data[7]
         self.sensor_read_timing = self.imu_data[8]
 
-        self.rollRate_rec =  self.rollRate
+        self.rollRate_rec = self.rollRate
         # Outlier detection on roll rate
         if abs(self.rollRate) > 20*deg2rad:
             print('WARNING : [%f] Measured roll rate larger than 20deg/s, at %g deg/s' % (time.time() - self.gaining_speed_start, self.rollRate * rad2deg))
@@ -919,7 +933,7 @@ class Controller(object):
                 else:
                     self.balancing_setpoint = 0
             else:
-                idx_rollref_currentTime = bisect.bisect_left(self.rollref_time, time.time() - self.time_start_controller)+np.array([-1,0])
+                idx_rollref_currentTime = bisect.bisect_left(self.rollref_time, time.time() - self.time_start_controller)+np.array([-1, 0])
                 if idx_rollref_currentTime[0]  < 0:
                     idx_rollref_currentTime[0] = 0
                 self.balancing_setpoint = np.interp(time.time() - self.time_start_controller, self.rollref_time[idx_rollref_currentTime], self.rollref_roll[idx_rollref_currentTime])
@@ -961,6 +975,14 @@ class Controller(object):
         self.steering_rate_filt_previous = self.steering_rate_filt
         self.steering_rate_previous = self.steering_rate
         # self.steering_rate = self.steering_rate_filt
+
+        if strdistbref_file != 'nofile':
+            idx_strdistbref_currentTime = bisect.bisect_left(self.strdistbref_time, time.time() - self.time_start_controller) + np.array([-1, 0])
+            if idx_strdistbref_currentTime[0] < 0:
+                idx_strdistbref_currentTime[0] = 0
+            self.steering_rate += np.interp(time.time() - self.time_start_controller,
+                                                self.strdistbref_time[idx_strdistbref_currentTime],
+                                                self.strdistbref_str[idx_strdistbref_currentTime])
 
         # Send Steering Rate Reference value to steering motor controller
         self.controller_set_handlebar_angular_velocity(self.steering_rate)
