@@ -41,7 +41,7 @@ path_file = 'latlon_straight_parking.csv'
                                         # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 
 # strdistbref_file = 'nofile'
-strdistbref_file = 'str_distb_ref2.csv'
+strdistbref_file = 'str_distb_ref5deg_plswid500slt3.csv'
 
 rollref_file = 'roll_ref_randMagPM10degLP30.csv' # LP 5-30 PM 2-10
 #rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
@@ -92,7 +92,7 @@ debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print 
 potentiometer_use = 0   # 1 = use potentiometer ; 0 = do not use potentiometer
 
 # Choice to use GPS (for outdoors use only) or not
-gps_use = 0          # 1 = use GPS ; 0 = do not use GPS
+gps_use = 1          # 1 = use GPS ; 0 = do not use GPS
 ntrip_correction = 0    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
 
 # Choice to use Laser Ranger (for indoors use on roller only) or not

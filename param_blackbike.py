@@ -32,6 +32,23 @@ HIGHSPEEDBOUND = 3  # m/s
 
 
 ########################################################################################################################
+# State Estimators
+# Speed estimation gains
+statesEstimators_Kv = 0.1
+statesEstimators_KvH = 1
+statesEstimators_KvGPS = 0
+statesEstimators_KvRef = 1 - statesEstimators_KvH - statesEstimators_KvGPS
+
+# Heading estimation gains
+statesEstimators_Kpsi = 0.01
+
+# Position estimation gains
+statesEstimators_Kx = 0.01
+statesEstimators_Ky = 0.01
+statesEstimators_Kxy = np.matrix([[statesEstimators_Kx , 0] , [0 , statesEstimators_Ky]])
+
+
+########################################################################################################################
 # Drive Motor
 driveMotor_port  = '/dev/ttyO4'             # Drive Motor serial port
 driveMotor_UARTPort = "UART4"               # Drive Motor UART port

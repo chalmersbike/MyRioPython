@@ -153,11 +153,12 @@ class Controller(object):
                 self.get_states()
                 self.time_get_states = time.time() - self.time_get_states
 
-                # Compute Global Angles and Coordinates
-                self.x_estimated, self.y_estimated, self.psi_estimated, self.nu_estimated = global_angles_and_coordinates(self.velocity, sample_time,
-                                                                                                                          LENGTH_A, LENGTH_B,
-                                                                                                                          self.steeringAngle,self.psi_estimated,
-                                                                                                                          self.x_estimated, self.y_estimated)
+                # Estimate states (v, yaw, heading, x, y)
+                # self.x_estimated, self.y_estimated, self.psi_estimated, self.nu_estimated = global_angles_and_coordinates(self.velocity, sample_time,
+                #                                                                                                           LENGTH_A, LENGTH_B,
+                #                                                                                                           self.steeringAngle,self.psi_estimated,
+                #                                                                                                           self.x_estimated, self.y_estimated)
+                # self.estimate_states()
 
                 # Get position from GPS
                 if gps_use:
@@ -173,6 +174,9 @@ class Controller(object):
 
                         if abs((datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count) > 1:
                             print("WARNING: the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised.")
+
+                    # Estimate states (v, yaw, heading, x, y)
+                    self.estimate_states()
                 else:
                     self.x_measured_GPS = 0.0
                     self.y_measured_GPS = 0.0
@@ -385,6 +389,7 @@ class Controller(object):
         self.gpspos = 0.0
         self.x_measured_GPS = 0.0
         self.y_measured_GPS = 0.0
+        self.pos_GPS = np.matrix([[self.x_measured_GPS],[self.y_measured_GPS]])
         self.lat_measured_GPS = 0.0
         self.lon_measured_GPS = 0.0
         self.gps_status = 'No status'
@@ -392,6 +397,7 @@ class Controller(object):
         self.psi_measured_GPS = 0.0
         self.x_measured_GPS_old = 0.0
         self.y_measured_GPS_old = 0.0
+        self.pos_GPS_previous = np.matrix([[self.x_measured_GPS_old],[self.y_measured_GPS_old]])
         # self.x_estimated_Odo = 0.0
         # self.y_estimated_Odo = 0.0
         # self.psi_estimated_Odo = 0.0
@@ -440,6 +446,23 @@ class Controller(object):
         self.AngVel = 0.0
         self.steeringAngle = 0.0
         self.sensor_read_timing = 0.0
+
+        # States Estimators
+        self.beta = 0.0
+        self.v_estimated = 0.0
+        self.pos_estimated = 0.0
+        self.x_estimated = 0.0
+        self.y_estimated = 0.0
+        self.yaw_estimated = 0.0
+        self.heading_estimated = 0.0
+        self.beta_previous = 0.0
+        self.v_estimated_previous = 0.0
+        self.pos_estimated_previous = 0.0
+        self.x_estimated_previous = 0.0
+        self.y_estimated_previous = 0.0
+        self.yaw_estimated_previous = 0.0
+        self.heading_estimated_previous = 0.0
+        self.time_estimate_previous = 0.0
 
         # Steering angle offset esimation
         self.steering_angle_offset = 0
@@ -604,6 +627,43 @@ class Controller(object):
             self.rollRate = self.rollRate_prev
 
 
+    ####################################################################################################################
+    ####################################################################################################################
+    # Get position from GPS
+    # @pysnoope
+    def estimate_states(self):
+        dt = time.time() - self.time_estimate_previous
+
+        self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
+
+        # Velocity estimators
+        # self.v_estimated_onlyMeasurements = statesEstimators_KvH * self.velocity + statesEstimators_KvGPS * np.linalg.norm(self.pos_GPS - self.pos_GPS_previous) / dt + statesEstimators_KvRef * initial_speed
+        self.v_estimated_onlyMeasurements = statesEstimators_KvH * self.velocity_rec + statesEstimators_KvGPS * np.linalg.norm(self.pos_GPS - self.pos_GPS_previous) / dt + statesEstimators_KvRef * initial_speed
+        self.v_estimated = (1 - statesEstimators_Kv) * self.v_estimated_previous + statesEstimators_Kv * self.v_estimated_onlyMeasurements
+
+        # Position estimators
+        # self.statesEstimators_Kxy_theta = statesEstimators_Kxy
+        self.statesEstimators_Kxy_theta = statesEstimators_Kxy * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous) , -np.sin(self.yaw_estimated_previous + self.beta_previous)], [np.sin(self.yaw_estimated_previous + self.beta_previous) , np.cos(self.yaw_estimated_previous + self.beta_previous)]])
+        self.pos_estimated = (np.eye(2) - self.statesEstimators_Kxy_theta) * (self.pos_estimated_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]])) \
+                             + self.statesEstimators_Kxy_theta * (self.pos_GPS_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]]))
+        self.x_estimated = np.asscalar(self.pos_estimated[0])
+        self.y_estimated = np.asscalar(self.pos_estimated[1])
+
+        # Yaw angle estimators
+        self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
+                             + statesEstimators_Kpsi * ((np.arctan2(self.y_estimated - self.y_estimated_previous, self.x_estimated - self.x_estimated_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
+        self.yaw_estimated = np.asscalar(self.yaw_estimated)
+        self.heading_estimated = self.yaw_estimated + self.beta
+
+        # Save variables of previous time step
+        self.beta_previous = self.beta
+        self.v_estimated_previous = self.v_estimated
+        self.pos_estimated_previous = self.pos_estimated
+        self.x_estimated_previous = self.x_estimated
+        self.y_estimated_previous = self.y_estimated
+        self.yaw_estimated_previous = self.yaw_estimated
+        self.heading_estimated_previous = self.heading_estimated
+        self.time_estimate_previous = time.time()
 
 
     ####################################################################################################################
@@ -631,6 +691,10 @@ class Controller(object):
         # Save previous x and y positions to use in heading computation
         self.x_measured_GPS_old = self.x_measured_GPS
         self.y_measured_GPS_old = self.y_measured_GPS
+
+        # Save x and y in a single vector
+        self.pos_GPS = np.array([[self.x_measured_GPS],[self.y_measured_GPS]])
+        self.pos_GPS_previous = np.array([[self.x_measured_GPS_old],[self.y_measured_GPS_old]])
 
         # Update Kalman filter
         # position_kalman = self.bike.kf.update(x_measured_GPS, y_measured_GPS, self.states[1], self.velocity)
@@ -722,8 +786,8 @@ class Controller(object):
     ####################################################################################################################
     # Update controller gains for current forward speed
     def update_controller_gains(self):
-        self.velocity = 4 + math.sin(self.time_count)
-        print('vel = %f' % (self.velocity))
+        # self.velocity = 4 + math.sin(self.time_count)
+        # print('vel = %f' % (self.velocity))
 
         if len(speed_lookup_controllergains):
             self.idx_speed_lookup = bisect.bisect_left(self.speed_lookup_controllergains_np, self.velocity) + np.array([-1, 0])
@@ -973,17 +1037,18 @@ class Controller(object):
         # Butterworth 1st order 1Hz cutoff
         self.steering_rate_filt = 0.0305 * self.steering_rate + 0.0305 * self.steering_rate_previous + 0.9391 * self.steering_rate_filt_previous
         self.steering_rate_filt_previous = self.steering_rate_filt
-        self.steering_rate_previous = self.steering_rate
+
         # self.steering_rate = self.steering_rate_filt
 
         if strdistbref_file != 'nofile':
+            # print('SteeringRate Overwritten')
             idx_strdistbref_currentTime = bisect.bisect_left(self.strdistbref_time, time.time() - self.time_start_controller) + np.array([-1, 0])
             if idx_strdistbref_currentTime[0] < 0:
                 idx_strdistbref_currentTime[0] = 0
             self.steering_rate += np.interp(time.time() - self.time_start_controller,
                                                 self.strdistbref_time[idx_strdistbref_currentTime],
                                                 self.strdistbref_str[idx_strdistbref_currentTime])
-
+        self.steering_rate_previous = self.steering_rate
         # Send Steering Rate Reference value to steering motor controller
         self.controller_set_handlebar_angular_velocity(self.steering_rate)
         # if self.pid_balance_control_signal > deadband or self.pid_balance_control_signal < -deadband:
@@ -1021,12 +1086,12 @@ class Controller(object):
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
         self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
-                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'DistanceTravelled','x_estimated', 'y_estimated', 'psi_estimated', 'nu_estimated', 'imu_read_timing']
+                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'DistanceTravelled', 'imu_read_timing']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
         if gps_use:
-            self.log_header_str += ['GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude','status','NMEA timestamp']
+            self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated', 'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude','status','NMEA timestamp']
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
         if path_tracking:
@@ -1049,7 +1114,7 @@ class Controller(object):
             "{0:.5f}".format(self.roll),
             "{0:.5f}".format(self.steeringAngle),
             "{0:.5f}".format(self.rollRate_rec),
-            "{0:.5f}".format(self.pid_balance_control_signal),
+            "{0:.5f}".format(self.steering_rate),
             "{0:.5f}".format(self.balancing_setpoint),
             "{0:.5f}".format(self.gy),
             "{0:.5f}".format(self.gz),
@@ -1057,10 +1122,6 @@ class Controller(object):
             "{0:.5f}".format(self.ay),
             "{0:.5f}".format(self.az),
             "{0:.5f}".format(self.distance_travelled),
-            "{0:.5f}".format(self.x_estimated),
-            "{0:.5f}".format(self.y_estimated),
-            "{0:.5f}".format(self.psi_estimated),
-            "{0:.5f}".format(self.nu_estimated),
             "{0:.5f}".format(self.sensor_read_timing)
         ]
 
@@ -1068,14 +1129,17 @@ class Controller(object):
             self.log_str += ["{0:.5f}".format(self.pot)]
         if gps_use:
             self.log_str += [
+                "{0:.5f}".format(self.v_estimated),
+                "{0:.5f}".format(self.yaw_estimated),
+                "{0:.5f}".format(self.heading_estimated),
+                "{0:.5f}".format(self.x_estimated),
+                "{0:.5f}".format(self.y_estimated),
                 "{0:.5f}".format(self.gps_timestamp),
                 "{0:.5f}".format(self.x_measured_GPS),
                 "{0:.5f}".format(self.y_measured_GPS),
                 "{0:.5f}".format(self.lat_measured_GPS),
                 "{0:.5f}".format(self.lon_measured_GPS),
-                #"{0:.5f}".format(self.gps_status),
                 self.gps_status,
-                #"{0:.5f}".format(self.gps_nmea_timestamp)
                 self.gps_nmea_timestamp
             ]
         if laserRanger_use:
