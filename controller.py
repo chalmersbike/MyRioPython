@@ -13,6 +13,8 @@ from scipy import signal
 import bisect
 import traceback
 from datetime import datetime
+import glob
+import os
 
 # @pysnooper.snoop()
 class Controller(object):
@@ -26,10 +28,16 @@ class Controller(object):
 
         # Load path
         if path_tracking and path_file != 'pot':
-            print("Loading path %s ..." % (path_file))
             try:
-                # self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
-                self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",")
+                if path_file == 'newest':
+                    list_of_files = glob.glob('./paths/*.csv')
+                    latest_file = max(list_of_files, key=os.path.getctime)
+                    print("Loading newest path %s ..." % (latest_file))
+                    self.path_data = np.genfromtxt(latest_file, delimiter=",")
+                else:
+                    print("Loading path %s ..." % (path_file))
+                    # self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
+                    self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",")
                 self.path_time = self.path_data[:,0]
                 if self.path_data[0,1] == 0:
                     # Case if the path in defined in (x,y,psi)
@@ -79,9 +87,9 @@ class Controller(object):
                 self.strdistbref_data = np.genfromtxt('strratedistbref/' + strdistbref_file, delimiter=",", skip_header=1)
                 self.strdistbref_time = self.strdistbref_data[:, 0]
                 self.strdistbref_str = self.strdistbref_data[:, 1]
-                print("Steering Rate disturbance reference loaded, starting experiment.")
+                print("Steering rate disturbance reference loaded, starting experiment.")
             except:
-                print([strdistbref_file, "Path file not found, setting roll reference to 0 as default"])
+                print([strdistbref_file, "Steering rate disturbance file not found, setting roll reference to 0 as default"])
                 # self.strdistbref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
                 self.strdistbref_data = np.array([[0.0, 0.0], [1000000.0, 0.0],]) # Using three rows with zeros for np.interp to work
                 self.strdistbref_time = self.strdistbref_data[:, 0]
@@ -883,27 +891,35 @@ class Controller(object):
             #         self.psi_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_psi[idx_path_currentTime])
 
             # Compute position and heading errors
-            if virtual_odometer:
-                # Using virtual Odometer to do heading control/position control
-                # WHILE it is highly imprecise!!!
+            try:
                 self.x_error = self.x_ref - self.x_estimated
                 self.y_error = self.y_ref - self.y_estimated
                 self.psi_error = self.psi_ref - self.psi_estimated
-            elif gps_use:
-                # We are outside so we get the position and heading measurement from the GPS
-                self.x_error = self.x_ref - self.x_measured_GPS
-                self.y_error = self.y_ref - self.y_measured_GPS
-                self.psi_error = self.psi_ref - self.psi_measured_GPS
-            elif laserRanger_use:
-                # We are on the roller so we neglect the angular error and the lateral error is given by the position
-                # measured by the laser rangers
-                self.x_error = 0
-                self.y_error = self.y_ref - self.y_laser_ranger
-                self.psi_error = 0
-            else:
+            except:
                 self.x_error = 0
                 self.y_error = 0
                 self.psi_error = 0
+            # if virtual_odometer:
+            #     # Using virtual Odometer to do heading control/position control
+            #     # WHILE it is highly imprecise!!!
+            #     self.x_error = self.x_ref - self.x_estimated
+            #     self.y_error = self.y_ref - self.y_estimated
+            #     self.psi_error = self.psi_ref - self.psi_estimated
+            # elif gps_use:
+            #     # We are outside so we get the position and heading measurement from the GPS
+            #     self.x_error = self.x_ref - self.x_measured_GPS
+            #     self.y_error = self.y_ref - self.y_measured_GPS
+            #     self.psi_error = self.psi_ref - self.psi_measured_GPS
+            # elif laserRanger_use:
+            #     # We are on the roller so we neglect the angular error and the lateral error is given by the position
+            #     # measured by the laser rangers
+            #     self.x_error = 0
+            #     self.y_error = self.y_ref - self.y_laser_ranger
+            #     self.psi_error = 0
+            # else:
+            #     self.x_error = 0
+            #     self.y_error = 0
+            #     self.psi_error = 0
 
             # print('x_ref = %f ; x_GPS = %f ; x_error = %f' % (self.x_ref,self.x_measured_GPS,self.x_error))
             # print('y_ref = %f ; y_GPS = %f ; y_error = %f' % (self.y_ref,self.y_measured_GPS,self.y_error))
@@ -1043,6 +1059,8 @@ class Controller(object):
         if strdistbref_file != 'nofile':
             # print('SteeringRate Overwritten')
             idx_strdistbref_currentTime = bisect.bisect_left(self.strdistbref_time, time.time() - self.time_start_controller) + np.array([-1, 0])
+            if idx_strdistbref_currentTime[1] >= len(self.strdistbref_time):
+                idx_strdistbref_currentTime = np.array([len(self.strdistbref_time) - 2,len(self.strdistbref_time) - 1])
             if idx_strdistbref_currentTime[0] < 0:
                 idx_strdistbref_currentTime[0] = 0
             self.steering_rate += np.interp(time.time() - self.time_start_controller,

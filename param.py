@@ -2,7 +2,10 @@ from constants import *
 from math import pi as PI
 import numpy as np
 
-deg2rad = 3.14159/180.0
+# deg2rad = 3.14159/180.0
+
+####################################################################################################################
+####################################################################################################################
 # Experiment Parameters
 bike = 'blackbike'                              # Choice of the bike : 'redbike' or 'blackbike'
 balancing_controller_structure = 'technion'     # Choice of the balancing controller structure : 'chalmers', 'technion' or 'mdh'
@@ -10,53 +13,90 @@ balancing_controller_structure = 'technion'     # Choice of the balancing contro
                                                     # Technion Controller Structure : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
                                                     # MDH Controller structure : delta = PID(phi) ; deltadot = PID(delta)
 
+initial_speed = 3                               # [m/s] Forward speed of the bike
+
 controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
 
-path_tracking = 1                              # 1 = use path tracking ; 0 = do not use path tracking
+test_duration = 5555.0                          # [s] Duration of the test
+start_up_interval = 5                           # [s] Time to wait before running drive motor after receiving input from user to run the bike
+# speed_up_time = test_duration                   # [s] Duration of the test
+speed_up_time = 3.0                             # [s] Time to run the drive motor without steering controller to get bike up to speed
+walk_time = 2.0                                 # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
+max_exceed_count = 10                           # Number of times where calculation time can exceed sampling time before aborting experiment
+
+path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 3.0                            # The time elpased for balancing before the path tracking is engaged.
 path_tracking_structure = 'parallel'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
                                                 # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
 lateralError_controller = 1                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 1                          # 1 = use heading controller ; 0 = do not use heading controller
-# path_file = 'ramp_heading_path_test_9secs_5deg.csv'                    # Name of the file path with ".csv" extension.
+
+# Choice to use more debug outputs
+debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print outputs are disabled
+
+# Choice to use Potentiometer
+potentiometer_use = 0   # 1 = use potentiometer ; 0 = do not use potentiometer
+
+# Choice to use GPS (for outdoors use only) or not
+gps_use = 1             # 1 = use GPS ; 0 = do not use GPS
+ntrip_correction = 0    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
+
+# Choice to use Laser Ranger (for indoors use on roller only) or not
+laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
+
+# Choice to use Virtual OdometerRanger or not
+# Will estimate position and heading from steering angle and velocity
+# WARNING : highly imprecise !!!
+virtual_odometer = 0
+
+# Roll Reference Tracking:
+roll_ref_use = 1
+roll_ref_step_imp_flag = 0  # 0 means step, 1 means impulse
+rol_ref_periodic = 0
+
+####################################################################################################################
+####################################################################################################################
+# Reference Path file
+# Name of the file path with ".csv" extension. Must be placed in "paths" folder.
+# Must be a CSV with 4 columns : time, x, y, heading
+# Can also be 'pot' to use the potentiometer as y position on the roller
+# Can also be a CSV file with 3 columns : time, lat, lon.
+# Can also be 'newest' to load the most recent lat/lon path from "paths".
+path_file = 'newest'
+# path_file = 'ramp_heading_path_test_9secs_5deg.csv'
 # path_file = 'step_heading_path_9secs_m5deg.csv'
 # path_file = 'step_heading_path_9secs_m10deg.csv'
 # path_file = 'step_heading_path_12secs_m5deg.csv'
 # path_file = 'step_heading_path_12secs_m10deg.csv'
 # path_file = 'straight_path.csv'
-path_file = 'latlon_straight_parking.csv'
-# path_file = 'ramp_heading_path_nocoasting_6secs_5deg.csv'                    # Name of the file path with ".csv" extension.
-                                                # Must be placed in "paths" folder.
-                                                # Must be a CSV with 4 columns : Time, x, y, heading
-                                                # Can also be 'pot' to use the potentiometer as y position on the roller
+# path_file = 'latlon_straight_parking.csv'
+# path_file = 'ramp_heading_path_nocoasting_6secs_5deg.csv'
 
+####################################################################################################################
+####################################################################################################################
+# Reference roll file
+# Name of the roll reference file with ".csv" extension. Must be placed in "rollref" folder.
+# Must be a CSV with 2 columns : Time, rollref. Must contain "rollref" in the name
+# Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
+# rollref_file = 'rollref_test1.csv'
+# rollref_file = 'roll_ref_sqr_5.csv'
+# rollref_file = 'nofile'
 
-# rollref_file = 'rollref_test1.csv'      # Name of the roll reference file with ".csv" extension.
-# rollref_file = 'roll_ref_sqr_5.csv'      # Name of the roll reference file with ".csv" extension.
-# rollref_file = 'nofile'                 # Must be placed in "rollref" folder.
-                                        # Must be a CSV with 2 columns : Time, rollref
-                                        # Must contain "rollref" in the name
-                                        # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
-
-# strdistbref_file = 'nofile'
-strdistbref_file = 'str_distb_ref5deg_plswid500slt3.csv'
-
-rollref_file = 'roll_ref_randMagPM10degLP30.csv' # LP 5-30 PM 2-10
+#rollref_file = 'roll_ref_randMagPM10degLP5.csv' # LP 5-30 PM 2-10
 #rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
 
 # rollref_file = 'roll_ref_2deg.csv'      # Right
 # rollref_file = 'roll_ref_4deg.csv'
-# rollref_file = 'roll_ref_6deg.csv'
+#rollref_file = 'roll_ref_6deg.csv'
 # rollref_file = 'roll_ref_8deg.csv'
 # rollref_file = 'roll_ref_10deg.csv'
 # rollref_file = 'roll_ref_-2deg.csv'     # Left
 # rollref_file = 'roll_ref_-4deg.csv'
 # rollref_file = 'roll_ref_-6deg.csv'
-# rollref_file = 'roll_ref_-8deg.csv'
-# rollref_file = 'roll_ref_-10deg.csv'
-
+#rollref_file = 'roll_ref_-8deg.csv'
+rollref_file = 'roll_ref_-10deg.csv'
 
 #rollref_file = 'roll_ref_sqr_pm2deg.csv'
 #rollref_file = 'roll_ref_sqr_pm4deg.csv'
@@ -76,37 +116,11 @@ rollref_file = 'roll_ref_randMagPM10degLP30.csv' # LP 5-30 PM 2-10
 # rollref_file = 'roll_ref_sqr_0_r10deg.csv'
 
 
-
-initial_speed = 3       # [m/s] Forward speed of the bike
-
-test_duration = 5555.0  # [s] Duration of the test
-start_up_interval = 5   # [s] Time to wait before running drive motor after receiving input from user to run the bike
-#speed_up_time = test_duration   # [s] Duration of the test
-speed_up_time = 3.0     # [s] Time to run the drive motor without steering controller to get bike up to speed
-walk_time = 2.0         # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
-max_exceed_count = 10   # Number of times where calculation time can exceed sampling time before aborting experiment
-
-debug = 0               # 1 = debug print outputs are enabled ; 0 = debug print outputs are disabled
-
-# Choice to use Potentiometer
-potentiometer_use = 0   # 1 = use potentiometer ; 0 = do not use potentiometer
-
-# Choice to use GPS (for outdoors use only) or not
-gps_use = 1          # 1 = use GPS ; 0 = do not use GPS
-ntrip_correction = 0    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
-
-# Choice to use Laser Ranger (for indoors use on roller only) or not
-laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
-
-# Choice to use Virtual OdometerRanger or not
-# Will estimate position and heading from steering angle and velocity
-# WARNING : highly imprecise !!!
-virtual_odometer = 0
-
-# Roll Reference Tracking:
-roll_ref_use = 1
-roll_ref_step_imp_flag = 0  # 0 means step, 1 means impulse
-rol_ref_periodic = 0
+####################################################################################################################
+####################################################################################################################
+# Steering disturbance file
+#strdistbref_file = 'nofile'
+strdistbref_file = 'str_distb_ref6deg_plswid500slt4.csv'
 
 roll_ref_start_time = 6.0
 roll_ref_end_time = 1000.0
@@ -140,6 +154,8 @@ roll_ref_imp_start_time2 = 7.0
 roll_ref_imp_Mag = 5.0 * deg2rad
 
 
+####################################################################################################################
+####################################################################################################################
 # Load bike specific parameters
 if bike == 'blackbike':
     from param_blackbike import *
