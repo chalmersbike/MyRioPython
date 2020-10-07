@@ -403,9 +403,9 @@ class Controller(object):
         self.gps_status = 'No status'
         self.gps_timestamp = 0.0
         self.psi_measured_GPS = 0.0
-        self.x_measured_GPS_old = 0.0
-        self.y_measured_GPS_old = 0.0
-        self.pos_GPS_previous = np.matrix([[self.x_measured_GPS_old],[self.y_measured_GPS_old]])
+        self.x_measured_GPS_previous = 0.0
+        self.y_measured_GPS_previous = 0.0
+        self.pos_GPS_previous = np.matrix([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
         # self.x_estimated_Odo = 0.0
         # self.y_estimated_Odo = 0.0
         # self.psi_estimated_Odo = 0.0
@@ -650,16 +650,21 @@ class Controller(object):
         self.v_estimated = (1 - statesEstimators_Kv) * self.v_estimated_previous + statesEstimators_Kv * self.v_estimated_onlyMeasurements
 
         # Position estimators
-        # self.statesEstimators_Kxy_theta = statesEstimators_Kxy
-        self.statesEstimators_Kxy_theta = statesEstimators_Kxy * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous) , -np.sin(self.yaw_estimated_previous + self.beta_previous)], [np.sin(self.yaw_estimated_previous + self.beta_previous) , np.cos(self.yaw_estimated_previous + self.beta_previous)]])
+        self.statesEstimators_Kxy_theta = statesEstimators_Kxy
+        # self.statesEstimators_Kxy_theta = statesEstimators_Kxy * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous) , -np.sin(self.yaw_estimated_previous + self.beta_previous)], [np.sin(self.yaw_estimated_previous + self.beta_previous) , np.cos(self.yaw_estimated_previous + self.beta_previous)]])
+        # self.pos_estimated = (np.eye(2) - self.statesEstimators_Kxy_theta) * (self.pos_estimated_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]])) \
+        #                      + self.statesEstimators_Kxy_theta * (self.pos_GPS_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]]))
         self.pos_estimated = (np.eye(2) - self.statesEstimators_Kxy_theta) * (self.pos_estimated_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]])) \
-                             + self.statesEstimators_Kxy_theta * (self.pos_GPS_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]]))
+                             + self.statesEstimators_Kxy_theta * (self.pos_GPS)
+
         self.x_estimated = np.asscalar(self.pos_estimated[0])
         self.y_estimated = np.asscalar(self.pos_estimated[1])
 
         # Yaw angle estimators
+        # self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
+        #                      + statesEstimators_Kpsi * ((np.arctan2(self.y_estimated - self.y_estimated_previous, self.x_estimated - self.x_estimated_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
-                             + statesEstimators_Kpsi * ((np.arctan2(self.y_estimated - self.y_estimated_previous, self.x_estimated - self.x_estimated_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
+                             + statesEstimators_Kpsi * ((np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.y_measured_GPS_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         self.yaw_estimated = np.asscalar(self.yaw_estimated)
         self.heading_estimated = self.yaw_estimated + self.beta
 
@@ -683,7 +688,7 @@ class Controller(object):
         self.gpspos = self.bike.gps.get_position()
         self.x_measured_GPS = self.gpspos[0]
         self.y_measured_GPS = self.gpspos[1]
-        self.psi_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_old,self.x_measured_GPS - self.x_measured_GPS_old)
+        self.psi_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
         self.lat_measured_GPS = self.gpspos[2]
         self.lon_measured_GPS = self.gpspos[3]
         self.gps_timestamp = time.time() - self.gaining_speed_start
@@ -697,12 +702,12 @@ class Controller(object):
             self.gps_nmea_timestamp = self.gpspos[5]
 
         # Save previous x and y positions to use in heading computation
-        self.x_measured_GPS_old = self.x_measured_GPS
-        self.y_measured_GPS_old = self.y_measured_GPS
+        self.x_measured_GPS_previous = self.x_measured_GPS
+        self.y_measured_GPS_previous = self.y_measured_GPS
 
         # Save x and y in a single vector
         self.pos_GPS = np.array([[self.x_measured_GPS],[self.y_measured_GPS]])
-        self.pos_GPS_previous = np.array([[self.x_measured_GPS_old],[self.y_measured_GPS_old]])
+        self.pos_GPS_previous = np.array([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
 
         # Update Kalman filter
         # position_kalman = self.bike.kf.update(x_measured_GPS, y_measured_GPS, self.states[1], self.velocity)
