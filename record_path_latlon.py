@@ -28,20 +28,25 @@ for i in range(0, int(math.ceil(start_up_interval))):
     print("Please start walking the bike in %is" % (int(math.ceil(start_up_interval)) - i))
 print("")
 
-# Get GPS position
-gpspos = gps.get_position()
-lat_measured_GPS_raw = gpspos[2]
-lon_measured_GPS_raw = gpspos[3]
+# Initialize lat/lon
+lat_measured_GPS_raw = 0
+lon_measured_GPS_raw = 0
 
-window_movingAverage = 10 # Samples
-lat_movingAverage = np.full(window_movingAverage,lat_measured_GPS_raw)
-lon_movingAverage = np.full(window_movingAverage,lon_measured_GPS_raw)
-lat_LP = np.average(lat_movingAverage)
-lon_LP = np.average(lon_movingAverage)
+while lat_measured_GPS_raw  == 0 or lat_measured_GPS_raw == 0:
+    # Get GPS position
+    gpspos = gps.get_position()
+    lat_measured_GPS_raw = gpspos[2]
+    lon_measured_GPS_raw = gpspos[3]
 
-if ((lat_measured_GPS_raw >= 53) and (lat_measured_GPS_raw <= 70) and (lon_measured_GPS_raw >= 8) and (lon_measured_GPS_raw <= 26)): # The location should be in SWEDEN
-    # Write position to CSV file
-    writer_gps.writerow((0.0, lat_LP, lon_LP, lat_measured_GPS_raw, lon_measured_GPS_raw))
+    if ((lat_measured_GPS_raw >= 53) and (lat_measured_GPS_raw <= 70) and (lon_measured_GPS_raw >= 8) and (lon_measured_GPS_raw <= 26)):  # The location should be in SWEDEN
+        window_movingAverage = 10 # Samples
+        lat_movingAverage = np.full(window_movingAverage,lat_measured_GPS_raw)
+        lon_movingAverage = np.full(window_movingAverage,lon_measured_GPS_raw)
+        lat_LP = np.average(lat_movingAverage)
+        lon_LP = np.average(lon_movingAverage)
+
+        # Write position to CSV file
+        writer_gps.writerow((0.0, lat_LP, lon_LP, lat_measured_GPS_raw, lon_measured_GPS_raw))
 
 # Save start time of the recording
 start_time = time.time()
@@ -56,13 +61,13 @@ while 1:
         lat_measured_GPS_raw = gpspos[2]
         lon_measured_GPS_raw = gpspos[3]
 
-        lat_movingAverage = np.append(lat_movingAverage[1:],lat_measured_GPS_raw)
-        lon_movingAverage = np.append(lon_movingAverage[1:],lon_measured_GPS_raw)
-        lat_LP = np.average(lat_movingAverage)
-        lon_LP = np.average(lon_movingAverage)
-
         # Check that we are in Sweden
         if ((lat_measured_GPS_raw >= 53) and (lat_measured_GPS_raw <= 70) and (lon_measured_GPS_raw >= 8) and (lon_measured_GPS_raw <= 26)): # The location should be in SWEDEN
+            lat_movingAverage = np.append(lat_movingAverage[1:], lat_measured_GPS_raw)
+            lon_movingAverage = np.append(lon_movingAverage[1:], lon_measured_GPS_raw)
+            lat_LP = np.average(lat_movingAverage)
+            lon_LP = np.average(lon_movingAverage)
+
             # Write position to CSV file
             writer_gps.writerow((time.time() - start_time, lat_LP, lon_LP, lat_measured_GPS_raw, lon_measured_GPS_raw))
 
