@@ -120,8 +120,9 @@ rollref_file = 'roll_ref_-10deg.csv'
 ####################################################################################################################
 # Steering disturbance file
 #strdistbref_file = 'nofile'
-strdistbref_file = 'str_distb_ref6deg_plswid500slt4.csv'
-
+# strdistbref_file = 'str_distb_ref6deg_plswid500slt4.csv'
+strdistbref_file = 'str_Gdistb2degLP1.csv'
+# strdistbref_file = 'str_Udistb2degLP1.csv'
 roll_ref_start_time = 6.0
 roll_ref_end_time = 1000.0
 if rol_ref_periodic is 1:

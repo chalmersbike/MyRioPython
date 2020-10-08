@@ -33,7 +33,7 @@ class Controller(object):
                     list_of_files = glob.glob('./paths/*.csv')
                     latest_file = max(list_of_files, key=os.path.getctime)
                     print("Loading newest path %s ..." % (latest_file))
-                    self.path_data = np.genfromtxt(latest_file, delimiter=",")
+                    self.path_data = np.genfromtxt(latest_file, delimiter=",", skip_header=1)
                 else:
                     print("Loading path %s ..." % (path_file))
                     # self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
@@ -354,7 +354,7 @@ class Controller(object):
 
             # Distance travelled
             self.distance_travelled += self.velocity * (time.time() - self.time_start_current_loop)
-            
+
         # Print number of times sampling time was exceeded after experiment is over
         print("Number of times sampling time was exceeded : %d" % (self.exceedscount))
 
@@ -650,8 +650,8 @@ class Controller(object):
         self.v_estimated = (1 - statesEstimators_Kv) * self.v_estimated_previous + statesEstimators_Kv * self.v_estimated_onlyMeasurements
 
         # Position estimators
-        self.statesEstimators_Kxy_theta = statesEstimators_Kxy
-        # self.statesEstimators_Kxy_theta = statesEstimators_Kxy * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous) , -np.sin(self.yaw_estimated_previous + self.beta_previous)], [np.sin(self.yaw_estimated_previous + self.beta_previous) , np.cos(self.yaw_estimated_previous + self.beta_previous)]])
+        # self.statesEstimators_Kxy_theta = statesEstimators_Kxy
+        self.statesEstimators_Kxy_theta = statesEstimators_Kxy * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous) , -np.sin(self.yaw_estimated_previous + self.beta_previous)], [np.sin(self.yaw_estimated_previous + self.beta_previous) , np.cos(self.yaw_estimated_previous + self.beta_previous)]])
         # self.pos_estimated = (np.eye(2) - self.statesEstimators_Kxy_theta) * (self.pos_estimated_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]])) \
         #                      + self.statesEstimators_Kxy_theta * (self.pos_GPS_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]]))
         self.pos_estimated = (np.eye(2) - self.statesEstimators_Kxy_theta) * (self.pos_estimated_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]])) \
@@ -1110,7 +1110,7 @@ class Controller(object):
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
         self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
-                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'DistanceTravelled', 'imu_read_timing']
+                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'imu_read_timing']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
@@ -1145,7 +1145,6 @@ class Controller(object):
             "{0:.5f}".format(self.ax),
             "{0:.5f}".format(self.ay),
             "{0:.5f}".format(self.az),
-            "{0:.5f}".format(self.distance_travelled),
             "{0:.5f}".format(self.sensor_read_timing)
         ]
 
