@@ -65,7 +65,6 @@ class Controller(object):
                 self.path_heading = self.path_data[:,3]
             self.path_distanceTravelled = np.cumsum(np.sqrt((self.path_x[1:] - self.path_x[0:-1])**2 + (self.path_y[1:] - self.path_y[0:-1])**2))
             self.path_distanceTravelled = np.append(0,self.path_distanceTravelled)
-            print(self.path_distanceTravelled)
 
         # Load roll reference
         if rollref_file != 'nofile':
@@ -354,8 +353,8 @@ class Controller(object):
                 time.sleep((sample_time - self.loop_time))
 
             # Distance travelled
-            self.distance_travelled += self.velocity * self.loop_time
-
+            self.distance_travelled += self.velocity * (time.time() - self.time_start_current_loop)
+            
         # Print number of times sampling time was exceeded after experiment is over
         print("Number of times sampling time was exceeded : %d" % (self.exceedscount))
 
@@ -687,32 +686,33 @@ class Controller(object):
     def gps_read(self):
         # Get GPS position
         self.gpspos = self.bike.gps.get_position()
-        self.x_measured_GPS = self.gpspos[0]
-        self.y_measured_GPS = self.gpspos[1]
-        self.psi_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
-        self.lat_measured_GPS = self.gpspos[2]
-        self.lon_measured_GPS = self.gpspos[3]
-        self.gps_timestamp = time.time() - self.gaining_speed_start
+        if ((self.gpspos[2] >= 53) and (self.gpspos[2] <= 70) and (self.gpspos[3] >= 8) and (self.gpspos[3] <= 26)):  # The location should be in SWEDEN
+            self.x_measured_GPS = self.gpspos[0]
+            self.y_measured_GPS = self.gpspos[1]
+            self.psi_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
+            self.lat_measured_GPS = self.gpspos[2]
+            self.lon_measured_GPS = self.gpspos[3]
+            self.gps_timestamp = time.time() - self.gaining_speed_start
 
-        # Read GPS status if it exists
-        if len(self.gpspos) >= 5:
-            self.gps_status = self.gpspos[4]
+            # Read GPS status if it exists
+            if len(self.gpspos) >= 5:
+                self.gps_status = self.gpspos[4]
 
-        # Read GPS NMEA timestamp if it exists
-        if len(self.gpspos) >= 6:
-            self.gps_nmea_timestamp = self.gpspos[5]
+            # Read GPS NMEA timestamp if it exists
+            if len(self.gpspos) >= 6:
+                self.gps_nmea_timestamp = self.gpspos[5]
 
-        # Save previous x and y positions to use in heading computation
-        self.x_measured_GPS_previous = self.x_measured_GPS
-        self.y_measured_GPS_previous = self.y_measured_GPS
+            # Save previous x and y positions to use in heading computation
+            self.x_measured_GPS_previous = self.x_measured_GPS
+            self.y_measured_GPS_previous = self.y_measured_GPS
 
-        # Save x and y in a single vector
-        self.pos_GPS = np.array([[self.x_measured_GPS],[self.y_measured_GPS]])
-        self.pos_GPS_previous = np.array([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
+            # Save x and y in a single vector
+            self.pos_GPS = np.array([[self.x_measured_GPS],[self.y_measured_GPS]])
+            self.pos_GPS_previous = np.array([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
 
-        # Update Kalman filter
-        # position_kalman = self.bike.kf.update(x_measured_GPS, y_measured_GPS, self.states[1], self.velocity)
-        # print('x_measured_GPS = %f ; y_measured_GPS = %f ; x_kalman = %f ; y_kalman = %f' % (self.x_measured_GPS, self.y_measured_GPS, position_kalman[0], position_kalman[1]))
+            # Update Kalman filter
+            # position_kalman = self.bike.kf.update(x_measured_GPS, y_measured_GPS, self.states[1], self.velocity)
+            # print('x_measured_GPS = %f ; y_measured_GPS = %f ; x_kalman = %f ; y_kalman = %f' % (self.x_measured_GPS, self.y_measured_GPS, position_kalman[0], position_kalman[1]))
 
 
     ####################################################################################################################
@@ -1119,7 +1119,7 @@ class Controller(object):
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
         if path_tracking:
-            self.log_header_str += ['DirectionGains', 'LateralPositionGains', 'x_ref', 'y_ref', 'heading_ref', 'lateral_error', 'heading_error']
+            self.log_header_str += ['DirectionGains', 'LateralPositionGains', 'distance_travelled', 'x_ref', 'y_ref', 'heading_ref', 'lateral_error', 'heading_error']
 
         self.writer.writerow(self.log_header_str)
 
@@ -1176,6 +1176,7 @@ class Controller(object):
             self.log_str += [
                 "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_direction.Kp,self.pid_direction.Ki,self.pid_direction.Kd),
                 "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_lateral_position.Kp,self.pid_lateral_position.Ki,self.pid_lateral_position.Kd),
+                "{0:.5f}".format(self.distance_travelled),
                 "{0:.5f}".format(self.x_ref),
                 "{0:.5f}".format(self.y_ref),
                 "{0:.5f}".format(self.heading_ref),
