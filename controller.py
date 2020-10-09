@@ -650,8 +650,8 @@ class Controller(object):
         self.v_estimated = (1 - statesEstimators_Kv) * self.v_estimated_previous + statesEstimators_Kv * self.v_estimated_onlyMeasurements
 
         # Position estimators
-        # self.statesEstimators_Kxy_theta = statesEstimators_Kxy
-        self.statesEstimators_Kxy_theta = statesEstimators_Kxy * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous) , -np.sin(self.yaw_estimated_previous + self.beta_previous)], [np.sin(self.yaw_estimated_previous + self.beta_previous) , np.cos(self.yaw_estimated_previous + self.beta_previous)]])
+        self.statesEstimators_Kxy_theta = statesEstimators_Kxy
+        # self.statesEstimators_Kxy_theta = statesEstimators_Kxy * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous) , -np.sin(self.yaw_estimated_previous + self.beta_previous)], [np.sin(self.yaw_estimated_previous + self.beta_previous) , np.cos(self.yaw_estimated_previous + self.beta_previous)]])
         # self.pos_estimated = (np.eye(2) - self.statesEstimators_Kxy_theta) * (self.pos_estimated_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]])) \
         #                      + self.statesEstimators_Kxy_theta * (self.pos_GPS_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]]))
         self.pos_estimated = (np.eye(2) - self.statesEstimators_Kxy_theta) * (self.pos_estimated_previous + self.v_estimated_previous * dt * np.matrix([[np.cos(self.yaw_estimated_previous + self.beta_previous)],[np.sin(self.yaw_estimated_previous + self.beta_previous)]])) \
@@ -1022,7 +1022,10 @@ class Controller(object):
                 idx_rollref_currentTime = bisect.bisect_left(self.rollref_time, time.time() - self.time_start_controller)+np.array([-1, 0])
                 if idx_rollref_currentTime[0]  < 0:
                     idx_rollref_currentTime[0] = 0
-                self.balancing_setpoint = np.interp(time.time() - self.time_start_controller, self.rollref_time[idx_rollref_currentTime], self.rollref_roll[idx_rollref_currentTime])
+                if time.time() - self.time_start_controller >= self.rollref_time[-1]:
+                    self.balancing_setpoint = self.rollref_roll[-1]
+                else:
+                    self.balancing_setpoint = np.interp(time.time() - self.time_start_controller, self.rollref_time[idx_rollref_currentTime], self.rollref_roll[idx_rollref_currentTime])
 
 
     ####################################################################################################################
@@ -1069,9 +1072,13 @@ class Controller(object):
                 idx_strdistbref_currentTime = np.array([len(self.strdistbref_time) - 2,len(self.strdistbref_time) - 1])
             if idx_strdistbref_currentTime[0] < 0:
                 idx_strdistbref_currentTime[0] = 0
-            self.steering_rate += np.interp(time.time() - self.time_start_controller,
+            if time.time() - self.time_start_controller >= self.strdistbref_time[-1]:
+                self.steering_rate += self.strdistbref_str[-1]
+            else:
+                self.steering_rate += np.interp(time.time() - self.time_start_controller,
                                                 self.strdistbref_time[idx_strdistbref_currentTime],
                                                 self.strdistbref_str[idx_strdistbref_currentTime])
+
         self.steering_rate_previous = self.steering_rate
         # Send Steering Rate Reference value to steering motor controller
         self.controller_set_handlebar_angular_velocity(self.steering_rate)
@@ -1234,4 +1241,4 @@ class Controller(object):
                 exc_flag,
                 exceptioncode,
                 exc_msg]
-            self.writer.writerow(self.log_str)
+            # self.writer.writerow(self.log_str)
