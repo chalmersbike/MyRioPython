@@ -168,6 +168,11 @@ class Controller(object):
                 #                                                                                                           self.x_estimated, self.y_estimated)
                 # self.estimate_states()
 
+                # Estimate states (v, yaw, heading, x, y)
+                if self.compute_estimators_flag:
+                    self.estimate_states()
+                    self.compute_estimators_flag = False
+
                 # Get position from GPS
                 if gps_use:
                     if ((time.time() - self.gaining_speed_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate or self.gps_timestamp <= 0.01:
@@ -178,13 +183,12 @@ class Controller(object):
                         if self.gps_nmea_timestamp_ini == 0.0:
                             self.gps_nmea_timestamp_ini = self.gps_nmea_timestamp
 
-                        # Check if GPS NMEA timestamp is more than 1s away from BeagleBone timestamp
+                        # Set flag to compute estimated states at next time step
+                        self.compute_estimators_flag = True
 
+                        # Check if GPS NMEA timestamp is more than 1s away from BeagleBone timestamp
                         if abs((datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count) > 1:
                             print("WARNING: the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised.")
-
-                    # Estimate states (v, yaw, heading, x, y)
-                    self.estimate_states()
                 else:
                     self.x_measured_GPS = 0.0
                     self.y_measured_GPS = 0.0
@@ -456,6 +460,7 @@ class Controller(object):
         self.sensor_read_timing = 0.0
 
         # States Estimators
+        self.compute_estimators_flag = False
         self.beta = 0.0
         self.v_estimated = 0.0
         self.pos_estimated = 0.0
