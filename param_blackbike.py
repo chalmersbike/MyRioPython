@@ -158,7 +158,10 @@ laserRanger_sensor2_accuracyMode = 4                    # Laser ranger sensor 2 
 potentiometer_port = 'P9_36'        # Potentiometer analog input port
 potentiometer_maxVoltage = 0.29     # [V] Maximum voltage measured at the potentiometer's output
 
-
+########################################################################################################################
+# SteeringCurrent Read
+steering_current_port = 'P9_39'     # ADIN for steering current
+steering_max_current = 10.0         # Amper, the maximal current, which gives 1.8 V reading here
 ########################################################################################################################
 # Safety Stop
 safetyStop_port = 'P9_15'       # Safety stop GPIO port

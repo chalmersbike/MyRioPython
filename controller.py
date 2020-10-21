@@ -458,6 +458,7 @@ class Controller(object):
         self.AngVel = 0.0
         self.steeringAngle = 0.0
         self.sensor_read_timing = 0.0
+        self.steeringCurrent = 0.0
 
         # States Estimators
         self.compute_estimators_flag = False
@@ -618,6 +619,8 @@ class Controller(object):
         if self.steering_angle_offset_computed_flag:
             self.steeringAngle = self.steeringAngle - self.steering_angle_offset
 
+        self.steeringCurrent = self.bike.steering_motor.read_steer_current()
+
         # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         # self.imu_data = self.bike.get_imu_data(0, self.steeringAngle, self.roll)
         self.imu_data = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)
@@ -638,6 +641,7 @@ class Controller(object):
         if abs(self.rollRate) > 20*deg2rad:
             print('WARNING : [%f] Measured roll rate larger than 20deg/s, at %g deg/s' % (time.time() - self.gaining_speed_start, self.rollRate * rad2deg))
             self.rollRate = self.rollRate_prev
+
 
 
     ####################################################################################################################
@@ -1122,7 +1126,7 @@ class Controller(object):
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
         self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
-                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'imu_read_timing']
+                               'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'imu_read_timing', 'SteerMotorCurrent']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
@@ -1157,7 +1161,8 @@ class Controller(object):
             "{0:.5f}".format(self.ax),
             "{0:.5f}".format(self.ay),
             "{0:.5f}".format(self.az),
-            "{0:.5f}".format(self.sensor_read_timing)
+            "{0:.5f}".format(self.sensor_read_timing),
+            "{0:.5f}".format(self.steeringCurrent)
         ]
 
         if potentiometer_use:

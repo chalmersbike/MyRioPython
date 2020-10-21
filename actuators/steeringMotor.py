@@ -3,11 +3,13 @@ import serial, time
 import Adafruit_BBIO.PWM as PWM
 import time
 import Adafruit_BBIO.GPIO as GPIO
+import Adafruit_BBIO.ADC as ADC
 import numpy as np
 
 
 class SteeringMotor(object):
     def __init__(self):
+        ADC.setup()
         GPIO.setup(steeringMotor_PinEnable, GPIO.OUT)
         GPIO.output(steeringMotor_PinEnable, GPIO.LOW)
         if debug:
@@ -54,3 +56,6 @@ class SteeringMotor(object):
 
     def disable(self):
         GPIO.output(steeringMotor_PinEnable, GPIO.LOW)
+
+    def read_steer_current(self):
+        return ADC.read(steering_current_port) * steering_max_current
