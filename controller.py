@@ -50,8 +50,8 @@ class Controller(object):
                     self.path_lon = self.path_data[:,2]
                     self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
                     self.path_y = R * self.path_lat * deg2rad
-                    # self.path_x = self.path_x - self.path_x[0]
-                    # self.path_y = self.path_y - self.path_y[0]
+                    self.path_x = self.path_x - self.path_x[0]
+                    self.path_y = self.path_y - self.path_y[0]
                     self.path_heading = np.arctan2(self.path_y[1:] - self.path_y[0:-1], (self.path_x[1:] - self.path_x[0:-1]))
                     self.path_heading = np.append(self.path_heading, self.path_heading[-1])
                 print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
@@ -1128,8 +1128,11 @@ class Controller(object):
     # Exit the code safely and put bike on a stable circle with a 5deg constant roll reference
     def safe_stop(self):
         print("Bike was in unsafe conditions or the code stopped. Putting the bike in a stable circle with a 5deg constant roll reference")
-        self.balancing_setpoint = 5*deg2rad*np.sign(self.roll)
-        keep_the_bike_stable()
+        if (abs(self.roll) > 30 * deg2rad or abs(self.steeringAngle) > 40 * deg2rad):
+            self.balancing_setpoint = 5*deg2rad*np.sign(self.roll)
+            keep_the_bike_stable()
+        else:
+            self.bike.stop()
 
 
     ####################################################################################################################
