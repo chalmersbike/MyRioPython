@@ -227,7 +227,7 @@ class GPS(object):
         # return line
 
     def process_data(self,line):
-        if line[0] == '$GPGGA':
+        if line[0] == '$GPGGA' or line[0] == '$GNGGA':
             gga = line
             self.utc = gga[1]
             self.latitude = gga[2]
@@ -242,7 +242,7 @@ class GPS(object):
             self.geoidal_Separation = gga[11]
             self.separation_unit = gga[12]
             self.age_of_Diff_Corr = gga[13]  # null when DGPS not used
-        elif line[0] == '$GPGSA':
+        elif line[0] == '$GPGSA' or line[0] == '$GNGSA':
             gsa = line
             self.mode1 = gsa[1]
             self.mode2 = gsa[2]
@@ -261,7 +261,7 @@ class GPS(object):
             self.pdop = gsa[15]
             self.hdop = gsa[16]
             self.vdop = gsa[17]
-        elif line[0] == '$GPGSV':
+        elif line[0] == '$GPGSV'or line[0] == '$GNGSV':
             gsv = line
             self.number_of_message = gsv[1]
             self.msg1 = gsv[2]
@@ -286,7 +286,7 @@ class GPS(object):
                 self.elevation4 = gsv[17]
                 self.azimuth4 = gsv[18]
                 self.SNR4 = gsv[19]
-        elif line[0] == '$GPRMC':
+        elif line[0] == '$GPRMC' or line[0] == '$GNRMC':
             rmc = line
             self.utc = rmc[1]
             self.status = rmc[2]
@@ -299,7 +299,7 @@ class GPS(object):
             self.Date = rmc[9]
             self.Magnetic_Variation = rmc[10]
             self.Mode_rmc = rmc[11]
-        elif line[0] == '$GPVTG':
+        elif line[0] == '$GPVTG' or line[0] == '$GNVTG':
             vtg = line
             self.Course = vtg[1]
             self.Reference = vtg[2]

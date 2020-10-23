@@ -405,8 +405,8 @@ class RecordPathLatLon(object):
         self.time_estimate_previous = time.time()
 
         # Compute estimated lat/lon
-        self.lat_estimated = (self.x_estimated * rad2deg) / R / np.cos(self.lat_measured_GPS_ini * deg2rad) + self.lat_measured_GPS_ini
-        self.lon_estimated = (self.y_estimated * rad2deg) / R + self.lon_measured_GPS_ini
+        self.lon_estimated = (self.x_estimated * rad2deg) / R / np.cos(self.lat_measured_GPS_ini * deg2rad) + self.lon_measured_GPS_ini
+        self.lat_estimated = (self.y_estimated * rad2deg) / R + self.lat_measured_GPS_ini
 
 
     ####################################################################################################################

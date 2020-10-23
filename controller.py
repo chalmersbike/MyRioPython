@@ -50,8 +50,8 @@ class Controller(object):
                     self.path_lon = self.path_data[:,2]
                     self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
                     self.path_y = R * self.path_lat * deg2rad
-                    self.path_x = self.path_x - self.path_x[0]
-                    self.path_y = self.path_y - self.path_y[0]
+                    # self.path_x = self.path_x - self.path_x[0]
+                    # self.path_y = self.path_y - self.path_y[0]
                     self.path_heading = np.arctan2(self.path_y[1:] - self.path_y[0:-1], (self.path_x[1:] - self.path_x[0:-1]))
                     self.path_heading = np.append(self.path_heading, self.path_heading[-1])
                 print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
@@ -65,6 +65,11 @@ class Controller(object):
                 self.path_heading = self.path_data[:,3]
             self.path_distanceTravelled = np.cumsum(np.sqrt((self.path_x[1:] - self.path_x[0:-1])**2 + (self.path_y[1:] - self.path_y[0:-1])**2))
             self.path_distanceTravelled = np.append(0,self.path_distanceTravelled)
+
+            print(self.path_lat)
+            print(self.path_lon)
+            print(self.path_x)
+            print(self.path_y)
 
         # Load roll reference
         if rollref_file != 'nofile':
@@ -169,7 +174,7 @@ class Controller(object):
                 # self.estimate_states()
 
                 # Estimate states (v, yaw, heading, x, y)
-                if self.compute_estimators_flag:
+                if self.compute_estimators_flag and (self.time_count >= walk_time):
                     self.estimate_states()
                     self.compute_estimators_flag = False
 
@@ -246,6 +251,22 @@ class Controller(object):
                         print('Gaining speed ...')
 
                     self.bike.set_velocity(initial_speed)
+
+                    # Set initial conditions of estimators
+                    self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
+                    self.beta_previous = self.beta
+                    self.v_estimated = self.velocity
+                    self.v_estimated_previous = self.v_estimated
+                    self.pos_estimated = self.pos_GPS
+                    self.pos_estimated_previous = self.pos_estimated
+                    self.x_estimated = np.asscalar(self.pos_estimated[0])
+                    self.y_estimated = np.asscalar(self.pos_estimated[1])
+                    self.x_estimated_previous = self.x_estimated
+                    self.y_estimated_previous = self.y_estimated
+                    self.heading_estimated = np.arctan2(self.y_measured_GPS,self.x_measured_GPS) # Heading computed between initial (0,0) position and position at end of walk
+                    self.heading_estimated_previous = self.heading_estimated
+                    self.yaw_estimated = self.heading_estimated - self.beta
+                    self.yaw_estimated_previous = self.yaw_estimated
                 elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
                     # Once enough time has passed, start controller
                     self.gainingSpeedOver_flag = True
@@ -296,6 +317,7 @@ class Controller(object):
                     # self.bike.steering_motor.enable()
                     # self.controller_set_handlebar_angular_velocity(0)
                     # self.update_controller_gains()
+                    self.get_balancing_setpoint()
                     self.keep_the_bike_stable()
 
 
@@ -310,7 +332,7 @@ class Controller(object):
                 print(e)
                 print(traceback.print_exc())
 
-                self.stop()
+                self.safe_stop()
                 exc_msg = 'Error or keyboard interrupt, aborting the experiment'
                 print(exc_msg)
                 self.exception_log(-2, exc_msg)
@@ -325,7 +347,7 @@ class Controller(object):
             # Check for ESTOP
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
-                self.stop()
+                self.safe_stop()
                 exc_msg = 'Emergency stop pressed, aborting the experiment'
                 print(exc_msg)
                 self.exception_log(0,exc_msg)
@@ -333,7 +355,7 @@ class Controller(object):
 
             # Check for extreme PHI
             if self.roll > MAX_LEAN_ANGLE or self.roll < MIN_LEAN_ANGLE:
-                self.stop()
+                self.safe_stop()
                 exc_msg = 'Exceeded min/max lean (roll) angle abs %3f > abs %3f, aborting the experiment' %(self.roll, MAX_LEAN_ANGLE)
                 print(exc_msg)
                 self.exception_log(2, exc_msg)
@@ -342,11 +364,12 @@ class Controller(object):
             # End test time condition
             if self.time_count > test_duration:
                 # Print number of times sampling time was exceeded if experiment is aborted early
-                self.stop()
+                self.safe_stop()
                 exc_msg = 'Exceeded test duration, aborting the experiment'
                 print(exc_msg)
                 self.exception_log(-1, exc_msg)
                 break
+
             # Log data
             self.log_regular()
 
@@ -673,7 +696,7 @@ class Controller(object):
         # self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
         #                      + statesEstimators_Kpsi * ((np.arctan2(self.y_estimated - self.y_estimated_previous, self.x_estimated - self.x_estimated_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
-                             + statesEstimators_Kpsi * ((np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.y_measured_GPS_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
+                             + statesEstimators_Kpsi * ((np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         self.yaw_estimated = np.asscalar(self.yaw_estimated)
         self.heading_estimated = self.yaw_estimated + self.beta
 
@@ -774,14 +797,16 @@ class Controller(object):
         if handlebar_angle > max_handlebar_angle:
             # print('Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg))
             self.upperSaturation = True
-            self.bike.stop()
+            # self.bike.stop()
+            self.safe_stop()
             exc_msg = 'Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg)
             print(exc_msg)
             self.exception_log(1, exc_msg)
         elif handlebar_angle < min_handlebar_angle:
             # print('Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg))
             self.lowerSaturation = True
-            self.bike.stop()
+            # self.bike.stop()
+            self.safe_stop()
             exc_msg = 'Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (max_handlebar_angle * rad2deg)
             print(exc_msg)
             self.exception_log(1, exc_msg)
@@ -799,7 +824,7 @@ class Controller(object):
             print('Emergency stop pressed, the experiment will be aborted if it is not released now')
             input_estop = raw_input('Press ENTER to continue')
             if input_estop:
-                self.stop()
+                self.safe_stop()
                 exc_msg = 'Emergency stop was not released, aborting the experiment before it starts'
                 print(exc_msg)
                 self.exception_log(0,exc_msg)
@@ -863,6 +888,7 @@ class Controller(object):
 
         print('Kpbal = %f ; Kibal = %f ; Kdbal = %f' % (self.pid_balance.Kp,self.pid_balance.Ki,self.pid_balance.Kd))
         print('Kpbalouter = %f ; Kibalouter = %f ; Kdbalouter = %f' % (self.pid_balance_outerloop.Kp,self.pid_balance_outerloop.Ki,self.pid_balance_outerloop.Kd))
+
 
     ####################################################################################################################
     ####################################################################################################################
@@ -1041,7 +1067,7 @@ class Controller(object):
     ####################################################################################################################
     # Balancing controller
     def keep_the_bike_stable(self):
-        self.get_balancing_setpoint()
+        # self.get_balancing_setpoint()
 
         if balancing_controller_structure == 'chalmers':
             # Chalmers Controller structure : deltadot = PID(phidot)
@@ -1095,6 +1121,15 @@ class Controller(object):
         #     self.controller_set_handlebar_angular_velocity(self.steering_rate)
         # else:
         #     self.controller_set_handlebar_angular_velocity(0)
+
+
+    ####################################################################################################################
+    ####################################################################################################################
+    # Exit the code safely and put bike on a stable circle with a 5deg constant roll reference
+    def safe_stop(self):
+        print("Bike was in unsafe conditions or the code stopped. Putting the bike in a stable circle with a 5deg constant roll reference")
+        self.balancing_setpoint = 5*deg2rad*np.sign(self.roll)
+        keep_the_bike_stable()
 
 
     ####################################################################################################################
@@ -1216,7 +1251,7 @@ class Controller(object):
             # Stop experiment if exceeded sampling time too many times
             # if self.exceedscount > max_exceed_count:
             #     print(")
-            #     self.stop()
+            #     self.safe_stop()
             # exc_msg = 'Calculation time exceeded sampling time too often (%d times) , aborting the experiment' % (max_exceed_count)
             # print(exc_msg)
             # self.exception_log(3, exc_msg)

@@ -45,8 +45,8 @@ statesEstimators_Kpsi = 0.01
 # Position estimation gains
 # statesEstimators_Kx = 0.01
 # statesEstimators_Ky = 0.01
-statesEstimators_Kx = 0.025
-statesEstimators_Ky = 0.025
+statesEstimators_Kx = 0.1
+statesEstimators_Ky = 0.1
 statesEstimators_Kxy = np.matrix([[statesEstimators_Kx , 0] , [0 , statesEstimators_Ky]])
 
 

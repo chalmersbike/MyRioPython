@@ -14,6 +14,8 @@ config-pin p8.13 pwm # 24/04/2020 : STEERING PWM
 config-pin p8.15 out- # 24/04/2020 : NOT USED
 config-pin p8.16 qep # 24/04/2020 : NOT USED
 config-pin p8.17 gpio # 24/04/2020 : STEERING ENABLE
+config-pin p8.38 uart # 22/10/2020 : GPS NTRIP UART5 BBB/RX
+config-pin p8.37 uart # 22/10/2020 : GPS NTRIP UART5 BBB/TX
 
 
 ################################################################
@@ -36,6 +38,8 @@ config-pin p9.24 uart # 24/04/2020 : GPS UART BBB/TX GPS/RX
 config-pin p9.26 uart # 24/04/2020 : GPS UART BBB/RX GPS/TX
 config-pin p9.27 gpio # 24/04/2020 : I2C LASER RANGER SHUTDOWN 1
 config-pin p9.30 gpio # 24/04/2020 : HALL SENSOR R1
+
+
 
 
 echo "Pin configuration complete"
