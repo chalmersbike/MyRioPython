@@ -244,6 +244,22 @@ class Controller(object):
                         self.steering_angle_offset = self.steering_angle_offset / self.steering_angle_offset_count
                         print('Steering angle offset : %.2f deg' % (self.steering_angle_offset*rad2deg))
 
+                        # Set initial conditions of estimators
+                        self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
+                        self.beta_previous = self.beta
+                        self.v_estimated = self.velocity
+                        self.v_estimated_previous = self.v_estimated
+                        self.pos_estimated = self.pos_GPS
+                        self.pos_estimated_previous = self.pos_estimated
+                        self.x_estimated = np.asscalar(self.pos_estimated[0])
+                        self.y_estimated = np.asscalar(self.pos_estimated[1])
+                        self.x_estimated_previous = self.x_estimated
+                        self.y_estimated_previous = self.y_estimated
+                        self.heading_estimated = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)  # Heading computed between initial (0,0) position and position at end of walk
+                        self.heading_estimated_previous = self.heading_estimated
+                        self.yaw_estimated = self.heading_estimated - self.beta
+                        self.yaw_estimated_previous = self.yaw_estimated
+
                     # Do not start controllers until bike ran for enough time to get up to speed
                     # self.bike.steering_motor.enable()
                     self.bike.steering_motor.disable()
@@ -253,22 +269,6 @@ class Controller(object):
                         print('Gaining speed ...')
 
                     self.bike.set_velocity(initial_speed)
-
-                    # Set initial conditions of estimators
-                    self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
-                    self.beta_previous = self.beta
-                    self.v_estimated = self.velocity
-                    self.v_estimated_previous = self.v_estimated
-                    self.pos_estimated = self.pos_GPS
-                    self.pos_estimated_previous = self.pos_estimated
-                    self.x_estimated = np.asscalar(self.pos_estimated[0])
-                    self.y_estimated = np.asscalar(self.pos_estimated[1])
-                    self.x_estimated_previous = self.x_estimated
-                    self.y_estimated_previous = self.y_estimated
-                    self.heading_estimated = np.arctan2(self.y_measured_GPS,self.x_measured_GPS) # Heading computed between initial (0,0) position and position at end of walk
-                    self.heading_estimated_previous = self.heading_estimated
-                    self.yaw_estimated = self.heading_estimated - self.beta
-                    self.yaw_estimated_previous = self.yaw_estimated
                 elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
                     # Once enough time has passed, start controller
                     self.gainingSpeedOver_flag = True
@@ -718,6 +718,11 @@ class Controller(object):
     # Get position from GPS
     # @pysnoope
     def gps_read(self):
+        # Store previous position
+        self.x_measured_GPS_previous = self.x_measured_GPS
+        self.y_measured_GPS_previous = self.y_measured_GPS
+        self.pos_GPS_previous = np.array([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
+
         # Get GPS position
         self.gpspos = self.bike.gps.get_position()
         if ((self.gpspos[2] >= 53) and (self.gpspos[2] <= 70) and (self.gpspos[3] >= 8) and (self.gpspos[3] <= 26)):  # The location should be in SWEDEN
@@ -736,13 +741,8 @@ class Controller(object):
             if len(self.gpspos) >= 6:
                 self.gps_nmea_timestamp = self.gpspos[5]
 
-            # Save previous x and y positions to use in heading computation
-            self.x_measured_GPS_previous = self.x_measured_GPS
-            self.y_measured_GPS_previous = self.y_measured_GPS
-
             # Save x and y in a single vector
             self.pos_GPS = np.array([[self.x_measured_GPS],[self.y_measured_GPS]])
-            self.pos_GPS_previous = np.array([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
 
             # Update Kalman filter
             # position_kalman = self.bike.kf.update(x_measured_GPS, y_measured_GPS, self.states[1], self.velocity)

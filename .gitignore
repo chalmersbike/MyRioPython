@@ -5,7 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-!vl53l0x_python.so
+!vl53l0x/VL53L0X_rasp_python/bin/vl53l0x_python.so
 
 # Distribution / packaging
 .Python
@@ -30,7 +30,7 @@ wheels/
 .installed.cfg
 *.egg
 log/
-log_screen/
+log_screen/*.txt
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -39,8 +39,8 @@ log_screen/
 *.spec
 
 # Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+#pip-log.txt
+#pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
@@ -114,6 +114,9 @@ ENV/
 .idea
 
 #.csv
-*.csv
+#*.csv
+ExpData_blackbike/*.csv
+rollref/Previous/*.csv
+strratedistbref/previous/*.csv
 !*path*.csv
-!*rollref*.csv
+#!*rollref*.csv
