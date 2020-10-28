@@ -27,8 +27,8 @@ max_exceed_count = 10                           # Number of times where calculat
 
 path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
-balancing_time = 3.0                            # The time elpased for balancing before the path tracking is engaged.
-path_tracking_structure = 'parallel'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
+balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
+path_tracking_structure = 'series'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
                                                 # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
 lateralError_controller = 1                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 1                          # 1 = use heading controller ; 0 = do not use heading controller
@@ -135,7 +135,7 @@ strdistbref_file = 'nofile'
 # strdistbref_file = 'str_Udistb_bandstop23_6degLP5.csv'
 # strdistbref_file = 'str_Udistb_bandstop23_7degLP1.csv'
 # strdistbref_file = 'str_Udistb_bandstop23_7degLP2.csv'
-# strdistbref_file = 'str_Udistb_bandstop23_10degLP5.csv'
+# strdistbref_file = 'str_Udistb_bandstop23_23degLP5.csv'
 roll_ref_start_time = 6.0
 roll_ref_end_time = 1000.0
 if rol_ref_periodic is 1:

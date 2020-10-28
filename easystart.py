@@ -7,7 +7,7 @@ from actuators import DriveMotor, SteeringMotor
 # import pysnooper
 
 try:
-    bike = Bike(debug=False)
+    bike = Bike(debug=False,recordPath=False)
 except (ValueError, KeyboardInterrupt):
     rearmotor = DriveMotor()
     rearmotor.stop()

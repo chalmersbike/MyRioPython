@@ -390,7 +390,7 @@ class RecordPathLatLon(object):
         # self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
         #                      + statesEstimators_Kpsi * ((np.arctan2(self.y_estimated - self.y_estimated_previous, self.x_estimated - self.x_estimated_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
-                             + statesEstimators_Kpsi * ((np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.y_measured_GPS_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
+                             + statesEstimators_Kpsi * ((np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         self.yaw_estimated = np.asscalar(self.yaw_estimated)
         self.heading_estimated = self.yaw_estimated + self.beta
 
@@ -494,10 +494,10 @@ class RecordPathLatLon(object):
             "{0:.8f}".format(self.lat_measured_GPS),
             "{0:.8f}".format(self.lon_measured_GPS),
             datetime.now().strftime("%H:%M:%S.%f"),
-            "{0:.5f}".format(self.time_count),
             "{0:.5f}".format(self.loop_time),
             "{0:.5f}".format(self.velocity_rec),
             "{0:.5f}".format(self.roll),
+            "{0:.5f}".format(self.steeringAngle),
             "{0:.5f}".format(self.rollRate_rec),
             "{0:.5f}".format(self.gy),
             "{0:.5f}".format(self.gz),

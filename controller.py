@@ -19,8 +19,11 @@ import os
 # @pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
-    def __init__(self, bike):
+    def __init__(self, bike, recordPath=False):
         self.bike = bike
+
+        self.recordPath = recordPath
+
         self.variable_init()
 
         # Check Estop before starting the experiment
@@ -39,13 +42,19 @@ class Controller(object):
                     # self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",", skip_header=1)
                     self.path_data = np.genfromtxt('paths/' + path_file, delimiter=",")
                 self.path_time = self.path_data[:,0]
-                if self.path_data[0,1] == 0:
+                # if self.path_data[0, 3] == 0:
+                if self.path_data.shape[1] <= 3:
                     # Case if the path in defined in (x,y,psi)
                     self.path_x = self.path_data[:,1]
                     self.path_y = self.path_data[:,2]
                     self.path_heading = self.path_data[:,3]
                 else:
                     # Case if the path in defined in (lat,lon)
+
+                    # Extract unique timestamps
+                    _, indices = np.unique(self.path_data[:, -1], return_index=True)
+                    self.path_data = self.path_data[indices,:]
+
                     self.path_lat = self.path_data[:,1]
                     self.path_lon = self.path_data[:,2]
                     self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
@@ -56,6 +65,8 @@ class Controller(object):
                     self.path_y = self.path_y - self.bike.gps.y0
                     self.path_heading = np.arctan2(self.path_y[1:] - self.path_y[0:-1], (self.path_x[1:] - self.path_x[0:-1]))
                     self.path_heading = np.append(self.path_heading, self.path_heading[-1])
+                    self.path_heading = np.unwrap(self.path_heading)
+
                 print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
             except:
                 print("Path file not found, setting all path references to 0 as default")
@@ -107,10 +118,17 @@ class Controller(object):
         # self.roll = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)[0]
 
         # Get experiment (if any) of the experiment
-        self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
+        if not self.recordPath:
+            self.descr = raw_input('Type a description for the experiment if necessary. Press ENTER to start the experiment. ')
+        else:
+            self.descr = ''
+            raw_input('Press enter to start recording a path by walking the bike.')
 
         # Create log file and add header line
-        self.log_headerline()
+        if not self.recordPath:
+            self.log_headerline()
+        else:
+            self.log_headerline_recordPath()
 
         # Wait before starting experiment
         print("")
@@ -176,7 +194,7 @@ class Controller(object):
                 # self.estimate_states()
 
                 # Estimate states (v, yaw, heading, x, y)
-                if self.compute_estimators_flag and (self.time_count >= walk_time):
+                if self.compute_estimators_flag:# and (self.time_count >= walk_time):
                     self.estimate_states()
                     self.compute_estimators_flag = False
 
@@ -196,6 +214,26 @@ class Controller(object):
                         # Check if GPS NMEA timestamp is more than 1s away from BeagleBone timestamp
                         if abs((datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count) > 1:
                             print("WARNING: the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised.")
+
+                        if self.lat_estimated == 0.0:# and self.recordPath:
+                            # Set initial conditions of estimators
+                            self.lat_estimated = self.lat_measured_GPS
+                            self.lon_estimated = self.lon_measured_GPS
+                            self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
+                            self.beta_previous = self.beta
+                            self.v_estimated = self.velocity
+                            self.v_estimated_previous = self.v_estimated
+                            self.pos_estimated = self.pos_GPS
+                            self.pos_estimated_previous = self.pos_estimated
+                            self.x_estimated = np.asscalar(self.pos_estimated[0])
+                            self.y_estimated = np.asscalar(self.pos_estimated[1])
+                            self.x_estimated_previous = self.x_estimated
+                            self.y_estimated_previous = self.y_estimated
+                            self.heading_estimated = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)  # Heading computed between initial (0,0) position and position at end of walk
+                            self.heading_estimated_previous = self.heading_estimated
+                            self.yaw_estimated = self.heading_estimated - self.beta
+                            self.yaw_estimated_previous = self.yaw_estimated
+
                 else:
                     self.x_measured_GPS = 0.0
                     self.y_measured_GPS = 0.0
@@ -244,7 +282,7 @@ class Controller(object):
                         self.steering_angle_offset = self.steering_angle_offset / self.steering_angle_offset_count
                         print('Steering angle offset : %.2f deg' % (self.steering_angle_offset*rad2deg))
 
-                        # Set initial conditions of estimators
+                        # # Set initial conditions of estimators
                         self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
                         self.beta_previous = self.beta
                         self.v_estimated = self.velocity
@@ -373,7 +411,10 @@ class Controller(object):
                 break
 
             # Log data
-            self.log_regular()
+            if not self.recordPath:
+                self.log_regular()
+            else:
+                self.log_regular_recordPath()
 
             # Compute total time for current loop
             self.loop_time = time.time() - self.time_start_current_loop
@@ -429,9 +470,10 @@ class Controller(object):
         self.pos_GPS = np.matrix([[self.x_measured_GPS],[self.y_measured_GPS]])
         self.lat_measured_GPS = 0.0
         self.lon_measured_GPS = 0.0
+        self.lat_measured_GPS_ini = 'none'
         self.gps_status = 'No status'
         self.gps_timestamp = 0.0
-        self.psi_measured_GPS = 0.0
+        self.theta_measured_GPS = 0.0
         self.x_measured_GPS_previous = 0.0
         self.y_measured_GPS_previous = 0.0
         self.pos_GPS_previous = np.matrix([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
@@ -492,6 +534,8 @@ class Controller(object):
         self.pos_estimated = 0.0
         self.x_estimated = 0.0
         self.y_estimated = 0.0
+        self.lat_estimated = 0.0
+        self.lon_estimated = 0.0
         self.yaw_estimated = 0.0
         self.heading_estimated = 0.0
         self.beta_previous = 0.0
@@ -695,10 +739,13 @@ class Controller(object):
         self.y_estimated = np.asscalar(self.pos_estimated[1])
 
         # Yaw angle estimators
+        # # self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
+        # #                      + statesEstimators_Kpsi * ((np.arctan2(self.y_estimated - self.y_estimated_previous, self.x_estimated - self.x_estimated_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         # self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
-        #                      + statesEstimators_Kpsi * ((np.arctan2(self.y_estimated - self.y_estimated_previous, self.x_estimated - self.x_estimated_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
+        #                      + statesEstimators_Kpsi * ((np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
-                             + statesEstimators_Kpsi * ((np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
+                             + statesEstimators_Kpsi * ((self.theta_measured_GPS - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
+
         self.yaw_estimated = np.asscalar(self.yaw_estimated)
         self.heading_estimated = self.yaw_estimated + self.beta
 
@@ -711,6 +758,10 @@ class Controller(object):
         self.yaw_estimated_previous = self.yaw_estimated
         self.heading_estimated_previous = self.heading_estimated
         self.time_estimate_previous = time.time()
+
+        # Compute estimated lat/lon
+        self.lon_estimated = (self.x_estimated * rad2deg) / R / np.cos(self.lat_measured_GPS_ini * deg2rad) + self.lon_measured_GPS_ini
+        self.lat_estimated = (self.y_estimated * rad2deg) / R + self.lat_measured_GPS_ini
 
 
     ####################################################################################################################
@@ -728,10 +779,17 @@ class Controller(object):
         if ((self.gpspos[2] >= 53) and (self.gpspos[2] <= 70) and (self.gpspos[3] >= 8) and (self.gpspos[3] <= 26)):  # The location should be in SWEDEN
             self.x_measured_GPS = self.gpspos[0]
             self.y_measured_GPS = self.gpspos[1]
-            self.psi_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
             self.lat_measured_GPS = self.gpspos[2]
             self.lon_measured_GPS = self.gpspos[3]
             self.gps_timestamp = time.time() - self.gaining_speed_start
+
+            # Compute GPS heading and yaw angle - needs to be unwraped in case bike turns around or goes in a circle
+            # self.theta_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
+            self.theta_measured_GPS = np.unwrap(np.array([self.theta_measured_GPS , np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)]))[-1]
+
+            if self.lat_measured_GPS_ini == 'none':
+                self.lat_measured_GPS_ini = self.lat_measured_GPS
+                self.lon_measured_GPS_ini = self.lon_measured_GPS
 
             # Read GPS status if it exists
             if len(self.gpspos) >= 5:
@@ -952,7 +1010,7 @@ class Controller(object):
             #     # We are outside so we get the position and heading measurement from the GPS
             #     self.x_error = self.x_ref - self.x_measured_GPS
             #     self.y_error = self.y_ref - self.y_measured_GPS
-            #     self.heading_error = self.heading_ref - self.psi_measured_GPS
+            #     self.heading_error = self.heading_ref - self.theta_measured_GPS
             # elif laserRanger_use:
             #     # We are on the roller so we neglect the angular error and the lateral error is given by the position
             #     # measured by the laser rangers
@@ -966,7 +1024,7 @@ class Controller(object):
 
             # print('x_ref = %f ; x_GPS = %f ; x_error = %f' % (self.x_ref,self.x_measured_GPS,self.x_error))
             # print('y_ref = %f ; y_GPS = %f ; y_error = %f' % (self.y_ref,self.y_measured_GPS,self.y_error))
-            # print('heading_ref = %f ; psi_GPS = %f ; heading_error = %f' % (self.heading_ref,self.psi_measured_GPS,self.heading_error))
+            # print('heading_ref = %f ; psi_GPS = %f ; heading_error = %f' % (self.heading_ref,self.theta_measured_GPS,self.heading_error))
             # print('')
                 
             # Compute lateral and heading errors
@@ -1172,7 +1230,7 @@ class Controller(object):
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
         if gps_use:
-            self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated', 'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude','status','NMEA timestamp']
+            self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated', 'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude', 'lat_estimated', 'lon_estimated','status','NMEA timestamp']
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
         if path_tracking:
@@ -1220,6 +1278,8 @@ class Controller(object):
                 "{0:.5f}".format(self.y_measured_GPS),
                 "{0:.5f}".format(self.lat_measured_GPS),
                 "{0:.5f}".format(self.lon_measured_GPS),
+                "{0:.8f}".format(self.lat_estimated),
+                "{0:.8f}".format(self.lon_estimated),
                 self.gps_status,
                 self.gps_nmea_timestamp
             ]
@@ -1293,3 +1353,87 @@ class Controller(object):
                 exceptioncode,
                 exc_msg]
             # self.writer.writerow(self.log_str)
+
+    ####################################################################################################################
+    ####################################################################################################################
+    # Log data for path recording
+    def log_headerline_recordPath(self):
+        # Data logging setup
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        csv_path = './paths/path_%s.csv' % (timestr)
+        print "RECORDED PATH is: "
+        print csv_path
+        results_csv = open(csv_path, 'wb')
+        # results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
+        self.writer = csv.writer(results_csv)
+
+        self.log_header_str = ['Time', 'lat_estimated', 'lon_estimated', 'latitude', 'longitude', 'RealTime',
+                               'CalculationTime', 'MeasuredVelocity', 'Roll', 'SteeringAngle', 'RollRate', 'gy', 'gz',
+                               'ax', 'ay', 'az', 'imu_read_timing']
+
+        if gps_use:
+            self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated',
+                                    'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'status', 'NMEA timestamp']
+
+        self.writer.writerow(self.log_header_str)
+
+    def log_regular_recordPath(self):
+        # print("time = %f ; roll = %f ; steering = %f" % (self.time_count,self.roll,self.steeringAngle))
+
+        # Log data
+        self.time_log = time.time()
+        self.log_str = [
+            "{0:.5f}".format(self.time_count),
+            "{0:.8f}".format(self.lat_estimated),
+            "{0:.8f}".format(self.lon_estimated),
+            "{0:.5f}".format(self.lat_measured_GPS),
+            "{0:.5f}".format(self.lon_measured_GPS),
+            datetime.now().strftime("%H:%M:%S.%f"),
+            "{0:.5f}".format(self.loop_time),
+            "{0:.5f}".format(self.velocity_rec),
+            "{0:.5f}".format(self.roll),
+            "{0:.5f}".format(self.steeringAngle),
+            "{0:.5f}".format(self.rollRate_rec),
+            "{0:.5f}".format(self.gy),
+            "{0:.5f}".format(self.gz),
+            "{0:.5f}".format(self.ax),
+            "{0:.5f}".format(self.ay),
+            "{0:.5f}".format(self.az),
+            "{0:.5f}".format(self.sensor_read_timing),
+        ]
+
+        if gps_use:
+            self.log_str += [
+                "{0:.5f}".format(self.v_estimated),
+                "{0:.5f}".format(self.yaw_estimated),
+                "{0:.5f}".format(self.heading_estimated),
+                "{0:.5f}".format(self.x_estimated),
+                "{0:.5f}".format(self.y_estimated),
+                "{0:.5f}".format(self.gps_timestamp),
+                "{0:.5f}".format(self.x_measured_GPS),
+                "{0:.5f}".format(self.y_measured_GPS),
+                self.gps_status,
+                self.gps_nmea_timestamp
+            ]
+
+        self.writer.writerow(self.log_str)
+        self.time_log = time.time() - self.time_log
+
+        if debug or (self.loop_time > sample_time):
+            if self.loop_time > sample_time:
+                print("WARNING: The calculation time exceeds the sampling time!")
+                self.exceedscount += 1
+
+            # Print sensor reading time, control calculation time, IMU data reading time and logging time
+            print("sensor_reading_time   control calculation   IMU   log  = %g \t %g \t %g \t %g \t" % (
+                self.sensor_reading_time, self.control_cal_time, self.time_get_states,
+                self.time_log))
+
+            # Stop experiment if exceeded sampling time too many times
+            # if self.exceedscount > max_exceed_count:
+            #     print(")
+            #     self.safe_stop()
+            # exc_msg = 'Calculation time exceeded sampling time too often (%d times) , aborting the experiment' % (max_exceed_count)
+            # print(exc_msg)
+            # self.exception_log(3, exc_msg)
+        self.rollRate_prev = self.rollRate

@@ -1,54 +1,22 @@
+print 'Starting Bike with controller ACTIVE\n'
+
+from bike import Bike
+from controller import Controller
 import Adafruit_BBIO.GPIO as GPIO
-from param import *
-from sensors import Encoder, HallSensor, IMU, SafetyStop, GPS
-from record_path_latlon import RecordPathLatLon
-import pysnooper
-
-class Bike(object):
-    # @pysnooper.snoop()
-    def __init__(self, debug='True'):
-        # Initialize sensors and actuators
-        self.safety_stop = SafetyStop()
-        self.encoder = Encoder()
-        self.hall_sensor = HallSensor()
-        self.imu = IMU()
-        if gps_use:
-            self.gps = GPS()
-
-        # Run bike and controllers
-        self.pathRecorder = RecordPathLatLon(self)
-        # self.controller.startup()
-        self.pathRecorder.run()
-
-    # Safety Stop
-    def emergency_stop_check(self):
-        return self.safety_stop.button_check()
-
-    # Steering Encoder
-    def get_handlebar_angle(self):
-        return self.encoder.get_angle()
-
-    # Hall Sensor
-    def get_velocity(self):
-        return self.hall_sensor.get_velocity()
-
-    # IMU
-    def get_imu_data(self, velocity, delta_state, phi):
-        return self.imu.get_imu_data(velocity, delta_state, phi)
-
-    # GPS
-    if gps_use:
-        def get_gps_data(self):
-            return self.gps.get_position()
-
-    def stop_all(self):
-        GPIO.cleanup()
-
+from actuators import DriveMotor, SteeringMotor
+# import pysnooper
 
 try:
-    bike = Bike(debug=False)
+    bike = Bike(debug=False,recordPath=True)
 except (ValueError, KeyboardInterrupt):
+    rearmotor = DriveMotor()
+    rearmotor.stop()
+    steeringmotor = SteeringMotor()
+    steeringmotor.stop()
     GPIO.cleanup()
-    exc_msg = '\n Error detected by record_path program ...'
+    # print 'sensor reading time is %g' % bike.controller.sensor_reading_time
+    # print '\n Error detected, all the control signals terminated...'
+    exc_msg = '\n Error detected by easystart program, all the control signals terminated...'
     print(exc_msg)
     print ValueError
+    # bike.exception_log(-2, exc_msg)

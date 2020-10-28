@@ -1,0 +1,116 @@
+    1  mkdir log_screen
+    2  `date +%Y-%m-%d`
+    3  cp ../.bashrc bashrc_copy 
+    4  cd ..
+    5  mv Chalmersbike chalmersbike
+    6  sudo reboot
+    7  ifconfig
+    8  python easystart.py 
+    9  sudo apt update
+   10  apt -get install python-pip numpy
+   11  apt get -install python-pip numpy
+   12  apt-get install python-pip numpy
+   13  sudo apt-get install python-pip numpy
+   14  sudo apt-get install python-pip python-numpy
+   15  sudo apt-get install python-numpy
+   16  sudo apt-get install python-pip
+   17  python easystart.py 
+   18  pip install spidev
+   19  python easystart.py 
+   20  pip install serial
+   21  sudo apt-get install python-serial
+   22  python easystart.p
+   23  python easystart.py
+   24  sudo apt-get install build-essential python-dev
+   25  dir
+   26  mkdir vl53l0x
+   27  cd vl53l0x/
+   28  dir
+   29  cd VL53L0X_rasp_python/
+   30  dir
+   31  make
+   32  dir
+   33  cd ../..
+   34  python easystart.py
+   35  sudo pip install virtualenv
+   36  dir
+   37  virtualenv chalmersbike
+   38  virtualenv --system-site-packages chalmersbike
+   39  dir
+   40  cd chalmersbike/
+   41  dir
+   42  cd ..
+   43  cd chalmersbike/
+   44  dir
+   45  bind 
+   46  dir
+   47  cd ..
+   48  cd chalmersbike/bin/
+   49  dir
+   50  source activate
+   51  pwd
+   52  cd ../..
+   53  python easystart.py 
+   54  pip install pysnooper
+   55  dir
+   56  python easystart.py 
+   57  apt-get install scipy
+   58  sudo apt-get install python-scipy
+   59  python easystart.py 
+   60  mkdir ExpData_blackbike
+   61  cd vl53l0x/VL53L0X_rasp_python/bin/
+   62  dir
+   63  cd ../../..
+   64  python easystart.py 
+   65  mkdir strratedistbref
+   66  git status
+   67  git status
+   68  git rm -r --cached .
+   69  git add .
+   70  git status
+   71  git status|more
+   72  git status
+   73  git commit -m "Including more reference files after reinstallment"
+   74  git push
+   75  python NTRIP/uart3test.py 
+   76  ls -l
+   77  ls -lA
+   78  date
+   79  tzselect
+   80  2
+   81  3
+   82  4
+   83  5
+   84  apt-get install -y ntpdate
+   85  sudo apt-get install -y ntpdate
+   86  apt-get install -y ntp
+   87  sudo apt-get install -y ntp
+   88  nano /etc/ntp.conf 
+   89  sudo nano /etc/ntp.conf 
+   90  /etc/init.d/ntp restart
+   91  /etc/init.d/ntp start
+   92  sudo nano /etc/ntp.conf 
+   93  fg nano
+   94  fg sudo
+   95  /etc/init.d/ntp start
+   96  sudo /etc/init.d/ntp restart
+   97  sudo nano /etc/ntp.conf 
+   98  sudo /etc/init.d/ntp restart
+   99  history
+  100  git status
+  101  git config --global user.name
+  102  git config --global user.name "Mr. Black with BBBlack"
+  103  git config --global user.name
+  104  git config user.name
+  105  git config --global user.name "Mr. Black with Mrs. BBBlack"
+  106  sudo shutdown -h now
+  107  python record_path.py
+  108  python easystart.py 
+  109  python easystart.py 
+  110  python easystart.py 
+  111  python record_path.py 
+  112  history
+  113  history > hist.out
+  114  dir
+  115  cat hist.out 
+  116  history > hist.out
