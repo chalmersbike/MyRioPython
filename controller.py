@@ -1061,6 +1061,9 @@ class Controller(object):
                     self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not measurement
                     # Compute balancing setpoint
                     self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
+
+                # Saturation of balancing setpoint
+                self.balancing_setpoint = max(min(self.balancing_setpoint,15*deg2rad),-15*deg2rad)
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
