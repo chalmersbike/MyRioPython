@@ -313,8 +313,8 @@ class Controller(object):
                     print('Gaining speed phase over')
 
                     # Check that speed if high enough
-                    if self.velocity < 0.5*initial_speed:
-                        print("WARNING : speed is lower than half the reference speed. Hall sensors or drive motor might be faulty. Will use reference speed instead of measured speed in calculations.")
+                    if self.velocity < 0.3*initial_speed:
+                        print("WARNING : speed is lower than one third the reference speed. Hall sensors or drive motor might be faulty. Will use reference speed instead of measured speed in calculations.")
                         self.broken_speed_flag = True
 
                     self.controller_active = True
@@ -387,10 +387,10 @@ class Controller(object):
             # Check for ESTOP
             self.ESTOP = self.bike.emergency_stop_check()
             if self.ESTOP:
-                self.safe_stop()
                 exc_msg = 'Emergency stop pressed, aborting the experiment'
                 print(exc_msg)
                 self.exception_log(0,exc_msg)
+                self.safe_stop()
                 break
 
             # Check for extreme PHI
@@ -783,13 +783,25 @@ class Controller(object):
             self.lon_measured_GPS = self.gpspos[3]
             self.gps_timestamp = time.time() - self.gaining_speed_start
 
-            # Compute GPS heading and yaw angle - needs to be unwraped in case bike turns around or goes in a circle
-            # self.theta_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
-            self.theta_measured_GPS = np.unwrap(np.array([self.theta_measured_GPS , np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)]))[-1]
+            if self.time_count > walk_time:
+                # Compute GPS heading - needs to be unwraped in case bike turns around or goes in a circle
+                self.theta_measured_GPS = np.unwrap(np.array([self.theta_measured_GPS , np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)]))[-1]
+            else:
+                self.theta_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
 
             if self.lat_measured_GPS_ini == 'none':
                 self.lat_measured_GPS_ini = self.lat_measured_GPS
                 self.lon_measured_GPS_ini = self.lon_measured_GPS
+                self.x_measured_GPS_ini = self.x_measured_GPS
+                self.y_measured_GPS_ini = self.y_measured_GPS
+                if self.path_lat:
+                    # self.lat_offset = self.lat_measured_GPS_ini - self.path_lat[0]
+                    # self.lon_offset = self.lon_measured_GPS_ini - self.path_lon[0]
+                    self.x_offset = self.x_measured_GPS_ini
+                    self.y_offset = self.y_measured_GPS_ini
+
+            self.x_measured_GPS = self.x_measured_GPS - self.x_offset
+            self.y_measured_GPS = self.y_measured_GPS - self.y_offset
 
             # Read GPS status if it exists
             if len(self.gpspos) >= 5:
@@ -880,6 +892,7 @@ class Controller(object):
     # Initial Estop check
     def initial_Estop_Check(self):
         self.ESTOP = self.bike.emergency_stop_check()
+
         if self.ESTOP:
             print('Emergency stop pressed, the experiment will be aborted if it is not released now')
             input_estop = raw_input('Press ENTER to continue')
@@ -1389,8 +1402,8 @@ class Controller(object):
             "{0:.5f}".format(self.time_count),
             "{0:.8f}".format(self.lat_estimated),
             "{0:.8f}".format(self.lon_estimated),
-            "{0:.5f}".format(self.lat_measured_GPS),
-            "{0:.5f}".format(self.lon_measured_GPS),
+            "{0:.8f}".format(self.lat_measured_GPS),
+            "{0:.8f}".format(self.lon_measured_GPS),
             datetime.now().strftime("%H:%M:%S.%f"),
             "{0:.5f}".format(self.loop_time),
             "{0:.5f}".format(self.velocity_rec),
