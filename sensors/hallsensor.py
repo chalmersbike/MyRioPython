@@ -47,7 +47,6 @@ class HallSensor(object):
         else:
             return self.velocity
 
-        return self.velocity
     def get_velocity_kmh(self):
         return (self.velocity * kmph2mps) or 0  # velocity is measured in km/h
 

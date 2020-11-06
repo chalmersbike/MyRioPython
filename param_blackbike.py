@@ -34,13 +34,14 @@ HIGHSPEEDBOUND = 3  # m/s
 ########################################################################################################################
 # State Estimators
 # Speed estimation gains
-statesEstimators_Kv = 0.1
+statesEstimators_Kv = 0.2
 statesEstimators_KvH = 1
 statesEstimators_KvGPS = 0
 statesEstimators_KvRef = 1 - statesEstimators_KvH - statesEstimators_KvGPS
 
 # Heading estimation gains
-statesEstimators_Kpsi = 0.07
+# statesEstimators_Kpsi = 0.07
+statesEstimators_Kpsi = 0.15
 
 # Position estimation gains
 statesEstimators_Kx = 0.05
@@ -108,7 +109,8 @@ hallSensor_pullUpDown = 'up'            # Hall sensor pull-up or pull-down choic
 hallSensor_edgeDetection = 'rising'     # Hall sensor edge dection type : 'rising', 'falling'
 hallSensor_numberOfSensors = 3          # Number of magnets placed on the wheel
 hallSensor_maxElapseBetweenPulses = 1   # [s] Bike is considered stationary (0m/s speed) if time between two pulses is longer than this
-hallSensor_bounceTime = 30              # [ms] Bouncetime between two pulses to avoid reading the same pulse multiple times
+# hallSensor_bounceTime = 30              # [ms] Bouncetime between two pulses to avoid reading the same pulse multiple times
+hallSensor_bounceTime = 60              # [ms] Bouncetime between two pulses to avoid reading the same pulse multiple times
 hallSensor_sensorPosition = 0.347       # [m] Distance between center of wheel and center of magnets (Tyre marking 40-622 = ID of 622mm + 4mm to center of magnet)
 hall_Sensor_distanceBetweenMagnets = hallSensor_sensorPosition * 2 * PI / hallSensor_numberOfSensors     # [m] Distance between magnets
 
@@ -238,7 +240,6 @@ path_choice = 'pot'
 # PID Lateral Position Controller Parameters
 pid_lateral_position_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 pid_lateral_position_P = -1e-1
-# pid_lateral_position_I = -1e-2
 pid_lateral_position_I = -0e-2
 pid_lateral_position_D = -0e-1
 pid_lateral_position_sample_time = 1.0 / controller_frequency

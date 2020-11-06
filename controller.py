@@ -55,6 +55,7 @@ class Controller(object):
                     _, indices = np.unique(self.path_data[:, -1], return_index=True)
                     self.path_data = self.path_data[indices,:]
 
+                    # Compute XY path
                     self.path_lat = self.path_data[:,1]
                     self.path_lon = self.path_data[:,2]
                     self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
@@ -63,6 +64,12 @@ class Controller(object):
                     # self.path_y = self.path_y - self.path_y[0]
                     self.path_x = self.path_x - self.bike.gps.x0
                     self.path_y = self.path_y - self.bike.gps.y0
+
+                    # Downsample from 10Hz to 1Hz
+                    self.path_x = self.path_x[0::10]
+                    self.path_y = self.path_y[0::10]
+
+                    # Compute heading
                     self.path_heading = np.arctan2(self.path_y[1:] - self.path_y[0:-1], (self.path_x[1:] - self.path_x[0:-1]))
                     self.path_heading = np.append(self.path_heading, self.path_heading[-1])
                     self.path_heading = np.unwrap(self.path_heading)
@@ -179,6 +186,7 @@ class Controller(object):
                     print('WARNING : [%f] Measured speed change between two samples too large' % (
                             time.time() - self.gaining_speed_start))
                     self.velocity = 1.5 + self.velocity
+                    self.velocity = self.velocity_previous
                 self.velocity_previous = self.velocity
 
                 # Get states
@@ -233,7 +241,6 @@ class Controller(object):
                             self.heading_estimated_previous = self.heading_estimated
                             self.yaw_estimated = self.heading_estimated - self.beta
                             self.yaw_estimated_previous = self.yaw_estimated
-
                 else:
                     self.x_measured_GPS = 0.0
                     self.y_measured_GPS = 0.0
@@ -282,7 +289,7 @@ class Controller(object):
                         self.steering_angle_offset = self.steering_angle_offset / self.steering_angle_offset_count
                         print('Steering angle offset : %.2f deg' % (self.steering_angle_offset*rad2deg))
 
-                        # # Set initial conditions of estimators
+                        # Set initial conditions of estimators
                         self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
                         self.beta_previous = self.beta
                         self.v_estimated = self.velocity
@@ -298,6 +305,9 @@ class Controller(object):
                         self.yaw_estimated = self.heading_estimated - self.beta
                         self.yaw_estimated_previous = self.yaw_estimated
 
+                        # Set GPS heading
+                        # self.theta_measured_GPS = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)
+
                     # Do not start controllers until bike ran for enough time to get up to speed
                     # self.bike.steering_motor.enable()
                     self.bike.steering_motor.disable()
@@ -306,7 +316,8 @@ class Controller(object):
                         self.speed_up_message_printed_flag = True
                         print('Gaining speed ...')
 
-                    self.bike.set_velocity(initial_speed)
+                    if not self.recordPath:
+                        self.bike.set_velocity(initial_speed)
                 elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
                     # Once enough time has passed, start controller
                     self.gainingSpeedOver_flag = True
@@ -328,11 +339,12 @@ class Controller(object):
                     self.pid_direction.clear()
 
                     # Enable steering motor
-                    self.bike.steering_motor.enable()
+                    if not self.recordPath:
+                        self.bike.steering_motor.enable()
 
-                    # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
-                    # TO DO : CHECK WHY THIS HAPPENS !
-                    PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
+                        # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
+                        # TO DO : CHECK WHY THIS HAPPENS !
+                        PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
 
 
                     # Time at which the controller starts running
@@ -723,8 +735,8 @@ class Controller(object):
         self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
 
         # Velocity estimators
-        # self.v_estimated_onlyMeasurements = statesEstimators_KvH * self.velocity + statesEstimators_KvGPS * np.linalg.norm(self.pos_GPS - self.pos_GPS_previous) / dt + statesEstimators_KvRef * initial_speed
-        self.v_estimated_onlyMeasurements = statesEstimators_KvH * self.velocity_rec + statesEstimators_KvGPS * np.linalg.norm(self.pos_GPS - self.pos_GPS_previous) / dt + statesEstimators_KvRef * initial_speed
+        # self.v_estimated_onlyMeasurements = statesEstimators_KvH * self.velocity_rec + statesEstimators_KvGPS * np.linalg.norm(self.pos_GPS - self.pos_GPS_previous) / dt + statesEstimators_KvRef * initial_speed
+        self.v_estimated_onlyMeasurements = statesEstimators_KvH * self.velocity + statesEstimators_KvGPS * np.linalg.norm(self.pos_GPS - self.pos_GPS_previous) / dt + statesEstimators_KvRef * initial_speed
         self.v_estimated = (1 - statesEstimators_Kv) * self.v_estimated_previous + statesEstimators_Kv * self.v_estimated_onlyMeasurements
 
         # Position estimators
@@ -744,7 +756,7 @@ class Controller(object):
         # self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
         #                      + statesEstimators_Kpsi * ((np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous) - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
         self.yaw_estimated = (1 - statesEstimators_Kpsi) * (self.yaw_estimated_previous + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous)) \
-                             + statesEstimators_Kpsi * ((self.theta_measured_GPS - self.beta_previous) + (self.v_estimated_previous / LENGTH_A) * dt * np.sin(self.beta_previous))
+                             + statesEstimators_Kpsi * (self.theta_measured_GPS - self.beta)
 
         self.yaw_estimated = np.asscalar(self.yaw_estimated)
         self.heading_estimated = self.yaw_estimated + self.beta
@@ -782,26 +794,32 @@ class Controller(object):
             self.lat_measured_GPS = self.gpspos[2]
             self.lon_measured_GPS = self.gpspos[3]
             self.gps_timestamp = time.time() - self.gaining_speed_start
-
-            if self.time_count > walk_time:
-                # Compute GPS heading - needs to be unwraped in case bike turns around or goes in a circle
-                self.theta_measured_GPS = np.unwrap(np.array([self.theta_measured_GPS , np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)]))[-1]
-            else:
-                self.theta_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
-
             if self.lat_measured_GPS_ini == 'none':
                 self.lat_measured_GPS_ini = self.lat_measured_GPS
                 self.lon_measured_GPS_ini = self.lon_measured_GPS
                 self.x_measured_GPS_ini = self.x_measured_GPS
                 self.y_measured_GPS_ini = self.y_measured_GPS
-                if self.path_lat:
+                # if self.path_lat:
                     # self.lat_offset = self.lat_measured_GPS_ini - self.path_lat[0]
                     # self.lon_offset = self.lon_measured_GPS_ini - self.path_lon[0]
+                try:
                     self.x_offset = self.x_measured_GPS_ini
                     self.y_offset = self.y_measured_GPS_ini
+                except:
+                    self.x_offset = 0.0
+                    self.y_offset = 0.0
 
             self.x_measured_GPS = self.x_measured_GPS - self.x_offset
             self.y_measured_GPS = self.y_measured_GPS - self.y_offset
+
+            print('DEBUG : x = %f ; x_prev = %f ; y = %f ; y_prev = %f' % (self.x_measured_GPS,self.x_measured_GPS_previous,self.y_measured_GPS,self.y_measured_GPS_previous))
+            self.theta_measured_GPS_noUnwrap = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
+            if self.time_count > walk_time:
+                # Compute GPS heading - needs to be unwraped in case bike turns around or goes in a circle
+                self.theta_measured_GPS = np.unwrap(np.array([self.theta_measured_GPS , np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)]))[-1]
+                # self.theta_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
+            else:
+                self.theta_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
 
             # Read GPS status if it exists
             if len(self.gpspos) >= 5:
@@ -1039,10 +1057,11 @@ class Controller(object):
             # print('y_ref = %f ; y_GPS = %f ; y_error = %f' % (self.y_ref,self.y_measured_GPS,self.y_error))
             # print('heading_ref = %f ; psi_GPS = %f ; heading_error = %f' % (self.heading_ref,self.theta_measured_GPS,self.heading_error))
             # print('')
-                
+
             # Compute lateral and heading errors
             self.lateral_error = self.x_error * np.sin(self.heading_ref) + self.y_error * np.cos(self.heading_ref)
             self.heading_error = self.heading_error
+            # self.heading_error = self.heading_error % (2*np.pi)
 
             if (time.time() - self.time_pathtracking) > 10 * sample_time:
                 self.time_pathtracking = time.time()
@@ -1076,7 +1095,11 @@ class Controller(object):
                     self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
 
                 # Saturation of balancing setpoint
-                self.balancing_setpoint = max(min(self.balancing_setpoint,15*deg2rad),-15*deg2rad)
+                self.balancing_setpoint_sat = max(min(self.balancing_setpoint,15*deg2rad),-15*deg2rad)
+                if self.balancing_setpoint_sat != self.balancing_setpoint:
+                    print('WARNING : Balancing setpoint saturated')
+                self.balancing_setpoint = self.balancing_setpoint_sat
+
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
@@ -1210,7 +1233,7 @@ class Controller(object):
         else:
             print("Conditions too extreme, bike probably felt down, turning off motors.")
             self.stop()
-            
+
 
     ####################################################################################################################
     ####################################################################################################################
@@ -1240,13 +1263,13 @@ class Controller(object):
         else:
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
-        self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
+        self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'FilteredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'imu_read_timing', 'SteerMotorCurrent']
 
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
         if gps_use:
-            self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated', 'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'latitude', 'longitude', 'lat_estimated', 'lon_estimated','status','NMEA timestamp']
+            self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated', 'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'theta_GPS', 'theta_GPS_noUnwrap', 'latitude', 'longitude', 'lat_estimated', 'lon_estimated','status','NMEA timestamp']
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
         if path_tracking:
@@ -1264,6 +1287,7 @@ class Controller(object):
             "{0:.5f}".format(self.time_count),
             "{0:.5f}".format(self.loop_time),
             "{0:.5f}".format(self.velocity_rec),
+            "{0:.5f}".format(self.velocity),
             "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_balance.Kp,self.pid_balance.Ki,self.pid_balance.Kd),
             "[{0:.5f},{1:.5f},{2:.5f}]".format(self.pid_balance_outerloop.Kp,self.pid_balance_outerloop.Ki,self.pid_balance_outerloop.Kd),
             "{0:.5f}".format(self.roll),
@@ -1292,6 +1316,8 @@ class Controller(object):
                 "{0:.5f}".format(self.gps_timestamp),
                 "{0:.5f}".format(self.x_measured_GPS),
                 "{0:.5f}".format(self.y_measured_GPS),
+                "{0:.5f}".format(self.theta_measured_GPS),
+                "{0:.5f}".format(self.theta_measured_GPS_noUnwrap),
                 "{0:.5f}".format(self.lat_measured_GPS),
                 "{0:.5f}".format(self.lon_measured_GPS),
                 "{0:.8f}".format(self.lat_estimated),
@@ -1384,12 +1410,12 @@ class Controller(object):
         self.writer = csv.writer(results_csv)
 
         self.log_header_str = ['Time', 'lat_estimated', 'lon_estimated', 'latitude', 'longitude', 'RealTime',
-                               'CalculationTime', 'MeasuredVelocity', 'Roll', 'SteeringAngle', 'RollRate', 'gy', 'gz',
+                               'CalculationTime', 'MeasuredVelocity', 'FilteredVelocity', 'Roll', 'SteeringAngle', 'RollRate', 'gy', 'gz',
                                'ax', 'ay', 'az', 'imu_read_timing']
 
         if gps_use:
             self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated',
-                                    'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'status', 'NMEA timestamp']
+                                    'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'theta_GPS', 'theta_GPS_noUnwrap', 'status', 'NMEA timestamp']
 
         self.writer.writerow(self.log_header_str)
 
@@ -1407,6 +1433,7 @@ class Controller(object):
             datetime.now().strftime("%H:%M:%S.%f"),
             "{0:.5f}".format(self.loop_time),
             "{0:.5f}".format(self.velocity_rec),
+            "{0:.5f}".format(self.velocity),
             "{0:.5f}".format(self.roll),
             "{0:.5f}".format(self.steeringAngle),
             "{0:.5f}".format(self.rollRate_rec),
@@ -1428,6 +1455,8 @@ class Controller(object):
                 "{0:.5f}".format(self.gps_timestamp),
                 "{0:.5f}".format(self.x_measured_GPS),
                 "{0:.5f}".format(self.y_measured_GPS),
+                "{0:.5f}".format(self.theta_measured_GPS),
+                "{0:.5f}".format(self.theta_measured_GPS_noUnwrap),
                 self.gps_status,
                 self.gps_nmea_timestamp
             ]
