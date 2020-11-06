@@ -223,6 +223,7 @@ pid_balance_outerloop_sample_time = 1.0 / controller_frequency
 
 ########################################################################################################################
 # Path Tracking
+max_rollref = 6 # [deg] maximum roll reference to be set by path tracking controller
 # Controller gains can be speed dependant if they are arrays with multiple values
 # If they contain a single value they are not speed dependant
 PATH_TYPE = 'NONE'  # [NONE, CIRCLE, STRAIGHT]

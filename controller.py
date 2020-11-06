@@ -1095,7 +1095,7 @@ class Controller(object):
                     self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
 
                 # Saturation of balancing setpoint
-                self.balancing_setpoint_sat = max(min(self.balancing_setpoint,15*deg2rad),-15*deg2rad)
+                self.balancing_setpoint_sat = max(min(self.balancing_setpoint,max_rollref*deg2rad),-max_rollref*deg2rad)
                 if self.balancing_setpoint_sat != self.balancing_setpoint:
                     print('WARNING : Balancing setpoint saturated')
                 self.balancing_setpoint = self.balancing_setpoint_sat
