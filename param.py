@@ -25,7 +25,7 @@ speed_up_time = 3.0                             # [s] Time to run the drive moto
 walk_time = 2.0                                 # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
 max_exceed_count = 10                           # Number of times where calculation time can exceed sampling time before aborting experiment
 
-path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
 path_tracking_structure = 'series'            # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
@@ -52,7 +52,7 @@ laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
 virtual_odometer = 0
 
 # Roll Reference Tracking:
-roll_ref_use = 0
+roll_ref_use = 1
 roll_ref_step_imp_flag = 0  # 0 means step, 1 means impulse
 rol_ref_periodic = 0
 
@@ -82,14 +82,14 @@ path_file = 'newest'
 # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 # rollref_file = 'rollref_test1.csv'
 # rollref_file = 'roll_ref_sqr_5.csv'
-rollref_file = 'nofile'
+# rollref_file = 'nofile'
 
 # rollref_file = 'roll_ref_randMagPM10degLP5.csv' # LP 5-30 PM 2-10
 #rollref_file = 'roll_Uref_MagPM3LP5.csv' # LP 5-30 PM 2-10
 #rollref_file = 'roll_Uref_MagPM6LP5.csv' # LP 5-30 PM 2-10
 # rollref_file = 'roll_Uref_MagPM9LP5.csv' # LP 5-30 PM 2-10
 
-# rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
+rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
 
 # rollref_file = 'roll_ref_2deg.csv'      # Right
 # rollref_file = 'roll_ref_4deg.csv'

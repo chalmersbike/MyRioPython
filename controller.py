@@ -27,7 +27,8 @@ class Controller(object):
         self.variable_init()
 
         # Check Estop before starting the experiment
-        self.initial_Estop_Check()  # Check if the Estop Engaged
+        if not recordPath:
+            self.initial_Estop_Check()  # Check if the Estop Engaged
 
         # Load path
         if path_tracking and path_file != 'pot':
@@ -396,31 +397,32 @@ class Controller(object):
             
 
 
-            # Check for ESTOP
-            self.ESTOP = self.bike.emergency_stop_check()
-            if self.ESTOP:
-                exc_msg = 'Emergency stop pressed, aborting the experiment'
-                print(exc_msg)
-                self.exception_log(0,exc_msg)
-                self.safe_stop()
-                break
+            if not recordPath:
+                # Check for ESTOP
+                self.ESTOP = self.bike.emergency_stop_check()
+                if self.ESTOP:
+                    exc_msg = 'Emergency stop pressed, aborting the experiment'
+                    print(exc_msg)
+                    self.exception_log(0,exc_msg)
+                    self.safe_stop()
+                    break
 
-            # Check for extreme PHI
-            if self.roll > MAX_LEAN_ANGLE or self.roll < MIN_LEAN_ANGLE:
-                self.safe_stop()
-                exc_msg = 'Exceeded min/max lean (roll) angle abs %3f > abs %3f, aborting the experiment' %(self.roll, MAX_LEAN_ANGLE)
-                print(exc_msg)
-                self.exception_log(2, exc_msg)
+                # Check for extreme PHI
+                if self.roll > MAX_LEAN_ANGLE or self.roll < MIN_LEAN_ANGLE:
+                    self.safe_stop()
+                    exc_msg = 'Exceeded min/max lean (roll) angle abs %3f > abs %3f, aborting the experiment' %(self.roll, MAX_LEAN_ANGLE)
+                    print(exc_msg)
+                    self.exception_log(2, exc_msg)
 
 
-            # End test time condition
-            if self.time_count > test_duration:
-                # Print number of times sampling time was exceeded if experiment is aborted early
-                self.safe_stop()
-                exc_msg = 'Exceeded test duration, aborting the experiment'
-                print(exc_msg)
-                self.exception_log(-1, exc_msg)
-                break
+                # End test time condition
+                if self.time_count > test_duration:
+                    # Print number of times sampling time was exceeded if experiment is aborted early
+                    self.safe_stop()
+                    exc_msg = 'Exceeded test duration, aborting the experiment'
+                    print(exc_msg)
+                    self.exception_log(-1, exc_msg)
+                    break
 
             # Log data
             if not self.recordPath:

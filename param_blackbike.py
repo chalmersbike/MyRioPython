@@ -242,6 +242,7 @@ path_choice = 'pot'
 pid_lateral_position_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 pid_lateral_position_P = -1e-1
 pid_lateral_position_I = -0e-2
+# pid_lateral_position_I = -1e-2
 pid_lateral_position_D = -0e-1
 pid_lateral_position_sample_time = 1.0 / controller_frequency
 
