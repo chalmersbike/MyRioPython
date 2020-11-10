@@ -397,7 +397,7 @@ class Controller(object):
             
 
 
-            if not recordPath:
+            if not self.recordPath:
                 # Check for ESTOP
                 self.ESTOP = self.bike.emergency_stop_check()
                 if self.ESTOP:
@@ -916,7 +916,7 @@ class Controller(object):
         if self.ESTOP:
             print('Emergency stop pressed, the experiment will be aborted if it is not released now')
             input_estop = raw_input('Press ENTER to continue')
-            if input_estop:
+            if self.ESTOP:
                 self.safe_stop()
                 exc_msg = 'Emergency stop was not released, aborting the experiment before it starts'
                 print(exc_msg)

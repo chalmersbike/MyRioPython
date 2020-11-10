@@ -191,6 +191,9 @@ class GPS(object):
         # Process data
         for i in range(0, len(readall) - 1):
             line = readall[i]      # Extract one NMEA sentence from the received data
+
+            # print(line)
+
             line = line.split("*") # Remove "*", the final character of a NMEA sentence
             checksum = line[1]     # Get the checksum
 
