@@ -1,13 +1,18 @@
 import sys
 import os
 sys.path.append(sys.path[0]+'/../../')
-os.chdir("../../")
-import param
+# os.chdir("../../")
+# os.chdir("./")
+pwd = os.system("pwd")
+print (pwd)
+
 from sensors import IMU
 import Adafruit_BBIO.GPIO as GPIO
 
 import time
 import csv
+
+import param
 
 # Data logging setup
 timestr = time.strftime("%Y%m%d-%H%M%S")
@@ -28,11 +33,12 @@ class Test(object):
         for x in range(1,int(number_samples_IMU)+1):
             loop_start_time = time.time()
             # [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
-            self.imudata = self.a_imu.get_imu_data()
+            self.imudata = self.a_imu.get_imu_data(0,0,0)
             print 'Time = %g\tPhi = %g\tGx = %g\tAx = %g\tAy = %g\tAz = %g\tPhi_gyro = %g\n' % (time.time() - start_time, self.imudata[0], self.imudata[2], self.imudata[5], self.imudata[6], self.imudata[7], self.imudata[1])
 
             # Write to CSV file
             writer_a_imu.writerow((time.time() - start_time, self.imudata[0], self.imudata[2], self.imudata[5], self.imudata[6], self.imudata[7], self.imudata[1]))
-            if (0.01-time.time()+loop_start_time) > 0:
-                time.sleep(0.01-time.time()+loop_start_time)
+            time.sleep(0.01)
+            # if (0.01-time.time()+loop_start_time) > 0:
+            #     time.sleep(0.01-time.time()+loop_start_time)
 test = Test()

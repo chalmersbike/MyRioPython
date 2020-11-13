@@ -19,15 +19,17 @@ import os
 # @pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
-    def __init__(self, bike, recordPath=False):
+    def __init__(self, bike, recordPath=False, reverse=False, straight=False):
         self.bike = bike
 
         self.recordPath = recordPath
+        self.reverse = reverse
+        self.straight = straight
 
         self.variable_init()
 
         # Check Estop before starting the experiment
-        if not recordPath:
+        if not self.recordPath:
             self.initial_Estop_Check()  # Check if the Estop Engaged
 
         # Load path
@@ -59,6 +61,13 @@ class Controller(object):
                     # Compute XY path
                     self.path_lat = self.path_data[:,1]
                     self.path_lon = self.path_data[:,2]
+
+                    # Reverse path is needed
+                    if self.reverse:
+                        print('Reading path in self.reverse ...')
+                        self.path_lon = self.path_lon[::-1]
+                        self.path_lat = self.path_lat[::-1]
+
                     self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
                     self.path_y = R * self.path_lat * deg2rad
                     # self.path_x = self.path_x - self.path_x[0]
@@ -91,6 +100,7 @@ class Controller(object):
             print(self.path_lon)
             print(self.path_x)
             print(self.path_y)
+            print(self.path_heading)
 
         # Load roll reference
         if rollref_file != 'nofile':
@@ -205,7 +215,7 @@ class Controller(object):
                 # Estimate states (v, yaw, heading, x, y)
                 if self.compute_estimators_flag:# and (self.time_count >= walk_time):
                     self.estimate_states()
-                    self.compute_estimators_flag = False
+                    # self.compute_estimators_flag = False
 
                 # Get position from GPS
                 if gps_use:
@@ -385,6 +395,9 @@ class Controller(object):
                 print(e)
                 print(traceback.print_exc())
 
+                if self.straight:
+                    self.log_regular_recordPath()
+
                 self.safe_stop()
                 exc_msg = 'Error or keyboard interrupt, aborting the experiment'
                 print(exc_msg)
@@ -427,7 +440,8 @@ class Controller(object):
             # Log data
             if not self.recordPath:
                 self.log_regular()
-            else:
+            # else:
+            elif not self.straight:
                 self.log_regular_recordPath()
 
             # Compute total time for current loop
@@ -1065,8 +1079,9 @@ class Controller(object):
             self.heading_error = self.heading_error
             # self.heading_error = self.heading_error % (2*np.pi)
 
-            if (time.time() - self.time_pathtracking) > 10 * sample_time:
-                self.time_pathtracking = time.time()
+            # if (time.time() - self.time_pathtracking) > 10 * sample_time:
+            if 1:
+                    self.time_pathtracking = time.time()
 
                 if path_tracking_structure == 'parallel':
                     # PID Lateral Position Controller
@@ -1096,11 +1111,11 @@ class Controller(object):
                     # Compute balancing setpoint
                     self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
 
-                # Saturation of balancing setpoint
-                self.balancing_setpoint_sat = max(min(self.balancing_setpoint,max_rollref*deg2rad),-max_rollref*deg2rad)
-                if self.balancing_setpoint_sat != self.balancing_setpoint:
-                    print('WARNING : Balancing setpoint saturated')
-                self.balancing_setpoint = self.balancing_setpoint_sat
+            # Saturation of balancing setpoint
+            self.balancing_setpoint_sat = max(min(self.balancing_setpoint,max_rollref*deg2rad),-max_rollref*deg2rad)
+            if self.balancing_setpoint_sat != self.balancing_setpoint:
+                print('WARNING : Balancing setpoint saturated')
+            self.balancing_setpoint = self.balancing_setpoint_sat
 
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
@@ -1229,9 +1244,11 @@ class Controller(object):
     # Exit the code safely and put bike on a stable circle with a 5deg constant roll reference
     def safe_stop(self):
         if (abs(self.roll) < 30 * deg2rad and abs(self.steeringAngle) < 40 * deg2rad):
-            print("Bike was in unsafe conditions or the code stopped. Putting the bike in a stable circle with a 5deg constant roll reference.")
-            self.balancing_setpoint = 5*deg2rad*np.sign(self.roll)
-            self.keep_the_bike_stable()
+            # print("Bike was in unsafe conditions or the code stopped. Putting the bike in a stable circle with a 5deg constant roll reference.")
+            # self.balancing_setpoint = 5*deg2rad*np.sign(self.roll)
+            # self.keep_the_bike_stable()
+            print("Bike was in unsafe conditions or the code stopped. Stopping the bike and disabling motors.")
+            self.stop()
         else:
             print("Conditions too extreme, bike probably felt down, turning off motors.")
             self.stop()

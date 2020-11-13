@@ -1,1 +1,0 @@
-Time,lat_estimated,lon_estimated,latitude,longitude,RealTime,CalculationTime,MeasuredVelocity,FilteredVelocity,Roll,SteeringAngle,RollRate,gy,gz,ax,ay,az,imu_read_timing,v_estimated,yaw_estimated,heading_estimated,x_estimated,y_estimated,GPS_timestamp,x_GPS,y_GPS,theta_GPS,theta_GPS_noUnwrap,status,NMEA timestamp

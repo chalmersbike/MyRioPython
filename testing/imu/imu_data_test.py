@@ -3,7 +3,10 @@ import sys
 import time
 import os
 # sys.path.append('../../')
-os.chdir("../../")
+# os.chdir("../../")
+# sys.path.append(sys.path[0]+'/../../')
+pwd = os.system("pwd")
+print (pwd)
 from bike import Bike
 
 bike = Bike()

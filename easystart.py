@@ -4,10 +4,26 @@ from bike import Bike
 from controller import Controller
 import Adafruit_BBIO.GPIO as GPIO
 from actuators import DriveMotor, SteeringMotor
+import sys
+import getopt
 # import pysnooper
 
 try:
-    bike = Bike(debug=False,recordPath=False)
+    # Get the command line arguments
+    reverse = False
+    try:
+        opts, args = getopt.getopt(sys.argv, "hr", ["reverse"])
+    except getopt.GetoptError:
+        print 'easystart.py -r'
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print 'easystart.py -r'
+            sys.exit()
+        elif opt in ("-r", "--reverse"):
+            reverse = True
+
+    bike = Bike(debug=False,recordPath=False,reverse=reverse)
 except (ValueError, KeyboardInterrupt):
     rearmotor = DriveMotor()
     rearmotor.stop()
