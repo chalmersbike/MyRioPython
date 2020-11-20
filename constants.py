@@ -18,5 +18,5 @@ kmph2mps = 3.6
 mps2kmph = 1.0 / kmph2mps
 
 ########################################################################################################################
-LENGTH_A = 0.325  # distance from rear wheel to COM
-LENGTH_B = 1.095  # length between wheel centers
+# LENGTH_A = 0.325  # distance from rear wheel to COM
+# LENGTH_B = 1.095  # length between wheel centers

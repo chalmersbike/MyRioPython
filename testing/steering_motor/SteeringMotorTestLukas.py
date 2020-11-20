@@ -35,10 +35,10 @@ class Test(object):
             input2 = raw_input('Enter the desired self.angle! The test will start afterwards! ')
             self.angle = float(input2)
             # Setup CSV file
-            #results_steering_motor = open('Tests_Lukas/%s-SensorTest_Lukas_SteeringMotor.csv' % timestr, 'wb')
-            #self.writer_steering_motor = csv.writer(results_steering_motor)
-            #self.writer_steering_motor.writerow(('Time (s)\t', 'tdelta (deg)\t' , 'Angular velocity (deg/s)\t'))
-            self.start_time = time.time()
+            # results_steering_motor = open('Tests_Lukas/%s-SensorTest_Lukas_SteeringMotor.csv' % timestr, 'wb')
+            # self.writer_steering_motor = csv.writer(results_steering_motor)
+            # self.writer_steering_motor.writerow(('Time (s)\t', 'tdelta (deg)\t' , 'Angular velocity (deg/s)\t'))
+            # self.start_time = time.time()
 
             # Enable steering motor
             self.steering_motor_drive.enable()
@@ -51,9 +51,9 @@ class Test(object):
 
                     print 'Time=%f,\t delta = %f,\t I = %f\t' % (self.time_now - self.start_time, 57.29577 * self.steeringAngle,self.steeringCurrent)
                     # Write to CSV file
-                    #self.writer_steering_motor.writerow((time.time() - self.start_time, 57.29577 *self.steeringAngle, 57.29577*self.angular_velocity))
-                    # self.steering_motor_drive.set_angular_velocity(self.angular_velocity)  #will cause the motor to rotate the wheel to the right
-                    self.steering_motor_drive.set_PWM_duty_cycle(10)
+                    # self.writer_steering_motor.writerow((time.time() - self.start_time, 57.29577 *self.steeringAngle, 57.29577*self.angular_velocity))
+                    self.steering_motor_drive.set_angular_velocity(self.angular_velocity)  #will cause the motor to rotate the wheel to the right
+                    # self.steering_motor_drive.set_PWM_duty_cycle(10)
 
                     # self.writer_steering.writerow((time.time() - self.start_time, self.steeringAngle, self.steeringCurrent))
                     self.log_str = [
@@ -72,9 +72,9 @@ class Test(object):
                     print 'Time=%f,\t tdelta = %f,\t Angular Velocity = %f\t' % (
                     self.time_now - self.start_time, 57.29577 * self.steeringAngle, 57.29577*self.angular_velocity)
                     # Write to CSV file
-                    #self.writer_steering_motor.writerow((time.time() - self.start_time, 57.29577 *self.steeringAngle, 57.29577*self.angular_velocity))
-                    # self.steering_motor_drive.set_angular_velocity(-self.angular_velocity)  #will cause the motor to rotate the wheel to the right
-                    self.steering_motor_drive.set_PWM_duty_cycle(55)
+                    # self.writer_steering_motor.writerow((time.time() - self.start_time, 57.29577 *self.steeringAngle, 57.29577*self.angular_velocity))
+                    self.steering_motor_drive.set_angular_velocity(-self.angular_velocity)  #will cause the motor to rotate the wheel to the right
+                    # self.steering_motor_drive.set_PWM_duty_cycle(55)
 
                     # self.writer_steering.writerow((time.time() - self.start_time, self.steeringAngle, self.steeringCurrent))
                     self.log_str = [

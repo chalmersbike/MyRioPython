@@ -1,11 +1,16 @@
 from math import pi as PI
 import numpy as np
 from param import initial_speed, controller_frequency
+from constants import *
 
 
 ########################################################################################################################
 # Bike Parameters
-b = 1.095                                   # [m] Distance between wheel centers
+# b = 1.095                                   # [m] Distance between wheel centers
+# LENGTH_A = 0.325  # [m] Distance from rear wheel to COM
+LENGTH_A = 0.6687  # [m] Distance from rear wheel to COM
+LENGTH_B = 1.15   # [m] Distance between wheel centers
+lambda_bike = 66*deg2rad # [rad] Angle of the fork axis
 
 # Wheel
 wheel_diameter = 0.694                      # [m] Wheel diameter
@@ -101,6 +106,10 @@ ntrip_mountpoint = "RTCM3_GNSS"         # NTRIP Mountpoint
 ntrip_username = "ChalmersE2RTK"        # Username to connect to NTRIP caster
 ntrip_password = "885511"               # Password to connect to NTRIP caster
 ntrip_verbose = 0                       # 1 = NTRIP library is verbose (will output extra information) ; 0 = not verbose
+
+antenna_offset_x = LENGTH_A - 0.1       # [m] Distance from antenna to center of mass on x-axis
+antenna_offset_y = 0.0                  # [m] Distance from antenna to center of mass on y-axis
+
 
 ########################################################################################################################
 # Hall Sensor
@@ -215,7 +224,8 @@ pid_balance_sample_time = 1.0 / controller_frequency
 # PID Balance Outer Loop Controller Parameters
 pid_balance_outerloop_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 #pid_balance_outerloop_P = 0.57
-pid_balance_outerloop_P = 1.0 # Gain tested with Peo
+# pid_balance_outerloop_P = 1.0 # Gain tested with Peo
+pid_balance_outerloop_P = 1.3 # Gain tested with Peo
 pid_balance_outerloop_I = 0.0
 pid_balance_outerloop_D = 0.0
 pid_balance_outerloop_sample_time = 1.0 / controller_frequency

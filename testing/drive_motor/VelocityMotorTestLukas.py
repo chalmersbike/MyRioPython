@@ -18,9 +18,9 @@ class Test(object):
         input1 = raw_input('Input a velocity between 1 and 5 m/s, the test will last 20 secs ')
         self.rear_motor_velocity = DriveMotor()
         # Setup CSV file
-        #results_velocity = open('Tests_Lukas/%s-SensorTest_Lukas_Velocity_Motor.csv' % timestr, 'wb')
-        #writer_velocity = csv.writer(results_velocity)
-        #writer_velocity.writerow(('Time (s)', 'Set velocity (m/s)', 'Actual Velocity (m/s)', 'Current (A)', 'RPM (1/s)'))
+        results_velocity = open('Tests_Lukas/%s-SensorTest_Lukas_Velocity_Motor.csv' % timestr, 'wb')
+        writer_velocity = csv.writer(results_velocity)
+        writer_velocity.writerow(('Time (s)', 'Set velocity (m/s)', 'Measured Velocity (m/s)'))
         if not input1:
             print 'Press enter to exit'
             exit()
@@ -39,7 +39,7 @@ class Test(object):
                 self.rear_motor_velocity.set_velocity(input_velocity)
                 print 'Time=%f\t Vel = %f\t' % (time_now-start_time, self.hall_sensor.get_velocity())
                 # Write to CSV file
-                #writer_velocity.writerow((time_now - start_time, input_velocity, self.hall_sensor.get_velocity()))
+                writer_velocity.writerow((time_now - start_time, input_velocity, self.hall_sensor.get_velocity()))
             self.rear_motor_velocity.stop()
 
 test = Test()

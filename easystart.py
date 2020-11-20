@@ -11,19 +11,22 @@ import getopt
 try:
     # Get the command line arguments
     reverse = False
+    straight = False
     try:
-        opts, args = getopt.getopt(sys.argv, "hr", ["reverse"])
+        opts, args = getopt.getopt(sys.argv[1:], "hrs", ["reverse","straight"])
     except getopt.GetoptError:
-        print 'easystart.py -r'
+        print 'easystart.py -r -s'
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print 'easystart.py -r'
+            print 'easystart.py -r -s'
             sys.exit()
+        elif opt in ("-s", "--straight"):
+            straight = True
         elif opt in ("-r", "--reverse"):
             reverse = True
 
-    bike = Bike(debug=False,recordPath=False,reverse=reverse)
+    bike = Bike(debug=False,recordPath=False,reverse=reverse,straight=straight)
 except (ValueError, KeyboardInterrupt):
     rearmotor = DriveMotor()
     rearmotor.stop()

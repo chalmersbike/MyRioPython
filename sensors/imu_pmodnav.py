@@ -210,7 +210,7 @@ class IMU(object):
         #     gx = self.prev_reading[2]
 
 
-        CP_acc_g = ((velocity ** 2) / b) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
+        CP_acc_g = ((velocity ** 2) / LENGTH_B) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
         self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi), az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
         # self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
 

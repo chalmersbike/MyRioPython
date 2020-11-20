@@ -70,14 +70,18 @@ class Controller(object):
 
                     self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
                     self.path_y = R * self.path_lat * deg2rad
-                    # self.path_x = self.path_x - self.path_x[0]
-                    # self.path_y = self.path_y - self.path_y[0]
-                    self.path_x = self.path_x - self.bike.gps.x0
-                    self.path_y = self.path_y - self.bike.gps.y0
+                    self.path_x = self.path_x - self.path_x[0]
+                    self.path_y = self.path_y - self.path_y[0]
+                    # self.path_x = self.path_x - self.bike.gps.x0
+                    # self.path_y = self.path_y - self.bike.gps.y0
 
                     # Downsample from 10Hz to 1Hz
                     self.path_x = self.path_x[0::10]
                     self.path_y = self.path_y[0::10]
+
+                    if self.straight:
+                        self.path_x = np.array([self.path_x[0],self.path_x[-1]])
+                        self.path_y = np.array([self.path_y[0],self.path_y[-1]])
 
                     # Compute heading
                     self.path_heading = np.arctan2(self.path_y[1:] - self.path_y[0:-1], (self.path_x[1:] - self.path_x[0:-1]))
@@ -96,11 +100,11 @@ class Controller(object):
             self.path_distanceTravelled = np.cumsum(np.sqrt((self.path_x[1:] - self.path_x[0:-1])**2 + (self.path_y[1:] - self.path_y[0:-1])**2))
             self.path_distanceTravelled = np.append(0,self.path_distanceTravelled)
 
-            print(self.path_lat)
-            print(self.path_lon)
-            print(self.path_x)
-            print(self.path_y)
-            print(self.path_heading)
+            # print(self.path_lat)
+            # print(self.path_lon)
+            # print(self.path_x)
+            # print(self.path_y)
+            # print(self.path_heading)
 
         # Load roll reference
         if rollref_file != 'nofile':
@@ -186,6 +190,7 @@ class Controller(object):
 
             try:
                 # Get velocity
+                self.velocity_previous = self.velocity
                 self.velocity = self.bike.get_velocity()
                 self.velocity_rec = self.velocity
                 if self.broken_speed_flag:
@@ -198,7 +203,6 @@ class Controller(object):
                             time.time() - self.gaining_speed_start))
                     self.velocity = 1.5 + self.velocity
                     self.velocity = self.velocity_previous
-                self.velocity_previous = self.velocity
 
                 # Get states
                 self.time_get_states = time.time()
@@ -220,9 +224,13 @@ class Controller(object):
                 # Get position from GPS
                 if gps_use:
                     if ((time.time() - self.gaining_speed_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate or self.gps_timestamp <= 0.01:
+                        self.gps_timestamp_previous = self.gps_timestamp
+
                         # self.bike.get_gps_data()
                         self.time_gps = time.time()
                         self.gps_read()
+
+                        # self.compute_steering_offset_flag = True
 
                         if self.gps_nmea_timestamp_ini == 0.0:
                             self.gps_nmea_timestamp_ini = self.gps_nmea_timestamp
@@ -252,6 +260,45 @@ class Controller(object):
                             self.heading_estimated_previous = self.heading_estimated
                             self.yaw_estimated = self.heading_estimated - self.beta
                             self.yaw_estimated_previous = self.yaw_estimated
+
+                        # Estimate steering angle offset from GPS position
+                        # speed_up_time + walk_time
+                        if not self.steering_angle_offset_computed_flag:
+                            try:
+                                # Rotate path to get small heading angle
+                                self.y_GPS_rot_previous = self.y_GPS_rot
+                                rotMatrix = np.array([[np.cos(-self.theta_measured_GPS), -np.sin(-self.theta_measured_GPS)], [np.sin(-self.theta_measured_GPS), np.cos(-self.theta_measured_GPS)]])
+                                self.pos_GPS_rot = np.dot(rotMatrix,self.pos_GPS)
+                                self.y_GPS_rot = self.pos_GPS_rot[1,:]
+
+                                self.velocity_previous = 1.5
+                                self.velocity = 1.5
+                                # self.steeringAngle_previous = 0.02
+                                # self.steeringAngle = 0.02
+                                # self.y_measured_GPS_previous = self.y_measured_GPS - 0.03
+                                # self.gps_timestamp_previous = self.gps_timestamp - 0.1
+
+                                self.steering_angle_offset += (1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt))
+                                self.cumsum_v_dt += self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous)
+                                self.cumsum_delta_v_dt += self.steeringAngle_previous * self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous)
+
+                                self.steering_angle_offset_count = self.steering_angle_offset_count + 1
+
+
+                                # print self.velocity_previous
+                                # print self.steeringAngle_previous
+                                # print (self.gps_timestamp - self.gps_timestamp_previous)
+                                # print self.cumsum_v_dt
+                                # print self.cumsum_delta_v_dt
+                                # print((1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt)))
+                                # print self.steering_angle_offset_count
+
+                                self.compute_steering_offset_flag = False
+                            except:
+                                self.steering_angle_offset += 0.0
+
+                                self.compute_steering_offset_flag = False
+
                 else:
                     self.x_measured_GPS = 0.0
                     self.y_measured_GPS = 0.0
@@ -290,11 +337,23 @@ class Controller(object):
 
                     self.bike.steering_motor.disable()
 
-                    # Estimate steering angle offset from mean of steering angle during walk
-                    self.steering_angle_offset = self.steering_angle_offset + self.steeringAngle
-                    self.steering_angle_offset_count = self.steering_angle_offset_count + 1
+                    # [OLD METHOD - CHANGED TO USE GPS POSITION OVER 5s] Estimate steering angle offset from mean of steering angle during walk
+                    # self.steering_angle_offset = self.steering_angle_offset + self.steeringAngle
+                    # self.steering_angle_offset_count = self.steering_angle_offset_count + 1
+
                 elif (self.time_count < speed_up_time+walk_time and self.time_count >= walk_time) and not self.gainingSpeedOver_flag:
-                    # Compute mean of steering angle during walk
+                    # Do not start controllers until bike ran for enough time to get up to speed
+                    # self.bike.steering_motor.enable()
+                    self.bike.steering_motor.disable()
+
+                    if not self.speed_up_message_printed_flag:
+                        self.speed_up_message_printed_flag = True
+                        print('Gaining speed ...')
+
+                    if not self.recordPath:
+                        self.bike.set_velocity(initial_speed)
+                elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
+                    # Compute mean of steering angle during first 5s
                     if not self.steering_angle_offset_computed_flag:
                         self.steering_angle_offset_computed_flag = True
                         self.steering_angle_offset = self.steering_angle_offset / self.steering_angle_offset_count
@@ -318,18 +377,6 @@ class Controller(object):
 
                         # Set GPS heading
                         # self.theta_measured_GPS = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)
-
-                    # Do not start controllers until bike ran for enough time to get up to speed
-                    # self.bike.steering_motor.enable()
-                    self.bike.steering_motor.disable()
-
-                    if not self.speed_up_message_printed_flag:
-                        self.speed_up_message_printed_flag = True
-                        print('Gaining speed ...')
-
-                    if not self.recordPath:
-                        self.bike.set_velocity(initial_speed)
-                elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
                     # Once enough time has passed, start controller
                     self.gainingSpeedOver_flag = True
                     print('Gaining speed phase over')
@@ -395,9 +442,6 @@ class Controller(object):
                 print(e)
                 print(traceback.print_exc())
 
-                if self.straight:
-                    self.log_regular_recordPath()
-
                 self.safe_stop()
                 exc_msg = 'Error or keyboard interrupt, aborting the experiment'
                 print(exc_msg)
@@ -441,7 +485,7 @@ class Controller(object):
             if not self.recordPath:
                 self.log_regular()
             # else:
-            elif not self.straight:
+            else:
                 self.log_regular_recordPath()
 
             # Compute total time for current loop
@@ -449,6 +493,8 @@ class Controller(object):
             # Sleep to match sampling time
             if self.loop_time < sample_time:
                 time.sleep((sample_time - self.loop_time))
+
+            self.time_start_previous_loop = self.time_start_current_loop
 
             # Distance travelled
             self.distance_travelled += self.velocity * (time.time() - self.time_start_current_loop)
@@ -502,6 +548,7 @@ class Controller(object):
         self.gps_status = 'No status'
         self.gps_timestamp = 0.0
         self.theta_measured_GPS = 0.0
+        self.theta_measured_GPS_noUnwrap = 0.0
         self.x_measured_GPS_previous = 0.0
         self.y_measured_GPS_previous = 0.0
         self.pos_GPS_previous = np.matrix([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
@@ -579,6 +626,10 @@ class Controller(object):
         self.steering_angle_offset = 0
         self.steering_angle_offset_count = 0
         self.steering_angle_offset_computed_flag = False
+        self.cumsum_v_dt = 0.0
+        self.cumsum_delta_v_dt = 0.0
+        self.y_GPS_rot_previous = 0.0
+        self.y_GPS_rot = 0.0
 
         # Controller
         self.controller_active = False
@@ -708,13 +759,14 @@ class Controller(object):
     ####################################################################################################################
     # Get bike states
     def get_states(self):
+        self.steeringAngle_previous = self.steeringAngle
         self.steeringAngle = self.bike.get_handlebar_angle()
         if self.steeringAngle > MAX_HANDLEBAR_ANGLE or self.steeringAngle < MIN_HANDLEBAR_ANGLE:
             print('WARNING : [%f] Steering angle exceeded limits' % (
                     time.time() - self.gaining_speed_start))
 
         if self.steering_angle_offset_computed_flag:
-            self.steeringAngle = self.steeringAngle - self.steering_angle_offset
+            self.steeringAngle = self.steeringAngle + self.steering_angle_offset
 
         self.steeringCurrent = self.bike.steering_motor.read_steer_current()
 
@@ -837,6 +889,10 @@ class Controller(object):
             else:
                 self.theta_measured_GPS = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
 
+
+            # Remove offset from antenna not being placed on center of mass
+            # self.x_mea
+
             # Read GPS status if it exists
             if len(self.gpspos) >= 5:
                 self.gps_status = self.gpspos[4]
@@ -945,7 +1001,7 @@ class Controller(object):
         # print('vel = %f' % (self.velocity))
 
         if len(speed_lookup_controllergains):
-            self.idx_speed_lookup = bisect.bisect_left(self.speed_lookup_controllergains_np, self.velocity) + np.array([-1, 0])
+            self.idx_speed_lookup = bisect.bisect_right(self.speed_lookup_controllergains_np, self.velocity) + np.array([-1, 0])
             print('idx_speed_lookup = ' + np.array2string(self.idx_speed_lookup))
             print(self.speed_lookup_controllergains_np[self.idx_speed_lookup])
 
@@ -1005,7 +1061,7 @@ class Controller(object):
         if path_tracking and not self.path_tracking_engaged:
             if time.time()-self.time_start_controller > balancing_time:
                 self.path_tracking_engaged = True
-                self.reset_global_angles_and_coordinates()
+                # self.reset_global_angles_and_coordinates()
                 print "Now heading or path tracking is engaged."
         if self.path_tracking_engaged:
             # Get reference position and heading
@@ -1023,7 +1079,7 @@ class Controller(object):
                     self.y_ref = self.path_y[-1]
                     self.heading_ref = self.path_heading[-1]
                 else:
-                    idx_path_currentDistanceTravelled = bisect.bisect_left(self.path_distanceTravelled,self.distance_travelled)+np.array([-1,0])
+                    idx_path_currentDistanceTravelled = bisect.bisect_right(self.path_distanceTravelled,self.distance_travelled)+np.array([-1,0])
                     self.x_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_x[idx_path_currentDistanceTravelled])
                     self.y_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_y[idx_path_currentDistanceTravelled])
                     self.heading_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_heading[idx_path_currentDistanceTravelled])
@@ -1033,7 +1089,7 @@ class Controller(object):
             #         self.y_ref = self.path_y[-1]
             #         self.heading_ref = self.path_heading[-1]
             #     else:
-            #         idx_path_currentTime = bisect.bisect_left(self.path_time,time.time() - self.time_start_controller)+np.array([-1,0])
+            #         idx_path_currentTime = bisect.bisect_right(self.path_time,time.time() - self.time_start_controller)+np.array([-1,0])
             #         self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_x[idx_path_currentTime])
             #         self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_y[idx_path_currentTime])
             #         self.heading_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_heading[idx_path_currentTime])
@@ -1075,13 +1131,14 @@ class Controller(object):
             # print('')
 
             # Compute lateral and heading errors
-            self.lateral_error = self.x_error * np.sin(self.heading_ref) + self.y_error * np.cos(self.heading_ref)
+            # self.lateral_error = self.x_error * np.sin(self.heading_ref) + self.y_error * np.cos(self.heading_ref)
+            self.lateral_error = -self.x_error * np.sin(self.heading_ref) + self.y_error * np.cos(self.heading_ref)
             self.heading_error = self.heading_error
             # self.heading_error = self.heading_error % (2*np.pi)
 
             # if (time.time() - self.time_pathtracking) > 10 * sample_time:
             if 1:
-                    self.time_pathtracking = time.time()
+                self.time_pathtracking = time.time()
 
                 if path_tracking_structure == 'parallel':
                     # PID Lateral Position Controller
@@ -1095,7 +1152,8 @@ class Controller(object):
                     self.pid_lateral_position_control_signal = self.pid_lateral_position.update(-self.lateral_error) # Minus sign due to using error and not measurement
                     if heading_controller:
                         # PID Direction/Heading Controller
-                        self.pid_direction.setReference(lateralError_controller * self.pid_lateral_position_control_signal)
+                        # self.pid_direction.setReference(lateralError_controller * self.pid_lateral_position_control_signal)
+                        self.pid_direction.setReference(-lateralError_controller * self.pid_lateral_position_control_signal)
                         self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not measurement
                         # Compute balancing setpoint
                         self.balancing_setpoint = self.pid_direction_control_signal
@@ -1170,7 +1228,7 @@ class Controller(object):
                 else:
                     self.balancing_setpoint = 0
             else:
-                idx_rollref_currentTime = bisect.bisect_left(self.rollref_time, time.time() - self.time_start_controller)+np.array([-1, 0])
+                idx_rollref_currentTime = bisect.bisect_right(self.rollref_time, time.time() - self.time_start_controller)+np.array([-1, 0])
                 if idx_rollref_currentTime[0]  < 0:
                     idx_rollref_currentTime[0] = 0
                 if time.time() - self.time_start_controller >= self.rollref_time[-1]:
@@ -1218,7 +1276,7 @@ class Controller(object):
 
         if strdistbref_file != 'nofile':
             # print('SteeringRate Overwritten')
-            idx_strdistbref_currentTime = bisect.bisect_left(self.strdistbref_time, time.time() - self.time_start_controller) + np.array([-1, 0])
+            idx_strdistbref_currentTime = bisect.bisect_right(self.strdistbref_time, time.time() - self.time_start_controller) + np.array([-1, 0])
             if idx_strdistbref_currentTime[1] >= len(self.strdistbref_time):
                 idx_strdistbref_currentTime = np.array([len(self.strdistbref_time) - 2,len(self.strdistbref_time) - 1])
             if idx_strdistbref_currentTime[0] < 0:

@@ -13,7 +13,7 @@ balancing_controller_structure = 'technion'     # Choice of the balancing contro
                                                     # Technion Controller Structure : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
                                                     # MDH Controller structure : delta = PID(phi) ; deltadot = PID(delta)
 
-initial_speed = 3                               # [m/s] Forward speed of the bike
+initial_speed = 4                               # [m/s] Forward speed of the bike
 
 controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
@@ -64,8 +64,8 @@ rol_ref_periodic = 0
 # Can also be 'pot' to use the potentiometer as y position on the roller
 # Can also be a CSV file with 3 columns : time, lat, lon.
 # Can also be 'newest' to load the most recent lat/lon path from "paths".
-#path_file = 'newest'
-path_file = 'path_20201111-164513.csv'
+path_file = 'newest'
+# path_file = 'path_20201111-164513.csv'
 
 # path_file = 'ramp_heading_path_test_9secs_5deg.csv'
 # path_file = 'step_heading_path_9secs_m5deg.csv'

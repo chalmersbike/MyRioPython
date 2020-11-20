@@ -24,13 +24,13 @@ class Test(object):
             gpspos = gps.get_position()
             writer_gps.writerow((time.time() - start_time, gpspos[0], gpspos[1], gpspos[2], gpspos[3], gpspos[4], gpspos[5]))
 
-            time.sleep(1)
+            time.sleep(0.1)
 
             # print(gps.ser_gps.inWaiting())
             # gps.ser_gps.flushInput()
             # gps.ser_gps.flushOutput()
 
-            # print 'Time=%f\t Temp=%g\tAx = %g\t' % (time.time() - start_time, gpspos[0], gpspos[1])
+            print 'Time=%f\tx=%g\ty = %g\t' % (time.time() - start_time, gpspos[0], gpspos[1])
             # Write to CSV file
 
 test = Test()
