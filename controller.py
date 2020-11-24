@@ -15,6 +15,7 @@ import traceback
 from datetime import datetime
 import glob
 import os
+import dubins
 
 # @pysnooper.snoop()
 class Controller(object):
@@ -80,6 +81,7 @@ class Controller(object):
                     self.path_y = self.path_y[0::10]
 
                     if self.straight:
+                        print('Using only first and last points of path to get a straight line ...')
                         self.path_x = np.array([self.path_x[0],self.path_x[-1]])
                         self.path_y = np.array([self.path_y[0],self.path_y[-1]])
 
@@ -97,14 +99,54 @@ class Controller(object):
                 self.path_x = self.path_data[:,1]
                 self.path_y = self.path_data[:,2]
                 self.path_heading = self.path_data[:,3]
+
             self.path_distanceTravelled = np.cumsum(np.sqrt((self.path_x[1:] - self.path_x[0:-1])**2 + (self.path_y[1:] - self.path_y[0:-1])**2))
             self.path_distanceTravelled = np.append(0,self.path_distanceTravelled)
 
-            # print(self.path_lat)
-            # print(self.path_lon)
-            # print(self.path_x)
-            # print(self.path_y)
-            # print(self.path_heading)
+
+            print(self.path_x)
+            print(self.path_y)
+            print(self.path_heading)
+
+            if path_end == 'uturn':
+                print("Adding a U-turn at the end of the reference path to bring the bike back to its start point")
+                # if path_end_uturn_left:
+                #     q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1] + 0.1)
+                # else:
+                #     q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1] - 0.1)
+                q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1])
+
+                idx_path_currentDistanceTravelled = bisect.bisect_right(self.path_distanceTravelled,self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath ) + np.array([-1, 0])
+                x1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath ,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_x[idx_path_currentDistanceTravelled])
+                y1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath ,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_y[idx_path_currentDistanceTravelled])
+                theta1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath ,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_heading[idx_path_currentDistanceTravelled]) - np.pi
+                q1_dubins = (x1_dubins,y1_dubins,theta1_dubins)
+
+                q2_dubins = (self.path_x[0],self.path_y[0],self.path_heading[0] - np.pi)
+
+                # self.path_dubins01 = dubins.shortest_path(q0_dubins, q1_dubins, path_end_uturn_radius)
+                if path_end_uturn_left:
+                    self.path_dubins01 = dubins.path(q0_dubins, q1_dubins, path_end_uturn_radius,dubins.LSR)
+                else:
+                    self.path_dubins01 = dubins.path(q0_dubins, q1_dubins, path_end_uturn_radius,dubins.RSL)
+                self.configurations_dubins01, _ = self.path_dubins01.sample_many(path_end_uturn_stepSize)
+                self.configurations_dubins01 = zip(*self.configurations_dubins01)
+
+                self.path_dubins12 = dubins.shortest_path(q1_dubins, q2_dubins, path_end_uturn_radius)
+                self.configurations_dubins12, _ = self.path_dubins12.sample_many(path_end_uturn_stepSize)
+                self.configurations_dubins12 = zip(*self.configurations_dubins12)
+
+                self.path_x = np.append(self.path_x,self.configurations_dubins01[0] + self.configurations_dubins12[0])
+                self.path_y = np.append(self.path_y,self.configurations_dubins01[1] + self.configurations_dubins12[1])
+                self.path_heading = np.append(self.path_heading,self.configurations_dubins01[2] + self.configurations_dubins12[2])
+                self.path_heading = np.unwrap(self.path_heading)
+
+                self.path_distanceTravelled = np.cumsum(np.sqrt((self.path_x[1:] - self.path_x[0:-1]) ** 2 + (self.path_y[1:] - self.path_y[0:-1]) ** 2))
+                self.path_distanceTravelled = np.append(0, self.path_distanceTravelled)
+
+            print(self.path_x)
+            print(self.path_y)
+            print(self.path_heading)
 
         # Load roll reference
         if rollref_file != 'nofile':
@@ -203,6 +245,10 @@ class Controller(object):
                             time.time() - self.gaining_speed_start))
                     self.velocity = 1.5 + self.velocity
                     self.velocity = self.velocity_previous
+                if (self.time_count >= speed_up_time + walk_time) and self.velocity < 0.8:
+                    print('WARNING : [%f] Measured velocity lower than 0.8m/s after speed-up, setting the measured speed to the reference' % (
+                            time.time() - self.gaining_speed_start))
+                    self.velocity = initial_speed
 
                 # Get states
                 self.time_get_states = time.time()
@@ -278,20 +324,22 @@ class Controller(object):
                                 # self.y_measured_GPS_previous = self.y_measured_GPS - 0.03
                                 # self.gps_timestamp_previous = self.gps_timestamp - 0.1
 
-                                self.steering_angle_offset += (1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt))
+                                self.steering_angle_offset += (1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_GPS_rot - self.y_GPS_rot_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt))
                                 self.cumsum_v_dt += self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous)
                                 self.cumsum_delta_v_dt += self.steeringAngle_previous * self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous)
 
                                 self.steering_angle_offset_count = self.steering_angle_offset_count + 1
 
 
-                                # print self.velocity_previous
-                                # print self.steeringAngle_previous
-                                # print (self.gps_timestamp - self.gps_timestamp_previous)
-                                # print self.cumsum_v_dt
-                                # print self.cumsum_delta_v_dt
-                                # print((1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt)))
-                                # print self.steering_angle_offset_count
+                                print self.velocity_previous
+                                print self.steeringAngle_previous
+                                print (self.gps_timestamp - self.gps_timestamp_previous)
+                                print self.cumsum_v_dt
+                                print self.cumsum_delta_v_dt
+                                print self.y_GPS_rot
+                                print (self.y_GPS_rot - self.y_GPS_rot_previous)
+                                print((1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt)))
+                                print self.steering_angle_offset_count
 
                                 self.compute_steering_offset_flag = False
                             except:
@@ -356,7 +404,7 @@ class Controller(object):
                     # Compute mean of steering angle during first 5s
                     if not self.steering_angle_offset_computed_flag:
                         self.steering_angle_offset_computed_flag = True
-                        self.steering_angle_offset = self.steering_angle_offset / self.steering_angle_offset_count
+                        self.steering_angle_offset = float(self.steering_angle_offset) / self.steering_angle_offset_count
                         print('Steering angle offset : %.2f deg' % (self.steering_angle_offset*rad2deg))
 
                         # Set initial conditions of estimators
@@ -427,8 +475,9 @@ class Controller(object):
                     # self.bike.steering_motor.enable()
                     # self.controller_set_handlebar_angular_velocity(0)
                     # self.update_controller_gains()
-                    self.get_balancing_setpoint()
-                    self.keep_the_bike_stable()
+                    if not self.recordPath:
+                        self.get_balancing_setpoint()
+                        self.keep_the_bike_stable()
 
 
                 # Compute time needed to run controllers
@@ -1169,7 +1218,11 @@ class Controller(object):
                     # Compute balancing setpoint
                     self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
 
-            # Saturation of balancing setpoint
+            # Go into circle with constant 6deg roll reference after we reach end of the reference path
+            if self.distance_travelled >= self.path_distanceTravelled[-1] and path_end == 'circle':
+                self.balancing_setpoint_sat = path_end_circle_rollRef*deg2rad
+
+                # Saturation of balancing setpoint
             self.balancing_setpoint_sat = max(min(self.balancing_setpoint,max_rollref*deg2rad),-max_rollref*deg2rad)
             if self.balancing_setpoint_sat != self.balancing_setpoint:
                 print('WARNING : Balancing setpoint saturated')

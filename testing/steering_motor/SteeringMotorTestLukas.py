@@ -38,7 +38,8 @@ class Test(object):
             # results_steering_motor = open('Tests_Lukas/%s-SensorTest_Lukas_SteeringMotor.csv' % timestr, 'wb')
             # self.writer_steering_motor = csv.writer(results_steering_motor)
             # self.writer_steering_motor.writerow(('Time (s)\t', 'tdelta (deg)\t' , 'Angular velocity (deg/s)\t'))
-            # self.start_time = time.time()
+
+            self.start_time = time.time()
 
             # Enable steering motor
             self.steering_motor_drive.enable()

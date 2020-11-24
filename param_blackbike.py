@@ -250,9 +250,11 @@ path_choice = 'pot'
 
 # PID Lateral Position Controller Parameters
 pid_lateral_position_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
-pid_lateral_position_P = -2e-1
-pid_lateral_position_I = -2e-2
-# pid_lateral_position_I = -1e-2
+# pid_lateral_position_P = -2e-1 # 23/11/2020
+pid_lateral_position_P = -1e-1 # 13/11/2020
+# pid_lateral_position_P = -1e-1
+# pid_lateral_position_I = -2e-2
+pid_lateral_position_I = -0e-2
 pid_lateral_position_D = -0e-1
 pid_lateral_position_sample_time = 1.0 / controller_frequency
 
@@ -260,5 +262,5 @@ pid_lateral_position_sample_time = 1.0 / controller_frequency
 pid_direction_reference = 0.0  # PID code uses constant reference setpoint and feedback. Since this controller doesn't have a constant setpoint, we only use the feedback value.
 pid_direction_P = -2e-1
 pid_direction_I = -0.0
-pid_direction_D = 0.0
+pid_direction_D = -0.0
 pid_direction_sample_time = 1.0 / controller_frequency
