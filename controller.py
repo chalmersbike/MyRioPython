@@ -344,6 +344,7 @@ class Controller(object):
                                 self.compute_steering_offset_flag = False
                             except:
                                 self.steering_angle_offset += 0.0
+                                self.steering_angle_offset_count = self.steering_angle_offset_count + 1
 
                                 self.compute_steering_offset_flag = False
 
@@ -404,7 +405,11 @@ class Controller(object):
                     # Compute mean of steering angle during first 5s
                     if not self.steering_angle_offset_computed_flag:
                         self.steering_angle_offset_computed_flag = True
-                        self.steering_angle_offset = float(self.steering_angle_offset) / self.steering_angle_offset_count
+                        try:
+                            self.steering_angle_offset = float(self.steering_angle_offset) / self.steering_angle_offset_count
+                        except:
+                            print('Cannot compute steering angle offset, setting it to 0.0')
+                            self.steering_angle_offset = 0.0
                         print('Steering angle offset : %.2f deg' % (self.steering_angle_offset*rad2deg))
 
                         # Set initial conditions of estimators
@@ -1220,7 +1225,7 @@ class Controller(object):
 
             # Go into circle with constant 6deg roll reference after we reach end of the reference path
             if self.distance_travelled >= self.path_distanceTravelled[-1] and path_end == 'circle':
-                self.balancing_setpoint_sat = path_end_circle_rollRef*deg2rad
+                self.balancing_setpoint = path_end_circle_rollRef*deg2rad
 
                 # Saturation of balancing setpoint
             self.balancing_setpoint_sat = max(min(self.balancing_setpoint,max_rollref*deg2rad),-max_rollref*deg2rad)

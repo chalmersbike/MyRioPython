@@ -25,7 +25,7 @@ speed_up_time = 3.0                             # [s] Time to run the drive moto
 walk_time = 2.0                                 # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
 max_exceed_count = 10                           # Number of times where calculation time can exceed sampling time before aborting experiment
 
-path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
 path_tracking_structure = 'series'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
@@ -33,12 +33,12 @@ path_tracking_structure = 'series'              # 'parallel' : direction and lat
 lateralError_controller = 1                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 1                          # 1 = use heading controller ; 0 = do not use heading controller
 # path_end = ''                                   # WARNING : YOU WILL NEED TO CATCH THE BIKE OR IT MIGHT FALL  - Do nothing when we reach the end of the path
-# path_end = 'circle'                             # Go into a circle after we reach the end of the reference path
-path_end = 'uturn'                              # Do a U-turn and come back to start of path after we reach the end of the reference path
-path_end_circle_rollRef = 6                     # [deg] Constant roll reference to go into a circle after we reach the end of the reference path
+path_end = 'circle'                             # Go into a circle after we reach the end of the reference path
+# path_end = 'uturn'                              # Do a U-turn and come back to start of path after we reach the end of the reference path
+path_end_circle_rollRef = -6                     # [deg] Constant roll reference to go into a circle after we reach the end of the reference path
 path_end_uturn_radius = 15                      # [m] Maximum turning radius of the U-turn to come back to start of path after we reach the end of the reference path
 path_end_uturn_stepSize = 1                     # [m] Step size of the path describing the U-turn to come back to start of path after we reach the end of the reference path
-path_end_uturn_left = 0                         # 1 = do the U-turn to the left ; 0 = do the U-turn to the right
+path_end_uturn_left = 1                         # 1 = do the U-turn to the left ; 0 = do the U-turn to the right
 path_end_uturn_distanceEndPath = 40             # [m] Distance from last point of reference path at which the bike should get back on path in opposite direction after U-turn
 
 # Choice to use more debug outputs
@@ -60,7 +60,7 @@ laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
 virtual_odometer = 0
 
 # Roll Reference Tracking:
-roll_ref_use = 0
+roll_ref_use = 1
 roll_ref_step_imp_flag = 0  # 0 means step, 1 means impulse
 rol_ref_periodic = 0
 
@@ -73,8 +73,8 @@ rol_ref_periodic = 0
 # Can also be a CSV file with 3 columns : time, lat, lon.
 # Can also be 'newest' to load the most recent lat/lon path from "paths".
 
-path_file = 'newest'
-# path_file = 'path_20201123-102358.csv'
+# path_file = 'newest'
+path_file = 'path_20201125-093000.csv'
 
 # path_file = 'ramp_heading_path_test_9secs_5deg.csv'
 # path_file = 'step_heading_path_9secs_m5deg.csv'
@@ -93,20 +93,20 @@ path_file = 'newest'
 # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 # rollref_file = 'rollref_test1.csv'
 # rollref_file = 'roll_ref_sqr_5.csv'
-rollref_file = 'nofile'
+# rollref_file = 'nofile'
 
 # rollref_file = 'roll_ref_randMagPM10degLP5.csv' # LP 5-30 PM 2-10
 #rollref_file = 'roll_Uref_MagPM3LP5.csv' # LP 5-30 PM 2-10
 #rollref_file = 'roll_Uref_MagPM6LP5.csv' # LP 5-30 PM 2-10
 # rollref_file = 'roll_Uref_MagPM9LP5.csv' # LP 5-30 PM 2-10
 
-# rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
+#rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
 
 # rollref_file = 'roll_ref_2deg.csv'      # Right
 # rollref_file = 'roll_ref_4deg.csv'
 #rollref_file = 'roll_ref_6deg.csv'
 # rollref_file = 'roll_ref_8deg.csv'
-8# rollref_file = 'roll_ref_10deg.csv'
+# rollref_file = 'roll_ref_10deg.csv'
 # rollref_file = 'roll_ref_-2deg.csv'     # Left
 # rollref_file = 'roll_ref_-4deg.csv'
 # rollref_file = 'roll_ref_-6deg.csv'
@@ -132,7 +132,7 @@ rollref_file = 'nofile'
 # rollref_file = 'roll_UrefBandStop23_MagPM4LP5.csv'
 # rollref_file = 'roll_UrefBandStop23_MagPM7LP5.csv'
 # rollref_file = 'roll_UrefBandStop23_MagPM10LP5.csv'
-#rollref_file = 'roll_UrefBandStop23_MagPM10LP1.csv'
+rollref_file = 'roll_UrefBandStop23_MagPM14LP5.csv'
 
 ####################################################################################################################
 ####################################################################################################################
@@ -146,7 +146,7 @@ strdistbref_file = 'nofile'
 # strdistbref_file = 'str_Udistb_bandstop23_6degLP5.csv'
 # strdistbref_file = 'str_Udistb_bandstop23_7degLP1.csv'
 # strdistbref_file = 'str_Udistb_bandstop23_7degLP2.csv'
-# strdistbref_file = 'str_Udistb_bandstop23_23degLP5.csv'
+strdistbref_file = 'str_Udistb_bandstop23_10degLP5.csv'
 roll_ref_start_time = 6.0
 roll_ref_end_time = 1000.0
 if rol_ref_periodic is 1:

@@ -47,10 +47,13 @@ statesEstimators_KvRef = 1 - statesEstimators_KvH - statesEstimators_KvGPS
 # Heading estimation gains
 # statesEstimators_Kpsi = 0.07
 statesEstimators_Kpsi = 0.15
+# statesEstimators_Kpsi = 0.01
 
 # Position estimation gains
 statesEstimators_Kx = 0.05
 statesEstimators_Ky = 0.05
+# statesEstimators_Kx = 0.01
+# statesEstimators_Ky = 0.01
 statesEstimators_Kxy = np.matrix([[statesEstimators_Kx , 0] , [0 , statesEstimators_Ky]])
 
 
