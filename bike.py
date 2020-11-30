@@ -7,7 +7,7 @@ import pysnooper
 
 class Bike(object):
     # @pysnooper.snoop()
-    def __init__(self, debug=True, recordPath=False, reverse=False, straight=False):
+    def __init__(self, debug=True, recordPath=False, reverse=False, straight=False, path_file_arg='', rollref_file_arg='', steeringdist_file_arg=''):
         # Initialize sensors and actuators
         self.safety_stop = SafetyStop()
         self.encoder = Encoder()
@@ -23,7 +23,7 @@ class Bike(object):
         self.steering_motor = SteeringMotor()
 
         # Run bike and controllers
-        self.controller = Controller(self,recordPath,reverse,straight)
+        self.controller = Controller(self,recordPath,reverse,straight,path_file_arg,rollref_file_arg,steeringdist_file_arg)
         # self.controller.startup()
         self.controller.run()
 
