@@ -34,7 +34,7 @@ class Controller(object):
             self.initial_Estop_Check()  # Check if the Estop Engaged
 
         # Load path
-        if path_tracking and path_file != 'pot':
+        if path_tracking and path_file != 'pot' and not self.recordPath:
             try:
                 if path_file == 'newest':
                     list_of_files = glob.glob('./paths/*.csv')
