@@ -26,6 +26,9 @@ class Controller(object):
         self.recordPath = recordPath
         self.reverse = reverse
         self.straight = straight
+        self.path_file_arg = path_file_arg
+        self.rollref_file_arg = rollref_file_arg
+        self.steeringdist_file_arg = steeringdist_file_arg
 
         self.variable_init()
 
@@ -34,19 +37,19 @@ class Controller(object):
             self.initial_Estop_Check()  # Check if the Estop Engaged
 
         # Load path
-        if path_file_arg == '':
-            path_file_arg = path_file
-        if path_tracking and path_file_arg != 'pot' and not self.recordPath:
+        if self.path_file_arg == '':
+            self.path_file_arg = path_file
+        if path_tracking and self.path_file_arg != 'pot' and not self.recordPath:
             try:
-                if path_file_arg == 'newest':
+                if self.path_file_arg == 'newest':
                     list_of_files = glob.glob('./paths/*.csv')
                     latest_file = max(list_of_files, key=os.path.getctime)
                     print("Loading newest path %s ..." % (latest_file))
                     self.path_data = np.genfromtxt(latest_file, delimiter=",", skip_header=1)
                 else:
-                    print("Loading path %s ..." % (path_file_arg))
-                    # self.path_data = np.genfromtxt('paths/' + path_file_arg, delimiter=",", skip_header=1)
-                    self.path_data = np.genfromtxt('paths/' + path_file_arg, delimiter=",")
+                    print("Loading path %s ..." % (self.path_file_arg))
+                    # self.path_data = np.genfromtxt('paths/' + self.path_file_arg, delimiter=",", skip_header=1)
+                    self.path_data = np.genfromtxt('paths/' + self.path_file_arg, delimiter=",")
                 self.path_time = self.path_data[:,0]
                 # if self.path_data[0, 3] == 0:
                 if self.path_data.shape[1] <= 3:
@@ -151,40 +154,35 @@ class Controller(object):
             print(self.path_heading)
 
         # Load roll reference
-        print('TEST')
-        print(rollref_file_arg)
-        print('TEST')
-        if rollref_file_arg == '':
-            rollref_file_arg = rollref_file
-        print(rollref_file_arg)
-        print('TEST')
-        if rollref_file_arg != 'nofile':
-            print("Loading roll reference %s ..." % (rollref_file_arg))
+        if self.rollref_file_arg == '':
+            self.rollref_file_arg = rollref_file
+        if self.rollref_file_arg != 'nofile':
+            print("Loading roll reference %s ..." % (self.rollref_file_arg))
             try:
-                # self.rollref_data = np.genfromtxt('rollref/' + rollref_file_arg, delimiter=",", skip_header=1)
-                self.rollref_data = np.genfromtxt(rollref_file_arg, delimiter=",", skip_header=1)
+                # self.rollref_data = np.genfromtxt('rollref/' + self.rollref_file_arg, delimiter=",", skip_header=1)
+                self.rollref_data = np.genfromtxt(self.rollref_file_arg, delimiter=",", skip_header=1)
                 self.rollref_time = self.rollref_data[:, 0]
                 self.rollref_roll = self.rollref_data[:, 1]
                 print("Roll reference loaded, starting experiment.")
             except:
-                print([rollref_file_arg, "Path file not found, setting roll reference to 0 as default"])
+                print([self.rollref_file_arg, "Path file not found, setting roll reference to 0 as default"])
                 # self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
                 self.rollref_data = np.array([[0.0, 0.0], [1000000.0, 0.0],]) # Using three rows with zeros for np.interp to work
                 self.rollref_time = self.rollref_data[:, 0]
                 self.rollref_roll = self.rollref_data[:, 1]
 
         # Load steering disturbance
-        if steeringdist_file_arg == '':
-            steeringdist_file_arg = strdistbref_file
-        if steeringdist_file_arg != 'nofile':
-            print("Loading steering rate disturbance reference %s ..." % (steeringdist_file_arg))
+        if self.steeringdist_file_arg == '':
+            self.steeringdist_file_arg = strdistbref_file
+        if self.steeringdist_file_arg != 'nofile':
+            print("Loading steering rate disturbance reference %s ..." % (self.steeringdist_file_arg))
             try:
-                self.strdistbref_data = np.genfromtxt('strratedistbref/' + steeringdist_file_arg, delimiter=",", skip_header=1)
+                self.strdistbref_data = np.genfromtxt('strratedistbref/' + self.steeringdist_file_arg, delimiter=",", skip_header=1)
                 self.strdistbref_time = self.strdistbref_data[:, 0]
                 self.strdistbref_str = self.strdistbref_data[:, 1]
                 print("Steering rate disturbance reference loaded, starting experiment.")
             except:
-                print([steeringdist_file_arg, "Steering rate disturbance file not found, setting roll reference to 0 as default"])
+                print([self.steeringdist_file_arg, "Steering rate disturbance file not found, setting roll reference to 0 as default"])
                 # self.strdistbref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
                 self.strdistbref_data = np.array([[0.0, 0.0], [1000000.0, 0.0],]) # Using three rows with zeros for np.interp to work
                 self.strdistbref_time = self.strdistbref_data[:, 0]
@@ -1132,7 +1130,7 @@ class Controller(object):
                 print "Now heading or path tracking is engaged."
         if self.path_tracking_engaged:
             # Get reference position and heading
-            if path_file_arg == 'pot':
+            if self.path_file_arg == 'pot':
                 self.x_ref = 0.0
                 self.heading_ref = 0.0
                 if potentiometer_use:
@@ -1250,7 +1248,7 @@ class Controller(object):
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
         else:
-            if rollref_file_arg == 'nofile':
+            if self.rollref_file_arg == 'nofile':
                 if roll_ref_use and not roll_ref_step_imp_flag: # Do step
                     if not rol_ref_periodic:
                         if self.time_count < self.roll_ref_end_time: #__(ref_start_time)------(ref_end_time)_____
@@ -1345,7 +1343,7 @@ class Controller(object):
 
         # self.steering_rate = self.steering_rate_filt
 
-        if steeringdist_file_arg != 'nofile':
+        if self.steeringdist_file_arg != 'nofile':
             # print('SteeringRate Overwritten')
             idx_strdistbref_currentTime = bisect.bisect_right(self.strdistbref_time, time.time() - self.time_start_controller) + np.array([-1, 0])
             if idx_strdistbref_currentTime[1] >= len(self.strdistbref_time):
