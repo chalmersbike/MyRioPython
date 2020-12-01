@@ -246,8 +246,6 @@ class Controller(object):
                 self.velocity_previous = self.velocity
                 self.velocity = self.bike.get_velocity()
                 self.velocity_rec = self.velocity
-                if self.broken_speed_flag:
-                    self.velocity = initial_speed
                 if abs(self.velocity) > 1.25*abs(initial_speed):
                     print('WARNING : [%f] Measured speed larger than 1.25 times reference speed' % (
                                 time.time() - self.gaining_speed_start))
@@ -259,6 +257,8 @@ class Controller(object):
                 if (self.time_count >= speed_up_time + walk_time) and self.velocity < 0.8:
                     print('WARNING : [%f] Measured velocity lower than 0.8m/s after speed-up, setting the measured speed to the reference' % (
                             time.time() - self.gaining_speed_start))
+                    self.velocity = initial_speed
+                if self.broken_speed_flag:
                     self.velocity = initial_speed
 
                 # Get states
