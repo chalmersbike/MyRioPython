@@ -945,6 +945,10 @@ class Controller(object):
             self.x_measured_GPS = self.x_measured_GPS - self.x_offset
             self.y_measured_GPS = self.y_measured_GPS - self.y_offset
 
+            # Offset GPS position from center of mass of bike to position of antenna
+            self.x_measured_GPS -= antenna_offset_x * np.cos(self.theta_measured_GPS)
+            self.y_measured_GPS -= antenna_offset_y * np.sin(self.theta_measured_GPS)
+
             print('DEBUG : x = %f ; x_prev = %f ; y = %f ; y_prev = %f' % (self.x_measured_GPS,self.x_measured_GPS_previous,self.y_measured_GPS,self.y_measured_GPS_previous))
             self.theta_measured_GPS_noUnwrap = np.arctan2(self.y_measured_GPS - self.y_measured_GPS_previous,self.x_measured_GPS - self.x_measured_GPS_previous)
             if self.time_count > walk_time:
