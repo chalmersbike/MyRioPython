@@ -1,5 +1,3 @@
-print 'Starting Bike with controller ACTIVE\n'
-
 from bike import Bike
 from controller import Controller
 import Adafruit_BBIO.GPIO as GPIO
@@ -23,6 +21,8 @@ try:
         elif opt in ("-s", "--straight"):
             straight = True
 
+    print 'Starting Bike with controller INACTIVE to record path\n'
+
     bike = Bike(debug=False,recordPath=True,straight=straight)
 except (ValueError, KeyboardInterrupt):
 
@@ -36,7 +36,7 @@ except (ValueError, KeyboardInterrupt):
 
     # print 'sensor reading time is %g' % bike.controller.sensor_reading_time
     # print '\n Error detected, all the control signals terminated...'
-    exc_msg = '\n Error detected by easystart program, all the control signals terminated...'
+    exc_msg = '\n Error detected by record_path program, all the control signals terminated...'
     print(exc_msg)
     print ValueError
     # bike.exception_log(-2, exc_msg)

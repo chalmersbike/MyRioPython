@@ -1,5 +1,3 @@
-print 'Starting Bike with controller ACTIVE\n'
-
 from bike import Bike
 from controller import Controller
 import Adafruit_BBIO.GPIO as GPIO
@@ -34,6 +32,8 @@ try:
             rollref_file_arg = arg
         elif opt in ("-s","--steeringdist"):
             steeringdist_file_arg = arg
+
+    print 'Starting Bike with controller ACTIVE\n'
 
     bike = Bike(debug=False,recordPath=False,reverse=reverse,straight=straight,path_file_arg=path_file_arg,rollref_file_arg=rollref_file_arg,steeringdist_file_arg=steeringdist_file_arg)
 except (ValueError, KeyboardInterrupt):
