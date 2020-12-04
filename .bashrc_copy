@@ -112,9 +112,15 @@ if ! shopt -oq posix; then
   fi
 fi
 
+TZ='Europe/Stockholm'; export TZ
 
 grep -qx "$PPID" <(pgrep -x "script") ||  (script -f /home/debian/chalmersbike/log_screen/Bikelog_$(date +"%Y%m%d_%H%M%S").txt)
 cd /home/debian/chalmersbike/
 source PinConfig.sh
- cp -f ../.bashrc .bashrc_copy
+cp -f ../.bashrc .bashrc_copy
 source /home/debian/chalmersbike/chalmersbike/bin/activate
+history > cmd_history.out
+
+
+# Enable file autocompletion for Python
+complete -F _filedir_xspec python
