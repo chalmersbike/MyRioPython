@@ -1,0 +1,2 @@
+Description :  ; walk_time = 2.0 ; speed_up_time = 3.0 ; balancing_time = 0.0
+RealTime,Time,CalculationTime,MeasuredVelocity,FilteredVelocity,BalancingGainsInner,BalancingGainsOuter,Roll,SteeringAngle,RollRate,ControlInput,BalancingSetpoint,gy,gz,ax,ay,az,imu_read_timing,SteerMotorCurrent

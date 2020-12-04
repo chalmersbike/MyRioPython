@@ -155,7 +155,7 @@ class Controller(object):
 
         # Load roll reference
         if self.rollref_file_arg == '':
-            self.rollref_file_arg = rollref_file
+            self.rollref_file_arg = 'rollref/' + rollref_file
         if self.rollref_file_arg != 'nofile':
             print("Loading roll reference %s ..." % (self.rollref_file_arg))
             try:
@@ -1226,10 +1226,30 @@ class Controller(object):
                         self.pid_direction.setReference(-lateralError_controller * self.pid_lateral_position_control_signal)
                         self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not measurement
                         # Compute balancing setpoint
-                        self.balancing_setpoint = self.pid_direction_control_signal
+                        idx_rollref_currentTime = bisect.bisect_right(self.rollref_time,
+                                                                      time.time() - self.time_start_controller) + np.array(
+                            [-1, 0])
+                        if idx_rollref_currentTime[0] < 0:
+                            idx_rollref_currentTime[0] = 0
+                        if time.time() - self.time_start_controller >= self.rollref_time[-1]:
+                            self.balancing_setpoint = self.pid_direction_control_signal + self.rollref_roll[-1]
+                        else:
+                            self.balancing_setpoint = self.pid_direction_control_signal + np.interp(time.time() - self.time_start_controller,
+                                                                self.rollref_time[idx_rollref_currentTime],
+                                                                self.rollref_roll[idx_rollref_currentTime])
                     else:
                         # Compute balancing setpoint
-                        self.balancing_setpoint = self.pid_lateral_position_control_signal
+                        idx_rollref_currentTime = bisect.bisect_right(self.rollref_time,
+                                                                      time.time() - self.time_start_controller) + np.array(
+                            [-1, 0])
+                        if idx_rollref_currentTime[0] < 0:
+                            idx_rollref_currentTime[0] = 0
+                        if time.time() - self.time_start_controller >= self.rollref_time[-1]:
+                            self.balancing_setpoint = self.pid_lateral_position_control_signal + self.rollref_roll[-1]
+                        else:
+                            self.balancing_setpoint = self.pid_lateral_position_control_signal + np.interp(time.time() - self.time_start_controller,
+                                                                self.rollref_time[idx_rollref_currentTime],
+                                                                self.rollref_roll[idx_rollref_currentTime])
                 else:
                     print("Path tracking controller structure choice is not valid : \"%s\"; Using parallel structure as default.\n" % (balancing_controller_structure))
                     # PID Lateral Position Controller

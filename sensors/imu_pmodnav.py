@@ -222,6 +222,7 @@ class IMU(object):
         self.phi = self.phi_acc * (1-imu_complementaryFilterRatio) + (self.phi + gx * (dT)) * imu_complementaryFilterRatio
         self.phi_gyro += dT * gx
         self.prev_reading = [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az]
+
         # [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az, self.last_read - self.first_read_time]
 
