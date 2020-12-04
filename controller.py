@@ -247,16 +247,13 @@ class Controller(object):
                 self.velocity = self.bike.get_velocity()
                 self.velocity_rec = self.velocity
                 if abs(self.velocity) > 1.25*abs(initial_speed):
-                    print('[%f] WARNING : Measured speed larger than 1.25 times reference speed' % (
-                                time.time() - self.run_start))
+                    print('[%f] WARNING : Measured speed larger than 1.25 times reference speed' % (time.time() - self.run_start))
                 if self.velocity-self.velocity_previous > 1.5:
-                    print('[%f] WARNING : Measured speed change between two samples too large' % (
-                            time.time() - self.run_start))
+                    print('[%f] WARNING : Measured speed change between two samples too large' % (time.time() - self.run_start))
                     self.velocity = 1.5 + self.velocity
                     self.velocity = self.velocity_previous
                 if (self.time_count >= speed_up_time + walk_time) and self.velocity < 0.8:
-                    print('[%f] WARNING : Measured velocity lower than 0.8m/s after speed-up, setting the measured speed to the reference' % (
-                            time.time() - self.run_start))
+                    print('[%f] WARNING : Measured velocity lower than 0.8m/s after speed-up, setting the measured speed to the reference' % (time.time() - self.run_start))
                     self.velocity = initial_speed
                 if self.broken_speed_flag:
                     self.velocity = initial_speed
@@ -421,7 +418,7 @@ class Controller(object):
                         except:
                             print('[%f] WARNING : Cannot compute steering angle offset, setting it to 0.0' % (time.time() - self.run_start))
                             self.steering_angle_offset = 0.0
-                        print('[%f] Steering angle offset : %.2f deg' % (self.steering_angle_offset*rad2deg) % (time.time() - self.run_start))
+                        print('[%f] Steering angle offset : %.2f deg' % (time.time() - self.run_start,self.steering_angle_offset*rad2deg))
 
                         # Set initial conditions of estimators
                         self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))

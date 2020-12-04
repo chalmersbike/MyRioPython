@@ -1,4 +1,8 @@
-from actuators import Steering
+import sys
+sys.path.append(sys.path[0] + '/../../')
+from param import *
+from sensors import Encoder
+from actuators import SteeringMotor
 from sensors import Encoder, SafetyStop
 import time
 import numpy as np
@@ -7,7 +11,9 @@ AngleRange = 0.4
 # AngleRange = 9999
 
 try:
-    mot = Steering()
+    mot = SteeringMotor()
+    mot.set_angular_velocity(0)
+    mot.enable()
     starttime = time.time()
     # safety_stop = SafetyStop()
     enc = Encoder()

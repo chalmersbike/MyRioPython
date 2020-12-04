@@ -42,6 +42,7 @@ class HallSensor(object):
     def get_velocity(self):
         self.elapse = time() - self.last_time_measured
         if self.elapse > hallSensor_maxElapseBetweenPulses:
+            print("No magnets detected for longer than %fs, setting speed to 0m/s" % (hallSensor_maxElapseBetweenPulses))
             self.velocity = 0.0
             return self.velocity
         else:
