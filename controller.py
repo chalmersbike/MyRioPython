@@ -17,6 +17,9 @@ import glob
 import os
 import dubins
 
+# Raise Numpy errors
+np.seterr(all = "raise")
+
 # @pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
@@ -32,17 +35,16 @@ class Controller(object):
         self.simulate_file = simulate_file
 
         # Load data from previous experiment if simulating to debug the code
-        if self.simulate_data != '':
+        if self.simulate_file != '':
             print("Loading data from experiment %s ..." % (self.simulate_file))
-            # self.simulate_data = np.genfromtxt('ExpData_blackbike/' + self.simulate_file, delimiter=",", skip_header=2)
-            self.simulate_data = np.genfromtxt(
-                'ExpData_blackbike/' + self.simulate_file,
-                names=True,  # If `names` is True, the field names are read from the first valid line
-                delimiter=",",  # tab separated values
-                skip_header = 1, # Skip first line of experiment description
-                dtype=None)  # guess the dtype of each column
+            # # self.simulate_data = np.genfromtxt('ExpData_blackbike/' + self.simulate_file, delimiter=",", skip_header=2)
+            # self.simulate_data = np.genfromtxt(self.simulate_file,
+            #     names=True,  # If `names` is True, the field names are read from the first valid line
+            #     delimiter=",",  # tab separated values
+            #     skip_header = 1, # Skip first line of experiment description
+            #     dtype=None)  # guess the dtype of each column
 
-            self.simulate_data = np.genfromtxt(("\t".join(i) for i in csv.reader(open('ExpData_blackbike/' + self.simulate_file))),
+            self.simulate_data = np.genfromtxt(("\t".join(i) for i in csv.reader(open(self.simulate_file))),
                                           names=True,  # If `names` is True, the field names are read from the first valid line
                                           delimiter="\t",  # tab separated values
                                           skip_header=1,  # Skip first line of experiment description
@@ -102,7 +104,10 @@ class Controller(object):
 
         # Load path
         if self.path_file_arg == '':
-            self.path_file_arg = path_file
+            if path_file != 'newest':
+                self.path_file_arg = 'paths/' + path_file
+            else:
+                self.path_file_arg = 'newest'
         if path_tracking and self.path_file_arg != 'pot' and not self.recordPath:
             try:
                 if self.path_file_arg == 'newest':
@@ -113,7 +118,7 @@ class Controller(object):
                 else:
                     print("Loading path %s ..." % (self.path_file_arg))
                     # self.path_data = np.genfromtxt('paths/' + self.path_file_arg, delimiter=",", skip_header=1)
-                    self.path_data = np.genfromtxt('paths/' + self.path_file_arg, delimiter=",")
+                    self.path_data = np.genfromtxt(self.path_file_arg, delimiter=",")
                 self.path_time = self.path_data[:,0]
                 # if self.path_data[0, 3] == 0:
                 if self.path_data.shape[1] <= 3:
@@ -236,11 +241,11 @@ class Controller(object):
 
         # Load steering disturbance
         if self.steeringdist_file_arg == '':
-            self.steeringdist_file_arg = strdistbref_file
+            self.steeringdist_file_arg = 'strratedistbref/' + strdistbref_file
         if self.steeringdist_file_arg != 'nofile':
             print("Loading steering rate disturbance reference %s ..." % (self.steeringdist_file_arg))
             try:
-                self.strdistbref_data = np.genfromtxt('strratedistbref/' + self.steeringdist_file_arg, delimiter=",", skip_header=1)
+                self.strdistbref_data = np.genfromtxt(self.steeringdist_file_arg, delimiter=",", skip_header=1)
                 self.strdistbref_time = self.strdistbref_data[:, 0]
                 self.strdistbref_str = self.strdistbref_data[:, 1]
                 print("Steering rate disturbance reference loaded, starting experiment.")
@@ -293,20 +298,20 @@ class Controller(object):
         # self.bike.steering_motor.enable()
 
         # Flush GPS data buffer
-        if gps_use and self.simulate_data == '':
+        if gps_use and self.simulate_file == '':
             while self.bike.gps.ser_gps.inWaiting() > 100:
                 self.bike.gps.ser_gps.flushInput()
                 # self.bike.gps.ser_gps.flush()
                 # Wait 0.1s to receive new GPS data
             time.sleep(0.1)
 
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             self.time_run_start = time.time()
         else:
             self.time_run_start = 0.0
             
         while self.controller_active or not self.gainingSpeedOver_flag:
-            if self.simulate_data == '':
+            if self.simulate_file == '':
                 self.time_start_current_loop = time.time()
             else:
                 self.time_start_current_loop = self.simulate_data_Time[self.idx_simulate_data]
@@ -314,22 +319,22 @@ class Controller(object):
             try:
                 # Get velocity
                 self.velocity_previous = self.velocity
-                if self.simulate_data == '':
+                if self.simulate_file == '':
                     self.velocity = self.bike.get_velocity()
                 else:
                     self.velocity = self.simulate_data_MeasuredVelocity[self.idx_simulate_data]
                 self.velocity_rec = self.velocity
                 if abs(self.velocity) > 1.25*abs(initial_speed):
                     print('[%f] WARNING : Measured speed larger than 1.25 times reference speed' % (
-                                time.time() - self.time_run_start))
+                                time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                 if self.velocity-self.velocity_previous > 1.5:
                     print('[%f] WARNING : Measured speed change between two samples too large' % (
-                            time.time() - self.time_run_start))
+                            time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                     self.velocity = 1.5 + self.velocity
                     self.velocity = self.velocity_previous
                 if (self.time_count >= speed_up_time + walk_time) and self.velocity < 0.8:
                     print('[%f] WARNING : Measured velocity lower than 0.8m/s after speed-up, setting the measured speed to the reference' % (
-                            time.time() - self.time_run_start))
+                            time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                     self.velocity = initial_speed
                 if self.broken_speed_flag:
                     self.velocity = initial_speed
@@ -344,9 +349,10 @@ class Controller(object):
                     self.estimate_states()
                     # self.compute_estimators_flag = False
 
+                self.sensor_reading_time = time.time()
                 # Get position from GPS
                 if gps_use:
-                    if ((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate or self.gps_timestamp <= 0.01 or self.simulate_data == '':
+                    if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01 or (((self.simulate_data_Time[self.idx_simulate_data] - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file!=''):
                         self.gps_timestamp_previous = self.gps_timestamp
 
                         # self.bike.get_gps_data()
@@ -362,8 +368,9 @@ class Controller(object):
                         self.compute_estimators_flag = True
 
                         # Check if GPS NMEA timestamp is more than 1s away from BeagleBone timestamp
-                        if abs((datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count) > 1:
-                            print("[%f] WARNING : the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised." % (time.time() - self.time_run_start))
+                        if self.simulate_file == '':
+                            if abs((datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count) > 1:
+                                print("[%f] WARNING : the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised." % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
 
                         if self.lat_estimated == 0.0:# and self.recordPath:
                             # Set initial conditions of estimators
@@ -385,7 +392,6 @@ class Controller(object):
                             self.yaw_estimated_previous = self.yaw_estimated
 
                         # Estimate steering angle offset from GPS position
-                        # speed_up_time + walk_time
                         if not self.steering_angle_offset_computed_flag:
                             try:
                                 # Rotate path to get small heading angle
@@ -416,19 +422,20 @@ class Controller(object):
                                 # print (self.y_GPS_rot - self.y_GPS_rot_previous)
                                 # print((1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt)))
                                 # print self.steering_angle_offset_count
+                                # print self.steering_angle_offset
 
                                 self.compute_steering_offset_flag = False
                             except:
-                                self.steering_angle_offset += 0.0
-                                self.steering_angle_offset_count = self.steering_angle_offset_count #+ 1
+                                # self.steering_angle_offset += 0.0
+                                # self.steering_angle_offset_count = self.steering_angle_offset_count #+ 1
 
                                 self.compute_steering_offset_flag = False
-                    else:
-                        self.x_measured_GPS = 0.0
-                        self.y_measured_GPS = 0.0
-                        self.lat_measured_GPS = 0.0
-                        self.lon_measured_GPS = 0.0
-                        self.gps_timestamp = 0.0
+                else:
+                    self.x_measured_GPS = 0.0
+                    self.y_measured_GPS = 0.0
+                    self.lat_measured_GPS = 0.0
+                    self.lon_measured_GPS = 0.0
+                    self.gps_timestamp = 0.0
 
                 # Get laser ranger position (y position on the roller)
                 if laserRanger_use:
@@ -437,11 +444,11 @@ class Controller(object):
                         self.time_laserranger = time.time()
                         self.y_laser_ranger = self.bike.get_laserRanger_data()
                         if abs(self.y_laser_ranger)>0.25:
-                            print('[%f] WARNING : Laser ranger position outside of roller' % (time.time() - self.time_run_start))
+                            print('[%f] WARNING : Laser ranger position outside of roller' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                 else:
                     self.y_laser_ranger = 0
                 # Compute time needed to read from all sensors
-                self.sensor_reading_time = time.time() - self.time_start_current_loop
+                self.sensor_reading_time = time.time() - self.sensor_reading_time + self.time_get_states
 
                 # if laserRanger_use:
                 #     print("Laser ranger reading time : %f" %(time.time()-self.time_laserranger))
@@ -457,9 +464,9 @@ class Controller(object):
                 if (self.time_count < walk_time):
                     if not self.walk_message_printed_flag:
                         self.walk_message_printed_flag = True
-                        print("[%f] Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff" % (time.time() - self.time_run_start))
+                        print("[%f] Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
 
-                    if self.simulate_data == '':
+                    if self.simulate_file == '':
                         self.bike.steering_motor.disable()
 
                     # [OLD METHOD - CHANGED TO USE GPS POSITION OVER 5s] Estimate steering angle offset from mean of steering angle during walk
@@ -469,14 +476,14 @@ class Controller(object):
                 elif (self.time_count < speed_up_time+walk_time and self.time_count >= walk_time) and not self.gainingSpeedOver_flag:
                     # Do not start controllers until bike ran for enough time to get up to speed
                     # self.bike.steering_motor.enable()
-                    if self.simulate_data == '':
+                    if self.simulate_file == '':
                         self.bike.steering_motor.disable()
 
                     if not self.speed_up_message_printed_flag:
                         self.speed_up_message_printed_flag = True
-                        print('[%f] Gaining speed ...' % (time.time() - self.time_run_start))
+                        print('[%f] Gaining speed ...' % (time.time() - self.time_run_start) if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
 
-                    if not self.recordPath and self.simulate_data == '':
+                    if not self.recordPath and self.simulate_file == '':
                         self.bike.set_velocity(initial_speed)
                 elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
                     # Compute mean of steering angle during first 5s
@@ -485,9 +492,9 @@ class Controller(object):
                         try:
                             self.steering_angle_offset = float(self.steering_angle_offset) / self.steering_angle_offset_count
                         except:
-                            print('[%f] WARNING : Cannot compute steering angle offset, setting it to 0.0' % (time.time() - self.time_run_start))
+                            print('[%f] WARNING : Cannot compute steering angle offset, setting it to 0.0' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                             self.steering_angle_offset = 0.0
-                        print('[%f] Steering angle offset : %.2f deg' % (self.steering_angle_offset*rad2deg) % (time.time() - self.time_run_start))
+                        print('[%f] Steering angle offset : %.2f deg' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],self.steering_angle_offset))
 
                         # Set initial conditions of estimators
                         self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
@@ -509,11 +516,11 @@ class Controller(object):
                         # self.theta_measured_GPS = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)
                     # Once enough time has passed, start controller
                     self.gainingSpeedOver_flag = True
-                    print('[%f] Gaining speed phase over' % (time.time() - self.time_run_start))
+                    print('[%f] Gaining speed phase over' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
 
                     # Check that speed if high enough
                     if self.velocity < 0.3*initial_speed:
-                        print("[%f] WARNING : speed is lower than one third the reference speed. Hall sensors or drive motor might be faulty. Will use reference speed instead of measured speed in calculations." % (time.time() - self.time_run_start))
+                        print("[%f] WARNING : speed is lower than one third the reference speed. Hall sensors or drive motor might be faulty. Will use reference speed instead of measured speed in calculations." % (time.time() - self.time_run_start) if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
                         self.broken_speed_flag = True
 
                     self.controller_active = True
@@ -527,7 +534,7 @@ class Controller(object):
                     self.pid_direction.clear()
 
                     # Enable steering motor
-                    if not self.recordPath and self.simulate_data == '':
+                    if not self.recordPath and self.simulate_file == '':
                         self.bike.steering_motor.enable()
 
                         # Restart PWM before using steering motor because it gets deactivated at the some point before in the code
@@ -541,14 +548,15 @@ class Controller(object):
                     # Abort experiment if bike is in unsafe conditions at this point
                     # if (abs(self.roll)>20*deg2rad or abs(self.rollRate)>20*deg2rad or abs(self.steeringAngle)>20*deg2rad):
                     if (abs(self.roll) > 20*deg2rad or abs(self.steeringAngle) > 20*deg2rad):
-                        exc_msg = ('[%f] Bike is in unsafe conditions, aborting the experiment' % (time.time() - self.time_run_start))
+                        exc_msg = ('[%f] Bike is in unsafe conditions, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                         print(exc_msg)
                         self.exception_log(-1, exc_msg)
                         break
 
                     # Reset estimated roll to zero
                     self.roll = 0
-                    self.bike.imu.phi = 0
+                    if self.simulate_file == '':
+                        self.bike.imu.phi = 0
                 elif self.controller_active:
                     # Check steering angle
                     self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
@@ -566,31 +574,34 @@ class Controller(object):
                 self.control_cal_time = time.time() - self.time_start_current_loop - self.sensor_reading_time
             #except (ValueError, KeyboardInterrupt):
             except Exception as e:
-                print("[%f] Number of times sampling time was exceeded : %d" % (self.exceedscount,time.time() - self.time_run_start))
+                print("[%f] Number of times sampling time was exceeded : %d" % (self.exceedscount,time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
 
                 # e = sys.exc_info()[0]
-                print("[%f] Detected error :" % (time.time() - self.time_run_start))
+                print("[%f] Detected error :" % (time.time() - self.time_run_start) if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
                 print(e)
                 print(traceback.print_exc())
 
                 self.safe_stop()
-                exc_msg = ('[%f] Error or keyboard interrupt, aborting the experiment' % (time.time() - self.time_run_start))
+                exc_msg = ('[%f] Error or keyboard interrupt, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                 print(exc_msg)
                 self.exception_log(-2, exc_msg)
 
 
             # Control Frequency
             self.loop_time = time.time() - self.time_start_current_loop
-            self.time_count = time.time() - self.time_run_start
-            
+            if self.simulate_file == '':
+                self.time_count = time.time() - self.time_run_start
+            else:
+                # self.time_count = self.simulate_data_Time[self.idx_simulate_data] - self.simulate_data_Time[self.idx_simulate_data-1]
+                self.time_count = self.simulate_data_Time[self.idx_simulate_data]
 
 
             if not self.recordPath:
                 # Check for ESTOP
-                if self.simulate_data == '':
+                if self.simulate_file == '':
                     self.ESTOP = self.bike.emergency_stop_check()
                     if self.ESTOP:
-                        exc_msg = '[%f] Emergency stop pressed, aborting the experiment' % (time.time() - self.time_run_start)
+                        exc_msg = '[%f] Emergency stop pressed, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
                         print(exc_msg)
                         self.exception_log(0,exc_msg)
                         self.safe_stop()
@@ -599,7 +610,7 @@ class Controller(object):
                 # Check for extreme PHI
                 if self.roll > MAX_LEAN_ANGLE or self.roll < MIN_LEAN_ANGLE:
                     self.safe_stop()
-                    exc_msg = ('[%f] Exceeded min/max lean (roll) angle abs %3f > abs %3f, aborting the experiment' % (time.time() - self.time_run_start,self.roll, MAX_LEAN_ANGLE))
+                    exc_msg = ('[%f] Exceeded min/max lean (roll) angle abs %3f > abs %3f, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],self.roll, MAX_LEAN_ANGLE))
                     print(exc_msg)
                     self.exception_log(2, exc_msg)
 
@@ -608,7 +619,7 @@ class Controller(object):
                 if self.time_count > test_duration:
                     # Print number of times sampling time was exceeded if experiment is aborted early
                     self.safe_stop()
-                    exc_msg = ('[%f] Exceeded test duration, aborting the experiment' % (time.time() - self.time_run_start))
+                    exc_msg = ('[%f] Exceeded test duration, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                     print(exc_msg)
                     self.exception_log(-1, exc_msg)
                     break
@@ -623,27 +634,30 @@ class Controller(object):
             # Compute total time for current loop
             self.loop_time = time.time() - self.time_start_current_loop
             # Sleep to match sampling time
-            if self.loop_time < sample_time and self.simulate_data == '':
+            if self.loop_time < sample_time and self.simulate_file == '':
                 time.sleep((sample_time - self.loop_time))
 
             self.time_start_previous_loop = self.time_start_current_loop
 
             # Distance travelled
-            self.distance_travelled += self.velocity * (time.time() - self.time_start_current_loop)
+            if self.simulate_file == '':
+                self.distance_travelled += self.velocity * (time.time() - self.time_start_current_loop)
+            else:
+                self.distance_travelled += self.velocity * (self.simulate_data_Time[self.idx_simulate_data] - self.simulate_data_Time[max(0,self.idx_simulate_data-1)])
 
             # Increase index for simulation using prerecorded data
-            if self.simulate_data == '':
+            if self.simulate_file != '':
                 self.idx_simulate_data += 1
 
         # Print number of times sampling time was exceeded after experiment is over
-        print("[%f] Number of times sampling time was exceeded : %d" % (time.time() - self.time_run_start,self.exceedscount))
+        print("[%f] Number of times sampling time was exceeded : %d" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],self.exceedscount))
 
     ####################################################################################################################
     ####################################################################################################################
     # Stop bike
     def stop(self):
         self.controller_active = False
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             self.bike.stop_all()
 
 
@@ -897,25 +911,25 @@ class Controller(object):
     # Get bike states
     def get_states(self):
         self.steeringAngle_previous = self.steeringAngle
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             self.steeringAngle = self.bike.get_handlebar_angle()
         else:
             self.steeringAngle = self.simulate_data_SteeringAngle[self.idx_simulate_data]
         if self.steeringAngle > MAX_HANDLEBAR_ANGLE or self.steeringAngle < MIN_HANDLEBAR_ANGLE:
             print('[%f] WARNING : Steering angle exceeded limits' % (
-                    time.time() - self.time_run_start))
+                    time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
 
-        if self.steering_angle_offset_computed_flag:
+        if self.steering_angle_offset_computed_flag and self.simulate_file == '':
             self.steeringAngle = self.steeringAngle + self.steering_angle_offset
 
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             self.steeringCurrent = self.bike.steering_motor.read_steer_current()
         else:
             self.steeringCurrent = self.simulate_data_SteerMotorCurrent[self.idx_simulate_data]
 
         # imu_data = [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         # self.imu_data = self.bike.get_imu_data(0, self.steeringAngle, self.roll)
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             self.imu_data = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)
         else:
             self.imu_data = (self.simulate_data_Roll[self.idx_simulate_data],
@@ -942,7 +956,7 @@ class Controller(object):
         self.rollRate_rec = self.rollRate
         # Outlier detection on roll rate
         if abs(self.rollRate) > 20*deg2rad:
-            print('[%f] WARNING : Measured roll rate larger than 20deg/s, at %g deg/s' % (time.time() - self.time_run_start, self.rollRate * rad2deg))
+            print('[%f] WARNING : Measured roll rate larger than 20deg/s, at %g deg/s' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data], self.rollRate * rad2deg))
             self.rollRate = self.rollRate_prev
 
 
@@ -952,7 +966,10 @@ class Controller(object):
     # Get position from GPS
     # @pysnoope
     def estimate_states(self):
-        dt = time.time() - self.time_estimate_previous
+        if self.simulate_file == '':
+            dt = time.time() - self.time_estimate_previous
+        else:
+            dt = self.simulate_data_Time[self.idx_simulate_data] - self.simulate_data_Time[max(0,self.idx_simulate_data-1)]
 
         self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
 
@@ -991,7 +1008,10 @@ class Controller(object):
         self.y_estimated_previous = self.y_estimated
         self.yaw_estimated_previous = self.yaw_estimated
         self.heading_estimated_previous = self.heading_estimated
-        self.time_estimate_previous = time.time()
+        if self.simulate_file == '':
+            self.time_estimate_previous = time.time()
+        else:
+            self.time_estimate_previous = self.simulate_data_Time[self.idx_simulate_data]
 
         # Compute estimated lat/lon
         self.lon_estimated = (self.x_estimated * rad2deg) / R / np.cos(self.lat_measured_GPS_ini * deg2rad) + self.lon_measured_GPS_ini
@@ -1009,7 +1029,7 @@ class Controller(object):
         self.pos_GPS_previous = np.array([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
 
         # Get GPS position
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             self.gpspos = self.bike.gps.get_position()
         else:
             self.gpspos = (self.simulate_data_x_GPS[self.idx_simulate_data],
@@ -1025,7 +1045,10 @@ class Controller(object):
             self.y_measured_GPS = self.gpspos[1]
             self.lat_measured_GPS = self.gpspos[2]
             self.lon_measured_GPS = self.gpspos[3]
-            self.gps_timestamp = time.time() - self.time_run_start
+            if self.simulate_file == '':
+                self.gps_timestamp = time.time() - self.time_run_start
+            else:
+                self.gps_timestamp = self.simulate_data_Time[self.idx_simulate_data]
             if self.lat_measured_GPS_ini == 'none':
                 self.lat_measured_GPS_ini = self.lat_measured_GPS
                 self.lon_measured_GPS_ini = self.lon_measured_GPS
@@ -1045,8 +1068,8 @@ class Controller(object):
             self.y_measured_GPS = self.y_measured_GPS - self.y_offset
 
             # Offset GPS position from center of mass of bike to position of antenna
-            self.x_measured_GPS -= antenna_offset_x * np.cos(self.theta_measured_GPS)
-            self.y_measured_GPS -= antenna_offset_y * np.sin(self.theta_measured_GPS)
+            # self.x_measured_GPS -= antenna_offset_x * np.cos(self.theta_measured_GPS)
+            # self.y_measured_GPS -= antenna_offset_y * np.sin(self.theta_measured_GPS)
 
 
             # print('DEBUG : [%f] x = %f ; x_prev = %f ; y = %f ; y_prev = %f' % (time.time() - self.time_run_start,self.x_measured_GPS,self.x_measured_GPS_previous,self.y_measured_GPS,self.y_measured_GPS_previous))
@@ -1130,7 +1153,7 @@ class Controller(object):
             self.upperSaturation = True
             # self.bike.stop()
             self.safe_stop()
-            exc_msg = '[%f] Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (time.time() - self.time_run_start,max_handlebar_angle * rad2deg)
+            exc_msg = '[%f] Exceeded MAX_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],max_handlebar_angle * rad2deg)
             print(exc_msg)
             self.exception_log(1, exc_msg)
         elif handlebar_angle < min_handlebar_angle:
@@ -1138,7 +1161,7 @@ class Controller(object):
             self.lowerSaturation = True
             # self.bike.stop()
             self.safe_stop()
-            exc_msg = '[%f] Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (time.time() - self.time_run_start,max_handlebar_angle * rad2deg)
+            exc_msg = '[%f] Exceeded MIN_HANDLEBAR_ANGLE of %f deg, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],max_handlebar_angle * rad2deg)
             print(exc_msg)
             self.exception_log(1, exc_msg)
         else:
@@ -1150,17 +1173,17 @@ class Controller(object):
     ####################################################################################################################
     # Initial Estop check
     def initial_Estop_Check(self):
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             self.ESTOP = self.bike.emergency_stop_check()
         else:
             self.ESTOP = False
 
         if self.ESTOP:
-            print('[%f] Emergency stop pressed, the experiment will be aborted if it is not released now' % (time.time() - self.time_run_start))
+            print('[%f] Emergency stop pressed, the experiment will be aborted if it is not released now' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
             input_estop = raw_input('Press ENTER to continue')
             if self.ESTOP:
                 self.safe_stop()
-                exc_msg = '[%f] Emergency stop was not released, aborting the experiment before it starts' % (time.time() - self.time_run_start)
+                exc_msg = '[%f] Emergency stop was not released, aborting the experiment before it starts' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
                 print(exc_msg)
                 self.exception_log(0,exc_msg)
 
@@ -1231,10 +1254,10 @@ class Controller(object):
     #@pysnooper.snoop()
     def get_balancing_setpoint(self):
         if path_tracking and not self.path_tracking_engaged:
-            if time.time()-self.time_start_controller > balancing_time:
+            if time.time()-self.time_start_controller > balancing_time or self.simulate_file != '':
                 self.path_tracking_engaged = True
                 # self.reset_global_angles_and_coordinates()
-                print("[%f] Now heading control and/or path tracking is engaged" % (time.time() - self.time_run_start))
+                print("[%f] Now heading control and/or path tracking is engaged" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
         if self.path_tracking_engaged:
             # Get reference position and heading
             if self.path_file_arg == 'pot':
@@ -1380,7 +1403,7 @@ class Controller(object):
                 # Saturation of balancing setpoint
             self.balancing_setpoint_sat = max(min(self.balancing_setpoint,max_rollref*deg2rad),-max_rollref*deg2rad)
             if self.balancing_setpoint_sat != self.balancing_setpoint:
-                print('[%f] WARNING : Balancing setpoint saturated' % (time.time() - self.time_run_start))
+                print('[%f] WARNING : Balancing setpoint saturated' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
             self.balancing_setpoint = self.balancing_setpoint_sat
 
         elif potentiometer_use:
@@ -1498,7 +1521,7 @@ class Controller(object):
 
         self.steering_rate_previous = self.steering_rate
         # Send Steering Rate Reference value to steering motor controller
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             self.controller_set_handlebar_angular_velocity(self.steering_rate)
 
         # if self.pid_balance_control_signal > deadband or self.pid_balance_control_signal < -deadband:
@@ -1515,10 +1538,10 @@ class Controller(object):
             # print("Bike was in unsafe conditions or the code stopped. Putting the bike in a stable circle with a 5deg constant roll reference.")
             # self.balancing_setpoint = 5*deg2rad*np.sign(self.roll)
             # self.keep_the_bike_stable()
-            print("[%f] Bike was in unsafe conditions or the code stopped. Stopping the bike and disabling motors." % (time.time() - self.time_run_start))
+            print("[%f] Bike was in unsafe conditions or the code stopped. Stopping the bike and disabling motors." % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
             self.stop()
         else:
-            print("[%f] Conditions too extreme, bike probably felt down, turning off motors." % (time.time() - self.time_run_start))
+            print("[%f] Conditions too extreme, bike probably felt down, turning off motors." % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
             self.stop()
 
 
@@ -1538,7 +1561,7 @@ class Controller(object):
     def log_headerline(self):
         # Data logging setup
         timestr = time.strftime("%Y%m%d-%H%M%S")
-        if self.simulate_data == '':
+        if self.simulate_file == '':
             csv_path = './ExpData_%s/BikeData_%s.csv' % (bike, timestr)
         else:
             csv_path = './ExpData_%s/BikeData_simulateData_%s.csv' % (bike, timestr)
@@ -1638,11 +1661,11 @@ class Controller(object):
 
         if debug or (self.loop_time > sample_time):
             if self.loop_time > sample_time:
-                print("[%f] WARNING : The calculation time exceeds the sampling time!" % (time.time() - self.time_run_start))
+                print("[%f] WARNING : The calculation time exceeds the sampling time!" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                 self.exceedscount += 1
 
             # Print sensor reading time, control calculation time, IMU data reading time and logging time
-            print("[%f] sensor_reading_time \t control calculation \t IMU \t log = %g \t %g \t %g \t %g \t" % (time.time() - self.time_run_start,
+            print("[%f] sensor_reading_time \t control calculation \t IMU \t log = %g \t %g \t %g \t %g \t" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],
                 self.sensor_reading_time, self.control_cal_time, self.time_get_states,
                 self.time_log))
 
@@ -1756,11 +1779,11 @@ class Controller(object):
 
         if debug or (self.loop_time > sample_time):
             if self.loop_time > sample_time:
-                print("[%f] WARNING : The calculation time exceeds the sampling time!" % (time.time() - self.time_run_start))
+                print("[%f] WARNING : The calculation time exceeds the sampling time!" % (time.time() - self.time_run_start) if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
                 self.exceedscount += 1
 
             # Print sensor reading time, control calculation time, IMU data reading time and logging time
-            print("[%f] sensor_reading_time \t control calculation \t IMU \t log = %g \t %g \t %g \t %g \t" % (time.time() - self.time_run_start,
+            print("[%f] sensor_reading_time \t control calculation \t IMU \t log = %g \t %g \t %g \t %g \t" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],
                 self.sensor_reading_time, self.control_cal_time, self.time_get_states,
                 self.time_log))
 
