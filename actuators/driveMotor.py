@@ -26,7 +26,8 @@ class DriveMotor(object):
             self.serial.write(character)
 
     def rear_set_rpm(self, rpm):
-        rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 5 -pi\n'
+        # rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 5 -pi\n'
+        rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 9999 -pi\n' # '-s' sets the speed of the motor, '-f' sets the maximum torque/current. Setting '-f' to a very large value will allow the motor to use the maximum current possible
         self.serial.write(rpm_string)
         # for character in pwm_string:
         #     self.serial_write_character(character)

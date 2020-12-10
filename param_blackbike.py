@@ -202,7 +202,16 @@ pid_steering_D = 0.0
 pid_steering_sample_time = 1.0 / controller_frequency
 
 # STEERING ANGLE CONTROL
-pid_steeringangle_P = 20.0
+# # # pid_steeringangle_P = 20.0
+# # # pid_steeringangle_I = 0.0
+# # # pid_steeringangle_D = 0.0
+# # pid_steeringangle_P = 14.0
+# # pid_steeringangle_I = 30.0
+# # pid_steeringangle_D = 0.0
+# pid_steeringangle_P = 10.0
+# pid_steeringangle_I = 5.0
+# pid_steeringangle_D = 0.0
+pid_steeringangle_P = 3.0
 pid_steeringangle_I = 0.0
 pid_steeringangle_D = 0.0
 pid_steeringangle_sample_time = 1.0 / controller_frequency

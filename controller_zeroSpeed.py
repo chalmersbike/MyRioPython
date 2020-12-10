@@ -36,7 +36,7 @@ class Controller(object):
         # Wait before starting experiment
         print("")
         # for i in range(0,int(math.ceil(start_up_interval))):
-        for i in range(0, int(math.ceil(3))):
+        for i in range(0, int(math.ceil(5))):
             time.sleep(1)
             print("Experiment starting in %is" % (int(math.ceil(start_up_interval))-i))
         print("")
@@ -237,7 +237,7 @@ class Controller(object):
         if circle_switch is True:
             self.roll_ref_start_time1 = roll_ref_start_time1
             self.roll_ref_start_time2 = roll_ref_start_time2
-
+        self.time_deltadot_previous = 0.0
 
         # Bike States
         self.roll = 0.0
@@ -598,9 +598,21 @@ class Controller(object):
     ####################################################################################################################
     # Balancing controller
     def keep_the_bike_stable(self):
-        # lqr_gains = (9.69,-181.88,-42.37)
-        lqr_gains = (9.69,-100,-42.37)
-        self.steering_rate = -(lqr_gains[0]*self.steeringAngle + lqr_gains[1]*self.roll + lqr_gains[2]*self.rollRate)
+        # # lqr_gains = (9.69,-181.88,-42.37)
+        # # lqr_gains = (9.69,-100,-42.37)
+        # lqr_gains = (9.6,-177,-41)
+        # self.steering_rate = -(lqr_gains[0]*self.steeringAngle + lqr_gains[1]*self.roll + lqr_gains[2]*self.rollRate)
+
+        lqr_gains = (77,15,-1340,-313)
+        self.deltadot = (self.steeringAngle - self.steeringAngle_previous)/((time.time() - self.run_start) - self.time_deltadot_previous)
+        self.steering_acc = -(lqr_gains[0]*self.steeringAngle + lqr_gains[1]*self.deltadot + lqr_gains[2]*self.roll + lqr_gains[3]*self.rollRate)
+        self.steering_rate += self.steering_acc * ((time.time() - self.run_start) - self.time_deltadot_previous)
+        self.time_deltadot_previous = time.time() - self.run_start
+        print("delta = %f ; deltadot = %f ; phi = %f ; phidot = %f ; deltaddot = %f ; controlInput = %f" % (self.steeringAngle,self.deltadot,self.roll,self.rollRate,self.steering_acc,self.steering_rate))
+
+        # self.delta_ref = (0 if (time.time() - self.run_start < 1) else 20*deg2rad if (time.time() - self.run_start < 5) else -20*deg2rad)
+        # # self.steering_rate = self.delta_ref - self.steeringAngle
+        # self.steering_rate = self.pos2vel(self.delta_ref)
 
         # # Low-pass filter
         # # Butterworth 1st order 1Hz cutoff
@@ -659,8 +671,14 @@ class Controller(object):
         else:
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
 
-        self.log_header_str = ['RealTime','Time', 'CalculationTime', 'Roll', 'SteeringAngle', 'RollRate',
-                               'ControlInput', 'gy', 'gz', 'ax', 'ay', 'az', 'imu_read_timing', 'SteerMotorCurrent']
+        self.log_header_str = ['RealTime','Time (s)', 'CalculationTime (s)', 'Roll (deg)', 'SteeringAngle (deg)', 'RollRate (deg)',
+                               'ControlInput (deg)', 'gy (rad/s)', 'gz (rad/s)', 'ax (g)', 'ay (g)', 'az (g)', 'imu_read_timing (s)', 'SteerMotorCurrent (A)']
+
+        # if self.deltadot:
+        self.log_header_str += ['deltadot_computed']
+
+        # if self.steering_acc:
+        self.log_header_str += ['steering_acc']
 
         self.writer.writerow(self.log_header_str)
 
@@ -683,6 +701,16 @@ class Controller(object):
             "{0:.5f}".format(self.sensor_read_timing),
             "{0:.5f}".format(self.steeringCurrent)
         ]
+
+        if self.deltadot:
+            self.log_str += [
+                "{0:.5f}".format(self.deltadot)
+            ]
+
+        if self.steering_acc:
+            self.log_str += [
+                "{0:.5f}".format(self.steering_acc)
+            ]
 
         self.writer.writerow(self.log_str)
         self.time_log = time.time() - self.time_log
