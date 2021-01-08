@@ -20,7 +20,7 @@ import dubins
 # Raise Numpy errors
 np.seterr(all = "raise")
 
-# @pysnooper.snoop()
+@pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
     def __init__(self, bike, recordPath=False, reverse=False, straight=False,path_file_arg='',rollref_file_arg='',steeringdist_file_arg='',simulate_file=''):
@@ -139,7 +139,7 @@ class Controller(object):
 
                     # Reverse path is needed
                     if self.reverse:
-                        print('Reading path in self.reverse ...')
+                        print('Reading path in reverse ...')
                         self.path_lon = self.path_lon[::-1]
                         self.path_lat = self.path_lat[::-1]
 
@@ -344,15 +344,12 @@ class Controller(object):
                 self.get_states()
                 self.time_get_states = time.time() - self.time_get_states
 
-                # Estimate states (v, yaw, heading, x, y)
-                if self.compute_estimators_flag:# and (self.time_count >= walk_time):
-                    self.estimate_states()
-                    # self.compute_estimators_flag = False
 
                 self.sensor_reading_time = time.time()
                 # Get position from GPS
                 if gps_use:
-                    if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01 or (((self.simulate_data_Time[self.idx_simulate_data] - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file!=''):
+                    # if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01 or (((self.simulate_data_Time[self.idx_simulate_data] - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file!=''):
+                    if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01:
                         self.gps_timestamp_previous = self.gps_timestamp
 
                         # self.bike.get_gps_data()
@@ -436,6 +433,12 @@ class Controller(object):
                     self.lat_measured_GPS = 0.0
                     self.lon_measured_GPS = 0.0
                     self.gps_timestamp = 0.0
+
+
+                # Estimate states (v, yaw, heading, x, y)
+                if self.compute_estimators_flag:# and (self.time_count >= walk_time):
+                    self.estimate_states()
+                    # self.compute_estimators_flag = False
 
                 # Get laser ranger position (y position on the roller)
                 if laserRanger_use:
@@ -958,6 +961,7 @@ class Controller(object):
         if abs(self.rollRate) > 20*deg2rad:
             print('[%f] WARNING : Measured roll rate larger than 20deg/s, at %g deg/s' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data], self.rollRate * rad2deg))
             self.rollRate = self.rollRate_prev
+        print("rollRate_rec = %f ; rollRate = %f ; rollRate_prev = %f" % (self.rollRate_rec,self.rollRate,self.rollRate_prev))
 
 
 

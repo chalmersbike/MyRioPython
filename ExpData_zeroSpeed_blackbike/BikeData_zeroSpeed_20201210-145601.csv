@@ -1,0 +1,2 @@
+Description :  ; walk_time = 2.0 ; speed_up_time = 3.0 ; balancing_time = 0.0
+RealTime,Time (s),CalculationTime (s),Roll (deg),SteeringAngle (deg),RollRate (deg),ControlInput (deg),gy (rad/s),gz (rad/s),ax (g),ay (g),az (g),imu_read_timing (s),SteerMotorCurrent (A),deltadot_computed,steering_acc

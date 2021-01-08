@@ -257,6 +257,10 @@ class Controller(object):
         self.steeringAngle = 0.0
         self.sensor_read_timing = 0.0
         self.steeringCurrent = 0.0
+        self.deltadot = 0.0
+        self.steering_acc  = 0.0
+        self.steering_rate  = 0.0
+        self.time_deltadot_previous = 0.0
 
         # States Estimators
         self.compute_estimators_flag = False
@@ -603,16 +607,17 @@ class Controller(object):
         # lqr_gains = (9.6,-177,-41)
         # self.steering_rate = -(lqr_gains[0]*self.steeringAngle + lqr_gains[1]*self.roll + lqr_gains[2]*self.rollRate)
 
-        lqr_gains = (77,15,-1340,-313)
-        self.deltadot = (self.steeringAngle - self.steeringAngle_previous)/((time.time() - self.run_start) - self.time_deltadot_previous)
-        self.steering_acc = -(lqr_gains[0]*self.steeringAngle + lqr_gains[1]*self.deltadot + lqr_gains[2]*self.roll + lqr_gains[3]*self.rollRate)
-        self.steering_rate += self.steering_acc * ((time.time() - self.run_start) - self.time_deltadot_previous)
-        self.time_deltadot_previous = time.time() - self.run_start
-        print("delta = %f ; deltadot = %f ; phi = %f ; phidot = %f ; deltaddot = %f ; controlInput = %f" % (self.steeringAngle,self.deltadot,self.roll,self.rollRate,self.steering_acc,self.steering_rate))
+        # lqr_gains = (77,15,-1340,-313)
+        # self.deltadot = (self.steeringAngle - self.steeringAngle_previous)/((time.time() - self.run_start) - self.time_deltadot_previous)
+        # self.steering_acc = -(lqr_gains[0]*self.steeringAngle + lqr_gains[1]*self.deltadot + lqr_gains[2]*self.roll + lqr_gains[3]*self.rollRate)
+        # self.steering_rate += self.steering_acc * ((time.time() - self.run_start) - self.time_deltadot_previous)
+        # self.time_deltadot_previous = time.time() - self.run_start
+        # print("delta = %f ; deltadot = %f ; phi = %f ; phidot = %f ; deltaddot = %f ; controlInput = %f" % (self.steeringAngle,self.deltadot,self.roll,self.rollRate,self.steering_acc,self.steering_rate))
 
         # self.delta_ref = (0 if (time.time() - self.run_start < 1) else 20*deg2rad if (time.time() - self.run_start < 5) else -20*deg2rad)
-        # # self.steering_rate = self.delta_ref - self.steeringAngle
-        # self.steering_rate = self.pos2vel(self.delta_ref)
+        self.delta_ref = -45*deg2rad # Keep wheel in place
+        # self.steering_rate = self.delta_ref - self.steeringAngle
+        self.steering_rate = self.pos2vel(self.delta_ref)
 
         # # Low-pass filter
         # # Butterworth 1st order 1Hz cutoff
