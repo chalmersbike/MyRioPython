@@ -61,7 +61,8 @@ statesEstimators_Kxy = np.matrix([[statesEstimators_Kx , 0] , [0 , statesEstimat
 # Drive Motor
 driveMotor_port  = '/dev/ttyO4'             # Drive Motor serial port
 driveMotor_UARTPort = "UART4"               # Drive Motor UART port
-driveMotor_CommunicationFrequency = 115200  # [Hz], Drive Motor Serial port communication frequency
+driveMotor_CommunicationFrequency = 115200  # [Hz] Drive Motor Serial port communication frequency
+driveMotor_logFrequency = 10                # [Hz] Frequency at which the motor controller outputs log data
 
 
 ########################################################################################################################
