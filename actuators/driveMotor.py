@@ -9,7 +9,7 @@ class DriveMotor(object):
 
     def __init__(self):
         UART.setup(driveMotor_UARTPort)
-        ADC.setup()
+        # ADC.setup()
         self.serial = serial.Serial(port=driveMotor_port, baudrate=driveMotor_CommunicationFrequency)
         self.serial.close()
         self.serial.open()

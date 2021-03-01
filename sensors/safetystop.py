@@ -34,6 +34,6 @@ class SafetyStop(object):
 
         # FOR TESTING PURPOSE ONLY, WILL IGNORE THE EMERGENCY STOP TO FORCEFULLY RUN THE CODE
         # The motors will still be electrically disconnected if the emergency stop is pressed
-        self.ESTOP = False
+       # self.ESTOP = False
 
         return self.ESTOP

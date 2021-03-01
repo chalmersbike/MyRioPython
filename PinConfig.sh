@@ -11,6 +11,7 @@ config-pin p8.10 gpio # 24/04/2020 : NOT USED
 config-pin p8.11 qep # 24/04/2020 : ENCODER A
 config-pin p8.12 qep # 24/04/2020 : ENCODER B
 config-pin p8.13 pwm # 24/04/2020 : STEERING PWM
+config-pin p8.15 gpio # 24/04/2020 : NOT USED
 config-pin p8.15 out- # 24/04/2020 : NOT USED
 config-pin p8.16 qep # 24/04/2020 : NOT USED
 config-pin p8.17 gpio # 24/04/2020 : STEERING ENABLE
