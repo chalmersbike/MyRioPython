@@ -25,7 +25,7 @@ speed_up_time = 3.0                             # [s] Time to run the drive moto
 walk_time = 2.0                                 # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
 max_exceed_count = 10                           # Number of times where calculation time can exceed sampling time before aborting experiment
 
-path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
 path_tracking_structure = 'series'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)

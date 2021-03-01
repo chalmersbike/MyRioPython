@@ -20,7 +20,7 @@ import dubins
 # Raise Numpy errors
 np.seterr(all = "raise")
 
-@pysnooper.snoop()
+# @pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
     def __init__(self, bike, recordPath=False, reverse=False, straight=False,path_file_arg='',rollref_file_arg='',steeringdist_file_arg='',simulate_file=''):

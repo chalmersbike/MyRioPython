@@ -118,7 +118,7 @@ class IMU(object):
             # print buf[1]
             # raw_input('IMU : SPI failure?')
 
-
+        self.gx_prev = 0.0
         self.gx_offset = 0.0
         self.gy_offset = 0.0
         self.gz_offset = 0.0
@@ -198,6 +198,7 @@ class IMU(object):
             dT = time.time() - self.last_read
             # dT = 0.01
             self.last_read = time.time()
+
         ax = read[1]
         ay = read[2]
         az = read[3]
@@ -211,7 +212,12 @@ class IMU(object):
 
 
         CP_acc_g = ((velocity ** 2) / LENGTH_B) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
-        self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi), az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
+
+        # Roll acceleration
+        phiddot = gx - self.gx_prev / dT
+
+        self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi) + imu_height*phiddot, az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
+        # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi), az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
         # self.phi_acc = math.atan2(ay, math.sqrt(ax ** 2 + az ** 2)) - self.acc_roll_offset
 
         if abs(self.phi_acc) >  80 * deg2rad:
@@ -222,6 +228,7 @@ class IMU(object):
         self.phi = self.phi_acc * (1-imu_complementaryFilterRatio) + (self.phi + gx * (dT)) * imu_complementaryFilterRatio
         self.phi_gyro += dT * gx
         self.prev_reading = [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az]
+        self.gx_prev = gx
 
         # [phi_comp, phi_gyro, gx (phidot), gy, gz, ax, ay, az]
         return [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az, self.last_read - self.first_read_time]

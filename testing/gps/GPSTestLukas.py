@@ -21,7 +21,10 @@ class Test(object):
             writer_gps = csv.writer(results_gps)
             writer_gps.writerow(('Time (s)', 'x (m)', 'y (m)', 'latitude', 'longitude', 'status', 'timestamp'))
         for x in range(1,int(number_samples_GPS)+1):
+            time_read_gps = time.time()
             gpspos = gps.get_position()
+            time_read_gps = time.time() - time_read_gps
+
             writer_gps.writerow((time.time() - start_time, gpspos[0], gpspos[1], gpspos[2], gpspos[3], gpspos[4], gpspos[5]))
 
             time.sleep(0.1)
@@ -30,7 +33,7 @@ class Test(object):
             # gps.ser_gps.flushInput()
             # gps.ser_gps.flushOutput()
 
-            print 'Time=%f\tx=%g\ty = %g\t' % (time.time() - start_time, gpspos[0], gpspos[1])
+            print 'Time=%f\tTimeReadGPS=%f\tx=%g\ty = %g\tlat = %g\tlon = %g' % (time.time() - start_time, time_read_gps, gpspos[0], gpspos[1], gpspos[2], gpspos[3])
             # Write to CSV file
 
 test = Test()

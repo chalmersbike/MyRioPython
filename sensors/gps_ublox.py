@@ -62,7 +62,8 @@ PMTK_API_SET_DGPS_MODE_WAAS = "$PMTK301,2*2E"  # turn on WAAS DGPS data source m
 class GPS(object):
     def __init__(self):
         # Open the serial connection at the default baudrate of 38400
-        self.ser_gps = serial.Serial(gps_port, 38400, timeout=1)
+        # self.ser_gps = serial.Serial(gps_port, 38400, timeout=1)
+        self.ser_gps = serial.Serial(gps_port, 460800, timeout=1)
 
         # if gps_baudrate == 115200:
         #     # Change the baud rate to 115200 bps
@@ -181,6 +182,7 @@ class GPS(object):
 
         # Read through all received lines until we find the last (most recent) one
         readall = ''
+        # print('inwaiting : %d' % (self.ser_gps.inWaiting()))
         while self.ser_gps.inWaiting() > 0:
             buffer_string = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
             # print('buffer: %s' % (buffer_string))
