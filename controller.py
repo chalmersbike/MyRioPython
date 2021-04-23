@@ -262,10 +262,10 @@ class Controller(object):
 
         # Get experiment (if any) of the experiment
         if not self.recordPath:
-            self.descr = raw_input('\nType a description for the experiment if necessary. Press ENTER to start the experiment. ')
+            self.descr = input('\nType a description for the experiment if necessary. Press ENTER to start the experiment. ')
         else:
             self.descr = ''
-            raw_input('Press enter to start recording a path by walking the bike.')
+            input('Press enter to start recording a path by walking the bike.')
 
         # Create log file and add header line
         if not self.recordPath:
@@ -410,16 +410,16 @@ class Controller(object):
 
                                 self.steering_angle_offset_count = self.steering_angle_offset_count + 1
 
-                                # print self.velocity_previous
-                                # print self.steeringAngle_previous
-                                # print (self.gps_timestamp - self.gps_timestamp_previous)
-                                # print self.cumsum_v_dt
-                                # print self.cumsum_delta_v_dt
-                                # print self.y_GPS_rot
-                                # print (self.y_GPS_rot - self.y_GPS_rot_previous)
-                                # print((1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt)))
-                                # print self.steering_angle_offset_count
-                                # print self.steering_angle_offset
+                                # print(self.velocity_previous)
+                                # print(self.steeringAngle_previous)
+                                # print((self.gps_timestamp - self.gps_timestamp_previous))
+                                # print(self.cumsum_v_dt)
+                                # print(self.cumsum_delta_v_dt)
+                                # print(self.y_GPS_rot)
+                                # print((self.y_GPS_rot - self.y_GPS_rot_previous))
+                                # print((1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt))))
+                                # print(self.steering_angle_offset_count)
+                                # print(self.steering_angle_offset)
 
                                 self.compute_steering_offset_flag = False
                             except:
@@ -1184,7 +1184,7 @@ class Controller(object):
 
         if self.ESTOP:
             print('[%f] Emergency stop pressed, the experiment will be aborted if it is not released now' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
-            input_estop = raw_input('Press ENTER to continue')
+            input_estop = input('Press ENTER to continue')
             if self.ESTOP:
                 self.safe_stop()
                 exc_msg = '[%f] Emergency stop was not released, aborting the experiment before it starts' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
@@ -1422,7 +1422,7 @@ class Controller(object):
                                 self.balancing_setpoint = roll_ref_Mag
                             else:
                                 self.balancing_setpoint = 0
-                            # print self.time_count, roll_ref_start_time, roll_ref_end_time
+                            # print(self.time_count, roll_ref_start_time, roll_ref_end_time
                         else:
                             self.balancing_setpoint = 0
                     else:
@@ -1432,7 +1432,7 @@ class Controller(object):
                                     self.balancing_setpoint = roll_ref_Mag
                                 else:
                                     self.balancing_setpoint = 0
-                                # print self.time_count, roll_ref_start_time, roll_ref_end_time
+                                # print(self.time_count, roll_ref_start_time, roll_ref_end_time
                             else:
                                 self.balancing_setpoint = 0
                                 self.roll_ref_start_time = self.roll_ref_start_time + roll_ref_period
@@ -1445,7 +1445,7 @@ class Controller(object):
                                     self.balancing_setpoint = roll_ref_Mag2
                                 else:
                                     self.balancing_setpoint = 0
-                                # print self.time_count, roll_ref_start_time, roll_ref_end_time
+                                # print(self.time_count, roll_ref_start_time, roll_ref_end_time
                             else:
                                 self.balancing_setpoint = roll_ref_Mag1
                                 self.roll_ref_start_time1 = self.roll_ref_start_time1 + roll_ref_totalperiod
@@ -1569,9 +1569,9 @@ class Controller(object):
             csv_path = './ExpData_%s/BikeData_%s.csv' % (bike, timestr)
         else:
             csv_path = './ExpData_%s/BikeData_simulateData_%s.csv' % (bike, timestr)
-        print "EXP LOG PATH is: "
-        print csv_path
-        results_csv = open(csv_path, 'wb')
+        print("EXP LOG PATH is: ")
+        print(csv_path)
+        results_csv = open(csv_path, 'w')
         # results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
         self.writer = csv.writer(results_csv)
 
@@ -1720,9 +1720,9 @@ class Controller(object):
         # Data logging setup
         timestr = time.strftime("%Y%m%d-%H%M%S")
         csv_path = './paths/path_%s.csv' % (timestr)
-        print "RECORDED PATH is: "
-        print csv_path
-        results_csv = open(csv_path, 'wb')
+        print("RECORDED PATH is: ")
+        print(csv_path)
+        results_csv = open(csv_path, 'w')
         # results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
         self.writer = csv.writer(results_csv)
 

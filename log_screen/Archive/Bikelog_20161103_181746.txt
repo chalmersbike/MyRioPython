@@ -1,0 +1,2191 @@
+Script started on Thu 03 Nov 2016 06:17:46 PM CET
+P8_38 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+Pin configuration complete
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 2
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! -10
+Time=0.000376,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.011554,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.026061,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.039792,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.053611,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.068070,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.079631,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.092343,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.106050,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.120848,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.136097,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.153425,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.175121,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.195899,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.206098,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.215921,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.226123,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.236114,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.242252,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.253341,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.261428,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.271643,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.280229,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.288974,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.298436,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.307789,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.316900,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.326162,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.335876,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.343421,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.353585,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.361814,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.371303,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.379920,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.387535,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.402450,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.417196,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.432706,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.441904,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.451902,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.460937,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.469873,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.477601,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.488294,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.497669,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.508250,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.518038,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.527835,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.538454,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.546700,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.556099,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.564782,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.573588,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.583315,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.591357,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.599631,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.608470,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.619044,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.628282,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.637463,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.646494,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.654062,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.663537,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.672181,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.681605,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.690150,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.697879,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.708207,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.717725,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.727389,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.737256,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.747661,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.755097,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.764963,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.774389,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.785348,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.793674,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.802522,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.812543,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.821492,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.830730,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.840247,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.849183,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.857304,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.867469,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.876550,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.888129,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.896150,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.905534,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.915602,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.924789,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.933553,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.943050,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.952798,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.960831,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.969577,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.979535,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.987951,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=0.999836,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.015678,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.025980,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.041480,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.057307,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.065789,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.080167,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.093464,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.105691,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.121047,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.134254,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.150123,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.161651,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.170636,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.180212,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.192035,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.200865,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.208621,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.220302,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.230491,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.239900,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.250279,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.260271,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.266746,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.276788,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.285387,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.294549,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.303450,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.310852,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.319846,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.330468,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.339466,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.348775,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.357873,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.367164,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.375801,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.384840,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.393326,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.401949,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.412518,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.419468,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.430118,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.439965,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.448220,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.455967,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.464208,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.470273,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.478633,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.486383,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.495759,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.504486,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.512453,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.518643,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.527305,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.536446,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.546661,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.557179,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.566802,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.575285,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.583551,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.593555,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.603628,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.613044,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.618431,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.629628,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.638131,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.647764,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.656967,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.666181,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.675292,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.683648,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.692925,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.703426,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.713033,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.723571,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.731342,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.740725,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.750260,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.760962,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.769205,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.778350,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.789039,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.797815,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.807529,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.817502,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.826416,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.837318,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.847479,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.856265,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.865792,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.874800,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.883466,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.893635,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.903804,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.913183,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.922207,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.928897,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.937804,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.947388,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.956326,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.965827,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.974412,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.982195,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=1.995615,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.004937,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.014587,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.025345,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.036800,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.048662,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.056632,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.064956,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.076671,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.084020,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.093128,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.103163,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.112497,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.121870,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.129061,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.139024,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.149897,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.160608,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.169420,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.177841,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.187273,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.197686,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.207761,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.217025,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.225538,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.233257,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.243083,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.254065,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.262003,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.272603,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.281670,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.290261,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.300088,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.308741,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.318431,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.326205,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.336451,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.345642,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.355435,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.364189,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.373252,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.382458,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.391798,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.400185,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.410579,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.421551,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.430557,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.437428,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.447886,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+Time=2.458350,	 tdelta = 0.000000,	 Angular Velocity = 1.999992	
+^CTraceback (most recent call last):
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 98, in <module>
+    test = Test()
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 94, in __init__
+    self.steering_motor_drive.set_angular_velocity(0)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 40, in set_angular_velocity
+    self.set_PWM_duty_cycle(duty_cycle)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 31, in set_PWM_duty_cycle
+    PWM.set_duty_cycle(steeringMotor_Channel, duty_cycle)
+RuntimeError: You must start() the PWM channel first
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 10
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! -10
+Time=0.000380,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.010721,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.019750,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.029633,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.039441,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.048661,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.057578,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.066854,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.076235,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.085076,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.094300,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.103316,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.112648,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.122184,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.129815,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.140549,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.150208,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.160217,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.171366,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.180430,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.189165,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.198530,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.208753,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.216421,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.226616,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.233287,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.243344,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.251409,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.257621,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.263034,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.268066,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.274168,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.280679,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.285787,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.291050,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.296069,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.300995,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.306178,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.311201,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.316373,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.321334,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.326544,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.337196,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.347626,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.357045,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.367016,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.375274,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.386373,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.393507,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.403504,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.413000,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.422363,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.430916,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.438732,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.447485,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.458178,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.467989,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.478439,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.488222,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.495484,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.506166,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.514953,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.524152,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.532269,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.540959,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.551152,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.560861,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.570900,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.581202,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.589310,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.597835,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.608817,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.617674,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.626323,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.636560,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.647550,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.657444,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.668334,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.677800,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.688109,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.699711,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.714095,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.728257,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.741108,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.754955,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.769646,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.782499,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.794206,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.806847,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.821817,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.835263,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.844654,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.851873,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.866820,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.877128,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.886522,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.896994,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.904199,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.909610,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.915105,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.920158,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.925811,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.931121,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.936094,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.941719,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.947008,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.952738,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.962512,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.971881,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.980229,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.986945,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.992007,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.997409,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.003545,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.013000,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.021073,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.026466,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.031527,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.036540,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.041481,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.046908,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.052639,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.057729,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.063579,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.068508,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.073437,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.078610,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.083878,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.088781,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.093690,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.099090,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.104048,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.110093,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.116310,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.120924,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.126343,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.131109,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.135761,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.140351,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.144927,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.149685,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.155541,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.160221,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.164756,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.170929,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.175700,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.190179,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.197146,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.202926,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.208341,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.214801,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.220308,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.225382,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.230820,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.236567,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.243849,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.248877,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.254179,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.262107,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.270496,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.275918,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.281078,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.286595,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.292321,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.297291,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.302459,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.307440,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.313109,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.319152,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.330253,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.339153,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.345312,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.351066,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.356045,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.362761,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.368253,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.373093,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.378269,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.385708,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.392733,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.397744,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.403441,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.409098,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.415152,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.420904,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.430519,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.435700,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.440565,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.445498,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.451433,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.456441,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.462296,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.470950,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.477040,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.482479,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.487821,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.497336,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.504716,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.510462,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.515972,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.522480,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.528025,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.532982,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.538228,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.543235,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.548185,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.553094,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.558265,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.563793,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.573753,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.582770,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.592114,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.598816,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.604277,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.609135,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.615024,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=1.620757,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+^CTraceback (most recent call last):
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 98, in <module>
+    test = Test()
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 94, in __init__
+    self.steering_motor_drive.set_angular_velocity(0)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 40, in set_angular_velocity
+    self.set_PWM_duty_cycle(duty_cycle)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 31, in set_PWM_duty_cycle
+    PWM.set_duty_cycle(steeringMotor_Channel, duty_cycle)
+RuntimeError: You must start() the PWM channel first
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 10
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! -20
+Time=0.000379,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.004730,	 tdelta = 0.000000,	 Angular Velocity = 9.999960	
+Time=0.016007,	 tdelta = -0.019459,	 Angular Velocity = 9.999960	
+Time=0.024661,	 tdelta = -0.094054,	 Angular Velocity = 9.999960	
+Time=0.037392,	 tdelta = -0.202703,	 Angular Velocity = 9.999960	
+Time=0.047298,	 tdelta = -0.290270,	 Angular Velocity = 9.999960	
+Time=0.056530,	 tdelta = -0.353513,	 Angular Velocity = 9.999960	
+Time=0.066197,	 tdelta = -0.429730,	 Angular Velocity = 9.999960	
+Time=0.076146,	 tdelta = -0.538378,	 Angular Velocity = 9.999960	
+Time=0.084698,	 tdelta = -0.642162,	 Angular Velocity = 9.999960	
+Time=0.092855,	 tdelta = -0.741081,	 Angular Velocity = 9.999960	
+Time=0.102731,	 tdelta = -0.864324,	 Angular Velocity = 9.999960	
+Time=0.112103,	 tdelta = -0.971351,	 Angular Velocity = 9.999960	
+Time=0.122023,	 tdelta = -1.096216,	 Angular Velocity = 9.999960	
+Time=0.130405,	 tdelta = -1.175675,	 Angular Velocity = 9.999960	
+Time=0.138000,	 tdelta = -1.251892,	 Angular Velocity = 9.999960	
+Time=0.147573,	 tdelta = -1.380000,	 Angular Velocity = 9.999960	
+Time=0.156968,	 tdelta = -1.485405,	 Angular Velocity = 9.999960	
+Time=0.165473,	 tdelta = -1.590811,	 Angular Velocity = 9.999960	
+Time=0.176009,	 tdelta = -1.699459,	 Angular Velocity = 9.999960	
+Time=0.183815,	 tdelta = -1.787027,	 Angular Velocity = 9.999960	
+Time=0.191984,	 tdelta = -1.866486,	 Angular Velocity = 9.999960	
+Time=0.202182,	 tdelta = -1.976756,	 Angular Velocity = 9.999960	
+Time=0.212104,	 tdelta = -2.082162,	 Angular Velocity = 9.999960	
+Time=0.220817,	 tdelta = -2.169729,	 Angular Velocity = 9.999960	
+Time=0.229273,	 tdelta = -2.270270,	 Angular Velocity = 9.999960	
+Time=0.237514,	 tdelta = -2.349729,	 Angular Velocity = 9.999960	
+Time=0.248207,	 tdelta = -2.474594,	 Angular Velocity = 9.999960	
+Time=0.259750,	 tdelta = -2.592973,	 Angular Velocity = 9.999960	
+Time=0.268352,	 tdelta = -2.680540,	 Angular Velocity = 9.999960	
+Time=0.279043,	 tdelta = -2.785945,	 Angular Velocity = 9.999960	
+Time=0.288173,	 tdelta = -2.888108,	 Angular Velocity = 9.999960	
+Time=0.297339,	 tdelta = -3.001621,	 Angular Velocity = 9.999960	
+Time=0.306371,	 tdelta = -3.118378,	 Angular Velocity = 9.999960	
+Time=0.316983,	 tdelta = -3.230270,	 Angular Velocity = 9.999960	
+Time=0.328117,	 tdelta = -3.355135,	 Angular Velocity = 9.999960	
+Time=0.336800,	 tdelta = -3.437837,	 Angular Velocity = 9.999960	
+Time=0.345954,	 tdelta = -3.536756,	 Angular Velocity = 9.999960	
+Time=0.354801,	 tdelta = -3.634053,	 Angular Velocity = 9.999960	
+Time=0.365063,	 tdelta = -3.741080,	 Angular Velocity = 9.999960	
+Time=0.375886,	 tdelta = -3.880540,	 Angular Velocity = 9.999960	
+Time=0.384673,	 tdelta = -3.969729,	 Angular Velocity = 9.999960	
+Time=0.393790,	 tdelta = -4.063783,	 Angular Velocity = 9.999960	
+Time=0.402774,	 tdelta = -4.178918,	 Angular Velocity = 9.999960	
+Time=0.411775,	 tdelta = -4.276216,	 Angular Velocity = 9.999960	
+Time=0.419860,	 tdelta = -4.358918,	 Angular Velocity = 9.999960	
+Time=0.430405,	 tdelta = -4.465945,	 Angular Velocity = 9.999960	
+Time=0.437660,	 tdelta = -4.542161,	 Angular Velocity = 9.999960	
+Time=0.446155,	 tdelta = -4.647567,	 Angular Velocity = 9.999960	
+Time=0.455206,	 tdelta = -4.754594,	 Angular Velocity = 9.999960	
+Time=0.463592,	 tdelta = -4.840540,	 Angular Velocity = 9.999960	
+Time=0.473480,	 tdelta = -4.963783,	 Angular Velocity = 9.999960	
+Time=0.483480,	 tdelta = -5.070810,	 Angular Velocity = 9.999960	
+Time=0.492959,	 tdelta = -5.169729,	 Angular Velocity = 9.999960	
+Time=0.501645,	 tdelta = -5.267026,	 Angular Velocity = 9.999960	
+Time=0.512013,	 tdelta = -5.364323,	 Angular Velocity = 9.999960	
+Time=0.519684,	 tdelta = -5.450269,	 Angular Velocity = 9.999960	
+Time=0.527991,	 tdelta = -5.541080,	 Angular Velocity = 9.999960	
+Time=0.536815,	 tdelta = -5.638377,	 Angular Velocity = 9.999960	
+Time=0.546590,	 tdelta = -5.753513,	 Angular Velocity = 9.999960	
+Time=0.557348,	 tdelta = -5.863783,	 Angular Velocity = 9.999960	
+Time=0.567371,	 tdelta = -5.961080,	 Angular Velocity = 9.999960	
+Time=0.576675,	 tdelta = -6.055134,	 Angular Velocity = 9.999960	
+Time=0.584872,	 tdelta = -6.162161,	 Angular Velocity = 9.999960	
+Time=0.595160,	 tdelta = -6.262702,	 Angular Velocity = 9.999960	
+Time=0.602716,	 tdelta = -6.376215,	 Angular Velocity = 9.999960	
+Time=0.612216,	 tdelta = -6.483242,	 Angular Velocity = 9.999960	
+Time=0.621841,	 tdelta = -6.599999,	 Angular Velocity = 9.999960	
+Time=0.632257,	 tdelta = -6.677837,	 Angular Velocity = 9.999960	
+Time=0.643905,	 tdelta = -6.804323,	 Angular Velocity = 9.999960	
+Time=0.652840,	 tdelta = -6.890269,	 Angular Velocity = 9.999960	
+Time=0.662220,	 tdelta = -7.005404,	 Angular Velocity = 9.999960	
+Time=0.671597,	 tdelta = -7.122161,	 Angular Velocity = 9.999960	
+Time=0.680621,	 tdelta = -7.212972,	 Angular Velocity = 9.999960	
+Time=0.689176,	 tdelta = -7.313512,	 Angular Velocity = 9.999960	
+Time=0.697967,	 tdelta = -7.418918,	 Angular Velocity = 9.999960	
+Time=0.707200,	 tdelta = -7.519458,	 Angular Velocity = 9.999960	
+Time=0.717361,	 tdelta = -7.613512,	 Angular Velocity = 9.999960	
+Time=0.725970,	 tdelta = -7.720539,	 Angular Velocity = 9.999960	
+Time=0.734502,	 tdelta = -7.834053,	 Angular Velocity = 9.999960	
+Time=0.744384,	 tdelta = -7.911891,	 Angular Velocity = 9.999960	
+Time=0.751791,	 tdelta = -8.007566,	 Angular Velocity = 9.999960	
+Time=0.760182,	 tdelta = -8.101620,	 Angular Velocity = 9.999960	
+Time=0.770344,	 tdelta = -8.226485,	 Angular Velocity = 9.999960	
+Time=0.780073,	 tdelta = -8.317296,	 Angular Velocity = 9.999960	
+Time=0.790996,	 tdelta = -8.430809,	 Angular Velocity = 9.999960	
+Time=0.801232,	 tdelta = -8.560539,	 Angular Velocity = 9.999960	
+Time=0.809532,	 tdelta = -8.664323,	 Angular Velocity = 9.999960	
+Time=0.819700,	 tdelta = -8.756755,	 Angular Velocity = 9.999960	
+Time=0.827867,	 tdelta = -8.849188,	 Angular Velocity = 9.999960	
+Time=0.836690,	 tdelta = -8.952971,	 Angular Velocity = 9.999960	
+Time=0.844821,	 tdelta = -9.034053,	 Angular Velocity = 9.999960	
+Time=0.852665,	 tdelta = -9.111890,	 Angular Velocity = 9.999960	
+Time=0.862214,	 tdelta = -9.209188,	 Angular Velocity = 9.999960	
+Time=0.872869,	 tdelta = -9.312971,	 Angular Velocity = 9.999960	
+Time=0.880886,	 tdelta = -9.405404,	 Angular Velocity = 9.999960	
+Time=0.891334,	 tdelta = -9.525404,	 Angular Velocity = 9.999960	
+Time=0.900196,	 tdelta = -9.638917,	 Angular Velocity = 9.999960	
+Time=0.908545,	 tdelta = -9.718377,	 Angular Velocity = 9.999960	
+Time=0.917858,	 tdelta = -9.823782,	 Angular Velocity = 9.999960	
+Time=0.926153,	 tdelta = -9.904863,	 Angular Velocity = 9.999960	
+Time=0.936827,	 tdelta = -10.003782,	 Angular Velocity = 9.999960	
+Time=0.946072,	 tdelta = -10.105944,	 Angular Velocity = 9.999960	
+Time=0.952796,	 tdelta = -10.161079,	 Angular Velocity = 9.999960	
+Time=0.962769,	 tdelta = -10.284323,	 Angular Velocity = 9.999960	
+Time=0.972849,	 tdelta = -10.405944,	 Angular Velocity = 9.999960	
+Time=0.981898,	 tdelta = -10.506485,	 Angular Velocity = 9.999960	
+Time=0.990191,	 tdelta = -10.608647,	 Angular Velocity = 9.999960	
+Time=1.000602,	 tdelta = -10.725404,	 Angular Velocity = 9.999960	
+Time=1.009169,	 tdelta = -10.822701,	 Angular Velocity = 9.999960	
+Time=1.019265,	 tdelta = -10.918377,	 Angular Velocity = 9.999960	
+Time=1.028058,	 tdelta = -11.009187,	 Angular Velocity = 9.999960	
+Time=1.038045,	 tdelta = -11.134052,	 Angular Velocity = 9.999960	
+Time=1.047447,	 tdelta = -11.252431,	 Angular Velocity = 9.999960	
+Time=1.054707,	 tdelta = -11.312431,	 Angular Velocity = 9.999960	
+Time=1.060724,	 tdelta = -11.391890,	 Angular Velocity = 9.999960	
+Time=1.072247,	 tdelta = -11.531349,	 Angular Velocity = 9.999960	
+Time=1.082060,	 tdelta = -11.614052,	 Angular Velocity = 9.999960	
+Time=1.091562,	 tdelta = -11.717836,	 Angular Velocity = 9.999960	
+Time=1.100781,	 tdelta = -11.815133,	 Angular Velocity = 9.999960	
+Time=1.110118,	 tdelta = -11.907566,	 Angular Velocity = 9.999960	
+Time=1.117161,	 tdelta = -12.001620,	 Angular Velocity = 9.999960	
+Time=1.127866,	 tdelta = -12.102160,	 Angular Velocity = 9.999960	
+Time=1.135969,	 tdelta = -12.201079,	 Angular Velocity = 9.999960	
+Time=1.144966,	 tdelta = -12.295133,	 Angular Velocity = 9.999960	
+Time=1.155870,	 tdelta = -12.410268,	 Angular Velocity = 9.999960	
+Time=1.164713,	 tdelta = -12.509187,	 Angular Velocity = 9.999960	
+Time=1.173969,	 tdelta = -12.611349,	 Angular Velocity = 9.999960	
+Time=1.183519,	 tdelta = -12.711890,	 Angular Velocity = 9.999960	
+Time=1.192637,	 tdelta = -12.825403,	 Angular Velocity = 9.999960	
+Time=1.202305,	 tdelta = -12.934052,	 Angular Velocity = 9.999960	
+Time=1.211469,	 tdelta = -13.036214,	 Angular Velocity = 9.999960	
+Time=1.218716,	 tdelta = -13.110809,	 Angular Velocity = 9.999960	
+Time=1.229269,	 tdelta = -13.204863,	 Angular Velocity = 9.999960	
+Time=1.238524,	 tdelta = -13.319998,	 Angular Velocity = 9.999960	
+Time=1.248066,	 tdelta = -13.401079,	 Angular Velocity = 9.999960	
+Time=1.257285,	 tdelta = -13.504863,	 Angular Velocity = 9.999960	
+Time=1.267135,	 tdelta = -13.637836,	 Angular Velocity = 9.999960	
+Time=1.275857,	 tdelta = -13.731890,	 Angular Velocity = 9.999960	
+Time=1.285018,	 tdelta = -13.847025,	 Angular Velocity = 9.999960	
+Time=1.295243,	 tdelta = -13.965403,	 Angular Velocity = 9.999960	
+Time=1.303036,	 tdelta = -14.052971,	 Angular Velocity = 9.999960	
+Time=1.312956,	 tdelta = -14.148646,	 Angular Velocity = 9.999960	
+Time=1.324676,	 tdelta = -14.286484,	 Angular Velocity = 9.999960	
+Time=1.334805,	 tdelta = -14.380538,	 Angular Velocity = 9.999960	
+Time=1.344172,	 tdelta = -14.497295,	 Angular Velocity = 9.999960	
+Time=1.353734,	 tdelta = -14.615673,	 Angular Velocity = 9.999960	
+Time=1.361936,	 tdelta = -14.693511,	 Angular Velocity = 9.999960	
+Time=1.372022,	 tdelta = -14.807025,	 Angular Velocity = 9.999960	
+Time=1.383515,	 tdelta = -14.922160,	 Angular Velocity = 9.999960	
+Time=1.392588,	 tdelta = -15.014592,	 Angular Velocity = 9.999960	
+Time=1.402671,	 tdelta = -15.132970,	 Angular Velocity = 9.999960	
+Time=1.411261,	 tdelta = -15.228646,	 Angular Velocity = 9.999960	
+Time=1.419056,	 tdelta = -15.316214,	 Angular Velocity = 9.999960	
+Time=1.428499,	 tdelta = -15.408646,	 Angular Velocity = 9.999960	
+Time=1.439091,	 tdelta = -15.527024,	 Angular Velocity = 9.999960	
+Time=1.446289,	 tdelta = -15.604862,	 Angular Velocity = 9.999960	
+Time=1.459580,	 tdelta = -15.732970,	 Angular Velocity = 9.999960	
+Time=1.467590,	 tdelta = -15.828646,	 Angular Velocity = 9.999960	
+Time=1.477197,	 tdelta = -15.924322,	 Angular Velocity = 9.999960	
+Time=1.486542,	 tdelta = -16.045943,	 Angular Velocity = 9.999960	
+Time=1.496204,	 tdelta = -16.139997,	 Angular Velocity = 9.999960	
+Time=1.505390,	 tdelta = -16.250268,	 Angular Velocity = 9.999960	
+Time=1.514484,	 tdelta = -16.347565,	 Angular Velocity = 9.999960	
+Time=1.523395,	 tdelta = -16.427024,	 Angular Velocity = 9.999960	
+Time=1.534035,	 tdelta = -16.548646,	 Angular Velocity = 9.999960	
+Time=1.542404,	 tdelta = -16.621619,	 Angular Velocity = 9.999960	
+Time=1.553006,	 tdelta = -16.730267,	 Angular Velocity = 9.999960	
+Time=1.561620,	 tdelta = -16.861619,	 Angular Velocity = 9.999960	
+Time=1.570062,	 tdelta = -16.949186,	 Angular Velocity = 9.999960	
+Time=1.579471,	 tdelta = -17.057835,	 Angular Velocity = 9.999960	
+Time=1.588510,	 tdelta = -17.169727,	 Angular Velocity = 9.999960	
+Time=1.598157,	 tdelta = -17.283240,	 Angular Velocity = 9.999960	
+Time=1.607917,	 tdelta = -17.377294,	 Angular Velocity = 9.999960	
+Time=1.619173,	 tdelta = -17.502159,	 Angular Velocity = 9.999960	
+Time=1.625506,	 tdelta = -17.581619,	 Angular Velocity = 9.999960	
+Time=1.635320,	 tdelta = -17.680538,	 Angular Velocity = 9.999960	
+Time=1.644596,	 tdelta = -17.800538,	 Angular Velocity = 9.999960	
+Time=1.654291,	 tdelta = -17.905943,	 Angular Velocity = 9.999960	
+Time=1.663867,	 tdelta = -18.006483,	 Angular Velocity = 9.999960	
+Time=1.669671,	 tdelta = -18.068105,	 Angular Velocity = 9.999960	
+Time=1.679659,	 tdelta = -18.170267,	 Angular Velocity = 9.999960	
+Time=1.687971,	 tdelta = -18.256213,	 Angular Velocity = 9.999960	
+Time=1.697069,	 tdelta = -18.363240,	 Angular Velocity = 9.999960	
+Time=1.706542,	 tdelta = -18.470267,	 Angular Velocity = 9.999960	
+Time=1.717694,	 tdelta = -18.591889,	 Angular Velocity = 9.999960	
+Time=1.725592,	 tdelta = -18.677835,	 Angular Velocity = 9.999960	
+Time=1.735159,	 tdelta = -18.775132,	 Angular Velocity = 9.999960	
+Time=1.744372,	 tdelta = -18.870808,	 Angular Velocity = 9.999960	
+Time=1.753611,	 tdelta = -18.969727,	 Angular Velocity = 9.999960	
+Time=1.763238,	 tdelta = -19.062159,	 Angular Velocity = 9.999960	
+Time=1.772040,	 tdelta = -19.174051,	 Angular Velocity = 9.999960	
+Time=1.781016,	 tdelta = -19.285943,	 Angular Velocity = 9.999960	
+Time=1.789707,	 tdelta = -19.384862,	 Angular Velocity = 9.999960	
+Time=1.799696,	 tdelta = -19.490267,	 Angular Velocity = 9.999960	
+Time=1.808932,	 tdelta = -19.577835,	 Angular Velocity = 9.999960	
+Time=1.818334,	 tdelta = -19.657294,	 Angular Velocity = 9.999960	
+Time=1.827760,	 tdelta = -19.774051,	 Angular Velocity = 9.999960	
+Time=1.836669,	 tdelta = -19.859997,	 Angular Velocity = 9.999960	
+Time=1.846318,	 tdelta = -19.967024,	 Angular Velocity = 9.999960	
+Time=1.856348,	 tdelta = -20.090267,	 Angular Velocity = 9.999960	
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 50
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! -100
+Time=0.000468,	 tdelta = 0.000000,	 Angular Velocity = 49.999799	
+Time=0.006055,	 tdelta = -0.001622,	 Angular Velocity = 49.999799	
+Time=0.015255,	 tdelta = -0.293513,	 Angular Velocity = 49.999799	
+Time=0.024087,	 tdelta = -0.710270,	 Angular Velocity = 49.999799	
+Time=0.031177,	 tdelta = -1.063784,	 Angular Velocity = 49.999799	
+Time=0.042508,	 tdelta = -1.514594,	 Angular Velocity = 49.999799	
+Time=0.052139,	 tdelta = -2.017297,	 Angular Velocity = 49.999799	
+Time=0.062926,	 tdelta = -2.472973,	 Angular Velocity = 49.999799	
+Time=0.070446,	 tdelta = -2.943243,	 Angular Velocity = 49.999799	
+Time=0.080829,	 tdelta = -3.394053,	 Angular Velocity = 49.999799	
+Time=0.090512,	 tdelta = -3.888648,	 Angular Velocity = 49.999799	
+Time=0.097522,	 tdelta = -4.255134,	 Angular Velocity = 49.999799	
+Time=0.107758,	 tdelta = -4.814594,	 Angular Velocity = 49.999799	
+Time=0.116463,	 tdelta = -5.309188,	 Angular Velocity = 49.999799	
+Time=0.126430,	 tdelta = -5.787567,	 Angular Velocity = 49.999799	
+Time=0.134397,	 tdelta = -6.214053,	 Angular Velocity = 49.999799	
+Time=0.142870,	 tdelta = -6.679458,	 Angular Velocity = 49.999799	
+Time=0.152713,	 tdelta = -7.209729,	 Angular Velocity = 49.999799	
+Time=0.162939,	 tdelta = -7.772431,	 Angular Velocity = 49.999799	
+Time=0.172510,	 tdelta = -8.228107,	 Angular Velocity = 49.999799	
+Time=0.180964,	 tdelta = -8.690269,	 Angular Velocity = 49.999799	
+Time=0.191815,	 tdelta = -9.202701,	 Angular Velocity = 49.999799	
+Time=0.201717,	 tdelta = -9.731350,	 Angular Velocity = 49.999799	
+Time=0.212040,	 tdelta = -10.256755,	 Angular Velocity = 49.999799	
+Time=0.221840,	 tdelta = -10.692971,	 Angular Velocity = 49.999799	
+Time=0.230843,	 tdelta = -11.112971,	 Angular Velocity = 49.999799	
+Time=0.238913,	 tdelta = -11.459998,	 Angular Velocity = 49.999799	
+Time=0.246369,	 tdelta = -11.904322,	 Angular Velocity = 49.999799	
+Time=0.256095,	 tdelta = -12.366484,	 Angular Velocity = 49.999799	
+Time=0.266744,	 tdelta = -12.890268,	 Angular Velocity = 49.999799	
+Time=0.276372,	 tdelta = -13.397836,	 Angular Velocity = 49.999799	
+Time=0.285998,	 tdelta = -13.845403,	 Angular Velocity = 49.999799	
+Time=0.295333,	 tdelta = -14.357835,	 Angular Velocity = 49.999799	
+Time=0.304080,	 tdelta = -14.776214,	 Angular Velocity = 49.999799	
+Time=0.312403,	 tdelta = -15.254592,	 Angular Velocity = 49.999799	
+Time=0.321256,	 tdelta = -15.719997,	 Angular Velocity = 49.999799	
+Time=0.330365,	 tdelta = -16.157835,	 Angular Velocity = 49.999799	
+Time=0.340685,	 tdelta = -16.722159,	 Angular Velocity = 49.999799	
+Time=0.349904,	 tdelta = -17.163240,	 Angular Velocity = 49.999799	
+Time=0.359319,	 tdelta = -17.665943,	 Angular Velocity = 49.999799	
+Time=0.369631,	 tdelta = -18.160538,	 Angular Velocity = 49.999799	
+Time=0.379747,	 tdelta = -18.700537,	 Angular Velocity = 49.999799	
+Time=0.388702,	 tdelta = -19.156213,	 Angular Velocity = 49.999799	
+Time=0.397398,	 tdelta = -19.600537,	 Angular Velocity = 49.999799	
+Time=0.407548,	 tdelta = -20.134051,	 Angular Velocity = 49.999799	
+Time=0.417132,	 tdelta = -20.560537,	 Angular Velocity = 49.999799	
+Time=0.425537,	 tdelta = -21.048645,	 Angular Velocity = 49.999799	
+Time=0.435181,	 tdelta = -21.491348,	 Angular Velocity = 49.999799	
+Time=0.443311,	 tdelta = -21.875672,	 Angular Velocity = 49.999799	
+Time=0.450673,	 tdelta = -22.264861,	 Angular Velocity = 49.999799	
+Time=0.458467,	 tdelta = -22.645942,	 Angular Velocity = 49.999799	
+Time=0.467114,	 tdelta = -23.062699,	 Angular Velocity = 49.999799	
+Time=0.478231,	 tdelta = -23.674050,	 Angular Velocity = 49.999799	
+Time=0.487944,	 tdelta = -24.158915,	 Angular Velocity = 49.999799	
+Time=0.496840,	 tdelta = -24.625942,	 Angular Velocity = 49.999799	
+Time=0.505427,	 tdelta = -25.086482,	 Angular Velocity = 49.999799	
+Time=0.514816,	 tdelta = -25.516212,	 Angular Velocity = 49.999799	
+Time=0.523719,	 tdelta = -26.002698,	 Angular Velocity = 49.999799	
+Time=0.533012,	 tdelta = -26.482698,	 Angular Velocity = 49.999799	
+Time=0.542782,	 tdelta = -26.961077,	 Angular Velocity = 49.999799	
+Time=0.549925,	 tdelta = -27.358374,	 Angular Velocity = 49.999799	
+Time=0.559102,	 tdelta = -27.807563,	 Angular Velocity = 49.999799	
+Time=0.569654,	 tdelta = -28.319995,	 Angular Velocity = 49.999799	
+Time=0.579126,	 tdelta = -28.864860,	 Angular Velocity = 49.999799	
+Time=0.588928,	 tdelta = -29.307563,	 Angular Velocity = 49.999799	
+Time=0.597846,	 tdelta = -29.729184,	 Angular Velocity = 49.999799	
+Time=0.605197,	 tdelta = -30.090806,	 Angular Velocity = 49.999799	
+Time=0.613453,	 tdelta = -30.549725,	 Angular Velocity = 49.999799	
+Time=0.621695,	 tdelta = -30.951887,	 Angular Velocity = 49.999799	
+Time=0.629456,	 tdelta = -31.415670,	 Angular Velocity = 49.999799	
+Time=0.638344,	 tdelta = -31.843778,	 Angular Velocity = 49.999799	
+Time=0.647318,	 tdelta = -32.281616,	 Angular Velocity = 49.999799	
+Time=0.657105,	 tdelta = -32.738913,	 Angular Velocity = 49.999799	
+Time=0.666517,	 tdelta = -33.215670,	 Angular Velocity = 49.999799	
+Time=0.675077,	 tdelta = -33.679454,	 Angular Velocity = 49.999799	
+Time=0.684405,	 tdelta = -34.130265,	 Angular Velocity = 49.999799	
+Time=0.693740,	 tdelta = -34.624859,	 Angular Velocity = 49.999799	
+Time=0.701534,	 tdelta = -35.087021,	 Angular Velocity = 49.999799	
+Time=0.709796,	 tdelta = -35.513508,	 Angular Velocity = 49.999799	
+Time=0.721695,	 tdelta = -36.022697,	 Angular Velocity = 49.999799	
+Time=0.729430,	 tdelta = -36.455670,	 Angular Velocity = 49.999799	
+Time=0.738189,	 tdelta = -36.887021,	 Angular Velocity = 49.999799	
+Time=0.747437,	 tdelta = -37.392967,	 Angular Velocity = 49.999799	
+Time=0.754226,	 tdelta = -37.739994,	 Angular Velocity = 49.999799	
+Time=0.764043,	 tdelta = -38.223237,	 Angular Velocity = 49.999799	
+Time=0.774021,	 tdelta = -38.738912,	 Angular Velocity = 49.999799	
+Time=0.784845,	 tdelta = -39.244858,	 Angular Velocity = 49.999799	
+Time=0.795246,	 tdelta = -39.760534,	 Angular Velocity = 49.999799	
+Time=0.803455,	 tdelta = -40.214588,	 Angular Velocity = 49.999799	
+Time=0.811763,	 tdelta = -40.623236,	 Angular Velocity = 49.999799	
+Time=0.821722,	 tdelta = -41.130804,	 Angular Velocity = 49.999799	
+Time=0.830507,	 tdelta = -41.581615,	 Angular Velocity = 49.999799	
+Time=0.839091,	 tdelta = -42.027561,	 Angular Velocity = 49.999799	
+Time=0.848679,	 tdelta = -42.496209,	 Angular Velocity = 49.999799	
+Time=0.855748,	 tdelta = -42.891885,	 Angular Velocity = 49.999799	
+Time=0.866846,	 tdelta = -43.439993,	 Angular Velocity = 49.999799	
+Time=0.876878,	 tdelta = -43.970263,	 Angular Velocity = 49.999799	
+Time=0.887440,	 tdelta = -44.524857,	 Angular Velocity = 49.999799	
+Time=0.896023,	 tdelta = -44.970803,	 Angular Velocity = 49.999799	
+Time=0.905785,	 tdelta = -45.405398,	 Angular Velocity = 49.999799	
+Time=0.913247,	 tdelta = -45.778371,	 Angular Velocity = 49.999799	
+Time=0.921773,	 tdelta = -46.208100,	 Angular Velocity = 49.999799	
+Time=0.931996,	 tdelta = -46.752965,	 Angular Velocity = 49.999799	
+Time=0.941403,	 tdelta = -47.299452,	 Angular Velocity = 49.999799	
+Time=0.952628,	 tdelta = -47.816749,	 Angular Velocity = 49.999799	
+Time=0.960512,	 tdelta = -48.222154,	 Angular Velocity = 49.999799	
+Time=0.969732,	 tdelta = -48.676208,	 Angular Velocity = 49.999799	
+Time=0.980928,	 tdelta = -49.216208,	 Angular Velocity = 49.999799	
+Time=0.989736,	 tdelta = -49.707559,	 Angular Velocity = 49.999799	
+Time=0.998975,	 tdelta = -50.189181,	 Angular Velocity = 49.999799	
+Time=1.008529,	 tdelta = -50.664316,	 Angular Velocity = 49.999799	
+Time=1.016919,	 tdelta = -51.050262,	 Angular Velocity = 49.999799	
+Time=1.026282,	 tdelta = -51.616208,	 Angular Velocity = 49.999799	
+Time=1.036052,	 tdelta = -52.045937,	 Angular Velocity = 49.999799	
+Time=1.046532,	 tdelta = -52.597289,	 Angular Velocity = 49.999799	
+Time=1.055995,	 tdelta = -53.085397,	 Angular Velocity = 49.999799	
+Time=1.064770,	 tdelta = -53.492424,	 Angular Velocity = 49.999799	
+Time=1.073873,	 tdelta = -54.011342,	 Angular Velocity = 49.999799	
+Time=1.083595,	 tdelta = -54.494586,	 Angular Velocity = 49.999799	
+Time=1.093245,	 tdelta = -54.977829,	 Angular Velocity = 49.999799	
+Time=1.102687,	 tdelta = -55.461072,	 Angular Velocity = 49.999799	
+Time=1.111673,	 tdelta = -55.898910,	 Angular Velocity = 49.999799	
+Time=1.121228,	 tdelta = -56.390261,	 Angular Velocity = 49.999799	
+Time=1.130717,	 tdelta = -56.897828,	 Angular Velocity = 49.999799	
+Time=1.139576,	 tdelta = -57.321072,	 Angular Velocity = 49.999799	
+Time=1.146074,	 tdelta = -57.617828,	 Angular Velocity = 49.999799	
+Time=1.157701,	 tdelta = -58.222693,	 Angular Velocity = 49.999799	
+Time=1.163074,	 tdelta = -58.577828,	 Angular Velocity = 49.999799	
+Time=1.173323,	 tdelta = -59.041612,	 Angular Velocity = 49.999799	
+Time=1.182333,	 tdelta = -59.503774,	 Angular Velocity = 49.999799	
+Time=1.191415,	 tdelta = -59.969179,	 Angular Velocity = 49.999799	
+Time=1.200431,	 tdelta = -60.421612,	 Angular Velocity = 49.999799	
+Time=1.210205,	 tdelta = -60.908098,	 Angular Velocity = 49.999799	
+Time=1.218591,	 tdelta = -61.308638,	 Angular Velocity = 49.999799	
+Time=1.228483,	 tdelta = -61.830801,	 Angular Velocity = 49.999799	
+Time=1.237433,	 tdelta = -62.283233,	 Angular Velocity = 49.999799	
+Time=1.245832,	 tdelta = -62.737287,	 Angular Velocity = 49.999799	
+Time=1.255420,	 tdelta = -63.223773,	 Angular Velocity = 49.999799	
+Time=1.265409,	 tdelta = -63.750800,	 Angular Velocity = 49.999799	
+Time=1.274886,	 tdelta = -64.261611,	 Angular Velocity = 49.999799	
+Time=1.284841,	 tdelta = -64.731881,	 Angular Velocity = 49.999799	
+Time=1.294136,	 tdelta = -65.208638,	 Angular Velocity = 49.999799	
+Time=1.303256,	 tdelta = -65.669178,	 Angular Velocity = 49.999799	
+Time=1.312678,	 tdelta = -66.111881,	 Angular Velocity = 49.999799	
+Time=1.320887,	 tdelta = -66.510800,	 Angular Velocity = 49.999799	
+Time=1.330816,	 tdelta = -67.068638,	 Angular Velocity = 49.999799	
+Time=1.340029,	 tdelta = -67.551881,	 Angular Velocity = 49.999799	
+Time=1.349760,	 tdelta = -68.002691,	 Angular Velocity = 49.999799	
+Time=1.358776,	 tdelta = -68.523232,	 Angular Velocity = 49.999799	
+Time=1.366744,	 tdelta = -68.862151,	 Angular Velocity = 49.999799	
+Time=1.378225,	 tdelta = -69.436205,	 Angular Velocity = 49.999799	
+Time=1.387166,	 tdelta = -69.947015,	 Angular Velocity = 49.999799	
+Time=1.396587,	 tdelta = -70.430259,	 Angular Velocity = 49.999799	
+Time=1.405606,	 tdelta = -70.895664,	 Angular Velocity = 49.999799	
+Time=1.415029,	 tdelta = -71.341610,	 Angular Velocity = 49.999799	
+Time=1.423258,	 tdelta = -71.782691,	 Angular Velocity = 49.999799	
+Time=1.432866,	 tdelta = -72.269177,	 Angular Velocity = 49.999799	
+Time=1.442667,	 tdelta = -72.749177,	 Angular Velocity = 49.999799	
+Time=1.451963,	 tdelta = -73.294042,	 Angular Velocity = 49.999799	
+Time=1.462230,	 tdelta = -73.718907,	 Angular Velocity = 49.999799	
+Time=1.469324,	 tdelta = -74.091880,	 Angular Velocity = 49.999799	
+Time=1.479323,	 tdelta = -74.644852,	 Angular Velocity = 49.999799	
+Time=1.487728,	 tdelta = -75.055123,	 Angular Velocity = 49.999799	
+Time=1.497895,	 tdelta = -75.561069,	 Angular Velocity = 49.999799	
+Time=1.507161,	 tdelta = -76.028095,	 Angular Velocity = 49.999799	
+Time=1.517314,	 tdelta = -76.532420,	 Angular Velocity = 49.999799	
+Time=1.527065,	 tdelta = -77.030257,	 Angular Velocity = 49.999799	
+Time=1.536094,	 tdelta = -77.503771,	 Angular Velocity = 49.999799	
+Time=1.545175,	 tdelta = -77.990257,	 Angular Velocity = 49.999799	
+Time=1.555030,	 tdelta = -78.442690,	 Angular Velocity = 49.999799	
+Time=1.563758,	 tdelta = -78.937284,	 Angular Velocity = 49.999799	
+Time=1.572760,	 tdelta = -79.409176,	 Angular Velocity = 49.999799	
+Time=1.583851,	 tdelta = -79.934581,	 Angular Velocity = 49.999799	
+Time=1.593096,	 tdelta = -80.399987,	 Angular Velocity = 49.999799	
+Time=1.601532,	 tdelta = -80.828095,	 Angular Velocity = 49.999799	
+Time=1.609887,	 tdelta = -81.303230,	 Angular Velocity = 49.999799	
+Time=1.619753,	 tdelta = -81.755662,	 Angular Velocity = 49.999799	
+Time=1.628352,	 tdelta = -82.182149,	 Angular Velocity = 49.999799	
+Time=1.637453,	 tdelta = -82.675121,	 Angular Velocity = 49.999799	
+Time=1.647474,	 tdelta = -83.211878,	 Angular Velocity = 49.999799	
+Time=1.657632,	 tdelta = -83.670797,	 Angular Velocity = 49.999799	
+Time=1.665757,	 tdelta = -84.158905,	 Angular Velocity = 49.999799	
+Time=1.673969,	 tdelta = -84.523770,	 Angular Velocity = 49.999799	
+Time=1.685570,	 tdelta = -85.109175,	 Angular Velocity = 49.999799	
+Time=1.695090,	 tdelta = -85.584310,	 Angular Velocity = 49.999799	
+Time=1.703626,	 tdelta = -86.059445,	 Angular Velocity = 49.999799	
+Time=1.713954,	 tdelta = -86.563769,	 Angular Velocity = 49.999799	
+Time=1.722945,	 tdelta = -87.077823,	 Angular Velocity = 49.999799	
+Time=1.731866,	 tdelta = -87.518904,	 Angular Velocity = 49.999799	
+Time=1.741721,	 tdelta = -88.000526,	 Angular Velocity = 49.999799	
+Time=1.751016,	 tdelta = -88.496742,	 Angular Velocity = 49.999799	
+Time=1.760144,	 tdelta = -88.971877,	 Angular Velocity = 49.999799	
+Time=1.769882,	 tdelta = -89.482688,	 Angular Velocity = 49.999799	
+Time=1.777440,	 tdelta = -89.917282,	 Angular Velocity = 49.999799	
+Time=1.789024,	 tdelta = -90.392417,	 Angular Velocity = 49.999799	
+Time=1.797904,	 tdelta = -90.874039,	 Angular Velocity = 49.999799	
+Time=1.807343,	 tdelta = -91.357282,	 Angular Velocity = 49.999799	
+Time=1.818397,	 tdelta = -91.952417,	 Angular Velocity = 49.999799	
+Time=1.827839,	 tdelta = -92.404850,	 Angular Velocity = 49.999799	
+Time=1.834183,	 tdelta = -92.790795,	 Angular Velocity = 49.999799	
+Time=1.843819,	 tdelta = -93.228633,	 Angular Velocity = 49.999799	
+Time=1.852565,	 tdelta = -93.702147,	 Angular Velocity = 49.999799	
+Time=1.863279,	 tdelta = -94.222687,	 Angular Velocity = 49.999799	
+Time=1.872677,	 tdelta = -94.749714,	 Angular Velocity = 49.999799	
+Time=1.885274,	 tdelta = -95.304309,	 Angular Velocity = 49.999799	
+Time=1.894983,	 tdelta = -95.858903,	 Angular Velocity = 49.999799	
+Time=1.904443,	 tdelta = -96.338903,	 Angular Velocity = 49.999799	
+Time=1.915255,	 tdelta = -96.841606,	 Angular Velocity = 49.999799	
+Time=1.924795,	 tdelta = -97.363768,	 Angular Velocity = 49.999799	
+Time=1.933137,	 tdelta = -97.756200,	 Angular Velocity = 49.999799	
+Time=1.942124,	 tdelta = -98.211876,	 Angular Velocity = 49.999799	
+Time=1.951792,	 tdelta = -98.719443,	 Angular Velocity = 49.999799	
+Time=1.962729,	 tdelta = -99.267551,	 Angular Velocity = 49.999799	
+Time=1.971989,	 tdelta = -99.737821,	 Angular Velocity = 49.999799	
+Time=1.979891,	 tdelta = -100.128632,	 Angular Velocity = 49.999799	
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 200
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! -100
+Time=0.000383,	 tdelta = 1.107567,	 Angular Velocity = 199.999197	
+Time=0.007028,	 tdelta = 1.086486,	 Angular Velocity = 199.999197	
+Time=0.015726,	 tdelta = 0.385946,	 Angular Velocity = 199.999197	
+Time=0.025178,	 tdelta = -1.133513,	 Angular Velocity = 199.999197	
+Time=0.033674,	 tdelta = -2.375675,	 Angular Velocity = 199.999197	
+Time=0.040167,	 tdelta = -3.577297,	 Angular Velocity = 199.999197	
+Time=0.045324,	 tdelta = -4.538918,	 Angular Velocity = 199.999197	
+Time=0.050935,	 tdelta = -5.651350,	 Angular Velocity = 199.999197	
+Time=0.059034,	 tdelta = -7.341080,	 Angular Velocity = 199.999197	
+Time=0.066967,	 tdelta = -9.230269,	 Angular Velocity = 199.999197	
+Time=0.076397,	 tdelta = -10.752971,	 Angular Velocity = 199.999197	
+Time=0.084835,	 tdelta = -12.632430,	 Angular Velocity = 199.999197	
+Time=0.092661,	 tdelta = -13.939457,	 Angular Velocity = 199.999197	
+Time=0.101008,	 tdelta = -15.698916,	 Angular Velocity = 199.999197	
+Time=0.110961,	 tdelta = -17.738916,	 Angular Velocity = 199.999197	
+Time=0.118763,	 tdelta = -19.459456,	 Angular Velocity = 199.999197	
+Time=0.127874,	 tdelta = -21.183240,	 Angular Velocity = 199.999197	
+Time=0.135596,	 tdelta = -22.670267,	 Angular Velocity = 199.999197	
+Time=0.144952,	 tdelta = -24.557834,	 Angular Velocity = 199.999197	
+Time=0.153731,	 tdelta = -26.544320,	 Angular Velocity = 199.999197	
+Time=0.163962,	 tdelta = -28.452968,	 Angular Velocity = 199.999197	
+Time=0.172568,	 tdelta = -30.353508,	 Angular Velocity = 199.999197	
+Time=0.182449,	 tdelta = -32.294589,	 Angular Velocity = 199.999197	
+Time=0.191758,	 tdelta = -34.125400,	 Angular Velocity = 199.999197	
+Time=0.200603,	 tdelta = -35.948102,	 Angular Velocity = 199.999197	
+Time=0.210934,	 tdelta = -38.090264,	 Angular Velocity = 199.999197	
+Time=0.218682,	 tdelta = -39.713507,	 Angular Velocity = 199.999197	
+Time=0.226077,	 tdelta = -41.219993,	 Angular Velocity = 199.999197	
+Time=0.234995,	 tdelta = -42.891885,	 Angular Velocity = 199.999197	
+Time=0.243814,	 tdelta = -44.693506,	 Angular Velocity = 199.999197	
+Time=0.250859,	 tdelta = -46.143236,	 Angular Velocity = 199.999197	
+Time=0.258634,	 tdelta = -47.589722,	 Angular Velocity = 199.999197	
+Time=0.265347,	 tdelta = -49.062154,	 Angular Velocity = 199.999197	
+Time=0.274595,	 tdelta = -50.845938,	 Angular Velocity = 199.999197	
+Time=0.282763,	 tdelta = -52.493505,	 Angular Velocity = 199.999197	
+Time=0.292023,	 tdelta = -54.259450,	 Angular Velocity = 199.999197	
+Time=0.300385,	 tdelta = -55.842153,	 Angular Velocity = 199.999197	
+Time=0.310575,	 tdelta = -57.896747,	 Angular Velocity = 199.999197	
+Time=0.319059,	 tdelta = -59.649720,	 Angular Velocity = 199.999197	
+Time=0.327945,	 tdelta = -61.332963,	 Angular Velocity = 199.999197	
+Time=0.336384,	 tdelta = -63.053503,	 Angular Velocity = 199.999197	
+Time=0.345595,	 tdelta = -64.994584,	 Angular Velocity = 199.999197	
+Time=0.353114,	 tdelta = -66.514043,	 Angular Velocity = 199.999197	
+Time=0.360809,	 tdelta = -68.156745,	 Angular Velocity = 199.999197	
+Time=0.370210,	 tdelta = -69.859448,	 Angular Velocity = 199.999197	
+Time=0.379489,	 tdelta = -71.680529,	 Angular Velocity = 199.999197	
+Time=0.389668,	 tdelta = -73.775663,	 Angular Velocity = 199.999197	
+Time=0.398369,	 tdelta = -75.523771,	 Angular Velocity = 199.999197	
+Time=0.409146,	 tdelta = -77.576744,	 Angular Velocity = 199.999197	
+Time=0.419056,	 tdelta = -79.735122,	 Angular Velocity = 199.999197	
+Time=0.428082,	 tdelta = -81.478365,	 Angular Velocity = 199.999197	
+Time=0.436853,	 tdelta = -83.567013,	 Angular Velocity = 199.999197	
+Time=0.444237,	 tdelta = -84.830256,	 Angular Velocity = 199.999197	
+Time=0.454974,	 tdelta = -86.891337,	 Angular Velocity = 199.999197	
+Time=0.462954,	 tdelta = -88.827553,	 Angular Velocity = 199.999197	
+Time=0.474726,	 tdelta = -91.075120,	 Angular Velocity = 199.999197	
+Time=0.486361,	 tdelta = -93.363228,	 Angular Velocity = 199.999197	
+Time=0.495563,	 tdelta = -95.302687,	 Angular Velocity = 199.999197	
+Time=0.504580,	 tdelta = -97.091335,	 Angular Velocity = 199.999197	
+Time=0.514189,	 tdelta = -99.108632,	 Angular Velocity = 199.999197	
+Time=0.522963,	 tdelta = -100.804848,	 Angular Velocity = 199.999197	
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 200
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! -100  20
+Time=0.000376,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.008225,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.016874,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.026974,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.035774,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.046532,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.056653,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.063861,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.073480,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.081745,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.087680,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.099324,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.109523,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.118271,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.127754,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.137350,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.146538,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.155829,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.163674,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.173182,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.181873,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.190646,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.201107,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.211097,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.221520,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.229789,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.239317,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.251078,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.259167,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.269548,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.277929,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.288342,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.296864,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.305340,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.315480,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.326553,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.337658,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.346681,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.356606,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.365139,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.374306,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.385513,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.392407,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.404809,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.411219,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.421837,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.432154,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.439037,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.450011,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.458842,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.466990,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.478424,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.487548,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.495667,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.508590,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.517298,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.525934,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.536515,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.543226,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.552961,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.562152,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.572106,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.583491,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.593272,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.600512,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.609483,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.618826,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.626443,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.635550,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.645826,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.654349,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.663047,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.673429,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.683042,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.692802,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.699689,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.709364,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.717496,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.729172,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.738482,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.746193,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.756142,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.764591,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.775432,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.785933,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.795741,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.804394,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.812682,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.823341,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.832667,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.843752,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.853151,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.861427,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.870790,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.881327,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.890653,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.900372,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.910040,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.919678,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.929162,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.938618,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.947116,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.957384,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.967630,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.977382,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.987109,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.995481,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.004178,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.013465,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.023550,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.032946,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.042546,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.050646,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.059804,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.069362,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.078911,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.088690,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.098759,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.106900,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.117188,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.126205,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.136734,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.146092,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.155222,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.165698,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.176957,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.186823,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.197455,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.205400,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.212929,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.224355,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.232529,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.242901,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.252761,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.260235,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.269929,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.279369,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.289343,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.299465,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.309666,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.317437,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.329161,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.337482,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.348296,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.355580,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.362096,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.371729,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.381341,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.390603,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.402231,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.410862,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.417993,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.427736,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.436355,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.445376,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.456403,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.464670,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.474572,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.485053,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.493572,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.505056,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.513120,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.521195,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.531570,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.540681,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.550436,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.559767,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.567667,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.576718,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.588170,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.597733,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.607354,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.617043,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.625111,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.633929,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.642336,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.653114,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.662559,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.669156,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.677612,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.688819,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.697513,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.707498,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.715549,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.723482,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.734155,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.742539,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.753385,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.764088,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.772987,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.783188,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.794442,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.805822,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.814886,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.825266,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.834453,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.844101,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.854581,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.862981,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.871529,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.879509,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.888918,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.897189,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.907560,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.917200,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.925730,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.934485,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.943041,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.952126,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.961718,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.969694,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.977593,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.986731,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=1.996737,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.005264,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.016606,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.025470,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.034056,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.044342,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.053425,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.061354,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.070649,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.080156,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.090020,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.098974,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.108866,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.116912,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.125027,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.132895,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.142123,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.152145,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.161990,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.171650,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.179270,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.188606,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.197934,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.207663,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.217134,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.226348,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.234371,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.242615,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.252190,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.259740,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.269040,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.277990,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.285257,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.294620,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.305399,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.314404,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.325132,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.333758,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.341830,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.349451,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.358911,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.368476,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.378094,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.388661,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.398125,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.409579,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.419713,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.431648,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.437693,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.445830,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.455481,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.464757,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.474907,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.483474,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.492209,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.502874,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=2.512550,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+^CTraceback (most recent call last):
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 98, in <module>
+    test = Test()
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 94, in __init__
+    self.steering_motor_drive.set_angular_velocity(0)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 40, in set_angular_velocity
+    self.set_PWM_duty_cycle(duty_cycle)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 31, in set_PWM_duty_cycle
+    PWM.set_duty_cycle(steeringMotor_Channel, duty_cycle)
+RuntimeError: You must start() the PWM channel first
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 200
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! -120
+Time=0.000971,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.005284,	 tdelta = 0.000000,	 Angular Velocity = 199.999197	
+Time=0.014528,	 tdelta = -0.604865,	 Angular Velocity = 199.999197	
+Time=0.024804,	 tdelta = -2.213513,	 Angular Velocity = 199.999197	
+Time=0.033497,	 tdelta = -3.505945,	 Angular Velocity = 199.999197	
+Time=0.043407,	 tdelta = -5.490810,	 Angular Velocity = 199.999197	
+Time=0.053161,	 tdelta = -7.235674,	 Angular Velocity = 199.999197	
+Time=0.063829,	 tdelta = -9.476755,	 Angular Velocity = 199.999197	
+Time=0.072351,	 tdelta = -11.056214,	 Angular Velocity = 199.999197	
+Time=0.080489,	 tdelta = -12.587025,	 Angular Velocity = 199.999197	
+Time=0.087361,	 tdelta = -14.077295,	 Angular Velocity = 199.999197	
+Time=0.095183,	 tdelta = -15.656754,	 Angular Velocity = 199.999197	
+Time=0.102522,	 tdelta = -17.112970,	 Angular Velocity = 199.999197	
+Time=0.109401,	 tdelta = -18.984321,	 Angular Velocity = 199.999197	
+Time=0.119990,	 tdelta = -20.597834,	 Angular Velocity = 199.999197	
+Time=0.130572,	 tdelta = -22.877834,	 Angular Velocity = 199.999197	
+Time=0.141114,	 tdelta = -24.797834,	 Angular Velocity = 199.999197	
+Time=0.151190,	 tdelta = -26.970806,	 Angular Velocity = 199.999197	
+Time=0.163443,	 tdelta = -30.963238,	 Angular Velocity = 199.999197	
+Time=0.179261,	 tdelta = -32.933508,	 Angular Velocity = 199.999197	
+Time=0.190388,	 tdelta = -36.003237,	 Angular Velocity = 199.999197	
+Time=0.205102,	 tdelta = -38.002696,	 Angular Velocity = 199.999197	
+Time=0.218189,	 tdelta = -41.158372,	 Angular Velocity = 199.999197	
+Time=0.230967,	 tdelta = -43.955668,	 Angular Velocity = 199.999197	
+Time=0.246038,	 tdelta = -46.632965,	 Angular Velocity = 199.999197	
+Time=0.260209,	 tdelta = -48.890262,	 Angular Velocity = 199.999197	
+Time=0.273458,	 tdelta = -51.650262,	 Angular Velocity = 199.999197	
+Time=0.288396,	 tdelta = -54.473504,	 Angular Velocity = 199.999197	
+Time=0.299932,	 tdelta = -56.845937,	 Angular Velocity = 199.999197	
+Time=0.309227,	 tdelta = -58.683233,	 Angular Velocity = 199.999197	
+Time=0.318916,	 tdelta = -60.736206,	 Angular Velocity = 199.999197	
+Time=0.329026,	 tdelta = -62.567017,	 Angular Velocity = 199.999197	
+Time=0.338343,	 tdelta = -64.778908,	 Angular Velocity = 199.999197	
+Time=0.348749,	 tdelta = -66.692421,	 Angular Velocity = 199.999197	
+Time=0.355412,	 tdelta = -68.122691,	 Angular Velocity = 199.999197	
+Time=0.365326,	 tdelta = -69.919448,	 Angular Velocity = 199.999197	
+Time=0.374829,	 tdelta = -71.873502,	 Angular Velocity = 199.999197	
+Time=0.384466,	 tdelta = -73.973501,	 Angular Velocity = 199.999197	
+Time=0.394930,	 tdelta = -76.007014,	 Angular Velocity = 199.999197	
+Time=0.404296,	 tdelta = -77.901068,	 Angular Velocity = 199.999197	
+Time=0.414231,	 tdelta = -79.812960,	 Angular Velocity = 199.999197	
+Time=0.424658,	 tdelta = -81.878905,	 Angular Velocity = 199.999197	
+Time=0.435192,	 tdelta = -84.131337,	 Angular Velocity = 199.999197	
+Time=0.443870,	 tdelta = -85.736743,	 Angular Velocity = 199.999197	
+Time=0.449751,	 tdelta = -86.918904,	 Angular Velocity = 199.999197	
+Time=0.458947,	 tdelta = -88.842147,	 Angular Velocity = 199.999197	
+Time=0.468782,	 tdelta = -90.763769,	 Angular Velocity = 199.999197	
+Time=0.477024,	 tdelta = -92.524850,	 Angular Velocity = 199.999197	
+Time=0.483352,	 tdelta = -94.367011,	 Angular Velocity = 199.999197	
+Time=0.496842,	 tdelta = -96.538362,	 Angular Velocity = 199.999197	
+Time=0.505072,	 tdelta = -98.075659,	 Angular Velocity = 199.999197	
+Time=0.513277,	 tdelta = -99.904848,	 Angular Velocity = 199.999197	
+Time=0.523411,	 tdelta = -101.836199,	 Angular Velocity = 199.999197	
+Time=0.533497,	 tdelta = -103.895658,	 Angular Velocity = 199.999197	
+Time=0.541396,	 tdelta = -105.773496,	 Angular Velocity = 199.999197	
+Time=0.552489,	 tdelta = -107.774577,	 Angular Velocity = 199.999197	
+Time=0.562277,	 tdelta = -109.723766,	 Angular Velocity = 199.999197	
+Time=0.571854,	 tdelta = -111.593495,	 Angular Velocity = 199.999197	
+Time=0.581824,	 tdelta = -113.897819,	 Angular Velocity = 199.999197	
+Time=0.593313,	 tdelta = -115.931332,	 Angular Velocity = 199.999197	
+Time=0.602418,	 tdelta = -117.731332,	 Angular Velocity = 199.999197	
+Time=0.609710,	 tdelta = -119.051332,	 Angular Velocity = 199.999197	
+Time=0.616200,	 tdelta = -120.572412,	 Angular Velocity = 199.999197	
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 200
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! 120
+Time=0.000385,	 delta = -0.001622,	 I = 0.026862	
+Time=0.006882,	 delta = 0.008108,	 I = 0.000000	
+Time=0.015118,	 delta = 0.755676,	 I = 0.000000	
+Time=0.026387,	 delta = 2.367567,	 I = 0.000000	
+Time=0.035419,	 delta = 4.049189,	 I = 0.000000	
+Time=0.045720,	 delta = 5.978918,	 I = 0.000000	
+Time=0.056256,	 delta = 7.746485,	 I = 0.000000	
+Time=0.065325,	 delta = 9.794593,	 I = 0.000000	
+Time=0.074820,	 delta = 11.798917,	 I = 0.000000	
+Time=0.086629,	 delta = 13.915133,	 I = 0.000000	
+Time=0.097583,	 delta = 16.110808,	 I = 0.000000	
+Time=0.106844,	 delta = 17.867024,	 I = 0.000000	
+Time=0.116697,	 delta = 19.811348,	 I = 0.000000	
+Time=0.126058,	 delta = 21.564321,	 I = 0.000000	
+Time=0.131207,	 delta = 22.911888,	 I = 0.000000	
+Time=0.141057,	 delta = 24.796212,	 I = 0.000000	
+Time=0.150396,	 delta = 26.584860,	 I = 0.000000	
+Time=0.159488,	 delta = 28.446482,	 I = 0.000000	
+Time=0.169061,	 delta = 30.562698,	 I = 0.000000	
+Time=0.180645,	 delta = 32.599454,	 I = 0.000000	
+Time=0.188582,	 delta = 34.342697,	 I = 0.000000	
+Time=0.199835,	 delta = 36.546480,	 I = 0.000000	
+Time=0.209387,	 delta = 38.554048,	 I = 0.014652	
+Time=0.218599,	 delta = 40.360534,	 I = 0.024420	
+Time=0.228238,	 delta = 42.345398,	 I = 0.124542	
+Time=0.234632,	 delta = 43.655668,	 I = 0.092796	
+Time=0.244786,	 delta = 45.674587,	 I = 0.205128	
+Time=0.254107,	 delta = 47.661073,	 I = 0.175824	
+Time=0.264035,	 delta = 49.417289,	 I = 0.063492	
+Time=0.274204,	 delta = 51.405397,	 I = 0.000000	
+Time=0.281964,	 delta = 53.091883,	 I = 0.000000	
+Time=0.290376,	 delta = 54.951883,	 I = 0.000000	
+Time=0.301133,	 delta = 56.729180,	 I = 0.000000	
+Time=0.310363,	 delta = 58.576206,	 I = 0.000000	
+Time=0.318952,	 delta = 60.220531,	 I = 0.000000	
+Time=0.327525,	 delta = 62.228098,	 I = 0.000000	
+Time=0.337810,	 delta = 63.890260,	 I = 0.000000	
+Time=0.347204,	 delta = 65.927016,	 I = 0.000000	
+Time=0.356756,	 delta = 67.701070,	 I = 0.000000	
+Time=0.366008,	 delta = 69.475124,	 I = 0.000000	
+Time=0.376730,	 delta = 71.521610,	 I = 0.000000	
+Time=0.385169,	 delta = 73.436745,	 I = 0.000000	
+Time=0.393183,	 delta = 74.944852,	 I = 0.000000	
+Time=0.404409,	 delta = 77.148636,	 I = 0.000000	
+Time=0.413863,	 delta = 79.060527,	 I = 0.000000	
+Time=0.425331,	 delta = 81.204311,	 I = 0.000000	
+Time=0.434381,	 delta = 83.007554,	 I = 0.000000	
+Time=0.440815,	 delta = 84.475121,	 I = 0.000000	
+Time=0.450850,	 delta = 86.528094,	 I = 0.000000	
+Time=0.461738,	 delta = 88.493499,	 I = 0.000000	
+Time=0.469846,	 delta = 90.121607,	 I = 0.000000	
+Time=0.480475,	 delta = 92.380525,	 I = 0.000000	
+Time=0.489350,	 delta = 94.258363,	 I = 0.002442	
+Time=0.497283,	 delta = 95.891335,	 I = 0.017094	
+Time=0.506526,	 delta = 97.696200,	 I = 0.007326	
+Time=0.516188,	 delta = 99.591875,	 I = 0.166056	
+Time=0.525579,	 delta = 101.599443,	 I = 0.398046	
+Time=0.535649,	 delta = 103.501604,	 I = 0.424908	
+Time=0.541371,	 delta = 104.917280,	 I = 0.322344	
+Time=0.552202,	 delta = 106.858361,	 I = 0.525031	
+Time=0.563340,	 delta = 109.164306,	 I = 0.727717	
+Time=0.573768,	 delta = 111.184846,	 I = 0.695971	
+Time=0.584291,	 delta = 113.297819,	 I = 0.998779	
+Time=0.593089,	 delta = 115.039440,	 I = 0.854701	
+Time=0.600098,	 delta = 116.545927,	 I = 1.023199	
+Time=0.609198,	 delta = 118.187007,	 I = 0.810745	
+Time=0.616449,	 delta = 119.959440,	 I = 0.815629	
+Time=0.626742,	 delta = 121.863223,	 I = 0.720391	
+Traceback (most recent call last):
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 98, in <module>
+    test = Test()
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 94, in __init__
+    self.steering_motor_drive.set_angular_velocity(0)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 40, in set_angular_velocity
+    self.set_PWM_duty_cycle(duty_cycle)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 31, in set_PWM_duty_cycle
+    PWM.set_duty_cycle(steeringMotor_Channel, duty_cycle)
+RuntimeError: You must start() the PWM channel first
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python testing/steering_motor/SteeringMotorTestLukas.py 
+Input a velocity between 0 and 10 deg/s 200
+tdelta = 0.000000
+Enter the desired self.angle! The test will start afterwards! 120
+Time=0.000380,	 delta = -0.001622,	 I = 0.019536	
+Time=0.006933,	 delta = 0.009730,	 I = 0.000000	
+Time=0.017373,	 delta = 0.958378,	 I = 0.000000	
+Time=0.026623,	 delta = 2.463243,	 I = 0.000000	
+Time=0.036638,	 delta = 4.067026,	 I = 0.000000	
+Time=0.046859,	 delta = 6.050269,	 I = 0.000000	
+Time=0.057577,	 delta = 8.130809,	 I = 0.000000	
+Time=0.067287,	 delta = 9.899998,	 I = 0.000000	
+Time=0.076559,	 delta = 11.742160,	 I = 0.000000	
+Time=0.085846,	 delta = 13.660538,	 I = 0.000000	
+Time=0.093598,	 delta = 15.262700,	 I = 0.000000	
+Time=0.104421,	 delta = 17.604321,	 I = 0.000000	
+Time=0.113878,	 delta = 19.448105,	 I = 0.000000	
+Time=0.124752,	 delta = 21.343780,	 I = 0.000000	
+Time=0.132780,	 delta = 22.872969,	 I = 0.000000	
+Time=0.138119,	 delta = 24.321077,	 I = 0.000000	
+Time=0.150091,	 delta = 26.472969,	 I = 0.000000	
+Time=0.159752,	 delta = 28.414049,	 I = 0.000000	
+Time=0.168763,	 delta = 30.178373,	 I = 0.000000	
+Time=0.177640,	 delta = 32.142157,	 I = 0.000000	
+Time=0.186959,	 delta = 33.864319,	 I = 0.000000	
+Time=0.195481,	 delta = 35.545940,	 I = 0.000000	
+Time=0.204655,	 delta = 37.645940,	 I = 0.000000	
+Time=0.213844,	 delta = 39.462156,	 I = 0.012210	
+Time=0.223996,	 delta = 41.482696,	 I = 0.039072	
+Time=0.233710,	 delta = 43.503236,	 I = 0.026862	
+Time=0.242128,	 delta = 45.024317,	 I = 0.129426	
+Time=0.251484,	 delta = 46.859992,	 I = 0.109890	
+Time=0.259853,	 delta = 48.624316,	 I = 0.078144	
+Time=0.270265,	 delta = 50.753505,	 I = 0.002442	
+Time=0.280120,	 delta = 52.535667,	 I = 0.000000	
+Time=0.288463,	 delta = 54.342153,	 I = 0.000000	
+Time=0.294936,	 delta = 55.415666,	 I = 0.000000	
+Time=0.303889,	 delta = 57.236747,	 I = 0.000000	
+Time=0.312864,	 delta = 58.984855,	 I = 0.000000	
+Time=0.320514,	 delta = 60.371341,	 I = 0.000000	
+Time=0.328136,	 delta = 61.868098,	 I = 0.000000	
+Time=0.336566,	 delta = 63.591881,	 I = 0.000000	
+Time=0.342772,	 delta = 64.934584,	 I = 0.000000	
+Time=0.354375,	 delta = 67.148097,	 I = 0.000000	
+Time=0.362085,	 delta = 68.703232,	 I = 0.000000	
+Time=0.372033,	 delta = 70.759448,	 I = 0.000000	
+Time=0.381233,	 delta = 72.471880,	 I = 0.000000	
+Time=0.390418,	 delta = 74.429177,	 I = 0.000000	
+Time=0.398185,	 delta = 75.932420,	 I = 0.000000	
+Time=0.408885,	 delta = 77.883230,	 I = 0.000000	
+Time=0.415938,	 delta = 79.485392,	 I = 0.000000	
+Time=0.426923,	 delta = 81.595122,	 I = 0.000000	
+Time=0.437639,	 delta = 83.763229,	 I = 0.000000	
+Time=0.443608,	 delta = 84.898364,	 I = 0.000000	
+Time=0.452185,	 delta = 86.610796,	 I = 0.000000	
+Time=0.460638,	 delta = 88.543769,	 I = 0.000000	
+Time=0.471668,	 delta = 90.572417,	 I = 0.000000	
+Time=0.479725,	 delta = 92.279985,	 I = 0.000000	
+Time=0.489287,	 delta = 94.086471,	 I = 0.000000	
+Time=0.499288,	 delta = 96.152416,	 I = 0.017094	
+Time=0.508535,	 delta = 98.012416,	 I = 0.012210	
+Time=0.518176,	 delta = 99.989173,	 I = 0.100122	
+Time=0.528796,	 delta = 102.098902,	 I = 0.415140	
+Time=0.538251,	 delta = 104.114577,	 I = 0.483516	
+Time=0.546251,	 delta = 105.658361,	 I = 0.586081	
+Time=0.556403,	 delta = 107.667550,	 I = 0.405372	
+Time=0.565761,	 delta = 109.556739,	 I = 0.656899	
+Time=0.574725,	 delta = 111.359982,	 I = 0.735043	
+Time=0.582668,	 delta = 113.200522,	 I = 0.937729	
+Time=0.592303,	 delta = 114.861062,	 I = 1.037851	
+Time=0.600671,	 delta = 116.516737,	 I = 1.072039	
+Time=0.608272,	 delta = 118.049170,	 I = 0.927961	
+Time=0.616710,	 delta = 119.956196,	 I = 0.952381	
+Time=0.625574,	 delta = 121.676737,	 I = 0.879121	
+Traceback (most recent call last):
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 98, in <module>
+    test = Test()
+  File "testing/steering_motor/SteeringMotorTestLukas.py", line 94, in __init__
+    self.steering_motor_drive.set_angular_velocity(0)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 40, in set_angular_velocity
+    self.set_PWM_duty_cycle(duty_cycle)
+  File "/home/debian/chalmersbike/testing/steering_motor/../../actuators/steeringMotor.py", line 31, in set_PWM_duty_cycle
+    PWM.set_duty_cycle(steeringMotor_Channel, duty_cycle)
+RuntimeError: You must start() the PWM channel first
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easyy[Kstart
+easystart.py            easystart_zeroSpeed.py  
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easystart_zeroSpeed.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C^CTraceback (most recent call last):
+  File "easystart_zeroSpeed.py", line 14, in <module>
+    rearmotor = DriveMotor()
+  File "/home/debian/chalmersbike/actuators/driveMotor.py", line 12, in __init__
+    ADC.setup()
+KeyboardInterrupt
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easystart_zeroSpeed.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : Searching for calibration file /home/debian/chalmersbike/sensors/Acc_Cali.txt
+IMU : Waiting for calibration data
+IMU : Gyroscope calibration finished
+IMU : Accelerometer not calibrated, using 0.02458 as roll angle offset
+
+
+Type a description for the experiment if necessary. Press ENTER to start the experiment. 
+EXP LOG PATH is: 
+./ExpData_zeroSpeed_blackbike/BikeData_zeroSpeed_20201209-095911.csv
+
+Experiment starting in 5s
+Experiment starting in 4s
+Experiment starting in 3s
+
+[0.006021] deltadot = 16.076882 ; delta = -1.980000 ; phi = 0.005557 ; phidot = -0.095480
+[0.014130] deltadot = 6.823309 ; delta = -1.978378 ; phi = 0.012143 ; phidot = -0.349230
+[0.025466] deltadot = 8.827498 ; delta = -1.921622 ; phi = 0.016410 ; phidot = -0.305480
+[0.035019] deltadot = 9.120592 ; delta = -1.851892 ; phi = 0.027929 ; phidot = -0.331730
+[0.045378] deltadot = 10.080175 ; delta = -1.777297 ; phi = 0.031315 ; phidot = -0.305480
+[0.055719] deltadot = 16.590824 ; delta = -1.707568 ; phi = 0.045532 ; phidot = -0.191730
+[0.065787] deltadot = 15.302900 ; delta = -1.632973 ; phi = 0.056489 ; phidot = -0.252980
+[0.076581] deltadot = 16.475825 ; delta = -1.521081 ; phi = 0.065131 ; phidot = -0.235480
+[0.087007] deltadot = 21.597032 ; delta = -1.389730 ; phi = 0.068759 ; phidot = -0.095480
+[0.098028] deltadot = 15.796510 ; delta = -1.222703 ; phi = 0.087610 ; phidot = -0.279230
+[0.107440] deltadot = 35.173263 ; delta = -1.045946 ; phi = 0.093167 ; phidot = 0.210770
+[0.117783] deltadot = 46.403699 ; delta = -0.840000 ; phi = 0.106981 ; phidot = 0.473270
+[0.129691] deltadot = 49.448127 ; delta = -0.452432 ; phi = 0.090477 ; phidot = 0.709520
+[0.139880] deltadot = 51.484415 ; delta = -0.003243 ; phi = 0.120264 ; phidot = 0.735770
+[0.150112] deltadot = 66.690404 ; delta = 0.488108 ; phi = 0.113240 ; phidot = 1.252020
+[0.160351] deltadot = 75.525308 ; delta = 1.000541 ; phi = 0.144330 ; phidot = 1.453270
+[0.170159] deltadot = 82.007253 ; delta = 1.676757 ; phi = 0.203440 ; phidot = 1.514520
+[0.180653] deltadot = 109.323403 ; delta = 2.437297 ; phi = 0.275381 ; phidot = 2.048270
+[0.191028] deltadot = 124.714925 ; delta = 3.319459 ; phi = 0.389916 ; phidot = 2.135770
+[0.201399] deltadot = 129.825330 ; delta = 4.451351 ; phi = 0.417347 ; phidot = 2.407020
+[0.211738] deltadot = 133.179525 ; delta = 5.677297 ; phi = 0.435904 ; phidot = 2.695770
+[0.221896] deltadot = 145.994031 ; delta = 6.969730 ; phi = 0.420307 ; phidot = 3.378270
+[0.232430] deltadot = 152.906094 ; delta = 8.372432 ; phi = 0.415854 ; phidot = 3.894520
+[0.242590] deltadot = 175.695600 ; delta = 9.836757 ; phi = 0.455802 ; phidot = 4.620770
+[0.253172] deltadot = 177.566729 ; delta = 11.477838 ; phi = 0.512817 ; phidot = 4.804520
+[0.263508] deltadot = 231.331185 ; delta = 13.224324 ; phi = 0.637673 ; phidot = 5.985770
+[0.274546] deltadot = 252.520734 ; delta = 15.157297 ; phi = 0.783181 ; phidot = 6.327020
+[0.284235] deltadot = 290.683689 ; delta = 17.294595 ; phi = 0.849196 ; phidot = 7.473270
+[0.294275] deltadot = 305.217369 ; delta = 19.425405 ; phi = 0.917159 ; phidot = 8.033270
+[0.305539] deltadot = 328.495670 ; delta = 21.664865 ; phi = 1.028259 ; phidot = 8.645770
+[0.315145] deltadot = 330.938220 ; delta = 23.842703 ; phi = 1.058837 ; phidot = 9.083270
+[0.325788] deltadot = 341.035528 ; delta = 26.182703 ; phi = 1.188074 ; phidot = 9.319520
+[0.336308] deltadot = 332.662780 ; delta = 28.414054 ; phi = 1.259766 ; phidot = 9.328270
+[0.346496] deltadot = 318.946623 ; delta = 30.653514 ; phi = 1.386836 ; phidot = 8.969520
+[0.357052] deltadot = 305.427400 ; delta = 32.949730 ; phi = 1.554580 ; phidot = 8.453270
+[0.367444] deltadot = 285.589377 ; delta = 35.185946 ; phi = 1.681344 ; phidot = 7.945770
+[0.377734] deltadot = 253.786822 ; delta = 37.511351 ; phi = 1.763590 ; phidot = 7.359520
+[0.388296] deltadot = 174.890870 ; delta = 39.801081 ; phi = 1.792682 ; phidot = 5.845770
+[0.399095] deltadot = 113.055723 ; delta = 42.038919 ; phi = 1.903187 ; phidot = 4.384520
+[0.410372] deltadot = 25.338707 ; delta = 43.835676 ; phi = 1.928670 ; phidot = 2.555770
+[0.419580] deltadot = -75.049394 ; delta = 44.918919 ; phi = 1.997906 ; phidot = 0.062020
+[0.430215] deltadot = -165.672599 ; delta = 45.167027 ; phi = 1.864198 ; phidot = -1.512980
+[0.440517] deltadot = -236.752453 ; delta = 44.555676 ; phi = 1.877390 ; phidot = -3.446730
+[0.451745] deltadot = -281.399147 ; delta = 43.157838 ; phi = 2.124955 ; phidot = -5.931730
+[0.461916] deltadot = -314.346150 ; delta = 41.025405 ; phi = 2.042055 ; phidot = -6.876730
+[0.471559] deltadot = -347.723054 ; delta = 39.111892 ; phi = 1.950358 ; phidot = -7.742980
+[0.481896] deltadot = -374.874845 ; delta = 36.916216 ; phi = 1.744756 ; phidot = -8.031730
+[0.492358] deltadot = -453.038499 ; delta = 34.740000 ; phi = 1.614810 ; phidot = -9.886730
+[0.503419] deltadot = -483.144880 ; delta = 32.422703 ; phi = 1.659542 ; phidot = -11.356730
+[0.513652] deltadot = -488.524709 ; delta = 30.131351 ; phi = 1.727823 ; phidot = -12.319230
+[0.524543] deltadot = -463.124407 ; delta = 27.942162 ; phi = 1.590445 ; phidot = -11.619230
+[0.534037] deltadot = -461.995087 ; delta = 25.725405 ; phi = 1.393494 ; phidot = -11.260480
+[0.544446] deltadot = -522.963181 ; delta = 23.466486 ; phi = 1.342026 ; phidot = -13.054230
+[0.554621] deltadot = -500.756951 ; delta = 21.267568 ; phi = 1.188101 ; phidot = -12.362980
+[0.565154] deltadot = -519.361396 ; delta = 19.011892 ; phi = 0.974837 ; phidot = -12.424230
+[0.576883] deltadot = -562.785025 ; delta = 17.239459 ; phi = 0.943480 ; phidot = -13.762980
+[0.586543] deltadot = -575.769345 ; delta = 16.650811 ; phi = 0.878732 ; phidot = -13.937980
+[0.597276] deltadot = -560.450833 ; delta = 16.712432 ; phi = 0.798366 ; phidot = -13.202980
+[0.607785] deltadot = -639.537694 ; delta = 16.926486 ; phi = 0.123990 ; phidot = -12.170480
+[0.618328] deltadot = -828.358700 ; delta = 17.020541 ; phi = -0.516112 ; phidot = -13.990480
+[0.628277] deltadot = -919.454022 ; delta = 16.892432 ; phi = -0.737751 ; phidot = -15.285480
+[0.638360] deltadot = -963.526402 ; delta = 16.461081 ; phi = -0.886506 ; phidot = -15.819230
+[0.648840] deltadot = -989.745077 ; delta = 15.672973 ; phi = -0.732817 ; phidot = -17.306730
+[0.659199] deltadot = -884.465725 ; delta = 14.591351 ; phi = -0.670962 ; phidot = -15.259230
+[0.670116] deltadot = -803.520464 ; delta = 13.174054 ; phi = -0.539816 ; phidot = -14.182980
+[0.680710] deltadot = -683.808006 ; delta = 11.719459 ; phi = -0.795665 ; phidot = -10.499230
+[0.690539] deltadot = -709.681355 ; delta = 10.394595 ; phi = -1.181927 ; phidot = -9.772980
+[0.701740] deltadot = -756.383779 ; delta = 9.047027 ; phi = -1.336456 ; phidot = -10.560480
+[0.711469] deltadot = -712.216372 ; delta = 8.108108 ; phi = -1.314181 ; phidot = -9.799230
+[0.721500] deltadot = -705.942962 ; delta = 7.367027 ; phi = -1.327040 ; phidot = -9.764230
+[0.732160] deltadot = -714.982116 ; delta = 6.968108 ; phi = -1.306510 ; phidot = -10.166730
+[0.741944] deltadot = -735.049120 ; delta = 6.888649 ; phi = -1.444461 ; phidot = -10.079230
+[0.752849] deltadot = -744.477378 ; delta = 6.972973 ; phi = -1.519504 ; phidot = -9.965480
+[0.763135] deltadot = -775.990815 ; delta = 7.068649 ; phi = -1.676142 ; phidot = -10.035480
+[0.773761] deltadot = -785.514338 ; delta = 7.156216 ; phi = -1.771815 ; phidot = -9.834230
+[0.784278] deltadot = -763.172022 ; delta = 7.221081 ; phi = -1.889343 ; phidot = -8.766730
+[0.794323] deltadot = -817.632755 ; delta = 7.268108 ; phi = -2.095165 ; phidot = -9.195480
+[0.804848] deltadot = -817.323587 ; delta = 7.298919 ; phi = -2.221465 ; phidot = -8.635480
+[0.815209] deltadot = -743.005155 ; delta = 7.313514 ; phi = -2.183867 ; phidot = -6.981730
+[0.825910] deltadot = -685.039714 ; delta = 7.313514 ; phi = -2.166485 ; phidot = -5.642980
+[0.835792] deltadot = -714.075185 ; delta = 7.313514 ; phi = -2.344715 ; phidot = -5.581730
+[0.845998] deltadot = -818.408746 ; delta = 7.313514 ; phi = -2.498400 ; phidot = -7.462980
+[0.856483] deltadot = -833.686787 ; delta = 7.316757 ; phi = -2.513602 ; phidot = -7.769230
+[0.867201] deltadot = -772.129932 ; delta = 7.365405 ; phi = -2.481398 ; phidot = -6.395480
+[0.878051] deltadot = -794.705323 ; delta = 7.504865 ; phi = -2.599351 ; phidot = -6.404230
+[0.887753] deltadot = -863.174590 ; delta = 7.725405 ; phi = -2.720867 ; phidot = -7.497980
+[0.899040] deltadot = -918.655274 ; delta = 8.091892 ; phi = -2.793515 ; phidot = -8.451730
+[0.908619] deltadot = -931.669261 ; delta = 8.494054 ; phi = -2.829014 ; phidot = -8.521730
+[0.919408] deltadot = -929.578916 ; delta = 8.907568 ; phi = -2.881930 ; phidot = -8.145480
+[0.929265] deltadot = -922.994550 ; delta = 9.319459 ; phi = -2.990618 ; phidot = -7.419230
+[0.939676] deltadot = -967.780035 ; delta = 9.690811 ; phi = -3.146482 ; phidot = -7.751730
+[0.950559] deltadot = -997.460050 ; delta = 10.047568 ; phi = -3.246172 ; phidot = -7.961730
+[0.960409] deltadot = -998.976971 ; delta = 10.380000 ; phi = -3.299544 ; phidot = -7.690480
+[0.970743] deltadot = -995.190637 ; delta = 10.680000 ; phi = -3.363223 ; phidot = -7.252980
+[0.981377] deltadot = -1021.058972 ; delta = 10.967027 ; phi = -3.451241 ; phidot = -7.436730
+[0.991595] deltadot = -1046.428990 ; delta = 11.218378 ; phi = -3.489734 ; phidot = -7.830480
+[1.001731] deltadot = -1068.561424 ; delta = 11.451892 ; phi = -3.545359 ; phidot = -8.075480
+[1.012583] deltadot = -1061.367948 ; delta = 11.665946 ; phi = -3.600531 ; phidot = -7.611730
+[1.022390] deltadot = -1067.401140 ; delta = 11.862162 ; phi = -3.682753 ; phidot = -7.357980
+[1.032969] deltadot = -1085.681662 ; delta = 12.066486 ; phi = -3.793192 ; phidot = -7.279230
+[1.043307] deltadot = -1100.316183 ; delta = 12.308108 ; phi = -3.872902 ; phidot = -7.235480
+[1.053687] deltadot = -1118.645612 ; delta = 12.624324 ; phi = -3.951200 ; phidot = -7.270480
+[1.064162] deltadot = -1129.371924 ; delta = 12.982703 ; phi = -3.992363 ; phidot = -7.270480
+[1.074261] deltadot = -1108.185077 ; delta = 13.350811 ; phi = -4.012818 ; phidot = -6.579230
+[1.085220] deltadot = -1126.587869 ; delta = 13.720541 ; phi = -4.068360 ; phidot = -6.701730
+[1.095758] deltadot = -1139.945893 ; delta = 14.041622 ; phi = -4.162898 ; phidot = -6.544230
+[1.105974] deltadot = -1176.341025 ; delta = 14.349730 ; phi = -4.242360 ; phidot = -7.016730
+[1.117148] deltadot = -1183.687559 ; delta = 14.631892 ; phi = -4.331394 ; phidot = -6.745480
+[1.128154] deltadot = -1197.248509 ; delta = 14.897838 ; phi = -4.417907 ; phidot = -6.640480
+[1.136977] deltadot = -1196.070520 ; delta = 15.118378 ; phi = -4.502659 ; phidot = -6.194230
+[1.148580] deltadot = -1219.016064 ; delta = 15.355135 ; phi = -4.591078 ; phidot = -6.316730
+[1.158748] deltadot = -1227.668885 ; delta = 15.540000 ; phi = -4.674528 ; phidot = -6.124230
+[1.169331] deltadot = -1228.827974 ; delta = 15.711892 ; phi = -4.760934 ; phidot = -5.739230
+[1.180344] deltadot = -1248.250025 ; delta = 15.867568 ; phi = -4.846005 ; phidot = -5.809230
+[1.190430] deltadot = -1244.937081 ; delta = 16.018378 ; phi = -4.898155 ; phidot = -5.467980
+[1.201297] deltadot = -1249.547688 ; delta = 16.206486 ; phi = -4.954538 ; phidot = -5.292980
+[1.210380] deltadot = -1250.286575 ; delta = 16.383243 ; phi = -4.995743 ; phidot = -5.091730
+[1.221497] deltadot = -1245.810527 ; delta = 16.608649 ; phi = -5.037276 ; phidot = -4.750480
+[1.232005] deltadot = -1255.805734 ; delta = 16.824324 ; phi = -5.098263 ; phidot = -4.680480
+[1.241901] deltadot = -1251.928276 ; delta = 17.018919 ; phi = -5.161063 ; phidot = -4.269230
+[1.253352] deltadot = -1256.642252 ; delta = 17.215135 ; phi = -5.221644 ; phidot = -4.076730
+[1.264097] deltadot = -1257.527429 ; delta = 17.374054 ; phi = -5.282885 ; phidot = -3.796730
+[1.273918] deltadot = -1256.925686 ; delta = 17.505405 ; phi = -5.325059 ; phidot = -3.569230
+[1.284456] deltadot = -1245.002799 ; delta = 17.623784 ; phi = -5.364780 ; phidot = -3.079230
+[1.294620] deltadot = -1230.546387 ; delta = 17.717838 ; phi = -5.387453 ; phidot = -2.606730
+[1.305194] deltadot = -1226.313229 ; delta = 17.797297 ; phi = -5.407871 ; phidot = -2.396730
+[1.315545] deltadot = -1205.179731 ; delta = 17.854054 ; phi = -5.437408 ; phidot = -1.740480
+[1.325789] deltadot = -1206.843324 ; delta = 17.894595 ; phi = -5.464876 ; phidot = -1.652980
+[1.336265] deltadot = -1180.355163 ; delta = 17.915676 ; phi = -5.486363 ; phidot = -0.909230
+[1.346278] deltadot = -1173.937126 ; delta = 17.920541 ; phi = -5.496456 ; phidot = -0.707980
+[1.356789] deltadot = -1151.641361 ; delta = 17.920541 ; phi = -5.496155 ; phidot = -0.165480
+[1.367141] deltadot = -1158.280599 ; delta = 17.920541 ; phi = -5.505289 ; phidot = -0.287980
+[1.377489] deltadot = -1142.157935 ; delta = 17.920541 ; phi = -5.507435 ; phidot = 0.114520
+[1.387707] deltadot = -1140.898277 ; delta = 17.920541 ; phi = -5.528694 ; phidot = 0.237020
+[1.397870] deltadot = -1124.422803 ; delta = 17.920541 ; phi = -5.524793 ; phidot = 0.622020
+[1.408278] deltadot = -1097.943402 ; delta = 17.920541 ; phi = -5.517071 ; phidot = 1.234520
+[1.418420] deltadot = -1079.149876 ; delta = 17.920541 ; phi = -5.506154 ; phidot = 1.645770
+[1.428748] deltadot = -1059.216464 ; delta = 17.920541 ; phi = -5.502985 ; phidot = 2.118270
+[1.439039] deltadot = -1064.701089 ; delta = 17.920541 ; phi = -5.495462 ; phidot = 1.952020
+[1.449549] deltadot = -1045.803454 ; delta = 17.920541 ; phi = -5.475849 ; phidot = 2.328270
+[1.459796] deltadot = -1038.631860 ; delta = 17.920541 ; phi = -5.455600 ; phidot = 2.415770
+[1.469953] deltadot = -1038.786183 ; delta = 17.920541 ; phi = -5.432150 ; phidot = 2.310770
+[1.480914] deltadot = -1012.468672 ; delta = 17.920541 ; phi = -5.401020 ; phidot = 2.818270
+[1.491546] deltadot = -1005.002343 ; delta = 17.920541 ; phi = -5.354784 ; phidot = 2.800770
+[1.502210] deltadot = -968.884140 ; delta = 17.920541 ; phi = -5.312873 ; phidot = 3.500770
+[1.512311] deltadot = -961.836963 ; delta = 17.920541 ; phi = -5.285219 ; phidot = 3.553270
+[1.522330] deltadot = -972.348110 ; delta = 17.920541 ; phi = -5.265558 ; phidot = 3.212020
+[1.532899] deltadot = -950.560098 ; delta = 17.920541 ; phi = -5.239750 ; phidot = 3.632020
+[1.543839] deltadot = -944.906130 ; delta = 17.920541 ; phi = -5.197672 ; phidot = 3.588270
+[1.553883] deltadot = -931.749382 ; delta = 17.920541 ; phi = -5.149689 ; phidot = 3.702020
+[1.564356] deltadot = -920.505679 ; delta = 17.920541 ; phi = -5.090219 ; phidot = 3.719520
+[1.574497] deltadot = -899.058179 ; delta = 17.920541 ; phi = -5.042013 ; phidot = 4.034520
+[1.585091] deltadot = -900.732581 ; delta = 17.920541 ; phi = -4.994722 ; phidot = 3.789520
+[1.595843] deltadot = -882.093516 ; delta = 17.920541 ; phi = -4.950221 ; phidot = 4.052020
+[1.606989] deltadot = -884.256206 ; delta = 17.920541 ; phi = -4.913796 ; phidot = 3.842020
+[1.616409] deltadot = -878.766763 ; delta = 17.920541 ; phi = -4.870621 ; phidot = 3.789520
+[1.627559] deltadot = -869.379718 ; delta = 17.920541 ; phi = -4.819614 ; phidot = 3.798270
+[1.637128] deltadot = -849.645697 ; delta = 17.920541 ; phi = -4.760820 ; phidot = 4.025770
+[1.648569] deltadot = -833.991774 ; delta = 17.920541 ; phi = -4.710889 ; phidot = 4.192020
+[1.657959] deltadot = -833.496009 ; delta = 17.920541 ; phi = -4.671605 ; phidot = 4.034520
+[1.668372] deltadot = -827.792010 ; delta = 17.920541 ; phi = -4.635326 ; phidot = 4.017020
+[1.678417] deltadot = -828.404617 ; delta = 17.920541 ; phi = -4.594196 ; phidot = 3.824520
+[1.688918] deltadot = -820.726803 ; delta = 17.920541 ; phi = -4.548792 ; phidot = 3.815770
+[1.699607] deltadot = -805.571143 ; delta = 17.920541 ; phi = -4.501677 ; phidot = 3.982020
+[1.709780] deltadot = -797.246671 ; delta = 17.920541 ; phi = -4.452619 ; phidot = 3.973270
+[1.720304] deltadot = -783.240062 ; delta = 17.920541 ; phi = -4.405915 ; phidot = 4.113270
+[1.730363] deltadot = -777.497460 ; delta = 17.920541 ; phi = -4.361310 ; phidot = 4.060770
+[1.742489] deltadot = -770.122355 ; delta = 17.920541 ; phi = -4.323696 ; phidot = 4.078270
+[1.751237] deltadot = -775.115076 ; delta = 17.920541 ; phi = -4.295152 ; phidot = 3.833270
+[1.761498] deltadot = -756.545735 ; delta = 17.920541 ; phi = -4.253073 ; phidot = 4.104520
+[1.771792] deltadot = -756.757164 ; delta = 17.920541 ; phi = -4.203596 ; phidot = 3.885770
+[1.781900] deltadot = -740.308864 ; delta = 17.920541 ; phi = -4.153232 ; phidot = 4.069520
+[1.792437] deltadot = -727.709191 ; delta = 17.920541 ; phi = -4.102315 ; phidot = 4.157020
+[1.803213] deltadot = -719.488684 ; delta = 17.920541 ; phi = -4.053845 ; phidot = 4.148270
+[1.813404] deltadot = -708.404762 ; delta = 17.920541 ; phi = -4.009465 ; phidot = 4.227020
+[1.823634] deltadot = -708.281715 ; delta = 17.920541 ; phi = -3.968234 ; phidot = 4.052020
+[1.834693] deltadot = -697.284231 ; delta = 17.920541 ; phi = -3.918262 ; phidot = 4.104520
+[1.844670] deltadot = -690.427290 ; delta = 17.920541 ; phi = -3.861281 ; phidot = 4.025770
+[1.855362] deltadot = -673.709773 ; delta = 17.920541 ; phi = -3.795207 ; phidot = 4.148270
+[1.865684] deltadot = -664.986597 ; delta = 17.920541 ; phi = -3.745924 ; phidot = 4.148270
+[1.876248] deltadot = -648.450577 ; delta = 17.920541 ; phi = -3.688983 ; phidot = 4.305770
+[1.886297] deltadot = -630.811122 ; delta = 17.920541 ; phi = -3.644049 ; phidot = 4.542020
+[1.896979] deltadot = -629.363339 ; delta = 17.920541 ; phi = -3.591279 ; phidot = 4.349520
+[1.908031] deltadot = -634.096439 ; delta = 17.920541 ; phi = -3.551135 ; phidot = 4.060770
+[1.917551] deltadot = -617.990394 ; delta = 17.920541 ; phi = -3.506757 ; phidot = 4.262020
+[1.928289] deltadot = -606.012185 ; delta = 17.920541 ; phi = -3.455298 ; phidot = 4.332020
+[1.938645] deltadot = -601.505089 ; delta = 17.920541 ; phi = -3.403486 ; phidot = 4.218270
+[1.948687] deltadot = -598.412590 ; delta = 17.920541 ; phi = -3.357638 ; phidot = 4.095770
+[1.958708] deltadot = -588.182494 ; delta = 17.920541 ; phi = -3.318083 ; phidot = 4.174520
+[1.969255] deltadot = -583.223597 ; delta = 17.923784 ; phi = -3.273676 ; phidot = 4.104520
+[1.979617] deltadot = -585.475517 ; delta = 17.927027 ; phi = -3.231498 ; phidot = 3.868270
+[1.989881] deltadot = -560.152034 ; delta = 17.928649 ; phi = -3.179547 ; phidot = 4.262020
+[2.000560] deltadot = -544.992397 ; delta = 17.928649 ; phi = -3.128356 ; phidot = 4.410770
+[2.011198] deltadot = -550.911501 ; delta = 17.928649 ; phi = -3.080723 ; phidot = 4.060770
+[2.020948] deltadot = -530.199216 ; delta = 17.930270 ; phi = -3.036583 ; phidot = 4.375770
+[2.031302] deltadot = -535.008643 ; delta = 17.931892 ; phi = -2.992728 ; phidot = 4.069520
+[2.041748] deltadot = -529.169937 ; delta = 17.936757 ; phi = -2.949343 ; phidot = 4.025770
+[2.052456] deltadot = -511.165480 ; delta = 17.940000 ; phi = -2.900144 ; phidot = 4.253270
+[2.063614] deltadot = -508.497539 ; delta = 17.941622 ; phi = -2.850527 ; phidot = 4.104520
+[2.073281] deltadot = -497.903715 ; delta = 17.943243 ; phi = -2.802748 ; phidot = 4.157020
+[2.083818] deltadot = -488.071798 ; delta = 17.944865 ; phi = -2.749139 ; phidot = 4.165770
+[2.093900] deltadot = -472.456255 ; delta = 17.944865 ; phi = -2.699426 ; phidot = 4.332020
+[2.104645] deltadot = -473.869161 ; delta = 17.944865 ; phi = -2.654711 ; phidot = 4.104520
+[2.115756] deltadot = -456.244777 ; delta = 17.944865 ; phi = -2.603782 ; phidot = 4.314520
+[2.125234] deltadot = -447.700019 ; delta = 17.944865 ; phi = -2.557533 ; phidot = 4.323270
+[2.135900] deltadot = -448.872475 ; delta = 17.944865 ; phi = -2.507406 ; phidot = 4.078270
+[2.145903] deltadot = -436.742570 ; delta = 17.944865 ; phi = -2.461171 ; phidot = 4.174520
+[2.156447] deltadot = -418.827161 ; delta = 17.946486 ; phi = -2.404456 ; phidot = 4.367020
+[2.166585] deltadot = -420.353399 ; delta = 17.948108 ; phi = -2.358266 ; phidot = 4.130770
+[2.176991] deltadot = -411.035541 ; delta = 17.951351 ; phi = -2.311528 ; phidot = 4.157020
+[2.187429] deltadot = -407.990967 ; delta = 17.954595 ; phi = -2.267802 ; phidot = 4.043270
+[2.197719] deltadot = -396.276659 ; delta = 17.961081 ; phi = -2.223563 ; phidot = 4.139520
+[2.209282] deltadot = -383.030298 ; delta = 17.967568 ; phi = -2.170668 ; phidot = 4.235770
+[2.219009] deltadot = -384.565572 ; delta = 17.974054 ; phi = -2.128319 ; phidot = 4.017020
+[2.228952] deltadot = -381.071340 ; delta = 17.980541 ; phi = -2.081877 ; phidot = 3.903270
+[2.239001] deltadot = -357.336251 ; delta = 17.987027 ; phi = -2.040663 ; phidot = 4.305770
+[2.250039] deltadot = -359.881087 ; delta = 17.995135 ; phi = -1.997849 ; phidot = 4.060770
+[2.260128] deltadot = -348.537854 ; delta = 18.003243 ; phi = -1.949538 ; phidot = 4.130770
+[2.269896] deltadot = -348.300642 ; delta = 18.011351 ; phi = -1.905195 ; phidot = 3.947020
+[2.281157] deltadot = -337.068762 ; delta = 18.021081 ; phi = -1.857425 ; phidot = 4.017020
+[2.291123] deltadot = -326.645970 ; delta = 18.032432 ; phi = -1.810084 ; phidot = 4.069520
+[2.301476] deltadot = -326.227145 ; delta = 18.045405 ; phi = -1.766478 ; phidot = 3.894520
+[2.312455] deltadot = -307.485740 ; delta = 18.060000 ; phi = -1.718581 ; phidot = 4.148270
+[2.322763] deltadot = -312.462820 ; delta = 18.072973 ; phi = -1.675057 ; phidot = 3.842020
+[2.333570] deltadot = -304.346440 ; delta = 18.087568 ; phi = -1.630437 ; phidot = 3.850770
+[2.344596] deltadot = -297.929303 ; delta = 18.098919 ; phi = -1.589513 ; phidot = 3.833270
+[2.355348] deltadot = -265.432647 ; delta = 18.108649 ; phi = -1.533079 ; phidot = 4.384520
+[2.365575] deltadot = -267.113748 ; delta = 18.120000 ; phi = -1.485209 ; phidot = 4.139520
+[2.376233] deltadot = -260.376091 ; delta = 18.129730 ; phi = -1.438509 ; phidot = 4.104520
+[2.386195] deltadot = -252.575881 ; delta = 18.142703 ; phi = -1.393736 ; phidot = 4.104520
+[2.396314] deltadot = -250.226391 ; delta = 18.155676 ; phi = -1.343275 ; phidot = 3.947020
+[2.406477] deltadot = -242.623486 ; delta = 18.175135 ; phi = -1.295212 ; phidot = 3.929520
+[2.417571] deltadot = -216.811152 ; delta = 18.196216 ; phi = -1.243497 ; phidot = 4.340770
+[2.428652] deltadot = -220.198251 ; delta = 18.218919 ; phi = -1.198570 ; phidot = 4.069520
+[2.438344] deltadot = -207.621432 ; delta = 18.236757 ; phi = -1.158977 ; phidot = 4.209520
+[2.450478] deltadot = -194.846529 ; delta = 18.261081 ; phi = -1.109805 ; phidot = 4.314520
+[2.459640] deltadot = -186.481359 ; delta = 18.277297 ; phi = -1.067745 ; phidot = 4.340770
+[2.469908] deltadot = -177.439972 ; delta = 18.296757 ; phi = -1.011555 ; phidot = 4.323270
+[2.480425] deltadot = -176.695755 ; delta = 18.321081 ; phi = -0.961440 ; phidot = 4.130770
+[2.490582] deltadot = -171.466226 ; delta = 18.350270 ; phi = -0.914097 ; phidot = 4.060770
+[2.500998] deltadot = -156.412906 ; delta = 18.387568 ; phi = -0.869591 ; phidot = 4.244520
+[2.511427] deltadot = -147.783268 ; delta = 18.428108 ; phi = -0.820664 ; phidot = 4.253270
+[2.521548] deltadot = -149.867838 ; delta = 18.475135 ; phi = -0.779220 ; phidot = 4.034520
+[2.532520] deltadot = -132.761419 ; delta = 18.530270 ; phi = -0.726200 ; phidot = 4.235770
+[2.542547] deltadot = -113.246704 ; delta = 18.583784 ; phi = -0.675877 ; phidot = 4.507020
+[2.553269] deltadot = -115.673220 ; delta = 18.640541 ; phi = -0.627729 ; phidot = 4.253270
+[2.563699] deltadot = -101.975330 ; delta = 18.690811 ; phi = -0.582070 ; phidot = 4.402020
+[2.573602] deltadot = -110.578543 ; delta = 18.739459 ; phi = -0.542910 ; phidot = 4.034520
+[2.583791] deltadot = -99.632547 ; delta = 18.789730 ; phi = -0.500637 ; phidot = 4.130770
+[2.594386] deltadot = -108.278160 ; delta = 18.846486 ; phi = -0.455196 ; phidot = 3.737020
+[2.604957] deltadot = -86.237319 ; delta = 18.909730 ; phi = -0.404261 ; phidot = 4.069520
+[2.615826] deltadot = -85.546436 ; delta = 18.976216 ; phi = -0.352161 ; phidot = 3.877020
+[2.625752] deltadot = -82.109780 ; delta = 19.058919 ; phi = -0.305965 ; phidot = 3.780770
+[2.636319] deltadot = -78.107770 ; delta = 19.143243 ; phi = -0.258512 ; phidot = 3.693270
+[2.646437] deltadot = -83.036758 ; delta = 19.232432 ; phi = -0.216664 ; phidot = 3.413270
+[2.657030] deltadot = -79.337757 ; delta = 19.321622 ; phi = -0.170660 ; phidot = 3.325770
+[2.668032] deltadot = -62.569756 ; delta = 19.410811 ; phi = -0.119732 ; phidot = 3.535770
+[2.678389] deltadot = -56.583739 ; delta = 19.493514 ; phi = -0.085481 ; phidot = 3.553270
+[2.689078] deltadot = -43.352107 ; delta = 19.576216 ; phi = -0.048804 ; phidot = 3.737020
+[2.698538] deltadot = -50.936429 ; delta = 19.647568 ; phi = -0.008736 ; phidot = 3.395770
+[2.708955] deltadot = -47.037919 ; delta = 19.725405 ; phi = 0.027645 ; phidot = 3.352020
+[2.719992] deltadot = -45.087361 ; delta = 19.804865 ; phi = 0.065270 ; phidot = 3.255770
+[2.730579] deltadot = -40.861002 ; delta = 19.897297 ; phi = 0.120510 ; phidot = 3.142020
+[2.740950] deltadot = -26.424086 ; delta = 19.984865 ; phi = 0.172367 ; phidot = 3.290770
+[2.751459] deltadot = -27.166888 ; delta = 20.093514 ; phi = 0.212574 ; phidot = 3.124520
+[2.761749] deltadot = -36.283515 ; delta = 20.205405 ; phi = 0.240102 ; phidot = 2.809520
+[2.772403] deltadot = -24.994051 ; delta = 20.325405 ; phi = 0.279990 ; phidot = 2.940770
+[2.782299] deltadot = -29.586710 ; delta = 20.458378 ; phi = 0.303819 ; phidot = 2.757020
+[2.792780] deltadot = -25.716444 ; delta = 20.589730 ; phi = 0.334836 ; phidot = 2.748270
+[2.803073] deltadot = -21.489396 ; delta = 20.709730 ; phi = 0.371306 ; phidot = 2.722020
+[2.813426] deltadot = -15.966643 ; delta = 20.828108 ; phi = 0.415009 ; phidot = 2.695770
+[2.824559] deltadot = -13.764050 ; delta = 20.946486 ; phi = 0.450088 ; phidot = 2.625770
+[2.834623] deltadot = -9.289707 ; delta = 21.043784 ; phi = 0.476591 ; phidot = 2.643270
+[2.845115] deltadot = -16.135805 ; delta = 21.155676 ; phi = 0.502759 ; phidot = 2.389520
+[2.855838] deltadot = -30.767613 ; delta = 21.280541 ; phi = 0.532261 ; phidot = 1.934520
+[2.865937] deltadot = -13.926269 ; delta = 21.407027 ; phi = 0.561304 ; phidot = 2.249520
+[2.876347] deltadot = -16.393941 ; delta = 21.562703 ; phi = 0.594316 ; phidot = 2.083270
+[2.886628] deltadot = -17.652597 ; delta = 21.718378 ; phi = 0.628078 ; phidot = 1.943270
+[2.896567] deltadot = -2.033065 ; delta = 21.872432 ; phi = 0.665901 ; phidot = 2.197020
+[2.906621] deltadot = 2.802060 ; delta = 22.024865 ; phi = 0.662976 ; phidot = 2.363270
+[2.917015] deltadot = -7.427195 ; delta = 22.183784 ; phi = 0.676635 ; phidot = 2.092020
+[2.927380] deltadot = -21.704471 ; delta = 22.334595 ; phi = 0.691305 ; phidot = 1.715770
+[2.937706] deltadot = -11.464523 ; delta = 22.488649 ; phi = 0.719004 ; phidot = 1.882020
+[2.948268] deltadot = -21.123002 ; delta = 22.642703 ; phi = 0.727516 ; phidot = 1.645770
+[2.958590] deltadot = -5.382906 ; delta = 22.795135 ; phi = 0.774040 ; phidot = 1.864520
+[2.968791] deltadot = -3.367369 ; delta = 22.957297 ; phi = 0.808410 ; phidot = 1.803270
+[2.979626] deltadot = -4.077660 ; delta = 23.130811 ; phi = 0.821916 ; phidot = 1.768270
+[2.989742] deltadot = -12.655363 ; delta = 23.302703 ; phi = 0.837501 ; phidot = 1.532020
+[3.000301] deltadot = -23.038765 ; delta = 23.479459 ; phi = 0.851257 ; phidot = 1.260770
+[3.010338] deltadot = -20.554902 ; delta = 23.654595 ; phi = 0.876816 ; phidot = 1.252020
+[3.020872] deltadot = -20.929102 ; delta = 23.836216 ; phi = 0.892660 ; phidot = 1.217020
+[3.032130] deltadot = -35.719272 ; delta = 24.009730 ; phi = 0.909718 ; phidot = 0.823270
+[3.041397] deltadot = -26.456462 ; delta = 24.186486 ; phi = 0.922993 ; phidot = 1.033270
+[3.052558] deltadot = -39.723673 ; delta = 24.371351 ; phi = 0.924949 ; phidot = 0.744520
+[3.063612] deltadot = -50.121151 ; delta = 24.544865 ; phi = 0.928315 ; phidot = 0.517020
+[3.074131] deltadot = -54.529250 ; delta = 24.703784 ; phi = 0.936352 ; phidot = 0.412020
+[3.082446] deltadot = -49.954682 ; delta = 24.852973 ; phi = 0.960154 ; phidot = 0.455770
+[3.092857] deltadot = -41.213824 ; delta = 25.021622 ; phi = 0.982202 ; phidot = 0.613270
+[3.104224] deltadot = -47.609970 ; delta = 25.195135 ; phi = 0.991959 ; phidot = 0.455770
+[3.114285] deltadot = -39.530269 ; delta = 25.378378 ; phi = 1.002955 ; phidot = 0.648270
+[3.123801] deltadot = -43.779379 ; delta = 25.542162 ; phi = 1.002020 ; phidot = 0.587020
+[3.133956] deltadot = -36.202153 ; delta = 25.714054 ; phi = 1.003481 ; phidot = 0.805770
+[3.144489] deltadot = -48.017789 ; delta = 25.887568 ; phi = 1.010996 ; phidot = 0.525770
+[3.155387] deltadot = -56.919169 ; delta = 26.046486 ; phi = 1.017969 ; phidot = 0.315770
+[3.165890] deltadot = -33.919679 ; delta = 26.215135 ; phi = 1.033420 ; phidot = 0.849520
+[3.175334] deltadot = -44.652879 ; delta = 26.356216 ; phi = 1.049344 ; phidot = 0.552020
+[3.185571] deltadot = -44.954132 ; delta = 26.511892 ; phi = 1.060140 ; phidot = 0.534520
+[3.195947] deltadot = -34.450132 ; delta = 26.669189 ; phi = 1.065184 ; phidot = 0.805770
+[3.206998] deltadot = -47.729949 ; delta = 26.841081 ; phi = 1.064338 ; phidot = 0.525770
+[3.216889] deltadot = -39.957512 ; delta = 27.006486 ; phi = 1.072631 ; phidot = 0.718270
+[3.227560] deltadot = -40.597794 ; delta = 27.173514 ; phi = 1.086180 ; phidot = 0.683270
+[3.238196] deltadot = -37.908718 ; delta = 27.342162 ; phi = 1.098359 ; phidot = 0.735770
+[3.248591] deltadot = -32.717627 ; delta = 27.497838 ; phi = 1.117889 ; phidot = 0.814520
+[3.259250] deltadot = -31.101128 ; delta = 27.643784 ; phi = 1.126830 ; phidot = 0.849520
+[3.269845] deltadot = -33.823891 ; delta = 27.786486 ; phi = 1.127294 ; phidot = 0.814520
+[3.280419] deltadot = -37.610346 ; delta = 27.924324 ; phi = 1.137700 ; phidot = 0.709520
+[3.290343] deltadot = -36.589588 ; delta = 28.057297 ; phi = 1.152706 ; phidot = 0.700770
+[3.300865] deltadot = -23.989728 ; delta = 28.193514 ; phi = 1.172501 ; phidot = 0.954520
+[3.311218] deltadot = -28.367863 ; delta = 28.321622 ; phi = 1.193224 ; phidot = 0.788270
+[3.321569] deltadot = -7.891271 ; delta = 28.451351 ; phi = 1.218659 ; phidot = 1.208270
+[3.332519] deltadot = -0.569239 ; delta = 28.572973 ; phi = 1.232167 ; phidot = 1.357020
+[3.342608] deltadot = -19.168298 ; delta = 28.691351 ; phi = 1.230796 ; phidot = 0.937020
+[3.352565] deltadot = -17.245512 ; delta = 28.809730 ; phi = 1.229838 ; phidot = 1.015770
+[3.362710] deltadot = -23.726566 ; delta = 28.921622 ; phi = 1.237800 ; phidot = 0.849520
+[3.373282] deltadot = -17.774401 ; delta = 29.035135 ; phi = 1.255290 ; phidot = 0.945770
+[3.383568] deltadot = -6.905618 ; delta = 29.138919 ; phi = 1.267600 ; phidot = 1.182020
+[3.393885] deltadot = -7.252868 ; delta = 29.244324 ; phi = 1.283516 ; phidot = 1.129520
+[3.404428] deltadot = -3.262815 ; delta = 29.343243 ; phi = 1.301290 ; phidot = 1.173270
+[3.415278] deltadot = -0.832324 ; delta = 29.438919 ; phi = 1.320210 ; phidot = 1.173270
+[3.425408] deltadot = -5.468765 ; delta = 29.529730 ; phi = 1.327317 ; phidot = 1.050770
+[3.436393] deltadot = -2.830814 ; delta = 29.622162 ; phi = 1.343180 ; phidot = 1.068270
+[3.446557] deltadot = -8.206021 ; delta = 29.703243 ; phi = 1.359773 ; phidot = 0.884520
+[3.457127] deltadot = 5.420956 ; delta = 29.781081 ; phi = 1.374098 ; phidot = 1.173270
+[3.467603] deltadot = 9.259312 ; delta = 29.850811 ; phi = 1.383350 ; phidot = 1.243270
+[3.477833] deltadot = 15.269296 ; delta = 29.918919 ; phi = 1.392623 ; phidot = 1.365770
+[3.488650] deltadot = 24.527440 ; delta = 29.982162 ; phi = 1.395662 ; phidot = 1.593270
+[3.498252] deltadot = 16.006043 ; delta = 30.042162 ; phi = 1.407524 ; phidot = 1.348270
+[3.509033] deltadot = 24.595956 ; delta = 30.098919 ; phi = 1.424677 ; phidot = 1.497020
+[3.519846] deltadot = 32.434823 ; delta = 30.150811 ; phi = 1.449483 ; phidot = 1.593270
+[3.529762] deltadot = 31.638823 ; delta = 30.194595 ; phi = 1.473710 ; phidot = 1.479520
+[3.540300] deltadot = 40.750373 ; delta = 30.238378 ; phi = 1.495133 ; phidot = 1.619520
+[3.550457] deltadot = 36.202941 ; delta = 30.280541 ; phi = 1.512264 ; phidot = 1.444520
+[3.561350] deltadot = 39.357673 ; delta = 30.322703 ; phi = 1.534401 ; phidot = 1.435770
+[3.571373] deltadot = 46.733562 ; delta = 30.363243 ; phi = 1.547869 ; phidot = 1.567020
+[3.582274] deltadot = 52.087803 ; delta = 30.398919 ; phi = 1.565866 ; phidot = 1.628270
+[3.592262] deltadot = 66.352897 ; delta = 30.426486 ; phi = 1.585123 ; phidot = 1.899520
+[3.602665] deltadot = 58.462128 ; delta = 30.445946 ; phi = 1.606457 ; phidot = 1.619520
+[3.613081] deltadot = 72.005642 ; delta = 30.458919 ; phi = 1.630980 ; phidot = 1.847020
+[3.623443] deltadot = 68.473566 ; delta = 30.465405 ; phi = 1.651913 ; phidot = 1.672020
+[3.633756] deltadot = 70.370117 ; delta = 30.470270 ; phi = 1.675053 ; phidot = 1.619520
+[3.645020] deltadot = 81.245596 ; delta = 30.471892 ; phi = 1.702128 ; phidot = 1.768270
+[3.654332] deltadot = 80.369713 ; delta = 30.473514 ; phi = 1.723617 ; phidot = 1.654520
+[3.665081] deltadot = 78.813698 ; delta = 30.476757 ; phi = 1.743377 ; phidot = 1.532020
+[3.676431] deltadot = 81.988614 ; delta = 30.478378 ; phi = 1.767483 ; phidot = 1.505770
+[3.687758] deltadot = 86.077869 ; delta = 30.478378 ; phi = 1.786532 ; phidot = 1.523270
+[3.697411] deltadot = 92.028410 ; delta = 30.478378 ; phi = 1.801910 ; phidot = 1.602020
+[3.708760] deltadot = 98.961027 ; delta = 30.478378 ; phi = 1.820809 ; phidot = 1.689520
+[3.719150] deltadot = 91.308714 ; delta = 30.478378 ; phi = 1.836354 ; phidot = 1.435770
+[3.729102] deltadot = 94.144624 ; delta = 30.478378 ; phi = 1.852376 ; phidot = 1.435770
+[3.739465] deltadot = 99.833800 ; delta = 30.478378 ; phi = 1.872357 ; phidot = 1.488270
+[3.749768] deltadot = 89.099946 ; delta = 30.478378 ; phi = 1.888733 ; phidot = 1.155770
+[3.761084] deltadot = 97.474254 ; delta = 30.478378 ; phi = 1.909697 ; phidot = 1.269520
+[3.771013] deltadot = 85.918852 ; delta = 30.480000 ; phi = 1.925574 ; phidot = 0.919520
+[3.781636] deltadot = 98.891054 ; delta = 30.483243 ; phi = 1.946341 ; phidot = 1.147020
+[3.791748] deltadot = 92.047542 ; delta = 30.486486 ; phi = 1.964604 ; phidot = 0.902020
+[3.801915] deltadot = 89.571457 ; delta = 30.491351 ; phi = 1.979255 ; phidot = 0.779520
+[3.812316] deltadot = 97.206976 ; delta = 30.496216 ; phi = 1.990228 ; phidot = 0.919520
+[3.823569] deltadot = 85.108701 ; delta = 30.497838 ; phi = 1.996957 ; phidot = 0.595770
+[3.832862] deltadot = 79.183331 ; delta = 30.497838 ; phi = 2.006044 ; phidot = 0.412020
+[3.843219] deltadot = 80.994327 ; delta = 30.497838 ; phi = 2.016275 ; phidot = 0.412020
+[3.854701] deltadot = 72.811547 ; delta = 30.497838 ; phi = 2.026796 ; phidot = 0.167020
+[3.864860] deltadot = 82.611565 ; delta = 30.497838 ; phi = 2.043654 ; phidot = 0.333270
+[3.874560] deltadot = 76.774749 ; delta = 30.497838 ; phi = 2.055268 ; phidot = 0.140770
+[3.885217] deltadot = 81.432095 ; delta = 30.497838 ; phi = 2.063339 ; phidot = 0.219520
+[3.895329] deltadot = 64.096794 ; delta = 30.499459 ; phi = 2.066829 ; phidot = -0.217980
+[3.905561] deltadot = 64.595703 ; delta = 30.501081 ; phi = 2.067709 ; phidot = -0.209230
+[3.915798] deltadot = 69.377983 ; delta = 30.501081 ; phi = 2.070406 ; phidot = -0.104230
+[3.926221] deltadot = 69.332106 ; delta = 30.501081 ; phi = 2.076227 ; phidot = -0.130480
+[3.936691] deltadot = 51.770512 ; delta = 30.501081 ; phi = 2.080378 ; phidot = -0.576730
+[3.947065] deltadot = 45.946175 ; delta = 30.501081 ; phi = 2.081928 ; phidot = -0.725480
+[3.957389] deltadot = 67.383897 ; delta = 30.501081 ; phi = 2.083462 ; phidot = -0.209230
+[3.967765] deltadot = 49.067524 ; delta = 30.501081 ; phi = 2.079294 ; phidot = -0.637980
+[3.978423] deltadot = 39.751353 ; delta = 30.501081 ; phi = 2.075305 ; phidot = -0.847980
+[3.988767] deltadot = 41.636115 ; delta = 30.501081 ; phi = 2.073792 ; phidot = -0.795480
+[3.999048] deltadot = 37.213662 ; delta = 30.501081 ; phi = 2.069075 ; phidot = -0.882980
+[4.010245] deltadot = 20.687134 ; delta = 30.501081 ; phi = 2.064885 ; phidot = -1.267980
+[4.019785] deltadot = 28.109178 ; delta = 30.501081 ; phi = 2.062227 ; phidot = -1.075480
+[4.029912] deltadot = 9.423691 ; delta = 30.501081 ; phi = 2.051921 ; phidot = -1.486730
+[4.040456] deltadot = 4.503869 ; delta = 30.501081 ; phi = 2.038313 ; phidot = -1.547980
+[4.050614] deltadot = -2.355671 ; delta = 30.501081 ; phi = 2.027934 ; phidot = -1.670480
+[4.061490] deltadot = -3.945322 ; delta = 30.501081 ; phi = 2.018953 ; phidot = -1.670480
+[4.072283] deltadot = -15.485321 ; delta = 30.501081 ; phi = 2.006453 ; phidot = -1.897980
+[4.082969] deltadot = -21.465143 ; delta = 30.501081 ; phi = 1.990911 ; phidot = -1.976730
+[4.092947] deltadot = -23.508100 ; delta = 30.501081 ; phi = 1.979368 ; phidot = -1.976730
+[4.103707] deltadot = -33.814930 ; delta = 30.501081 ; phi = 1.959648 ; phidot = -2.142980
+[4.113890] deltadot = -47.322848 ; delta = 30.501081 ; phi = 1.940083 ; phidot = -2.387980
+[4.124429] deltadot = -60.937514 ; delta = 30.501081 ; phi = 1.915862 ; phidot = -2.615480
+[4.134585] deltadot = -61.773345 ; delta = 30.501081 ; phi = 1.896952 ; phidot = -2.554230
+[4.145146] deltadot = -81.970508 ; delta = 30.501081 ; phi = 1.872024 ; phidot = -2.939230
+[4.155819] deltadot = -82.568722 ; delta = 30.501081 ; phi = 1.846349 ; phidot = -2.842980
+[4.166333] deltadot = -90.308249 ; delta = 30.501081 ; phi = 1.818838 ; phidot = -2.912980
+[4.176728] deltadot = -97.538366 ; delta = 30.501081 ; phi = 1.790151 ; phidot = -2.965480
+[4.187084] deltadot = -120.978674 ; delta = 30.501081 ; phi = 1.757035 ; phidot = -3.394230
+[4.198032] deltadot = -120.574072 ; delta = 30.501081 ; phi = 1.724864 ; phidot = -3.245480
+[4.207842] deltadot = -128.302724 ; delta = 30.501081 ; phi = 1.697414 ; phidot = -3.315480
+[4.218750] deltadot = -132.714909 ; delta = 30.501081 ; phi = 1.662353 ; phidot = -3.271730
+[4.228415] deltadot = -133.707750 ; delta = 30.501081 ; phi = 1.630394 ; phidot = -3.157980
+[4.238587] deltadot = -144.669947 ; delta = 30.501081 ; phi = 1.596837 ; phidot = -3.280480
+[4.249149] deltadot = -151.905244 ; delta = 30.501081 ; phi = 1.560013 ; phidot = -3.297980
+[4.259816] deltadot = -152.959673 ; delta = 30.501081 ; phi = 1.525680 ; phidot = -3.175480
+[4.269828] deltadot = -168.333494 ; delta = 30.501081 ; phi = 1.499627 ; phidot = -3.437980
+[4.280380] deltadot = -167.364190 ; delta = 30.501081 ; phi = 1.470648 ; phidot = -3.289230
+[4.291339] deltadot = -170.673895 ; delta = 30.501081 ; phi = 1.437761 ; phidot = -3.227980
+[4.301103] deltadot = -179.499818 ; delta = 30.501081 ; phi = 1.402085 ; phidot = -3.289230
+[4.311544] deltadot = -181.426334 ; delta = 30.501081 ; phi = 1.364852 ; phidot = -3.175480
+[4.321622] deltadot = -196.363804 ; delta = 30.501081 ; phi = 1.323023 ; phidot = -3.359230
+[4.332028] deltadot = -197.215814 ; delta = 30.501081 ; phi = 1.289833 ; phidot = -3.236730
+[4.342039] deltadot = -204.494691 ; delta = 30.501081 ; phi = 1.260871 ; phidot = -3.289230
+[4.352725] deltadot = -199.862478 ; delta = 30.501081 ; phi = 1.232317 ; phidot = -3.052980
+[4.363959] deltadot = -213.968949 ; delta = 30.501081 ; phi = 1.197210 ; phidot = -3.245480
+[4.373254] deltadot = -216.647401 ; delta = 30.501081 ; phi = 1.171943 ; phidot = -3.201730
+[4.384286] deltadot = -222.044906 ; delta = 30.501081 ; phi = 1.135368 ; phidot = -3.175480
+[4.394371] deltadot = -230.680858 ; delta = 30.501081 ; phi = 1.098738 ; phidot = -3.227980
+[4.405893] deltadot = -236.220657 ; delta = 30.501081 ; phi = 1.059333 ; phidot = -3.192980
+[4.415414] deltadot = -232.630172 ; delta = 30.501081 ; phi = 1.033001 ; phidot = -2.991730
+[4.425743] deltadot = -228.140132 ; delta = 30.501081 ; phi = 1.005670 ; phidot = -2.764230
+[4.436691] deltadot = -230.753317 ; delta = 30.501081 ; phi = 0.974692 ; phidot = -2.694230
+[4.446168] deltadot = -235.146165 ; delta = 30.501081 ; phi = 0.947847 ; phidot = -2.685480
+[4.456672] deltadot = -242.083339 ; delta = 30.501081 ; phi = 0.916761 ; phidot = -2.720480
+[4.467044] deltadot = -250.775221 ; delta = 30.501081 ; phi = 0.883869 ; phidot = -2.790480
+[4.477438] deltadot = -239.242764 ; delta = 30.501081 ; phi = 0.855790 ; phidot = -2.387980
+[4.487729] deltadot = -244.550351 ; delta = 30.501081 ; phi = 0.833911 ; phidot = -2.422980
+[4.498447] deltadot = -232.393460 ; delta = 30.501081 ; phi = 0.807332 ; phidot = -2.011730
+[4.508839] deltadot = -247.809661 ; delta = 30.501081 ; phi = 0.772933 ; phidot = -2.239230
+[4.519019] deltadot = -246.186056 ; delta = 30.501081 ; phi = 0.739542 ; phidot = -2.055480
+[4.529393] deltadot = -253.290800 ; delta = 30.501081 ; phi = 0.707510 ; phidot = -2.090480
+[4.540360] deltadot = -242.530350 ; delta = 30.501081 ; phi = 0.681149 ; phidot = -1.714230
+[4.550523] deltadot = -248.778285 ; delta = 30.501081 ; phi = 0.662065 ; phidot = -1.784230
+[4.561096] deltadot = -242.120272 ; delta = 30.501081 ; phi = 0.653064 ; phidot = -1.582980
+[4.571444] deltadot = -220.509044 ; delta = 30.501081 ; phi = 0.645444 ; phidot = -1.022980
+[4.581749] deltadot = -220.102695 ; delta = 30.501081 ; phi = 0.627471 ; phidot = -0.935480
+[4.592799] deltadot = -215.566540 ; delta = 30.501081 ; phi = 0.608509 ; phidot = -0.742980
+[4.602769] deltadot = -212.707170 ; delta = 30.501081 ; phi = 0.592234 ; phidot = -0.602980
+[4.613147] deltadot = -202.391803 ; delta = 30.501081 ; phi = 0.583627 ; phidot = -0.314230
+[4.623481] deltadot = -200.626646 ; delta = 30.501081 ; phi = 0.579412 ; phidot = -0.252980
+[4.633797] deltadot = -201.558200 ; delta = 30.501081 ; phi = 0.582256 ; phidot = -0.287980
+[4.644977] deltadot = -178.887014 ; delta = 30.501081 ; phi = 0.590759 ; phidot = 0.228270
+[4.655185] deltadot = -180.044952 ; delta = 30.501081 ; phi = 0.594351 ; phidot = 0.184520
+[4.667213] deltadot = -167.179965 ; delta = 30.501081 ; phi = 0.594068 ; phidot = 0.499520
+[4.675809] deltadot = -176.742933 ; delta = 30.501081 ; phi = 0.586657 ; phidot = 0.298270
+[4.685923] deltadot = -178.410211 ; delta = 30.501081 ; phi = 0.583318 ; phidot = 0.272020
+[4.696498] deltadot = -166.448844 ; delta = 30.501081 ; phi = 0.588065 ; phidot = 0.543270
+[4.706648] deltadot = -165.631846 ; delta = 30.501081 ; phi = 0.596734 ; phidot = 0.525770
+[4.717198] deltadot = -149.583801 ; delta = 30.501081 ; phi = 0.608355 ; phidot = 0.867020
+[4.728103] deltadot = -139.362861 ; delta = 30.501081 ; phi = 0.621510 ; phidot = 1.059520
+[4.737901] deltadot = -139.246208 ; delta = 30.501081 ; phi = 0.626222 ; phidot = 1.042020
+[4.749060] deltadot = -148.331099 ; delta = 30.501081 ; phi = 0.627593 ; phidot = 0.814520
+[4.759557] deltadot = -140.965354 ; delta = 30.501081 ; phi = 0.634751 ; phidot = 0.963270
+[4.769733] deltadot = -135.521659 ; delta = 30.501081 ; phi = 0.647265 ; phidot = 1.042020
+[4.779754] deltadot = -118.564331 ; delta = 30.501081 ; phi = 0.666049 ; phidot = 1.374520
+[4.789915] deltadot = -119.590544 ; delta = 30.501081 ; phi = 0.682547 ; phidot = 1.278270
+[4.801770] deltadot = -113.139127 ; delta = 30.501081 ; phi = 0.698727 ; phidot = 1.365770
+[4.811055] deltadot = -117.608538 ; delta = 30.501081 ; phi = 0.709959 ; phidot = 1.208270
+[4.821588] deltadot = -104.907016 ; delta = 30.501081 ; phi = 0.724968 ; phidot = 1.453270
+[4.831346] deltadot = -113.629192 ; delta = 30.501081 ; phi = 0.738522 ; phidot = 1.182020
+[4.841693] deltadot = -95.599663 ; delta = 30.501081 ; phi = 0.761337 ; phidot = 1.523270
+[4.852242] deltadot = -81.116094 ; delta = 30.501081 ; phi = 0.788440 ; phidot = 1.759520
+[4.862261] deltadot = -86.208280 ; delta = 30.501081 ; phi = 0.804261 ; phidot = 1.567020
+[4.873765] deltadot = -83.951385 ; delta = 30.501081 ; phi = 0.821066 ; phidot = 1.549520
+[4.882990] deltadot = -75.674609 ; delta = 30.501081 ; phi = 0.841479 ; phidot = 1.663270
+[4.893484] deltadot = -74.665101 ; delta = 30.501081 ; phi = 0.857316 ; phidot = 1.619520
+[4.903432] deltadot = -72.228588 ; delta = 30.501081 ; phi = 0.873109 ; phidot = 1.610770
+[4.915031] deltadot = -66.611025 ; delta = 30.501081 ; phi = 0.898766 ; phidot = 1.637020
+[4.923846] deltadot = -53.743999 ; delta = 30.501081 ; phi = 0.924844 ; phidot = 1.838270
+[4.934308] deltadot = -50.147828 ; delta = 30.501081 ; phi = 0.945161 ; phidot = 1.838270
+[4.945070] deltadot = -52.697399 ; delta = 30.501081 ; phi = 0.963186 ; phidot = 1.698270
+[4.955097] deltadot = -43.473370 ; delta = 30.502703 ; phi = 0.980931 ; phidot = 1.847020
+[4.965374] deltadot = -48.423710 ; delta = 30.502703 ; phi = 0.999580 ; phidot = 1.645770
+[4.976495] deltadot = -49.563767 ; delta = 30.502703 ; phi = 1.021515 ; phidot = 1.523270
+[4.985857] deltadot = -43.215196 ; delta = 30.502703 ; phi = 1.045221 ; phidot = 1.575770
+[4.996285] deltadot = -37.557241 ; delta = 30.502703 ; phi = 1.069080 ; phidot = 1.610770
+^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easystart_zeroSpeed.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : Searching for calibration file /home/debian/chalmersbike/sensors/Acc_Cali.txt
+IMU : Waiting for calibration data
+IMU : Gyroscope calibration finished
+IMU : Accelerometer not calibrated, using 0.02458 as roll angle offset
+
+
+Type a description for the experiment if necessary. Press ENTER to start the experiment. 
+EXP LOG PATH is: 
+./ExpData_zeroSpeed_blackbike/BikeData_zeroSpeed_20201209-100055.csv
+
+Experiment starting in 5s
+Experiment starting in 4s
+Experiment starting in 3s
+Experiment starting in 2s
+Experiment starting in 1s
+
+[0.006393] deltadot = 43.504398 ; delta = 1.618378 ; phi = 0.029036 ; phidot = 1.314670
+[0.012791] WARNING : The calculation time exceeds the sampling time!
+[0.015792] sensor_reading_time 	 control calculation 	 IMU 	 log = 0.00574708 	 0.00534987 	 0.00572896 	 0.000926018 	
+[0.029574] deltadot = 35.129172 ; delta = 2.054595 ; phi = 0.056048 ; phidot = 1.095920
+[0.037876] deltadot = 38.254822 ; delta = 2.378919 ; phi = 0.081164 ; phidot = 1.139670
+[0.048395] deltadot = 49.425305 ; delta = 2.693514 ; phi = 0.100531 ; phidot = 1.402170
+[0.058462] deltadot = 47.776675 ; delta = 3.064865 ; phi = 0.091090 ; phidot = 1.489670
+[0.069051] deltadot = 61.944664 ; delta = 3.546486 ; phi = 0.079700 ; phidot = 1.997170
+[0.080198] deltadot = 72.250663 ; delta = 4.058919 ; phi = 0.169773 ; phidot = 1.979670
+[0.090485] deltadot = 73.194170 ; delta = 4.670270 ; phi = 0.262986 ; phidot = 1.743420
+[0.100992] deltadot = 112.736255 ; delta = 5.393514 ; phi = 0.361441 ; phidot = 2.452170
+[0.111391] deltadot = 166.419625 ; delta = 6.225405 ; phi = 0.478797 ; phidot = 3.449670
+[0.121265] deltadot = 200.634416 ; delta = 7.470811 ; phi = 0.528857 ; phidot = 4.359670
+[0.132244] deltadot = 200.945338 ; delta = 9.204324 ; phi = 0.580045 ; phidot = 4.552170
+[0.143036] deltadot = 243.038914 ; delta = 11.226486 ; phi = 0.676210 ; phidot = 5.637170
+[0.152871] deltadot = 280.455564 ; delta = 13.180541 ; phi = 0.685507 ; phidot = 6.967170
+[0.163076] deltadot = 323.477772 ; delta = 15.296757 ; phi = 0.879175 ; phidot = 7.675920
+[0.173435] deltadot = 406.946859 ; delta = 17.544324 ; phi = 0.978105 ; phidot = 9.810920
+[0.183972] deltadot = 503.456651 ; delta = 19.709189 ; phi = 1.079341 ; phidot = 12.234670
+[0.194541] deltadot = 526.615352 ; delta = 22.020000 ; phi = 1.311191 ; phidot = 12.339670
+[0.204961] deltadot = 555.771691 ; delta = 24.225405 ; phi = 1.721196 ; phidot = 11.797170
+[0.215649] deltadot = 648.093790 ; delta = 26.516757 ; phi = 1.937377 ; phidot = 13.652170
+[0.225371] deltadot = 769.625801 ; delta = 28.658919 ; phi = 2.205099 ; phidot = 15.962170
+[0.235546] deltadot = 833.452567 ; delta = 30.804324 ; phi = 2.400333 ; phidot = 17.178420
+[0.245689] deltadot = 872.366012 ; delta = 33.058378 ; phi = 2.535699 ; phidot = 18.070920
+[0.257143] deltadot = 919.995515 ; delta = 35.523243 ; phi = 2.721608 ; phidot = 19.007170
+[0.266384] deltadot = 962.727841 ; delta = 37.555135 ; phi = 2.963789 ; phidot = 19.479670
+[0.278097] deltadot = 973.766135 ; delta = 40.068649 ; phi = 3.205042 ; phidot = 19.295920
+[0.288130] deltadot = 964.383663 ; delta = 42.149189 ; phi = 3.364192 ; phidot = 18.867170
+[0.298999] deltadot = 951.094067 ; delta = 44.586486 ; phi = 3.522643 ; phidot = 18.429670
+[0.308734] deltadot = 951.668846 ; delta = 46.923243 ; phi = 3.654657 ; phidot = 18.420920
+[0.319080] deltadot = 911.372602 ; delta = 49.162703 ; phi = 3.759248 ; phidot = 17.510920
+[0.328179] WARNING : Steering angle exceeded limits
+[0.332256] deltadot = 836.965076 ; delta = 51.429730 ; phi = 3.810439 ; phidot = 16.005920
+[0.338172] WARNING : Steering angle exceeded limits
+[0.342889] deltadot = 771.456279 ; delta = 53.599459 ; phi = 3.928924 ; phidot = 14.404670
+[0.349324] WARNING : Steering angle exceeded limits
+[0.353842] deltadot = 732.182850 ; delta = 56.007568 ; phi = 4.056548 ; phidot = 13.459670
+[0.359157] WARNING : The calculation time exceeds the sampling time!
+[0.361034] sensor_reading_time 	 control calculation 	 IMU 	 log = 0.00632501 	 0.00412011 	 0.00630999 	 0.00106406 	
+[0.373371] WARNING : Steering angle exceeded limits
+[0.378210] deltadot = 601.046700 ; delta = 61.112432 ; phi = 4.267476 ; phidot = 10.545920
+[0.381200] WARNING : The calculation time exceeds the sampling time!
+[0.382387] sensor_reading_time 	 control calculation 	 IMU 	 log = 0.00910497 	 0.0024159 	 0.0090909 	 0.000463009 	
+[0.390333] WARNING : Steering angle exceeded limits
+[0.393756] deltadot = 518.289564 ; delta = 64.793514 ; phi = 4.437370 ; phidot = 8.655920
+[0.402031] WARNING : Steering angle exceeded limits
+[0.405923] deltadot = 445.470382 ; delta = 67.182162 ; phi = 4.506159 ; phidot = 7.142170
+[0.410408] WARNING : The calculation time exceeds the sampling time!
+[0.412524] sensor_reading_time 	 control calculation 	 IMU 	 log = 0.00683308 	 0.0038619 	 0.0068171 	 0.00048089 	
+[0.425650] WARNING : Steering angle exceeded limits
+[0.429661] deltadot = 354.029198 ; delta = 72.257838 ; phi = 4.862750 ; phidot = 4.560920
+[0.435067] WARNING : The calculation time exceeds the sampling time!
+[0.437402] sensor_reading_time 	 control calculation 	 IMU 	 log = 0.00821614 	 0.00410295 	 0.00820184 	 0.00117779 	
+[0.449089] WARNING : Steering angle exceeded limits
+[0.453969] deltadot = 290.224554 ; delta = 77.114595 ; phi = 5.063634 ; phidot = 3.274670
+[0.457663] WARNING : The calculation time exceeds the sampling time!
+[0.459784] sensor_reading_time 	 control calculation 	 IMU 	 log = 0.00741696 	 0.00308084 	 0.0074029 	 0.000478029 	
+[0.472718] WARNING : Steering angle exceeded limits
+[0.476901] deltadot = 290.837971 ; delta = 82.084865 ; phi = 4.963736 ; phidot = 4.884670
+[0.481239] WARNING : The calculation time exceeds the sampling time!
+[0.483386] sensor_reading_time 	 control calculation 	 IMU 	 log = 0.00751615 	 0.00372195 	 0.00750113 	 0.000473022 	
+[0.496888] WARNING : Steering angle exceeded limits
+[0.500385] deltadot = 264.652275 ; delta = 87.225405 ; phi = 5.054066 ; phidot = 5.059670
+[0.505277] WARNING : The calculation time exceeds the sampling time!
+[0.507114] sensor_reading_time 	 control calculation 	 IMU 	 log = 0.00764513 	 0.00411201 	 0.00763011 	 0.000477076 	
+[0.514129] WARNING : Steering angle exceeded limits
+[0.516819] Conditions too extreme, bike probably felt down, turning off motors.
+[0.516745] Bike is in unsafe conditions, aborting the experiment
+[0.520504] Number of times sampling time was exceeded : 8
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easystart_zeroSpeed.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C^CTraceback (most recent call last):
+  File "easystart_zeroSpeed.py", line 14, in <module>
+    rearmotor = DriveMotor()
+  File "/home/debian/chalmersbike/actuators/driveMotor.py", line 12, in __init__
+    ADC.setup()
+KeyboardInterrupt
+^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easystart_zeroSpeed.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C^CTraceback (most recent call last):
+  File "easystart_zeroSpeed.py", line 14, in <module>
+    rearmotor = DriveMotor()
+  File "/home/debian/chalmersbike/actuators/driveMotor.py", line 12, in __init__
+    ADC.setup()
+KeyboardInterrupt
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easystart_zeroSpeed.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C^CTraceback (most recent call last):
+  File "easystart_zeroSpeed.py", line 14, in <module>
+    rearmotor = DriveMotor()
+  File "/home/debian/chalmersbike/actuators/driveMotor.py", line 12, in __init__
+    ADC.setup()
+KeyboardInterrupt
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easystart_zeroSpeed.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C^CTraceback (most recent call last):
+  File "easystart_zeroSpeed.py", line 14, in <module>
+    rearmotor = DriveMotor()
+  File "/home/debian/chalmersbike/actuators/driveMotor.py", line 12, in __init__
+    ADC.setup()
+KeyboardInterrupt
+^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ python easystart_zeroSpeed.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C^CTraceback (most recent call last):
+  File "easystart_zeroSpeed.py", line 14, in <module>
+    rearmotor = DriveMotor()
+  File "/home/debian/chalmersbike/actuators/driveMotor.py", line 12, in __init__
+    ADC.setup()
+KeyboardInterrupt
+^C
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ sudo shutdown now
+[sudo] password for debian: 

@@ -14,7 +14,7 @@ class SafetyStop(object):
         elif safetyStop_pullUpDown == 'down':
             GPIO.setup(safetyStop_port, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         else:
-            print "Safety stop : Chosen safety stop pull-up or pull-down type is not valid : %s. Choosing pull-up instead" %(safetyStop_pullUpDown)
+            print("Safety stop : Chosen safety stop pull-up or pull-down type is not valid : %s. Choosing pull-up instead" %(safetyStop_pullUpDown))
             GPIO.setup(safetyStop_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         self.ESTOP_previous = False
@@ -34,6 +34,6 @@ class SafetyStop(object):
 
         # FOR TESTING PURPOSE ONLY, WILL IGNORE THE EMERGENCY STOP TO FORCEFULLY RUN THE CODE
         # The motors will still be electrically disconnected if the emergency stop is pressed
-       # self.ESTOP = False
+        # self.ESTOP = False
 
         return self.ESTOP

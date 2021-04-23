@@ -28,7 +28,7 @@ from ctypes import *
 import smbus
 import time
 import Adafruit_BBIO.GPIO as GPIO
-import VL53L0X
+from .VL53L0X import VL53L0X
 import pysnooper
 
 VL53L0X_GOOD_ACCURACY_MODE = 0  # Good Accuracy mode
@@ -55,7 +55,7 @@ class SingleLaserRanger(object):
         elif laserRanger_sensor1_accuracyMode == 4:
             self.tof.start_ranging(VL53L0X.VL53L0X_HIGH_SPEED_MODE)
         else:
-            print "Laser ranger 1 : Chosen accuracy mode is not valid : %d. Choosing high speed mode (4) instead" %(laserRanger_sensor1_accuracyMode)
+            print("Laser ranger 1 : Chosen accuracy mode is not valid : %d. Choosing high speed mode (4) instead" %(laserRanger_sensor1_accuracyMode))
             self.tof.start_ranging(VL53L0X.VL53L0X_HIGH_SPEED_MODE)
             
             
@@ -63,7 +63,7 @@ class SingleLaserRanger(object):
         if (self.timing < 20000):
             self.timing = 20000
         if debug:
-            print ("Timing %d ms" % (self.timing / 1000))
+            print(("Timing %d ms" % (self.timing / 1000)))
         self.timing = self.timing / 1000000.00 + 0.1
 
         # self.distance1 = 0
@@ -82,21 +82,21 @@ class SingleLaserRanger(object):
         if time.time() - self.last_read_time > self.timing:
             self.last_read_time = time.time()
             if debug:
-                print "Reading the laser data"
+                print("Reading the laser data")
             dist = self.get_distance()
-            print dist
+            print(dist)
             # return (distances[1] - distances[0])/2 # TRUE if the sensor readings are reliable
 
             if dist < 1000:
                 self.bike_y = (dist - roller_width / 2) / 1000.0
             else:
                 if debug:
-                    print "Warning: The laser reading exceeds the roller, ignoring this data point"
+                    print("Warning: The laser reading exceeds the roller, ignoring this data point")
 
             return self.bike_y
         else:
             if debug:
-                print "Too Frequent Laser Ranger Reading"
+                print("Too Frequent Laser Ranger Reading")
 
             return self.bike_y
 
@@ -107,7 +107,7 @@ class SingleLaserRanger(object):
             self.distance_old = self.distance
         else:
             if debug:
-                print "Warning: channel strange reading %f" % self.distance
+                print("Warning: channel strange reading %f" % self.distance)
             self.distance = self.distance_old
             self.tof.start_ranging(VL53L0X.VL53L0X_HIGH_SPEED_MODE)
         return (self.distance)

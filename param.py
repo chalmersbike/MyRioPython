@@ -25,7 +25,7 @@ speed_up_time = 3.0                             # [s] Time to run the drive moto
 walk_time = 2.0                                 # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
 max_exceed_count = 10                           # Number of times where calculation time can exceed sampling time before aborting experiment
 
-path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
 path_tracking_structure = 'series'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
@@ -96,7 +96,7 @@ path_file = 'newest'
 rollref_file = 'nofile'
 
 # Turn to RIGHT, T is the period
-#rollref_file = 'roll_ref_StepT3_3deg.csv'
+rollref_file = 'roll_ref_StepT3_3deg.csv'
 # rollref_file = 'roll_ref_StepT5_3deg.csv'
 
 # Turn to LEFT Deg can be 1-5;
@@ -108,7 +108,7 @@ rollref_file = 'nofile'
 
 #rollref_file = 'roll_UrefBandStop23_MagPM4LP5.csv'
 #rollref_file = 'roll_UrefBandStop23_MagPM7LP5.csv'
-rollref_file = 'roll_UrefBandStop23_MagPM10LP5.csv'
+#rollref_file = 'roll_UrefBandStop23_MagPM10LP5.csv'
 # rollref_file = 'roll_UrefBandStop23_MagPM14LP5.csv'
 #rollref_file = 'roll_UrefBandStop23_MagPM16LP5.csv'
 
@@ -123,7 +123,7 @@ strdistbref_file = 'nofile'
 # strdistbref_file = 'str_Udistb_bandstop23_9degLP5.csv'
 # strdistbref_file = 'str_Udistb_bandstop23_7degLP1.csv'
 # strdistbref_file = 'str_Udistb_bandstop23_7degLP2.csv'
-strdistbref_file = 'str_Udistb_bandstop23_10degLP5.csv'
+# strdistbref_file = 'str_Udistb_bandstop23_10degLP5.csv'
 #strdistbref_file = 'str_Udistb_bandstop23_14degLP5.csv'
 #strdistbref_file = 'str_Udistb_bandstop23_18degLP5.csv'
 
@@ -167,5 +167,5 @@ if bike == 'blackbike':
 elif bike == 'redbike':
     from param_redbike import *
 else:
-    print "Bike choice is not valid : \"%s\"; Using black bike as default.\n" % (bike)
+    print("Bike choice is not valid : \"%s\"; Using black bike as default.\n" % (bike))
     from param_blackbike import *

@@ -4,7 +4,7 @@ import serial
 import math
 import time
 import warnings
-from NtripClient import NtripClient
+from .NtripClient import NtripClient
 
 
 ########################################################################################################################
@@ -161,7 +161,7 @@ class GPS(object):
 
                                       mountpoint=ntrip_mountpoint, verbose=True, lat=lat_ini, lon=lon_ini, height=12) # Average elevation in Gothenburg is 12m, some NMEA sentences do not carry elevation so it is hard coded here
         else:
-            self.ser_gps.write(PMTK_API_SET_DGPS_MODE_OFF + "\r\n")  # turn on RTCM DGPS data source mode
+            self.ser_gps.write((PMTK_API_SET_DGPS_MODE_OFF + "\r\n").encode('utf-8'))  # turn on RTCM DGPS data source mode
 
     def get_position(self):
         lat, lon = self.get_latlon()
@@ -184,7 +184,10 @@ class GPS(object):
         readall = ''
         # print('inwaiting : %d' % (self.ser_gps.inWaiting()))
         while self.ser_gps.inWaiting() > 0:
-            buffer_string = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
+            # # buffer_string = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
+            buffer_string = self.ser_gps.readline().decode('utf-8',errors='ignore').split('\r\n')  # Read data from the GPS
+            # buffer_string = self.ser_gps.read_until).decode('utf-8',errors='ignore').split('\r\n')  # Read data from the GPS
+
             # print('buffer: %s' % (buffer_string))
             readall = buffer_string
 

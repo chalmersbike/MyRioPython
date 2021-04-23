@@ -1,0 +1,54 @@
+Script started on Thu 03 Nov 2016 06:18:18 PM CET
+P8_38 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+Pin configuration complete
+(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ python easysstart.py 
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : Searching for calibration file /home/debian/chalmersbike/sensors/Acc_Cali.txt
+IMU : Waiting for calibration data
+IMU : Gyroscope calibration finished
+IMU : Accelerometer not calibrated, using 0.02458 as roll angle offset
+
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ 

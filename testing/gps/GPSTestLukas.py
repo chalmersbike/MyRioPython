@@ -17,9 +17,10 @@ class Test(object):
         start_time = time.time()
         if number_samples_GPS is not 0:
         # Setup CSV file
-            results_gps = open(sys.path[0]+'/%s-SensorTest_Lukas_GPS.csv' % timestr, 'wb')
+            results_gps = open(sys.path[0]+'/%s-SensorTest_Lukas_GPS.csv' % timestr, 'w')
             writer_gps = csv.writer(results_gps)
-            writer_gps.writerow(('Time (s)', 'x (m)', 'y (m)', 'latitude', 'longitude', 'status', 'timestamp'))
+            # writer_gps.writerow(('Time (s)', 'x (m)', 'y (m)', 'latitude', 'longitude', 'status', 'timestamp'))
+            writer_gps.writerow(['Time (s)', 'x (m)', 'y (m)', 'latitude', 'longitude', 'status', 'timestamp'])
         for x in range(1,int(number_samples_GPS)+1):
             time_read_gps = time.time()
             gpspos = gps.get_position()
@@ -33,7 +34,7 @@ class Test(object):
             # gps.ser_gps.flushInput()
             # gps.ser_gps.flushOutput()
 
-            print 'Time=%f\tTimeReadGPS=%f\tx=%g\ty = %g\tlat = %g\tlon = %g' % (time.time() - start_time, time_read_gps, gpspos[0], gpspos[1], gpspos[2], gpspos[3])
+            print('Time=%f\tTimeReadGPS=%f\tx=%g\ty = %g\tlat = %g\tlon = %g' % (time.time() - start_time, time_read_gps, gpspos[0], gpspos[1], gpspos[2], gpspos[3]))
             # Write to CSV file
 
 test = Test()

@@ -1,0 +1,10 @@
+Script started on Thu 03 Nov 2016 05:18:31 PM UTC
+P8_38 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+Pin configuration complete
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ sudo shutdown now
+[sudo] password for debian: 

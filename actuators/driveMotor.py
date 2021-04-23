@@ -14,14 +14,14 @@ class DriveMotor(object):
         self.serial.close()
         self.serial.open()
         if debug:
-            print 'Drive Motor : Serial port opened'
+            print('Drive Motor : Serial port opened')
         self.Time = -1 # Initialize time to -1 as a way to check that we correctly read from the controller after starting the logging
 
     def serial_write_character(self, character):
         if self.serial.isOpen():
             self.serial.write(character)
         else:
-            print 'Drive Motor : Serial port is not open!'
+            print('Drive Motor : Serial port is not open!')
             self.serial.close()
             self.serial.open()
             self.serial.write(character)
@@ -30,7 +30,7 @@ class DriveMotor(object):
         # rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 5 -pi\n'
         # rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 9999 -pi\n' # '-s' sets the speed of the motor, '-f' sets the maximum torque/current. Setting '-f' to a very large value will allow the motor to use the maximum current possible
         rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 9999\n' # '-s' sets the speed of the motor, '-f' sets the maximum torque/current. Setting '-f' to a very large value will allow the motor to use the maximum current possible
-        self.serial.write(rpm_string)
+        self.serial.write(rpm_string.encode('utf-8'))
         # for character in pwm_string:
         #     self.serial_write_character(character)
         #     time.sleep(0.001)  # fixes comms issue
@@ -43,7 +43,7 @@ class DriveMotor(object):
 
     def stop(self):
         stop_string = 'run -stop\n'
-        self.serial.write(stop_string)
+        self.serial.write(stop_string.encode('utf-8'))
         # for character in pwm_string:
         #     self.serial_write_character(character)
         #     time.sleep(0.001)  # fixes comms issue
@@ -52,7 +52,7 @@ class DriveMotor(object):
         self.logReady = False
         self.serial.reset_input_buffer()
         startLog_string = "log -p " + str(1.0/driveMotor_logFrequency) + " -k\n"
-        self.serial.write(startLog_string)
+        self.serial.write(startLog_string.encode('utf-8'))
         while not self.logReady:
             self.readLog()
             if self.Time != -1:
@@ -61,7 +61,7 @@ class DriveMotor(object):
 
     def stopLog(self):
         stopLog_string = "\n"
-        self.serial.write(stopLog_string)
+        self.serial.write(stopLog_string.encode('utf-8'))
 
     def getLog(self):
         self.readLog()

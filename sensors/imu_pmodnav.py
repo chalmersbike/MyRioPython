@@ -86,7 +86,7 @@ class IMU(object):
         else:
             #warnings.warn('IMU : WHO_AM_I incorrect !')
             print('IMU : WHO_AM_I incorrect ! Read %s, expected %s' %(hex(who_am_i),hex(WHO_AM_I)))
-            raw_input('IMU : SPI failure?')
+            print('IMU : SPI failure?')
 
         # Initialize gyro
         gyro_init = 0b00000000
@@ -101,7 +101,7 @@ class IMU(object):
         else:
             print('IMU : Gyro incorrectly initialized !')
             # print buf[1]
-            # raw_input('IMU : SPI failure?')
+            # print('IMU : SPI failure?')
 
         # Initialize accel
         accel_init = 0b00000000
@@ -116,7 +116,7 @@ class IMU(object):
         else:
             print('IMU : Accel incorrectly initialized !')
             # print buf[1]
-            # raw_input('IMU : SPI failure?')
+            # print('IMU : SPI failure?')
 
         self.gx_prev = 0.0
         self.gx_offset = 0.0

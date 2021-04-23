@@ -1,0 +1,246 @@
+Script started on Thu 03 Nov 2016 05:25:15 PM UTC
+P8_38 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+daPin configuration complete
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ date
+Thu Nov  3 17:25:19 UTC 2016
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ date
+Thu Nov  3 17:28:06 UTC 2016
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ connmanctl
+connmanctl> [KError getting VPN connections: The name net.connman.vpn was not provided by any .service filesconnmanctl> [Kconnmanctl> [Kconnmanctl> [Kconnmanctl> services
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    COMHEM_8677a2        wifi_38d269d6615e_434f4d48454d5f383637376132_managed_psk
+    Richard Liza         wifi_38d269d6615e_52696368617264204c697a61_managed_psk
+    hide yo kids hide yo wifi wifi_38d269d6615e_6869646520796f206b696473206869646520796f2077696669_managed_psk
+    COMHEM_ef4fbe        wifi_38d269d6615e_434f4d48454d5f656634666265_managed_psk
+    Miss Fajitas         wifi_38d269d6615e_4d6973732046616a69746173_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+connmanctl> scan wifi
+connmanctl> [KScan completed for wifi
+connmanctl> scan wifi[1Pervices
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    COMHEM_8677a2        wifi_38d269d6615e_434f4d48454d5f383637376132_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    hide yo kids hide yo wifi wifi_38d269d6615e_6869646520796f206b696473206869646520796f2077696669_managed_psk
+    COMHEM_ef4fbe        wifi_38d269d6615e_434f4d48454d5f656634666265_managed_psk
+    Miss Fajitas         wifi_38d269d6615e_4d6973732046616a69746173_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+connmanctl> servicescan wifi
+connmanctl> scan wifi[KScan completed for wifi
+connmanctl> scan wifi[1Pervices
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    COMHEM_8677a2        wifi_38d269d6615e_434f4d48454d5f383637376132_managed_psk
+    COMHEM_9c9f18        wifi_38d269d6615e_434f4d48454d5f396339663138_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    Richard Liza         wifi_38d269d6615e_52696368617264204c697a61_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    COMHEM_ef4fbe        wifi_38d269d6615e_434f4d48454d5f656634666265_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+connmanctl> services
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    COMHEM_10906b        wifi_38d269d6615e_434f4d48454d5f313039303662_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    COMHEM_8677a2        wifi_38d269d6615e_434f4d48454d5f383637376132_managed_psk
+    COMHEM_9c9f18        wifi_38d269d6615e_434f4d48454d5f396339663138_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    COMHEM_ef4fbe        wifi_38d269d6615e_434f4d48454d5f656634666265_managed_psk
+    Richard Liza         wifi_38d269d6615e_52696368617264204c697a61_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+connmanctl> servicescan wifi
+connmanctl> [KScan completed for wifi
+connmanctl> scan wifi[1Pervices
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    COMHEM_10906b        wifi_38d269d6615e_434f4d48454d5f313039303662_managed_psk
+    COMHEM_8677a2        wifi_38d269d6615e_434f4d48454d5f383637376132_managed_psk
+    COMHEM_9c9f18        wifi_38d269d6615e_434f4d48454d5f396339663138_managed_psk
+    ComHem9A5E8C         wifi_38d269d6615e_436f6d48656d394135453843_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    Richard Liza         wifi_38d269d6615e_52696368617264204c697a61_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+connmanctl> scan wifi[Kagent on
+connmanctl> [KAgent registered
+connmanctl> agent onscan wifi
+connmanctl> scan wifi[KScan completed for wifi
+connmanctl> scan wifi[1Pagent onscan wifi[1Pervices
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    COMHEM_10906b        wifi_38d269d6615e_434f4d48454d5f313039303662_managed_psk
+    COMHEM_9c9f18        wifi_38d269d6615e_434f4d48454d5f396339663138_managed_psk
+    ComHem9A5E8C         wifi_38d269d6615e_436f6d48656d394135453843_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    Richard Liza         wifi_38d269d6615e_52696368617264204c697a61_managed_psk
+    dlink-72D4           wifi_38d269d6615e_646c696e6b2d37324434_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+connmanctl> scan wifi
+connmanctl> [KScan completed for wifi
+connmanctl> scan wifi[1Pagent onscan wifi[1Pervices
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    COMHEM_8677a2        wifi_38d269d6615e_434f4d48454d5f383637376132_managed_psk
+    COMHEM_10906b        wifi_38d269d6615e_434f4d48454d5f313039303662_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    COMHEM_9c9f18        wifi_38d269d6615e_434f4d48454d5f396339663138_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+    hide yo kids hide yo wifi wifi_38d269d6615e_6869646520796f206b696473206869646520796f2077696669_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    XCHEN                wifi_38d269d6615e_584348454e_managed_psk
+    COMHEM_631846        wifi_38d269d6615e_434f4d48454d5f363331383436_managed_psk
+    Richard Liza         wifi_38d269d6615e_52696368617264204c697a61_managed_psk
+    dlink-72D4           wifi_38d269d6615e_646c696e6b2d37324434_managed_psk
+connmanctl> scan wifi
+connmanctl> [KScan completed for wifi
+connmanctl> scan wifi[1Pagent onscan wifi[1Pagent onscan wifi
+connmanctl> [KScan completed for wifi
+connmanctl> scan wifi[1Pagent onscan wifi[1Pervices
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    hide yo kids hide yo wifi wifi_38d269d6615e_6869646520796f206b696473206869646520796f2077696669_managed_psk
+    COMHEM_10906b        wifi_38d269d6615e_434f4d48454d5f313039303662_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    COMHEM_8677a2        wifi_38d269d6615e_434f4d48454d5f383637376132_managed_psk
+    COMHEM_9c9f18        wifi_38d269d6615e_434f4d48454d5f396339663138_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    COMHEM_ef4fbe        wifi_38d269d6615e_434f4d48454d5f656634666265_managed_psk
+    Richard Liza         wifi_38d269d6615e_52696368617264204c697a61_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+    Granada 2.0          wifi_38d269d6615e_4772616e61646120322e30_managed_psk
+connmanctl> scan wifi
+connmanctl> [KScan completed for wifi
+connmanctl> scan wifi[1Pagent onscan wifi[1Pervices
+connmanctl> [K    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    COMHEM_9c9f18        wifi_38d269d6615e_434f4d48454d5f396339663138_managed_psk
+    COMHEM_10906b        wifi_38d269d6615e_434f4d48454d5f313039303662_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+    hide yo kids hide yo wifi wifi_38d269d6615e_6869646520796f206b696473206869646520796f2077696669_managed_psk
+    Miss Fajitas         wifi_38d269d6615e_4d6973732046616a69746173_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+connmanctl> da[K[K
+connmanctl> [K(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ date ++[K[K--set 20201104
+date: cannot set date: Operation not permitted
+Wed Nov  4 00:00:00 UTC 2020
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ time --set 114200
+bash: --set: command not found
+
+real	0m0.011s
+user	0m0.000s
+sys	0m0.006s
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ time --set 114200date --set 20201104[C[C[C[C[C[C[C[C[C[C114200
+date: invalid date ‘20201104114200’
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ date --set 20201104114200[K[K[K[K[K[K
+date: cannot set date: Operation not permitted
+Wed Nov  4 00:00:00 UTC 2020
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ connmanctl
+connmanctl> [Kconnmanctl> [KError getting VPN connections: The name net.connman.vpn was not provided by any .service filesconnmanctl> [Kconnmanctl> [Kconnmanctl> scan wifi
+connmanctl> se[KScan completed for wifi
+connmanctl> services 
+connmanctl> [K    HUAWEI_Honor 8_2EE4  wifi_38d269d6615e_4855415745495f486f6e6f7220385f32454534_managed_psk
+    comhem_3B2F61        wifi_38d269d6615e_636f6d68656d5f334232463631_managed_psk
+    Netgear91            wifi_38d269d6615e_4e6574676561723931_managed_psk
+    COMHEM_51988b        wifi_38d269d6615e_434f4d48454d5f353139383862_managed_psk
+    COMHEM_8677a2        wifi_38d269d6615e_434f4d48454d5f383637376132_managed_psk
+    COMHEM_ef0ef7        wifi_38d269d6615e_434f4d48454d5f656630656637_managed_psk
+    Richard Liza         wifi_38d269d6615e_52696368617264204c697a61_managed_psk
+    TP-Link_406D         wifi_38d269d6615e_54502d4c696e6b5f34303644_managed_psk
+    dlink-72D4           wifi_38d269d6615e_646c696e6b2d37324434_managed_psk
+connmanctl> connect wifi_38d269d6615e_4855415745495f486f6e6f7220385f32454534_managed_psk 
+connmanctl> [KError /net/connman/service/wifi_38d269d6615e_4855415745495f486f6e6f7220385f32454534_managed_psk: Not registered
+connmanctl> agent on
+connmanctl> [KAgent registered
+connmanctl> agent onconnect wifi_38d269d6615e_4855415745495f486f6e6f7220385f32454534_managed_psk 
+connmanctl> [KAgent RequestInput wifi_38d269d6615e_4855415745495f486f6e6f7220385f32454534_managed_psk
+  Passphrase = [ Type=psk, Requirement=mandatory ]
+Passphrase? 07acf2ab
+connmanctl> [KConnected wifi_38d269d6615e_4855415745495f486f6e6f7220385f32454534_managed_psk
+connmanctl> 
+connmanctl> [K(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ connmanctldate --set 20201104[9Pconnmanctl[Kdate
+Thu Nov  3 17:37:47 UTC 2016
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ time
+
+real	0m0.000s
+user	0m0.000s
+sys	0m0.000s
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ d[Kutcupdate
+bash: utcupdate: command not found
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ntpupdate
+bash: ntpupdate: command not found
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ ntpupdateutcupdate[1Pdate[1Pdate[1Pdatepdate
+bash: utpdate: command not found
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ utpdate[K[K[K[K[K[K[Ksudo ntpdate
+[sudo] password for debian: 
+ 4 Nov 10:44:49 ntpdate[3659]: no servers can be used, exiting
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ sudo ntpdate[Kntpdate [K[K[K[K[K[K[K[Ktz
+tzconfig  tzselect  
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ tz
+tzconfig  tzselect  
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ tzcon[K[K[Kselet[Kct
+Please identify a location so that time zone rules can be set correctly.
+Please select a continent, ocean, "coord", or "TZ".
+ 1) Africa
+ 2) Americas
+ 3) Antarctica
+ 4) Asia
+ 5) Atlantic Ocean
+ 6) Australia
+ 7) Europe
+ 8) Indian Ocean
+ 9) Pacific Ocean
+10) coord - I want to use geographical coordinates.
+11) TZ - I want to specify the time zone using the Posix TZ format.
+#? 7
+Please select a country whose clocks agree with yours.
+ 1) Åland Islands	  18) Greece		    35) Norway
+ 2) Albania		  19) Guernsey		    36) Poland
+ 3) Andorra		  20) Hungary		    37) Portugal
+ 4) Austria		  21) Ireland		    38) Romania
+ 5) Belarus		  22) Isle of Man	    39) Russia
+ 6) Belgium		  23) Italy		    40) San Marino
+ 7) Bosnia & Herzegovina  24) Jersey		    41) Serbia
+ 8) Britain (UK)	  25) Latvia		    42) Slovakia
+ 9) Bulgaria		  26) Liechtenstein	    43) Slovenia
+10) Croatia		  27) Lithuania		    44) Spain
+11) Czech Republic	  28) Luxembourg	    45) Svalbard & Jan Mayen
+12) Denmark		  29) Macedonia		    46) Sweden
+13) Estonia		  30) Malta		    47) Switzerland
+14) Finland		  31) Moldova		    48) Turkey
+15) France		  32) Monaco		    49) Ukraine
+16) Germany		  33) Montenegro	    50) Vatican City
+17) Gibraltar		  34) Netherlands
+#? 46
+
+The following information has been given:
+
+	Sweden
+
+Therefore TZ='Europe/Stockholm' will be used.
+Local time is now:	Wed Nov  4 11:45:23 CET 2020.
+Universal Time is now:	Wed Nov  4 10:45:23 UTC 2020.
+Is the above information OK?
+1) Yes
+2) No
+#? 1
+
+You can make this change permanent for yourself by appending the line
+	TZ='Europe/Stockholm'; export TZ
+to the file '.profile' in your home directory; then log out and log in again.
+
+Here is that TZ value again, this time on standard output so that you
+can use the /usr/bin/tzselect command in shell scripts:
+Europe/Stockholm
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ date
+Wed Nov  4 10:45:31 UTC 2020
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ 

@@ -81,7 +81,7 @@ class Test(object):
         if not input1:
             # print 'Now we are going to test the rear motor, the gear is at LEVEL %i \t' %  RearMotorDrive().GearNr
             input1 = raw_input('enter a velocity between 1-3.9, the test will last 30 secs')
-            self.rear_motor = RearMotorDrive()
+            self.rear_motor = DriveMotor()
             if not input1:
                 print('Press enter to exit')
                 exit()
@@ -93,9 +93,9 @@ class Test(object):
                 time_now = start_time
                 while time_now  - start_time < 30:
                     time_now = time.time()
-                    self.imudata = self.imu.get_imu_data()
-                    print('Time=%f\tVel = %f\tphi = %f\tdelta = %f\t' % (
-                    time_now - start_time, self.hall_sensor.get_velocity(), 57.29577 *self.imudata[0], 57.29577 *  self.encoder.get_angle()))
+                    # self.imudata = self.imu.get_imu_data()
+                    # print('Time=%f\tVel = %f\tphi = %f\tdelta = %f\t' % (
+                    # time_now - start_time, self.hall_sensor.get_velocity(), 57.29577 *self.imudata[0], 57.29577 *  self.encoder.get_angle()))
                     # Without IMU Reading
                     # print 'Time=%f\tVel = %f\tdelta = %f\tCurrent = %f\tRPM = %f\t' % (
                     #     time_now - start_time, self.hall_sensor.get_velocity(),

@@ -15,7 +15,7 @@ class HallSensor(object):
         elif hallSensor_pullUpDown == 'down':
             GPIO.setup(hallSensor_port, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         else:
-            print "Hall sensor : Chosen Hall sensor pull-up or pull-down type is not valid : %s. Choosing pull-up instead" %(hallSensor_pullUpDown)
+            print("Hall sensor : Chosen Hall sensor pull-up or pull-down type is not valid : %s. Choosing pull-up instead" %(hallSensor_pullUpDown))
             GPIO.setup(hallSensor_port, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         self._initialize_interrupt()
@@ -27,7 +27,7 @@ class HallSensor(object):
         elif hallSensor_edgeDetection == 'falling':
             GPIO.add_event_detect(hallSensor_port, GPIO.FALLING, callback=self.update_velocity,bouncetime=hallSensor_bounceTime)
         else:
-            print "Hall sensor : Chosen Hall sensor edge detection type is not valid : %s. Choosing rising edge instead" %(hallSensor_edgeDetection)
+            print("Hall sensor : Chosen Hall sensor edge detection type is not valid : %s. Choosing rising edge instead" %(hallSensor_edgeDetection))
             GPIO.add_event_detect(hallSensor_port, GPIO.RISING, callback=self.update_velocity,bouncetime=hallSensor_bounceTime)
 
     def update_velocity(self, *args):
@@ -37,7 +37,7 @@ class HallSensor(object):
                          else 0.0 if self.elapse > hallSensor_maxElapseBetweenPulses
         else (hall_Sensor_distanceBetweenMagnets / self.elapse) * tyre_ratio)
         self.last_time_measured = time_measured
-        # print 'MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL'
+        # print('MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL'
 
     def get_velocity(self):
         self.elapse = time() - self.last_time_measured

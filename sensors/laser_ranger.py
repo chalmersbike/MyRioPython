@@ -28,7 +28,7 @@ from ctypes import *
 import smbus
 import time
 import Adafruit_BBIO.GPIO as GPIO
-import VL53L0X
+from .VL53L0X import VL53L0X
 import pysnooper
 
 VL53L0X_GOOD_ACCURACY_MODE = 0      # Good Accuracy mode
@@ -49,7 +49,7 @@ class DualLaserRanger(object):
         elif laserRanger_sensor1_shutdown_pullUpDown == 'up':
             GPIO.setup(laserRanger_sensor1_shutdown, GPIO.OUT, pull_up_down=GPIO.PUD_up)
         else:
-            print "Laser ranger 1 : Chosen GPIO shutdown edge detection type is not valid : %s. Choosing pull-down instead" %(laserRanger_sensor1_shutdown_pullUpDown)
+            print("Laser ranger 1 : Chosen GPIO shutdown edge detection type is not valid : %s. Choosing pull-down instead" %(laserRanger_sensor1_shutdown_pullUpDown))
             GPIO.setup(laserRanger_sensor1_shutdown, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 
         if laserRanger_sensor2_shutdown_pullUpDown == 'down':
@@ -57,7 +57,7 @@ class DualLaserRanger(object):
         elif laserRanger_sensor2_shutdown_pullUpDown == 'up':
             GPIO.setup(laserRanger_sensor2_shutdown, GPIO.OUT, pull_up_down=GPIO.PUD_up)
         else:
-            print "Laser ranger 2 : Chosen GPIO shutdown edge detection type is not valid : %s. Choosing pull-down instead" %(laserRanger_sensor2_shutdown_pullUpDown)
+            print("Laser ranger 2 : Chosen GPIO shutdown edge detection type is not valid : %s. Choosing pull-down instead" %(laserRanger_sensor2_shutdown_pullUpDown))
             GPIO.setup(laserRanger_sensor2_shutdown, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
 
         # Set all shutdown pins low to turn off each VL53L0X
@@ -87,7 +87,7 @@ class DualLaserRanger(object):
         elif laserRanger_sensor1_accuracyMode == 4:
             self.tof1.start_ranging(VL53L0X.VL53L0X_HIGH_SPEED_MODE)
         else:
-            print "Laser ranger 1 : Chosen accuracy mode is not valid : %d. Choosing high speed mode (4) instead" %(laserRanger_sensor1_accuracyMode)
+            print("Laser ranger 1 : Chosen accuracy mode is not valid : %d. Choosing high speed mode (4) instead" %(laserRanger_sensor1_accuracyMode))
             self.tof1.start_ranging(VL53L0X.VL53L0X_HIGH_SPEED_MODE)
 
         # Set shutdown pin high for the second VL53L0X then
@@ -105,7 +105,7 @@ class DualLaserRanger(object):
         elif laserRanger_sensor2_accuracyMode == 4:
             self.tof2.start_ranging(VL53L0X.VL53L0X_HIGH_SPEED_MODE)
         else:
-            print "Laser ranger 2 : Chosen accuracy mode is not valid : %d. Choosing high speed mode (4) instead" %(laserRanger_sensor2_accuracyMode)
+            print("Laser ranger 2 : Chosen accuracy mode is not valid : %d. Choosing high speed mode (4) instead" %(laserRanger_sensor2_accuracyMode))
             self.tof2.start_ranging(VL53L0X.VL53L0X_HIGH_SPEED_MODE)
 
 
@@ -113,7 +113,7 @@ class DualLaserRanger(object):
         if (self.timing < 20000):
             self.timing = 20000
         if debug:
-            print ("Laser ranger : Timing %d ms" % (self.timing / 1000))
+            print(("Laser ranger : Timing %d ms" % (self.timing / 1000)))
         self.timing = self.timing / 1000000.00
 
         self.distance1 = 0
@@ -134,21 +134,21 @@ class DualLaserRanger(object):
     def get_y(self):
         if time.time() - self.last_read_time > self.timing:
             self.last_read_time = time.time()
-            # print "Reading the laser data"
+            # print("Reading the laser data"
             dist = self.get_distance()
-            # print dist
+            # print(dist
             # return (distances[1] - distances[0])/2 # TRUE if the sensor readings are reliable
 
             if dist[0] < 1000 and dist[1] < 1000:
                 self.bike_y = (laserRanger_roller_width / 2 - dist[0]) / 1000.0 if dist[0] >= dist[1] else (dist[1] - laserRanger_roller_width / 2) / 1000.0
             else:
                 if debug:
-                    print "Warning: The laser reading exceeds the roller, ignoring this data point"
+                    print("Warning: The laser reading exceeds the roller, ignoring this data point")
 
             return self.bike_y
         else:
             if debug:
-                print "Too Frequent Laser Ranger Reading"
+                print("Too Frequent Laser Ranger Reading")
 
             return self.bike_y
 
@@ -159,7 +159,7 @@ class DualLaserRanger(object):
             self.distance1_old = self.distance1
         else:
             if debug:
-                print "Laser ranger : Sensor 1 negative reading %f" % self.distance1
+                print("Laser ranger : Sensor 1 negative reading %f" % self.distance1)
             self.distance1 = self.distance1_old
         # time.sleep(0.0001)
         # Sensor 2 : RIGHT SENSOR
@@ -168,6 +168,6 @@ class DualLaserRanger(object):
             self.distance2_old = self.distance2
         else:
             if debug:
-                print "Laser ranger : Sensor 1 negative reading %f" % self.distance1
+                print("Laser ranger : Sensor 1 negative reading %f" % self.distance1)
             self.distance2 = self.distance2_old
         return (self.distance1, self.distance2)

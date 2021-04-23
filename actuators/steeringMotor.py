@@ -13,11 +13,11 @@ class SteeringMotor(object):
         GPIO.setup(steeringMotor_PinEnable, GPIO.OUT)
         GPIO.output(steeringMotor_PinEnable, GPIO.LOW)
         if debug:
-            print 'Steering Motor : Enable pin set to DISABLE'
+            print('Steering Motor : Enable pin set to DISABLE')
         PWM.start(steeringMotor_Channel, steeringMotor_IdleDuty, steeringMotor_Frequency)
         PWM.set_duty_cycle(steeringMotor_Channel, steeringMotor_IdleDuty)
         if debug:
-            print 'Steering Motor : PWM started'
+            print('Steering Motor : PWM started')
 
     def set_PWM_duty_cycle(self,duty_cycle):
         # Constrain duty cycle between steeringMotor_PWMforMinOutput and steeringMotor_PWMforMaxOutput

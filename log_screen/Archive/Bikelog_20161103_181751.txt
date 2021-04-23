@@ -1,0 +1,175 @@
+Script started on Thu 03 Nov 2016 06:17:51 PM CET
+P8_38 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+Pin configuration complete
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ suod[K[K[K[Kh[Kgit status
+On branch simulationEnvironment
+Your branch is up-to-date with 'origin/simulationEnvironment'.
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   PinConfig.sh[m
+	[31mmodified:   actuators/driveMotor.py[m
+	[31mmodified:   param.py[m
+	[31mmodified:   sensors/imu_pmodnav.py[m
+	[31mmodified:   sensors/safetystop.py[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	[31mpaths/path_20210301-155539.csv[m
+	[31mrollref/roll_ref_StepT3_-1deg.csv[m
+	[31mrollref/roll_ref_StepT3_-2deg.csv[m
+	[31mrollref/roll_ref_StepT3_-3deg.csv[m
+	[31mrollref/roll_ref_StepT3_-4deg.csv[m
+	[31mrollref/roll_ref_StepT3_-5deg.csv[m
+	[31mrollref/roll_ref_StepT3_1deg.csv[m
+	[31mrollref/roll_ref_StepT3_2deg.csv[m
+	[31mrollref/roll_ref_StepT3_3deg.csv[m
+	[31mrollref/roll_ref_StepT3_4deg.csv[m
+	[31mrollref/roll_ref_StepT3_5deg.csv[m
+	[31mrollref/roll_ref_StepT5_-1deg.csv[m
+	[31mrollref/roll_ref_StepT5_-2deg.csv[m
+	[31mrollref/roll_ref_StepT5_-3deg.csv[m
+	[31mrollref/roll_ref_StepT5_-5deg.csv[m
+	[31mrollref/roll_ref_StepT5_1deg.csv[m
+	[31mrollref/roll_ref_StepT5_2deg.csv[m
+	[31mrollref/roll_ref_StepT5_3deg.csv[m
+	[31mrollref/roll_ref_StepT5_5deg.csv[m
+	[31mtesting/gps/20210122-140013-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210122-141758-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210122-141929-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210122-141948-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210122-142113-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-160633-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-160816-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-160901-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-161222-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-161317-SensorTest_Lukas_GPS.csv[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ gitadd [K[K[K[K add PinConfig.sh 
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ gh[Kit add actuators/driveMotor.py 
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git add pra[K[Karam.py 
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git add sensors/
+imu_pmodnav.py  safetystop.py   
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git add sensors/
+imu_pmodnav.py  safetystop.py   
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git add sensors/imu_pmodnav.py 
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git add sensors/imu_pmodnav.py [14Pparam[C[C[C[C[14@sensors/imu_pmodnav[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Ksafetystop.py 
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git status
+On branch simulationEnvironment
+Your branch is up-to-date with 'origin/simulationEnvironment'.
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	[32mmodified:   PinConfig.sh[m
+	[32mmodified:   actuators/driveMotor.py[m
+	[32mmodified:   param.py[m
+	[32mmodified:   sensors/imu_pmodnav.py[m
+	[32mmodified:   sensors/safetystop.py[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	[31mpaths/path_20210301-155539.csv[m
+	[31mrollref/roll_ref_StepT3_-1deg.csv[m
+	[31mrollref/roll_ref_StepT3_-2deg.csv[m
+	[31mrollref/roll_ref_StepT3_-3deg.csv[m
+	[31mrollref/roll_ref_StepT3_-4deg.csv[m
+	[31mrollref/roll_ref_StepT3_-5deg.csv[m
+	[31mrollref/roll_ref_StepT3_1deg.csv[m
+	[31mrollref/roll_ref_StepT3_2deg.csv[m
+	[31mrollref/roll_ref_StepT3_3deg.csv[m
+	[31mrollref/roll_ref_StepT3_4deg.csv[m
+	[31mrollref/roll_ref_StepT3_5deg.csv[m
+	[31mrollref/roll_ref_StepT5_-1deg.csv[m
+	[31mrollref/roll_ref_StepT5_-2deg.csv[m
+	[31mrollref/roll_ref_StepT5_-3deg.csv[m
+	[31mrollref/roll_ref_StepT5_-5deg.csv[m
+	[31mrollref/roll_ref_StepT5_1deg.csv[m
+	[31mrollref/roll_ref_StepT5_2deg.csv[m
+	[31mrollref/roll_ref_StepT5_3deg.csv[m
+	[31mrollref/roll_ref_StepT5_5deg.csv[m
+	[31mtesting/gps/20210122-140013-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210122-141758-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210122-141929-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210122-141948-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210122-142113-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-160633-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-160816-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-160901-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-161222-SensorTest_Lukas_GPS.csv[m
+	[31mtesting/gps/20210210-161317-SensorTest_Lukas_GPS.csv[m
+
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git statusadd sensors/safetystop.py status[K
+On branch simulationEnvironment
+Your branch is up-to-date with 'origin/simulationEnvironment'.
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	[32mmodified:   PinConfig.sh[m
+	[32mmodified:   actuators/driveMotor.py[m
+	[32mmodified:   param.py[m
+	[32mmodified:   sensors/imu_pmodnav.py[m
+	[32mmodified:   sensors/safetystop.py[m
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   .gitignore[m
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	[31mpaths/path_20210301-155539.csv[m
+	[31mrollref/roll_ref_StepT3_-1deg.csv[m
+	[31mrollref/roll_ref_StepT3_-2deg.csv[m
+	[31mrollref/roll_ref_StepT3_-3deg.csv[m
+	[31mrollref/roll_ref_StepT3_-4deg.csv[m
+	[31mrollref/roll_ref_StepT3_-5deg.csv[m
+	[31mrollref/roll_ref_StepT3_1deg.csv[m
+	[31mrollref/roll_ref_StepT3_2deg.csv[m
+	[31mrollref/roll_ref_StepT3_3deg.csv[m
+	[31mrollref/roll_ref_StepT3_4deg.csv[m
+	[31mrollref/roll_ref_StepT3_5deg.csv[m
+	[31mrollref/roll_ref_StepT5_-1deg.csv[m
+	[31mrollref/roll_ref_StepT5_-2deg.csv[m
+	[31mrollref/roll_ref_StepT5_-3deg.csv[m
+	[31mrollref/roll_ref_StepT5_-5deg.csv[m
+	[31mrollref/roll_ref_StepT5_1deg.csv[m
+	[31mrollref/roll_ref_StepT5_2deg.csv[m
+	[31mrollref/roll_ref_StepT5_3deg.csv[m
+	[31mrollref/roll_ref_StepT5_5deg.csv[m
+
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git commit -m '[K"changes in[K[K[K[K[K[K[K[K[K[Kroll acceleration compes[Knsate[Kion in Roll [K[K[K[K[K[K[K[Kchanged.[K."
+[simulationEnvironment 941c664] roll acceleration compensation changed.
+ Committer: Mr. Black with Mrs. BBBlack <debian@beaglebone.localdomain>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 5 files changed, 27 insertions(+), 47 deletions(-)
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git push
+Counting objects: 9, done.
+Compressing objects:  11% (1/9)   Compressing objects:  22% (2/9)   Compressing objects:  33% (3/9)   Compressing objects:  44% (4/9)   Compressing objects:  55% (5/9)   Compressing objects:  66% (6/9)   Compressing objects:  77% (7/9)   Compressing objects:  88% (8/9)   Compressing objects: 100% (9/9)   Compressing objects: 100% (9/9), done.
+Writing objects:  11% (1/9)   Writing objects:  22% (2/9)   Writing objects:  33% (3/9)   Writing objects:  44% (4/9)   Writing objects:  55% (5/9)   Writing objects:  66% (6/9)   Writing objects:  77% (7/9)   Writing objects:  88% (8/9)   Writing objects: 100% (9/9)   Writing objects: 100% (9/9), 1019 bytes | 0 bytes/s, done.
+Total 9 (delta 8), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/8)[Kremote: Resolving deltas:  12% (1/8)[Kremote: Resolving deltas:  25% (2/8)[Kremote: Resolving deltas:  37% (3/8)[Kremote: Resolving deltas:  50% (4/8)[Kremote: Resolving deltas:  62% (5/8)[Kremote: Resolving deltas:  75% (6/8)[Kremote: Resolving deltas:  87% (7/8)[Kremote: Resolving deltas: 100% (8/8)[Kremote: Resolving deltas: 100% (8/8), completed with 8 local objects.[K
+sudTo github.com:chalmersbike/BBBlue.git
+   d73e79e..941c664  simulationEnvironment -> simulationEnvironment
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ sudo shutdown -h now
+[sudo] password for debian: 

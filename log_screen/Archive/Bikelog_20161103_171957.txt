@@ -1,0 +1,1433 @@
+Script started on Thu 03 Nov 2016 05:19:57 PM UTC
+P8_38 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+Pin configuration complete
+(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ sudo shutdown -h nowpython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : Searching for calibration file /home/debian/chalmersbike/sensors/Acc_Cali.txt
+IMU : Waiting for calibration data
+IMU : Gyroscope calibration finished
+IMU : Accelerometer not calibrated, using 0.03115 as roll angle offset
+
+GPS : GPS initialized, obtained initial latitude and longitude
+Loading newest path ./paths/path_20201125-093000.csv ...
+Using only first and last points of path to get a straight line ...
+Path loaded, loading roll reference if needed, otherwise starting experiment ...
+[  0.         -45.23398312]
+[   0.          103.93278599]
+[ 1.98129434  1.98129434]
+[  0.         -45.23398312]
+[   0.          103.93278599]
+[ 1.98129434  1.98129434]
+Type a description for the experiment if necessary. Press ENTER to start the experiment. 
+EXP LOG PATH is: 
+./ExpData_blackbike/BikeData_20161103-172758.csv
+
+Experiment starting in 5s
+Experiment starting in 4s
+Experiment starting in 3s
+Experiment starting in 2s
+Experiment starting in 1s
+
+WARNING : [0.000193] Measured speed larger than 1.25 times reference speed
+WARNING : [0.000367] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  133.215 deg. 
+ using previous reading
+DEBUG : x = 0.000000 ; x_prev = 0.000000 ; y = 0.000000 ; y_prev = 0.000000
+1.5
+0.0
+0.0188591480255
+0.0282887220383
+0.0
+[ 0.]
+[ 0.]
+0.0
+1
+Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0671499 	 0.0015552 	 0.00649095 	 0.00105906 	
+WARNING : [0.075985] Measured speed larger than 1.25 times reference speed
+WARNING : [0.077074] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0537 deg. 
+ using previous reading
+WARNING : [0.086959] Measured speed larger than 1.25 times reference speed
+WARNING : [0.088560] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0546 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.00982189 	 0.000324965 	 0.00495195 	 0.00101614 	
+WARNING : [0.102908] Measured speed larger than 1.25 times reference speed
+WARNING : [0.104030] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0547 deg. 
+ using previous reading
+WARNING : [0.113894] Measured speed larger than 1.25 times reference speed
+WARNING : [0.115277] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0548 deg. 
+ using previous reading
+DEBUG : x = -0.039522 ; x_prev = 0.000000 ; y = 0.074130 ; y_prev = 0.000000
+1.5
+0.0695112752902
+0.116432905197
+0.202938079834
+0.012140099589
+[ -1.38777878e-17]
+[ -1.38777878e-17]
+0.504096050718
+2
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0602629 	 0.00092411 	 0.00496221 	 0.002002 	
+WARNING : [0.189817] Measured speed larger than 1.25 times reference speed
+WARNING : [0.192916] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0742 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0185871 	 0.000329971 	 0.00979114 	 0.000995874 	
+WARNING : [0.221524] Measured speed larger than 1.25 times reference speed
+WARNING : [0.221646] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0786 deg. 
+ using previous reading
+DEBUG : x = -0.079045 ; x_prev = -0.039522 ; y = 0.129727 ; y_prev = 0.074130
+1.5
+0.0648979455377
+0.112859964371
+0.37222802639
+0.0231266693207
+[-0.01073757]
+[-0.01073757]
+0.310437966301
+3
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0631142 	 0.000351906 	 0.0100701 	 0.00107694 	
+WARNING : [0.290593] Measured speed larger than 1.25 times reference speed
+WARNING : [0.291651] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0856 deg. 
+ using previous reading
+WARNING : [0.301667] Measured speed larger than 1.25 times reference speed
+WARNING : [0.303064] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0862 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.00960422 	 0.000566959 	 0.00498986 	 0.000994921 	
+WARNING : [0.318878] Measured speed larger than 1.25 times reference speed
+WARNING : [0.320053] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0863 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.014926 	 0.000336885 	 0.00918913 	 0.000999928 	
+WARNING : [0.346570] Measured speed larger than 1.25 times reference speed
+WARNING : [0.350198] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0865 deg. 
+ using previous reading
+DEBUG : x = -0.167970 ; x_prev = -0.079045 ; y = 0.277987 ; y_prev = 0.129727
+1.5
+0.0626337346162
+0.140170097351
+0.582483172417
+0.0362957343386
+[ 0.00105917]
+[ 0.01179674]
+0.612806480295
+4
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0788701 	 0.00128698 	 0.0106959 	 0.00194502 	
+WARNING : [0.440367] Measured speed larger than 1.25 times reference speed
+WARNING : [0.442403] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0791 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0173459 	 0.000332117 	 0.011308 	 0.00120401 	
+WARNING : [0.469703] Measured speed larger than 1.25 times reference speed
+WARNING : [0.471698] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0653 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0160251 	 0.000331879 	 0.0105309 	 0.000997066 	
+WARNING : [0.498058] Measured speed larger than 1.25 times reference speed
+WARNING : [0.500493] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0543 deg. 
+ using previous reading
+DEBUG : x = -0.207493 ; x_prev = -0.167970 ; y = 0.370650 ; y_prev = 0.277987
+1.5
+0.06764330128
+0.140520811081
+0.793264389038
+0.0505536716787
+[ 0.04544223]
+[ 0.04438307]
+0.297219266497
+5
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0693159 	 0.000468016 	 0.0109739 	 0.00278187 	
+WARNING : [0.582428] Measured speed larger than 1.25 times reference speed
+WARNING : [0.582554] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0487 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0150871 	 0.000326872 	 0.011287 	 0.000997066 	
+WARNING : [0.609228] Measured speed larger than 1.25 times reference speed
+WARNING : [0.612280] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0494 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0174601 	 0.000331879 	 0.0103219 	 0.00127292 	
+WARNING : [0.641461] Measured speed larger than 1.25 times reference speed
+WARNING : [0.644642] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0497 deg. 
+ using previous reading
+DEBUG : x = -0.296418 ; x_prev = -0.207493 ; y = 0.555975 ; y_prev = 0.370650
+1.5
+0.0720585125769
+0.153150081635
+1.02298951149
+0.0671073223041
+[ 0.0267245]
+[-0.01871773]
+0.510365407084
+6
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.079603 	 0.000370026 	 0.0114181 	 0.00263381 	
+WARNING : [0.735575] Measured speed larger than 1.25 times reference speed
+WARNING : [0.738537] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0499 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0169449 	 0.000916004 	 0.0106468 	 0.00103879 	
+WARNING : [0.765487] Measured speed larger than 1.25 times reference speed
+WARNING : [0.767856] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0508 deg. 
+ using previous reading
+DEBUG : x = -0.335941 ; x_prev = -0.296418 ; y = 0.648637 ; y_prev = 0.555975
+1.5
+0.0720585125769
+0.114593982697
+1.19488048553
+0.0794935302192
+[ 0.05453068]
+[ 0.02780618]
+0.283552911451
+7
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0702581 	 0.00115705 	 0.011091 	 0.00141096 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4866 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0136721 	 0.000330925 	 0.00861001 	 0.00102496 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4872 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.015326 	 0.000330925 	 0.0107841 	 0.000997066 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4875 deg. 
+ using previous reading
+DEBUG : x = -0.385344 ; x_prev = -0.335941 ; y = 0.759832 ; y_prev = 0.648637
+1.5
+0.0720585125769
+0.134187936783
+1.39616239071
+0.0939976049147
+[ 0.0436427]
+[-0.01088798]
+0.257819739466
+8
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0650461 	 0.00134897 	 0.00988078 	 0.00179696 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3823 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0121939 	 0.00105 	 0.00864196 	 0.00101614 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3556 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.015161 	 0.000334024 	 0.0106449 	 0.00100493 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.332 deg. 
+ using previous reading
+DEBUG : x = -0.464389 ; x_prev = -0.385344 ; y = 0.945157 ; y_prev = 0.759832
+1.5
+0.0888136733961
+0.147941112518
+1.61807405949
+0.113706395388
+[ 0.05634837]
+[ 0.01270567]
+0.371297493184
+9
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0750899 	 0.000365973 	 0.00884581 	 0.00231504 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3115 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0130391 	 0.000334024 	 0.00970101 	 0.0014739 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3101 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0165839 	 0.00052309 	 0.0115662 	 0.0010159 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3093 deg. 
+ using previous reading
+DEBUG : x = -0.503911 ; x_prev = -0.464389 ; y = 1.074884 ; y_prev = 0.945157
+1.5
+0.0967384116214
+0.130266904831
+1.81347441673
+0.132609115579
+[ 0.16878042]
+[ 0.11243205]
+0.248413304544
+10
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0653188 	 0.000812054 	 0.00858307 	 0.00129199 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3095 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0150421 	 0.000334978 	 0.0118871 	 0.00100303 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3102 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0144062 	 0.000333786 	 0.010869 	 0.000993967 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3105 deg. 
+ using previous reading
+DEBUG : x = -0.543433 ; x_prev = -0.503911 ; y = 1.167547 ; y_prev = 1.074884
+1.5
+0.096936530077
+0.133478164673
+2.01369166374
+0.152017480765
+[ 0.04180686]
+[-0.12697356]
+0.130979034124
+11
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0656111 	 0.00047183 	 0.00880694 	 0.00213599 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3107 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.012084 	 0.000334024 	 0.00840783 	 0.00100899 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3114 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.011672 	 0.000540972 	 0.00731516 	 0.00100994 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1477 deg. 
+ using previous reading
+DEBUG : x = -0.642240 ; x_prev = -0.543433 ; y = 1.427002 ; y_prev = 1.167547
+1.5
+0.096936530077
+0.141747951508
+2.226313591
+0.172628312612
+[ 0.09233708]
+[ 0.05053022]
+0.436914390583
+12
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.072206 	 0.000365973 	 0.00832987 	 0.002141 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1505 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0134821 	 0.000329971 	 0.00984001 	 0.00125194 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1573 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.015218 	 0.000333786 	 0.0112059 	 0.00101113 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1673 deg. 
+ using previous reading
+DEBUG : x = -0.681762 ; x_prev = -0.642240 ; y = 1.519664 ; y_prev = 1.427002
+1.5
+0.094644016519
+0.130603075027
+2.42221820354
+0.191169511998
+[ 0.03090071]
+[-0.06143637]
+0.106200318351
+13
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0634301 	 0.00131702 	 0.0101838 	 0.00248814 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1846 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.01284 	 0.00088191 	 0.0100968 	 0.00102115 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1853 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0141311 	 0.000330925 	 0.00945401 	 0.00101018 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1883 deg. 
+ using previous reading
+DEBUG : x = -0.721284 ; x_prev = -0.681762 ; y = 1.630859 ; y_prev = 1.519664
+1.5
+0.0881344101196
+0.132020950317
+2.62024962902
+0.208622894867
+[ 0.1334435]
+[ 0.10254279]
+0.129376448185
+14
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0684049 	 0.00160503 	 0.00933695 	 0.00203204 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2116 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.012825 	 0.000329971 	 0.00861692 	 0.001266 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2298 deg. 
+ using previous reading
+DEBUG : x = -0.750926 ; x_prev = -0.721284 ; y = 1.723521 ; y_prev = 1.630859
+1.5
+0.0826720012715
+0.111726045609
+2.78783869743
+0.222477818544
+[ 0.19009874]
+[ 0.05665524]
+0.117345160006
+15
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0644319 	 0.000598907 	 0.0114882 	 0.001647 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2863 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0125799 	 0.000334024 	 0.00778818 	 0.00125098 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3231 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.012646 	 0.000332117 	 0.0088861 	 0.00100493 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3574 deg. 
+ using previous reading
+DEBUG : x = -0.839852 ; x_prev = -0.750926 ; y = 1.945911 ; y_prev = 1.723521
+1.5
+0.0654356956315
+0.138566970825
+2.99568915367
+0.236078657735
+[ 0.05733967]
+[-0.13275907]
+0.285140952531
+16
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0713289 	 0.000949144 	 0.00860095 	 0.00155997 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3645 deg. 
+ using previous reading
+Gaining speed ...
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0142171 	 0.00373387 	 0.0104699 	 0.0023551 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4051 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.013062 	 0.00149488 	 0.00974703 	 0.00100207 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4255 deg. 
+ using previous reading
+DEBUG : x = -0.889255 ; x_prev = -0.839852 ; y = 2.057106 ; y_prev = 1.945911
+1.5
+0.0478314557168
+0.138301849365
+3.20314192772
+0.24600142591
+[-0.02257381]
+[-0.07991349]
+0.100053232567
+17
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.067277 	 0.000802994 	 0.0112281 	 0.00184703 	
+WARNING : [2.190421] Measured speed larger than 1.25 times reference speed
+WARNING : [2.193864] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2818 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0177491 	 0.00143194 	 0.00949001 	 0.00101995 	
+WARNING : [2.221714] Measured speed larger than 1.25 times reference speed
+WARNING : [2.221838] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3284 deg. 
+ using previous reading
+DEBUG : x = -0.928777 ; x_prev = -0.889255 ; y = 2.149769 ; y_prev = 2.057106
+1.5
+0.0392557568516
+0.113386154175
+3.37322115898
+0.252678014858
+[ 0.01090614]
+[ 0.03347995]
+0.0985147489562
+18
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0655081 	 0.00150084 	 0.0114689 	 0.00139618 	
+WARNING : [2.301264] Measured speed larger than 1.25 times reference speed
+WARNING : [2.302213] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.5887 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0158989 	 0.00072217 	 0.0104229 	 0.000997066 	
+WARNING : [2.330299] Measured speed larger than 1.25 times reference speed
+WARNING : [2.331788] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.714 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.015151 	 0.000730991 	 0.0103879 	 0.000995159 	
+WARNING : [2.360289] Measured speed larger than 1.25 times reference speed
+WARNING : [2.361886] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.7831 deg. 
+ using previous reading
+DEBUG : x = -1.017703 ; x_prev = -0.928777 ; y = 2.335093 ; y_prev = 2.149769
+1.5
+0.0208307404779
+0.150012016296
+3.59823918343
+0.257365306928
+[-0.09264494]
+[-0.10355108]
+0.17647151686
+19
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0785971 	 0.00158215 	 0.0107439 	 0.00133991 	
+WARNING : [2.456922] Measured speed larger than 1.25 times reference speed
+WARNING : [2.457091] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.8041 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0144432 	 0.000953913 	 0.00964594 	 0.00123882 	
+WARNING : [2.486199] Measured speed larger than 1.25 times reference speed
+WARNING : [2.489388] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.805 deg. 
+ using previous reading
+DEBUG : x = -1.076986 ; x_prev = -1.017703 ; y = 2.446288 ; y_prev = 2.335093
+1.5
+0.0189910691041
+0.118587017059
+3.77611970901
+0.260743448282
+[-0.20053343]
+[-0.10788849]
+0.113631814485
+20
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0705721 	 0.00200701 	 0.011188 	 0.00107098 	
+WARNING : [2.569504] Measured speed larger than 1.25 times reference speed
+WARNING : [2.571285] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.8053 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0183392 	 0.000735998 	 0.0104032 	 0.000993967 	
+WARNING : [2.599111] Measured speed larger than 1.25 times reference speed
+WARNING : [2.601223] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.7852 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0181901 	 0.00132084 	 0.00874019 	 0.00152588 	
+WARNING : [2.632522] Measured speed larger than 1.25 times reference speed
+WARNING : [2.632647] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.6839 deg. 
+ using previous reading
+DEBUG : x = -1.116509 ; x_prev = -1.076986 ; y = 2.538951 ; y_prev = 2.446288
+1.5
+0.0193873060154
+0.142529964447
+3.98991465569
+0.264888356338
+[ 0.03090072]
+[ 0.23143415]
+0.0564433981774
+21
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0629332 	 0.00142193 	 0.0107229 	 0.00165415 	
+WARNING : [2.709391] Measured speed larger than 1.25 times reference speed
+WARNING : [2.709516] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4506 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0139039 	 0.00153804 	 0.010556 	 0.00102115 	
+WARNING : [2.738176] Measured speed larger than 1.25 times reference speed
+WARNING : [2.741444] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3634 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.019232 	 0.000720978 	 0.00955486 	 0.000991106 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.6875 deg. 
+ using previous reading
+DEBUG : x = -1.225195 ; x_prev = -1.116509 ; y = 2.742808 ; y_prev = 2.538951
+1.5
+0.0339065585496
+0.151842832565
+4.21767890453
+0.272611058177
+[-0.20925226]
+[-0.24015298]
+0.167540834117
+22
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0727019 	 0.00217199 	 0.009094 	 0.002038 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.5343 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0144548 	 0.000718117 	 0.00916219 	 0.00100398 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4956 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0149879 	 0.00100708 	 0.0106361 	 0.00124407 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.464 deg. 
+ using previous reading
+DEBUG : x = -1.274598 ; x_prev = -1.225195 ; y = 2.854003 ; y_prev = 2.742808
+1.5
+0.0484258110837
+0.133800983429
+4.41838037968
+0.282330189896
+[ 0.00601966]
+[ 0.21527192]
+0.073714262558
+23
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0656059 	 0.00110006 	 0.00974917 	 0.00206208 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3987 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0129011 	 0.000954151 	 0.00916505 	 0.00100493 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3965 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.014112 	 0.000720978 	 0.0105278 	 0.00099802 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3967 deg. 
+ using previous reading
+DEBUG : x = -1.412927 ; x_prev = -1.274598 ; y = 3.150523 ; y_prev = 2.854003
+1.5
+0.0566052730377
+0.143566131592
+4.63372957706
+0.294520090013
+[-0.05148658]
+[-0.05750624]
+0.260424543939
+24
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.071208 	 0.000788927 	 0.00899196 	 0.00295019 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3969 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0132759 	 0.00073123 	 0.00922394 	 0.00131392 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3977 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0149019 	 0.000732899 	 0.0115871 	 0.00126219 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3988 deg. 
+ using previous reading
+DEBUG : x = -1.482091 ; x_prev = -1.412927 ; y = 3.298783 ; y_prev = 3.150523
+1.5
+0.0566052730377
+0.1321849823
+4.83200705051
+0.305743640535
+[-0.05148659]
+[ -1.66179985e-08]
+0.106775969826
+25
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0677481 	 0.00187492 	 0.0117261 	 0.00108194 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1033 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0136571 	 0.000953913 	 0.0091939 	 0.000996113 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.124 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0150719 	 0.000735998 	 0.0109591 	 0.00126195 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1592 deg. 
+ using previous reading
+DEBUG : x = -1.541375 ; x_prev = -1.482091 ; y = 3.484108 ; y_prev = 3.298783
+1.5
+0.0474352188056
+0.133766889572
+5.03265738487
+0.315261533049
+[ 0.4065478]
+[ 0.4580344]
+0.140980198744
+26
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.061712 	 0.000892878 	 0.009763 	 0.00252008 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4138 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.015089 	 0.000731945 	 0.011807 	 0.0013361 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.5316 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0122569 	 0.000965118 	 0.008255 	 0.000999928 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.6416 deg. 
+ using previous reading
+DEBUG : x = -1.719226 ; x_prev = -1.541375 ; y = 3.873290 ; y_prev = 3.484108
+1.5
+0.0207175299318
+0.137855052948
+5.23943996429
+0.319545557327
+[-0.04621728]
+[-0.45276509]
+0.340708883486
+27
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.074549 	 0.000988007 	 0.0116279 	 0.00102401 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.243 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.01267 	 0.000730038 	 0.00875306 	 0.00127888 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2437 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0123229 	 0.000729084 	 0.00865483 	 0.000996113 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2439 deg. 
+ using previous reading
+DEBUG : x = -1.798271 ; x_prev = -1.719226 ; y = 4.095680 ; y_prev = 3.873290
+1.5
+0.0174627267321
+0.125136137009
+5.42714416981
+0.322823384574
+[ 0.32274708]
+[ 0.36896436]
+0.187663596623
+28
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0651491 	 0.00162196 	 0.00985098 	 0.00108314 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2442 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.016119 	 0.000741005 	 0.011627 	 0.00100589 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2442 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0121911 	 0.00072813 	 0.00854397 	 0.00149298 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.227 deg. 
+ using previous reading
+DEBUG : x = -1.887196 ; x_prev = -1.798271 ; y = 4.318070 ; y_prev = 4.095680
+1.5
+0.0174910293686
+0.133144855499
+5.62686145306
+0.326316645441
+[ 0.14908314]
+[-0.17366394]
+0.167108765311
+29
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0639451 	 0.00203991 	 0.00753379 	 0.00197983 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0424 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0141962 	 0.000932932 	 0.00990701 	 0.00100279 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0118 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.010287 	 0.00156689 	 0.00696993 	 0.00101614 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9986 deg. 
+ using previous reading
+DEBUG : x = -2.074928 ; x_prev = -1.887196 ; y = 4.818447 ; y_prev = 4.318070
+1.5
+0.0366802169284
+0.145925998688
+5.84575045109
+0.334345541372
+[ 0.25011838]
+[ 0.10103524]
+0.382575043048
+30
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0775311 	 0.00157595 	 0.010191 	 0.0012331 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9923 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.015878 	 0.000843048 	 0.0113521 	 0.00101304 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9932 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0095911 	 0.000718832 	 0.00722098 	 0.000994921 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9964 deg. 
+ using previous reading
+DEBUG : x = -2.193495 ; x_prev = -2.074928 ; y = 5.096434 ; y_prev = 4.818447
+1.5
+0.0408407044967
+0.121248006821
+6.02762246132
+0.341773322398
+[ 0.01817688]
+[-0.2319415]
+0.229662536626
+31
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0399151 	 0.00090003 	 0.00503588 	 0.00101709 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0544 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0723 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0077 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0167 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0243 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0288 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0309 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0309 deg. 
+ using previous reading
+DEBUG : x = -2.282420 ; x_prev = -2.193495 ; y = 5.355889 ; y_prev = 5.096434
+1.5
+0.0236610041297
+0.117961168289
+6.20456421375
+0.345959941933
+[ 0.42261149]
+[ 0.40443461]
+0.213734873935
+32
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.040134 	 0.000758171 	 0.00483394 	 0.00123715 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0261 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0177 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0067 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9964 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9881 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9824 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9781 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9729 deg. 
+ using previous reading
+DEBUG : x = -2.499794 ; x_prev = -2.282420 ; y = 5.911864 ; y_prev = 5.355889
+1.5
+0.0317272555376
+0.137594938278
+6.41095662117
+0.352508206584
+[ 0.17545654]
+[-0.24715495]
+0.422133879882
+33
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.077563 	 0.00170994 	 0.00977015 	 0.00152111 	
+WARNING : [4.331003] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2819 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0157878 	 0.000997066 	 0.011286 	 0.0010159 	
+WARNING : [4.357268] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2745 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.016371 	 0.000725985 	 0.00973392 	 0.00121284 	
+WARNING : [4.385957] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2626 deg. 
+ using previous reading
+DEBUG : x = -2.598600 ; x_prev = -2.499794 ; y = 6.226916 ; y_prev = 5.911864
+1.5
+0.0415482704096
+0.137423992157
+6.61709260941
+0.361072800365
+[ 0.61613685]
+[ 0.44068031]
+0.20852643818
+34
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0644732 	 0.002105 	 0.0104561 	 0.00103402 	
+WARNING : [4.467030] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.262 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0173109 	 0.00147915 	 0.0111129 	 0.00125694 	
+WARNING : [4.497622] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2627 deg. 
+ using previous reading
+DEBUG : x = -2.707287 ; x_prev = -2.598600 ; y = 6.541968 ; y_prev = 6.226916
+1.5
+0.0427652837799
+0.113440990448
+6.78725409508
+0.368349804588
+[ 0.4258133]
+[-0.19032355]
+0.256816080975
+35
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0663221 	 0.00139785 	 0.00974607 	 0.00196791 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9597 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0117669 	 0.000732899 	 0.00835299 	 0.00100088 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -91.9955 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0148211 	 0.000726938 	 0.0102201 	 0.000999928 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0334 deg. 
+ using previous reading
+DEBUG : x = -2.815973 ; x_prev = -2.707287 ; y = 6.838488 ; y_prev = 6.541968
+1.5
+0.0288120839762
+0.134028911591
+6.98829746246
+0.374142282972
+[ 0.29048749]
+[-0.13532582]
+0.189296815977
+36
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0668659 	 0.00137401 	 0.009691 	 0.00156212 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0577 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0138049 	 0.000743151 	 0.00999284 	 0.00124478 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0584 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.014977 	 0.000725031 	 0.0114641 	 0.000999928 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0362 deg. 
+ using previous reading
+DEBUG : x = -3.033347 ; x_prev = -2.815973 ; y = 7.431528 ; y_prev = 6.838488
+1.5
+0.0211986747526
+0.146671056747
+7.20830404758
+0.378806131013
+[ 0.29048748]
+[ -9.97107996e-09]
+0.377684764181
+37
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0743389 	 0.00143814 	 0.00954103 	 0.00191307 	
+WARNING : [4.860508] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4899 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.015728 	 0.00071907 	 0.011029 	 0.000995874 	
+WARNING : [4.889097] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4 deg. 
+ using previous reading
+DEBUG : x = -3.132153 ; x_prev = -3.033347 ; y = 7.728047 ; y_prev = 7.431528
+1.5
+0.0284158470649
+0.112673044205
+7.37731361389
+0.383608681002
+[ 0.52845296]
+[ 0.23796548]
+0.222479944797
+38
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.069135 	 0.00259614 	 0.00856996 	 0.00189686 	
+WARNING : [4.969160] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2368 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.01653 	 0.000721931 	 0.00949407 	 0.00124311 	
+WARNING : [4.999729] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.1815 deg. 
+ using previous reading
+DEBUG : x = -3.221078 ; x_prev = -3.132153 ; y = 8.006035 ; y_prev = 7.728047
+1.5
+0.045821968524
+0.113433837891
+7.54746437073
+0.391405323626
+[ 0.62864336]
+[ 0.1001904]
+0.197077894018
+39
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0686131 	 0.000895977 	 0.00951004 	 0.00101614 	
+WARNING : [5.079216] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.0947 deg. 
+ using previous reading
+Steering angle offset : -2.31 deg
+Gaining speed phase over
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.016077 	 0.00881815 	 0.010011 	 0.00106812 	
+WARNING : [5.116310] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3423 deg. 
+ using previous reading
+Now heading or path tracking is engaged.
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.014822 	 0.00620389 	 0.011209 	 0.00107908 	
+WARNING : [5.149547] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.3358 deg. 
+ using previous reading
+DEBUG : x = -3.389048 ; x_prev = -3.221078 ; y = 8.562009 ; y_prev = 8.006035
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.044523 	 0.00139093 	 0.0111551 	 0.00105286 	
+WARNING : [5.209463] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.4706 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0168772 	 0.00156593 	 0.0115879 	 0.00106001 	
+WARNING : [5.242189] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.6245 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0166609 	 0.00166798 	 0.0102711 	 0.00107098 	
+WARNING : [5.270666] Measured speed change between two samples too large
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.7787 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.015084 	 0.00133896 	 0.01103 	 0.001755 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.2255 deg. 
+ using previous reading
+DEBUG : x = -3.477974 ; x_prev = -3.389048 ; y = 8.821464 ; y_prev = 8.562009
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0297961 	 0.00153303 	 0.0105078 	 0.00127912 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.5175 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.6862 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  -92.9092 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0144591 	 0.001333 	 0.010283 	 0.00105 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  -98.7071 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.013942 	 0.00136185 	 0.00967002 	 0.00105405 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  89.5692 deg. 
+ using previous reading
+DEBUG : x = -3.557019 ; x_prev = -3.477974 ; y = 9.062387 ; y_prev = 8.821464
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0293941 	 0.0015409 	 0.00895905 	 0.00103807 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.812 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.7176 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.6497 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.6026 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.5596 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.5196 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.011555 	 0.00159502 	 0.00755501 	 0.0010488 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.4589 deg. 
+ using previous reading
+DEBUG : x = -3.655825 ; x_prev = -3.557019 ; y = 9.303309 ; y_prev = 9.062387
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.03074 	 0.00143218 	 0.00779605 	 0.00103903 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3977 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.012444 	 0.00193191 	 0.00802207 	 0.00105596 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3874 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3755 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3685 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3626 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3567 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.352 deg. 
+ using previous reading
+DEBUG : x = -3.833676 ; x_prev = -3.655825 ; y = 9.785154 ; y_prev = 9.303309
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.03982 	 0.00226307 	 0.00779581 	 0.00104308 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3314 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0145459 	 0.00136805 	 0.008497 	 0.00105596 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3236 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0104611 	 0.00130296 	 0.00804591 	 0.00104403 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.318 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3149 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.312 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.31 deg. 
+ using previous reading
+DEBUG : x = -3.922601 ; x_prev = -3.833676 ; y = 10.007543 ; y_prev = 9.785154
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0224121 	 0.00135803 	 0.00519919 	 0.0010221 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3029 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.3001 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.298 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2958 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2942 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2835 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2825 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0126369 	 0.00131106 	 0.00891185 	 0.00155091 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2794 deg. 
+ using previous reading
+DEBUG : x = -4.001646 ; x_prev = -3.922601 ; y = 10.248466 ; y_prev = 10.007543
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.022227 	 0.001544 	 0.005059 	 0.00103903 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2758 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2743 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2733 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.00987911 	 0.00215888 	 0.00621414 	 0.00158787 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2699 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0140889 	 0.00162721 	 0.00964785 	 0.00105309 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2666 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.012255 	 0.00207019 	 0.0096159 	 0.001055 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2633 deg. 
+ using previous reading
+DEBUG : x = -4.090572 ; x_prev = -4.001646 ; y = 10.489388 ; y_prev = 10.248466
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0316072 	 0.00137687 	 0.0111489 	 0.00103211 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2595 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2584 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2573 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.256 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2549 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.012394 	 0.00132394 	 0.00824499 	 0.0012722 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2526 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0142989 	 0.00133514 	 0.010509 	 0.00156498 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.25 deg. 
+ using previous reading
+DEBUG : x = -4.189378 ; x_prev = -4.090572 ; y = 10.989765 ; y_prev = 10.489388
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0399501 	 0.00136185 	 0.00912619 	 0.00103188 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2621 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2608 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2598 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2587 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2577 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2565 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2554 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2542 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.00850201 	 0.00317502 	 0.00614309 	 0.00205088 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2519 deg. 
+ using previous reading
+DEBUG : x = -4.248661 ; x_prev = -4.189378 ; y = 11.212155 ; y_prev = 10.989765
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0297818 	 0.00163913 	 0.00863385 	 0.00104809 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2479 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2466 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2456 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2446 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2437 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2428 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.242 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0140781 	 0.00146794 	 0.010772 	 0.00105309 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2399 deg. 
+ using previous reading
+DEBUG : x = -4.337587 ; x_prev = -4.248661 ; y = 11.471610 ; y_prev = 11.212155
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0306411 	 0.0017221 	 0.00913286 	 0.00141716 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2289 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.012521 	 0.0016191 	 0.00878501 	 0.00131893 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2277 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2272 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2267 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2262 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2258 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2254 deg. 
+ using previous reading
+DEBUG : x = -4.515438 ; x_prev = -4.337587 ; y = 11.971987 ; y_prev = 11.471610
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0410402 	 0.00137901 	 0.00946307 	 0.00120616 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2237 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0131972 	 0.00132179 	 0.00982594 	 0.00131607 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2225 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.010711 	 0.00161004 	 0.00863385 	 0.00129294 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2218 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2214 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2211 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2207 deg. 
+ using previous reading
+DEBUG : x = -4.624124 ; x_prev = -4.515438 ; y = 12.231442 ; y_prev = 11.971987
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0280261 	 0.00229192 	 0.00514197 	 0.00103593 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2156 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.014154 	 0.00132394 	 0.00962186 	 0.00132513 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2148 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.013664 	 0.00152302 	 0.009866 	 0.00104213 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2141 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0122821 	 0.00130081 	 0.00897813 	 0.00169396 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2137 deg. 
+ using previous reading
+DEBUG : x = -4.722930 ; x_prev = -4.624124 ; y = 12.509429 ; y_prev = 12.231442
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0229928 	 0.00135422 	 0.00489807 	 0.00118399 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2131 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2127 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.00728202 	 0.00285411 	 0.00520802 	 0.00229383 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2123 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.012325 	 0.00141907 	 0.00848103 	 0.00105786 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2117 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0134339 	 0.00133896 	 0.00865602 	 0.00105095 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2112 deg. 
+ using previous reading
+DEBUG : x = -4.782214 ; x_prev = -4.722930 ; y = 12.768884 ; y_prev = 12.509429
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.027755 	 0.00155115 	 0.00839615 	 0.00104499 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2105 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2101 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2124 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2121 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2119 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0141139 	 0.00132704 	 0.00942397 	 0.00132298 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2113 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.013561 	 0.0013001 	 0.0100138 	 0.00131512 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2107 deg. 
+ using previous reading
+DEBUG : x = -4.890901 ; x_prev = -4.782214 ; y = 13.343391 ; y_prev = 12.768884
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0411732 	 0.0013628 	 0.010098 	 0.00103593 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2097 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2092 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.209 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2087 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2085 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.00711322 	 0.00348282 	 0.00507402 	 0.00133801 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.208 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.014746 	 0.00157404 	 0.0104699 	 0.00130081 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2074 deg. 
+ using previous reading
+DEBUG : x = -4.979826 ; x_prev = -4.890901 ; y = 13.621379 ; y_prev = 13.343391
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0343971 	 0.00222683 	 0.0134768 	 0.0010519 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2049 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2044 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2042 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.204 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2038 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2036 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.007411 	 0.00415611 	 0.00506997 	 0.00109005 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2033 deg. 
+ using previous reading
+DEBUG : x = -5.058871 ; x_prev = -4.979826 ; y = 13.899366 ; y_prev = 13.621379
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.02948 	 0.001369 	 0.00939202 	 0.00121903 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2027 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0144479 	 0.0016551 	 0.00994205 	 0.00131798 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2021 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2018 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2017 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2015 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2013 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.2012 deg. 
+ using previous reading
+DEBUG : x = -5.246603 ; x_prev = -5.058871 ; y = 14.455340 ; y_prev = 13.899366
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0387871 	 0.00155401 	 0.00520706 	 0.0010581 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1999 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.013721 	 0.00160098 	 0.0094099 	 0.00105119 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1993 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0138381 	 0.0015769 	 0.0105238 	 0.00143194 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1989 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1987 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1985 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1983 deg. 
+ using previous reading
+DEBUG : x = -5.345409 ; x_prev = -5.246603 ; y = 14.733328 ; y_prev = 14.455340
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0223711 	 0.00137877 	 0.00501895 	 0.00103283 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1981 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1978 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0138149 	 0.00133705 	 0.0100901 	 0.00105 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1975 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.013248 	 0.00160503 	 0.00945711 	 0.001055 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1971 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0142589 	 0.00130701 	 0.00970912 	 0.00142908 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1968 deg. 
+ using previous reading
+DEBUG : x = -5.454095 ; x_prev = -5.345409 ; y = 15.029848 ; y_prev = 14.733328
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0222721 	 0.001544 	 0.00506091 	 0.00103784 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1965 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1976 deg. 
+ using previous reading
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1974 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0073359 	 0.00265789 	 0.00529385 	 0.00147605 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1972 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.01403 	 0.00133014 	 0.0103579 	 0.00132895 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1968 deg. 
+ using previous reading
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0142682 	 0.00133181 	 0.010572 	 0.00131702 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1963 deg. 
+ using previous reading
+DEBUG : x = -5.552902 ; x_prev = -5.454095 ; y = 15.307835 ; y_prev = 15.029848
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.0289259 	 0.00137997 	 0.00971699 	 0.00103807 	
+WARNING : Spike in accelerometer detected, calculated acc roll is  88.1959 deg. 
+ using previous reading
+Conditions too extreme, bike probably felt down, turning off motors.
+Exceeded MIN_HANDLEBAR_ANGLE of 50.000000 deg, aborting the experiment
+WARNING : Balancing setpoint saturated
+Number of times sampling time was exceeded : 166
+Detected error :
+You must start() the PWM channel first
+Traceback (most recent call last):
+  File "/home/debian/chalmersbike/controller.py", line 480, in run
+    self.keep_the_bike_stable()
+  File "/home/debian/chalmersbike/controller.py", line 1346, in keep_the_bike_stable
+    self.controller_set_handlebar_angular_velocity(self.steering_rate)
+  File "/home/debian/chalmersbike/controller.py", line 986, in controller_set_handlebar_angular_velocity
+    self.bike.set_handlebar_angular_velocity(0)
+  File "/home/debian/chalmersbike/bike.py", line 67, in set_handlebar_angular_velocity
+    self.steering_motor.set_angular_velocity(angular_velocity)
+  File "/home/debian/chalmersbike/actuators/steeringMotor.py", line 40, in set_angular_velocity
+    self.set_PWM_duty_cycle(duty_cycle)
+  File "/home/debian/chalmersbike/actuators/steeringMotor.py", line 31, in set_PWM_duty_cycle
+    PWM.set_duty_cycle(steeringMotor_Channel, duty_cycle)
+RuntimeError: You must start() the PWM channel first
+None
+Conditions too extreme, bike probably felt down, turning off motors.
+Error or keyboard interrupt, aborting the experiment
+WARNING: The calculation time exceeds the sampling time!
+sensor_reading_time   control calculation   IMU   log  = 0.00788403 	 0.00137997 	 0.00541782 	 0.00310302 	
+Number of times sampling time was exceeded : 167
+(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbikke$ [K[A(chalmersbike) debian@beaglebone:~/chalmerssbike$ [K[A(chalmersbike) debian@beaglebone:~/chalmeersbike$ [K[A(chalmersbike) debian@beaglebone:~/chaalmersbike$ [K[A(chalmersbike) debian@beaglebone:~/chhalmersbike$ [K[A(chalmersbike) debian@beaglebone::~/chalmersbike$ [K[A(chalmersbike) debian@beaglebonee:~/chalmersbike$ [K[A(chalmersbike) debian@beaglebonne:~/chalmersbike$ [K[A(chalmersbike) debian@beaglebbone:~/chalmersbike$ [K[A(chalmersbike) debian@beagleebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beagglebone:~/chalmersbike$ s udo shutdozn [K[K[Kwn now
+[sudo] password for debian: 

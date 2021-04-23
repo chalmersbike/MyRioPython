@@ -1,0 +1,58 @@
+Script started on Thu 03 Nov 2016 05:18:04 PM UTC
+P8_38 pinmux file not found!
+^Psudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+Pin configuration complete
+(chalmersbike) debian@beagglebone:~/chalmersbike$ suudo shutdown -h now[K[A[A(chalmersbike) debian@beagglebone:~/chalmersbike$ suudo shutdown -h now[K[A[A(chalmersbike) debian@beagglebone:~/chalmersbike$ suudo shutdown -h now[A[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csuudo shutdown -h now[A[C[C[C[C[Cpython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : Searching for calibration file /home/debian/chalmersbike/sensors/Acc_Cali.txt
+IMU : Waiting for calibration data
+IMU : Gyroscope calibration finished
+IMU : Accelerometer not calibrated, using 0.03115 as roll angle offset
+
+GPS : GPS initialized, obtained initial latitude and longitude
+Emergency stop pressed, the experiment will be aborted if it is not released now
+Press ENTER to continue^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : WHO_AM_I incorrect ! Read 0xffL, expected 0x68
+IMU : SPI failure?^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : Searching for calibration file /home/debian/chalmersbike/sensors/Acc_Cali.txt
+IMU : Waiting for calibration data
+IMU : Gyroscope calibration finished
+IMU : Accelerometer not calibrated, using 0.03115 as roll angle offset
+
+GPS : GPS initialized, obtained initial latitude and longitude
+Emergency stop pressed, the experiment will be aborted if it is not released now
+Press ENTER to continue^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ [K[A(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s[K[A[A(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s[K[A[A(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s[K[A[A(chalmersbike) debian@beagglebone:~/chalmersbike$ pyython easystart.py -s

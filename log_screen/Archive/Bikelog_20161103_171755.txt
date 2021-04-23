@@ -1,0 +1,9 @@
+Script started on Thu 03 Nov 2016 05:17:55 PM UTC
+^[[AP8_38 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+Pin configuration complete
+(chalmersbike) debian@beagglebone:~/chalmersbike$ suudo shutdown -h nowexit

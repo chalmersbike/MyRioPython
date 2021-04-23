@@ -1,0 +1,64 @@
+Script started on Thu 03 Nov 2016 05:17:45 PM UTC
+P8_38 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+Pin configuration complete
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git add *
+The following paths are ignored by one of your .gitignore files:
+All_in_1Test.pyc
+bike.pyc
+constants.pyc
+controller.pyc
+param.pyc
+param_blackbike.pyc
+record_path_latlon.pyc
+utils.pyc
+Use -f if you really want to add them.
+git commit -m '(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git commit -m ''A'd'd'e' 'd'o'p't'i'o'n' '[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'd' 'o'p't'i'o'n' 'fo'[1P'[1P't'o' 'g'o' 'i'n't'o' 'a' 'c'i'r'c'l'e' 'o'r' 'U'-'tu'r'n' 'a'n'd' 'b'a'c'k' 't'o' 's't'a'r't' 'a'f't'e'r' 'e'n' 'o'f' 'p'[1P'r'e'f'e'r'e'n'c'e' 'pa't'h'
+[bothBikes 397f1ae] Added option to go into a circle or U-turn and back to start after en of reference path
+ Committer: Mr. Black with Mrs. BBBlack <debian@beaglebone.localdomain>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 25 files changed, 70160 insertions(+), 25 deletions(-)
+ create mode 100644 Tests_Lukas/20201120-175332-SensorTest_Lukas_SteeringMotor.csv
+ create mode 100644 Tests_Lukas/20201120-175446-SensorTest_Lukas_SteeringMotor.csv
+ create mode 100644 Tests_Lukas/20201120-175528-SensorTest_Lukas_SteeringMotor.csv
+ create mode 100644 Tests_Lukas/20201120-175543-SensorTest_Lukas_SteeringMotor.csv
+ create mode 100644 Tests_Lukas/20201120-175619-SensorTest_Lukas_SteeringMotor.csv
+ create mode 100644 Tests_Lukas/20201120-180835-SensorTest_Lukas_Velocity_Motor.csv
+ create mode 100644 Tests_Lukas/20201120-181123-SensorTest_Lukas_Velocity_Motor.csv
+ create mode 100644 Tests_Lukas/20201120-181308-SensorTest_Lukas_Velocity_Motor.csv
+ create mode 100644 Tests_Lukas/20201120-181408-SensorTest_Lukas_Velocity_Motor.csv
+ create mode 100644 paths/path_20201120-155357.csv
+ create mode 100644 paths/path_20201120-164041.csv
+ create mode 100644 paths/path_20201120-164254.csv
+ create mode 100644 paths/path_20201120-164507.csv
+ create mode 100644 paths/path_20201120-164604.csv
+ create mode 100644 paths/path_20201120-164757.csv
+ create mode 100644 paths/path_20201120-164931.csv
+ create mode 100644 paths/path_20201122-124154.csv
+ create mode 100644 paths/path_20201122-142315.csv
+ create mode 100644 paths/path_20201123-102358.csv
+ create mode 100644 paths/path_20201123-105434.csv
+ create mode 100644 testing/gps/20201120-173142-SensorTest_Lukas_GPS.csv
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ git push
+Counting objects: 31, done.
+Compressing objects:   3% (1/31)   Compressing objects:   6% (2/31)   Compressing objects:   9% (3/31)   Compressing objects:  12% (4/31)   Compressing objects:  16% (5/31)   Compressing objects:  19% (6/31)   Compressing objects:  22% (7/31)   Compressing objects:  25% (8/31)   Compressing objects:  29% (9/31)   Compressing objects:  32% (10/31)   Compressing objects:  35% (11/31)   Compressing objects:  38% (12/31)   Compressing objects:  41% (13/31)   Compressing objects:  45% (14/31)   Compressing objects:  48% (15/31)   Compressing objects:  51% (16/31)   Compressing objects:  54% (17/31)   Compressing objects:  58% (18/31)   Compressing objects:  61% (19/31)   Compressing objects:  64% (20/31)   Compressing objects:  67% (21/31)   Compressing objects:  70% (22/31)   Compressing objects:  74% (23/31)   Compressing objects:  77% (24/31)   Compressing objects:  80% (25/31)   Compressing objects:  83% (26/31)   Compressing objects:  87% (27/31)   Compressing objects:  90% (28/31)   Compressing objects:  93% (29/31)   Compressing objects:  96% (30/31)   Compressing objects: 100% (31/31)   Compressing objects: 100% (31/31), done.
+Writing objects:   3% (1/31)   Writing objects:   6% (2/31)   Writing objects:   9% (3/31)   Writing objects:  12% (4/31)   Writing objects:  16% (5/31)   Writing objects:  19% (6/31)   Writing objects:  22% (7/31)   Writing objects:  25% (8/31)   Writing objects:  29% (9/31)   Writing objects:  32% (10/31)   Writing objects:  35% (11/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  38% (12/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  41% (13/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  45% (14/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  48% (15/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  51% (16/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  54% (17/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  58% (18/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  61% (19/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  64% (20/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  67% (21/31), 192.00 KiB | 356.00 KiB/s   Writing objects:  70% (22/31), 464.00 KiB | 294.00 KiB/s   Writing objects:  70% (22/31), 752.00 KiB | 325.00 KiB/s   Writing objects:  74% (23/31), 752.00 KiB | 325.00 KiB/s   Writing objects:  74% (23/31), 1.01 MiB | 301.00 KiB/s   Writing objects:  77% (24/31), 1.01 MiB | 301.00 KiB/s   Writing objects:  77% (24/31), 1.48 MiB | 347.00 KiB/s   Writing objects:  80% (25/31), 1.48 MiB | 347.00 KiB/s   Writing objects:  80% (25/31), 1.79 MiB | 357.00 KiB/s   Writing objects:  83% (26/31), 1.79 MiB | 357.00 KiB/s   Writing objects:  87% (27/31), 1.79 MiB | 357.00 KiB/s   Writing objects:  90% (28/31), 1.79 MiB | 357.00 KiB/s   Writing objects:  93% (29/31), 1.79 MiB | 357.00 KiB/s   Writing objects:  96% (30/31), 1.79 MiB | 357.00 KiB/s   Writing objects: 100% (31/31), 1.79 MiB | 357.00 KiB/s   Writing objects: 100% (31/31), 2.20 MiB | 357.00 KiB/s, done.
+Total 31 (delta 10), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/10)[Kremote: Resolving deltas:  10% (1/10)[Kremote: Resolving deltas:  20% (2/10)[Kremote: Resolving deltas:  30% (3/10)[Kremote: Resolving deltas:  40% (4/10)[Kremote: Resolving deltas:  50% (5/10)[Kremote: Resolving deltas:  60% (6/10)[Kremote: Resolving deltas:  70% (7/10)[Kremote: Resolving deltas:  80% (8/10)[Kremote: Resolving deltas:  90% (9/10)[Kremote: Resolving deltas: 100% (10/10)[Kremote: Resolving deltas: 100% (10/10), completed with 10 local objects.[K
+To github.com:chalmersbike/BBBlue.git
+   f7bef69..397f1ae  bothBikes -> bothBikes
+(chalmersbike) ]0;debian@beaglebone: ~/chalmersbike[01;32mdebian@beaglebone[00m:[01;34m~/chalmersbike[00m$ sudo shutdo[K[K[K[K[K[K[K[K[K[K[K

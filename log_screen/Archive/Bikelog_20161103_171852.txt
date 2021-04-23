@@ -1,0 +1,694 @@
+Script started on Thu 03 Nov 2016 05:18:52 PM UTC
+P8_38 pinmux file not found!
+psudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_38_pinmux/state
+P8_37 pinmux file not found!
+sudo: no askpass program specified, try setting SUDO_ASKPASS
+Cannot write pinmux file: /sys/devices/platform/ocp/ocp*P8_37_pinmux/state
+ythoPin configuration complete
+(chalmersbike) debian@beaglebone:~/chalmersbike$ python easudo shutdown nowpython easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : Searching for calibration file /home/debian/chalmersbike/sensors/Acc_Cali.txt
+IMU : Waiting for calibration data
+IMU : Gyroscope calibration finished
+IMU : Accelerometer not calibrated, using 0.03115 as roll angle offset
+
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beaglebone:~/chalmersbike$ python easystart.py -s
+Starting Bike with controller ACTIVE
+
+IMU : Gyro range : 245 deg/s ; Gyro sensitivity : 0.008750 (deg/s)/LSB ; Gyro ODR : 952.0 Hz
+IMU : Accel range : 2 g ; Accel sensitivity : 0.000061 g/LSB ; Accel ODR : 952.0 Hz
+IMU : Searching for calibration file /home/debian/chalmersbike/sensors/Acc_Cali.txt
+IMU : Waiting for calibration data
+IMU : Gyroscope calibration finished
+IMU : Accelerometer not calibrated, using 0.03115 as roll angle offset
+
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+GPS : No available Satellites, automatically set longitude and latitude to be ZERO ; Wait for a while or CHANGE your POSITION
+^C
+ Error detected by easystart program, all the control signals terminated...
+<type 'exceptions.ValueError'>
+(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ python easytest.py 
+Testing the Bike
+Press the EStop and Enter, test the emergency stop is detectable!
+Estop detected, please reset it if you want to test the motors
+Press ENTER or #sample to start hallsensor test,rotate the rear wheel for the reading!10000
+Time=0.001697	 Vel = 0.000000
+
+Time=0.502975	 Vel = 0.000000
+
+Time=1.004063	 Vel = 0.000000
+
+Time=1.505154	 Vel = 0.000000
+
+Time=2.006249	 Vel = 0.000000
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=2.507335	 Vel = 0.000000
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=3.008424	 Vel = 1.054851
+
+Time=3.509486	 Vel = 1.054851
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=4.010574	 Vel = 0.865005
+
+Time=4.511723	 Vel = 0.865005
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=5.012814	 Vel = 0.000000
+
+Time=5.513903	 Vel = 0.000000
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=6.014993	 Vel = 0.000000
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=6.516084	 Vel = 7.092289
+
+Time=7.017170	 Vel = 7.092289
+
+Time=7.518255	 Vel = 0.000000
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=8.019349	 Vel = 0.000000
+
+Time=8.520507	 Vel = 0.000000
+
+Time=9.021596	 Vel = 0.000000
+
+Time=9.522689	 Vel = 0.000000
+
+Time=10.023782	 Vel = 0.000000
+
+Time=10.525238	 Vel = 0.000000
+
+Time=11.026328	 Vel = 0.000000
+
+Time=11.527420	 Vel = 0.000000
+
+Time=12.028576	 Vel = 0.000000
+
+Time=12.529666	 Vel = 0.000000
+
+Time=13.030734	 Vel = 0.000000
+
+Time=13.531828	 Vel = 0.000000
+
+Time=14.032918	 Vel = 0.000000
+
+Time=14.533980	 Vel = 0.000000
+
+Time=15.035050	 Vel = 0.000000
+
+Time=15.535779	 Vel = 0.000000
+
+Time=16.036923	 Vel = 0.000000
+
+Time=16.538011	 Vel = 0.000000
+
+Time=17.039101	 Vel = 0.000000
+
+Time=17.539977	 Vel = 0.000000
+
+Time=18.041023	 Vel = 0.000000
+
+Time=18.542115	 Vel = 0.000000
+
+Time=19.043205	 Vel = 0.000000
+
+Time=19.544025	 Vel = 0.000000
+
+Time=20.045113	 Vel = 0.000000
+
+Time=20.546202	 Vel = 0.000000
+
+Time=21.047290	 Vel = 0.000000
+
+Time=21.548377	 Vel = 0.000000
+
+Time=22.049440	 Vel = 0.000000
+
+Time=22.550534	 Vel = 0.000000
+
+Time=23.051693	 Vel = 0.000000
+
+Time=23.552780	 Vel = 0.000000
+
+Time=24.053844	 Vel = 0.000000
+
+Time=24.555082	 Vel = 0.000000
+
+Time=25.056169	 Vel = 0.000000
+
+Time=25.557259	 Vel = 0.000000
+
+Time=26.058349	 Vel = 0.000000
+
+Time=26.559440	 Vel = 0.000000
+
+Time=27.060605	 Vel = 0.000000
+
+Time=27.561695	 Vel = 0.000000
+
+Time=28.062785	 Vel = 0.000000
+
+Time=28.563873	 Vel = 0.000000
+
+Time=29.064960	 Vel = 0.000000
+
+Time=29.566049	 Vel = 0.000000
+
+Time=30.067140	 Vel = 0.000000
+
+Time=30.568229	 Vel = 0.000000
+
+Time=31.069319	 Vel = 0.000000
+
+Time=31.570408	 Vel = 0.000000
+
+Time=32.071499	 Vel = 0.000000
+
+Time=32.572668	 Vel = 0.000000
+
+Time=33.073756	 Vel = 0.000000
+
+Time=33.575311	 Vel = 0.000000
+
+Time=34.076379	 Vel = 0.000000
+
+Time=34.577469	 Vel = 0.000000
+
+Time=35.078558	 Vel = 0.000000
+
+Time=35.579714	 Vel = 0.000000
+
+Time=36.080799	 Vel = 0.000000
+
+Time=36.581863	 Vel = 0.000000
+
+Time=37.082929	 Vel = 0.000000
+
+Time=37.584019	 Vel = 0.000000
+
+Time=38.085092	 Vel = 0.000000
+
+Time=38.586156	 Vel = 0.000000
+
+Time=39.087246	 Vel = 0.000000
+
+Time=39.588335	 Vel = 0.000000
+
+Time=40.089425	 Vel = 0.000000
+
+Time=40.590514	 Vel = 0.000000
+
+Time=41.091576	 Vel = 0.000000
+
+Time=41.592749	 Vel = 0.000000
+
+Time=42.093839	 Vel = 0.000000
+
+Time=42.594927	 Vel = 0.000000
+
+Time=43.095843	 Vel = 0.000000
+
+Time=43.597050	 Vel = 0.000000
+
+Time=44.098141	 Vel = 0.000000
+
+Time=44.599231	 Vel = 0.000000
+
+Time=45.100323	 Vel = 0.000000
+
+Time=45.601412	 Vel = 0.000000
+
+Time=46.102502	 Vel = 0.000000
+
+Time=46.603591	 Vel = 0.000000
+
+Time=47.104757	 Vel = 0.000000
+
+Time=47.605843	 Vel = 0.000000
+
+Time=48.106904	 Vel = 0.000000
+
+Time=48.608278	 Vel = 0.000000
+
+Time=49.109247	 Vel = 0.000000
+
+Time=49.610346	 Vel = 0.000000
+
+Time=50.111410	 Vel = 0.000000
+
+Time=50.612593	 Vel = 0.000000
+
+Time=51.113486	 Vel = 0.000000
+
+Time=51.614576	 Vel = 0.000000
+
+Time=52.115729	 Vel = 0.000000
+
+Time=52.616816	 Vel = 0.000000
+
+Time=53.118187	 Vel = 0.000000
+
+Time=53.619271	 Vel = 0.000000
+
+Time=54.120359	 Vel = 0.000000
+
+Time=54.621449	 Vel = 0.000000
+
+Time=55.122498	 Vel = 0.000000
+
+Time=55.623563	 Vel = 0.000000
+
+Time=56.124749	 Vel = 0.000000
+
+Time=56.625841	 Vel = 0.000000
+
+Time=57.126906	 Vel = 0.000000
+
+Time=57.627997	 Vel = 0.000000
+
+Time=58.129091	 Vel = 0.000000
+
+Time=58.630179	 Vel = 0.000000
+
+Time=59.131269	 Vel = 0.000000
+
+Time=59.632345	 Vel = 0.000000
+
+Time=60.133437	 Vel = 0.000000
+
+Time=60.634527	 Vel = 0.000000
+
+Time=61.135685	 Vel = 0.000000
+
+Time=61.636771	 Vel = 0.000000
+
+Time=62.137836	 Vel = 0.000000
+
+Time=62.638928	 Vel = 0.000000
+
+Time=63.140017	 Vel = 0.000000
+
+Time=63.641108	 Vel = 0.000000
+
+Time=64.142200	 Vel = 0.000000
+
+Time=64.643248	 Vel = 0.000000
+
+Time=65.144338	 Vel = 0.000000
+
+Time=65.645433	 Vel = 0.000000
+
+Time=66.146518	 Vel = 0.000000
+
+Time=66.647570	 Vel = 0.000000
+
+Time=67.148746	 Vel = 0.000000
+
+Time=67.649814	 Vel = 0.000000
+
+Time=68.150633	 Vel = 0.000000
+
+Time=68.651794	 Vel = 0.000000
+
+Time=69.152877	 Vel = 0.000000
+
+Time=69.653969	 Vel = 0.000000
+
+Time=70.155058	 Vel = 0.000000
+
+Time=70.656148	 Vel = 0.000000
+
+Time=71.157235	 Vel = 0.000000
+
+Time=71.658326	 Vel = 0.000000
+
+Time=72.159414	 Vel = 0.000000
+
+Time=72.660571	 Vel = 0.000000
+
+Time=73.161664	 Vel = 0.000000
+
+Time=73.662751	 Vel = 0.000000
+
+Time=74.163895	 Vel = 0.000000
+
+Time=74.664964	 Vel = 0.000000
+
+Time=75.166053	 Vel = 0.000000
+
+Time=75.667117	 Vel = 0.000000
+
+Time=76.168208	 Vel = 0.000000
+
+Time=76.669299	 Vel = 0.000000
+
+Time=77.170389	 Vel = 0.000000
+
+Time=77.671479	 Vel = 0.000000
+
+Time=78.172644	 Vel = 0.000000
+
+Time=78.673711	 Vel = 0.000000
+
+Time=79.174802	 Vel = 0.000000
+
+Time=79.675893	 Vel = 0.000000
+
+Time=80.176980	 Vel = 0.000000
+
+Time=80.678085	 Vel = 0.000000
+
+Time=81.179169	 Vel = 0.000000
+
+Time=81.680260	 Vel = 0.000000
+
+Time=82.181347	 Vel = 0.000000
+
+Time=82.682438	 Vel = 0.000000
+
+Time=83.183502	 Vel = 0.000000
+
+Time=83.684479	 Vel = 0.000000
+
+Time=84.185554	 Vel = 0.000000
+
+Time=84.686645	 Vel = 0.000000
+
+Time=85.187776	 Vel = 0.000000
+
+Time=85.689001	 Vel = 0.000000
+
+Time=86.190089	 Vel = 0.000000
+
+Time=86.691177	 Vel = 0.000000
+
+Time=87.192267	 Vel = 0.000000
+
+Time=87.693358	 Vel = 0.000000
+
+Time=88.194251	 Vel = 0.000000
+
+Time=88.695178	 Vel = 0.000000
+
+Time=89.196249	 Vel = 0.000000
+
+Time=89.697336	 Vel = 0.000000
+
+Time=90.198383	 Vel = 0.000000
+
+Time=90.699476	 Vel = 0.000000
+
+Time=91.200464	 Vel = 0.000000
+
+Time=91.701537	 Vel = 0.000000
+
+Time=92.202628	 Vel = 0.000000
+
+Time=92.703765	 Vel = 0.000000
+
+Time=93.204852	 Vel = 0.000000
+
+Time=93.705923	 Vel = 0.000000
+
+Time=94.207010	 Vel = 0.000000
+
+Time=94.707791	 Vel = 0.000000
+
+Time=95.208874	 Vel = 0.000000
+
+Time=95.709963	 Vel = 0.000000
+
+Time=96.211052	 Vel = 0.000000
+
+Time=96.712142	 Vel = 0.000000
+
+Time=97.213234	 Vel = 0.000000
+
+Time=97.714323	 Vel = 0.000000
+
+Time=98.215458	 Vel = 0.000000
+
+Time=98.716622	 Vel = 0.000000
+
+Time=99.217685	 Vel = 0.000000
+
+Time=99.718776	 Vel = 0.000000
+
+Time=100.220146	 Vel = 0.000000
+
+Time=100.721211	 Vel = 0.000000
+
+Time=101.222280	 Vel = 0.000000
+
+Time=101.723340	 Vel = 0.000000
+
+Time=102.224778	 Vel = 0.000000
+
+Time=102.725867	 Vel = 0.000000
+
+Time=103.226933	 Vel = 0.000000
+
+Time=103.728029	 Vel = 0.000000
+
+Time=104.229118	 Vel = 0.000000
+
+Time=104.730460	 Vel = 0.000000
+
+Time=105.231509	 Vel = 0.000000
+
+Time=105.732514	 Vel = 0.000000
+
+Time=106.233597	 Vel = 0.000000
+
+Time=106.734694	 Vel = 0.000000
+
+Time=107.235869	 Vel = 0.000000
+
+Time=107.736944	 Vel = 0.000000
+
+Time=108.238035	 Vel = 0.000000
+
+Time=108.739296	 Vel = 0.000000
+
+Time=109.240673	 Vel = 0.000000
+
+Time=109.741763	 Vel = 0.000000
+
+Time=110.242853	 Vel = 0.000000
+
+Time=110.743946	 Vel = 0.000000
+
+Time=111.245034	 Vel = 0.000000
+
+Time=111.746098	 Vel = 0.000000
+
+Time=112.247188	 Vel = 0.000000
+
+Time=112.748279	 Vel = 0.000000
+
+Time=113.249369	 Vel = 0.000000
+
+Time=113.750737	 Vel = 0.000000
+
+Time=114.252192	 Vel = 0.000000
+
+Time=114.753221	 Vel = 0.000000
+
+Time=115.254310	 Vel = 0.000000
+
+Time=115.755402	 Vel = 0.000000
+
+Time=116.256566	 Vel = 0.000000
+
+Time=116.757655	 Vel = 0.000000
+
+Time=117.258743	 Vel = 0.000000
+
+Time=117.759834	 Vel = 0.000000
+
+Time=118.260922	 Vel = 0.000000
+
+Time=118.762014	 Vel = 0.000000
+
+Time=119.263076	 Vel = 0.000000
+
+Time=119.764742	 Vel = 0.000000
+
+Time=120.265834	 Vel = 0.000000
+
+Time=120.766900	 Vel = 0.000000
+
+Time=121.267990	 Vel = 0.000000
+
+Time=121.769080	 Vel = 0.000000
+
+Time=122.270149	 Vel = 0.000000
+
+Time=122.771212	 Vel = 0.000000
+
+Time=123.272302	 Vel = 0.000000
+
+Time=123.774281	 Vel = 0.000000
+
+Time=124.275351	 Vel = 0.000000
+
+Time=124.776506	 Vel = 0.000000
+
+Time=125.277568	 Vel = 0.000000
+
+Time=125.778661	 Vel = 0.000000
+
+Time=126.279753	 Vel = 0.000000
+
+Time=126.780638	 Vel = 0.000000
+
+Time=127.281541	 Vel = 0.000000
+
+Time=127.782636	 Vel = 0.000000
+
+Time=128.283776	 Vel = 0.000000
+
+Time=128.784867	 Vel = 0.000000
+
+Time=129.285954	 Vel = 0.000000
+
+Time=129.787046	 Vel = 0.000000
+
+Time=130.287749	 Vel = 0.000000
+
+Time=130.788830	 Vel = 0.000000
+
+Time=131.289922	 Vel = 0.000000
+
+Time=131.791010	 Vel = 0.000000
+
+Time=132.291960	 Vel = 0.000000
+
+Time=132.793051	 Vel = 0.000000
+
+Time=133.294141	 Vel = 0.000000
+
+Time=133.795229	 Vel = 0.000000
+
+Time=134.296320	 Vel = 0.000000
+
+Time=134.797411	 Vel = 0.000000
+
+Time=135.298502	 Vel = 0.000000
+
+Time=135.799570	 Vel = 0.000000
+
+Time=136.300742	 Vel = 0.000000
+
+Time=136.801834	 Vel = 0.000000
+
+Time=137.302894	 Vel = 0.000000
+
+Time=137.803986	 Vel = 0.000000
+
+Time=138.305034	 Vel = 0.000000
+
+Time=138.806100	 Vel = 0.000000
+
+Time=139.307189	 Vel = 0.000000
+
+Time=139.808280	 Vel = 0.000000
+
+Time=140.309370	 Vel = 0.000000
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=140.810461	 Vel = 0.000000
+
+Time=141.311461	 Vel = 0.000000
+
+Time=141.812592	 Vel = 0.000000
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=142.313683	 Vel = 6.126674
+
+Time=142.814769	 Vel = 6.126674
+
+Time=143.315857	 Vel = 0.000000
+
+Time=143.816949	 Vel = 0.000000
+
+MAGNET DETECTED!I AM UPDATING THE VELOCITY BY CALCULATING THE TIME INTERVAL
+Time=144.318039	 Vel = 0.000000
+
+Time=144.819128	 Vel = 0.000000
+
+Time=145.319785	 Vel = 0.000000
+
+Time=145.820869	 Vel = 0.000000
+
+Time=146.321932	 Vel = 0.000000
+
+Time=146.823022	 Vel = 0.000000
+
+^CTraceback (most recent call last):
+  File "easytest.py", line 4, in <module>
+    test = Test()
+  File "/home/debian/chalmersbike/All_in_1Test.py", line 35, in __init__
+    time.sleep(0.5)
+KeyboardInterrupt
+(chalmersbike) debian@beaglebone:~/chalmersbike$ [K(chalmersbike) debian@beaglebone:~/chalmersbike$ exit
