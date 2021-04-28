@@ -1595,9 +1595,9 @@ class Controller(object):
             path_file = self.path_file_arg
 
         if path_tracking:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , path_file , param_hexdump , param_bike_hexdump])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , self.reverse , self.straight , self.rollref_file_arg , self.steeringdist_file_arg , path_file , param_hexdump , param_bike_hexdump])
         else:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , path_file , param_hexdump , param_bike_hexdump])
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , self.reverse , self.straight , self.rollref_file_arg , self.steeringdist_file_arg , path_file , param_hexdump , param_bike_hexdump])
 
         self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'FilteredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'imu_read_timing', 'SteerMotorCurrent']
