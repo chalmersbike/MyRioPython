@@ -111,9 +111,9 @@ class Controller(object):
             try:
                 if self.path_file_arg == 'newest':
                     list_of_files = glob.glob('./paths/*.csv')
-                    latest_file = max(list_of_files, key=os.path.getctime)
-                    print("Loading newest path %s ..." % (latest_file))
-                    self.path_data = np.genfromtxt(latest_file, delimiter=",", skip_header=1)
+                    self.latest_file = max(list_of_files, key=os.path.getctime)
+                    print("Loading newest path %s ..." % (self.latest_file))
+                    self.path_data = np.genfromtxt(self.latest_file, delimiter=",", skip_header=1)
                 else:
                     print("Loading path %s ..." % (self.path_file_arg))
                     # self.path_data = np.genfromtxt('paths/' + self.path_file_arg, delimiter=",", skip_header=1)
@@ -1589,10 +1589,15 @@ class Controller(object):
         param_hexdump = codecs.encode(param_file, 'base64')
         param_bike_hexdump = codecs.encode(param_bike_file, 'base64')
 
-        if path_tracking:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , param_hexdump , param_bike_hexdump])
+        if self.path_file_arg == 'newest':
+            path_file = self.latest_file
         else:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , param_hexdump , param_bike_hexdump])
+            path_file = self.path_file_arg
+
+        if path_tracking:
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , path_file , param_hexdump , param_bike_hexdump])
+        else:
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , path_file , param_hexdump , param_bike_hexdump])
 
         self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'FilteredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'imu_read_timing', 'SteerMotorCurrent']
