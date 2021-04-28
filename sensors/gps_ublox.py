@@ -144,25 +144,6 @@ class GPS(object):
             print('GPS : GPS initialized, obtained initial latitude and longitude')
         print('GPS : GPS initialized, obtained initial latitude and longitude')
 
-        # Initialize NTRIP connection
-        if ntrip_correction:
-            print("GPS : Using NTRIP to improve GPS accuracy")
-
-            # Choose the DGPS data source mode
-            if gps_DPGSDataSourceMode == 'RTCM':
-                self.ser_gps.write(PMTK_API_SET_DGPS_MODE_RTCM + "\r\n")  # turn on RTCM DGPS data source mode
-            elif gps_typeOutputData == 'WAAS':
-                self.ser_gps.write(PMTK_API_SET_DGPS_MODE_WAAS + "\r\n")  # turn on WAAS DGPS data source mode
-            else:
-                print("GPS : Chosen DGPS data source mode is not valid : %s. Choosing RTCM instead" % (gps_typeOutputData))
-                self.ser_gps.write(PMTK_API_SET_DGPS_MODE_RTCM + "\r\n")  # turn on RTCM DGPS data source mode
-
-            self.ntripclient = NtripClient(user=ntrip_username+':'+ntrip_password, caster=ntrip_caster_address, port=ntrip_port,
-
-                                      mountpoint=ntrip_mountpoint, verbose=True, lat=lat_ini, lon=lon_ini, height=12) # Average elevation in Gothenburg is 12m, some NMEA sentences do not carry elevation so it is hard coded here
-        else:
-            self.ser_gps.write((PMTK_API_SET_DGPS_MODE_OFF + "\r\n").encode('utf-8'))  # turn on RTCM DGPS data source mode
-
     def get_position(self):
         lat, lon = self.get_latlon()
         if self.found_satellite == 1:
@@ -175,8 +156,6 @@ class GPS(object):
         return self.dx, self.dy, lat, lon,self.status, self.utc
 
     def get_latlon(self):
-        if ntrip_correction:
-            self.ntrip_data = self.ntripclient.readData()
 
         # readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
 
@@ -233,6 +212,9 @@ class GPS(object):
         #
         #     line = line[0].split(",", 19) # Split comma-separated values
         # return line
+
+    def write_ntrip(self,ntrip_correction_data):
+        self.ser_gps.write(ntrip_correction_data)
 
     def process_data(self,line):
         if line[0] == '$GPGGA' or line[0] == '$GNGGA':

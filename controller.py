@@ -37,22 +37,17 @@ class Controller(object):
         # Load data from previous experiment if simulating to debug the code
         if self.simulate_file != '':
             print("Loading data from experiment %s ..." % (self.simulate_file))
-            # # self.simulate_data = np.genfromtxt('ExpData_blackbike/' + self.simulate_file, delimiter=",", skip_header=2)
             # self.simulate_data = np.genfromtxt(self.simulate_file,
             #     names=True,  # If `names` is True, the field names are read from the first valid line
             #     delimiter=",",  # tab separated values
             #     skip_header = 1, # Skip first line of experiment description
-            #     dtype=None)  # guess the dtype of each column
+            #     dtype=None,  # guess the dtype of each column
+            #     )
 
-            self.simulate_data = np.genfromtxt(("\t".join(i) for i in csv.reader(open(self.simulate_file))),
-                                          names=True,  # If `names` is True, the field names are read from the first valid line
-                                          delimiter="\t",  # tab separated values
-                                          skip_header=1,  # Skip first line of experiment description
-                                          # dtype='<U19'  # guess the dtype of each column
-                                          )
+            self.simulate_data = np.genfromtxt(("\t".join(i).encode('ascii') for i in csv.reader(open(self.simulate_file))),names=True,delimiter="\t",skip_header=1,dtype=None)
 
             self.idx_simulate_data = 0
-            self.simulate_data_RealTime = self.simulate_data['RealTime']
+            self.simulate_data_RealTime = self.simulate_data['RealTime'].astype('U13')
             self.simulate_data_Time = self.simulate_data['Time']
             self.simulate_data_CalculationTime = self.simulate_data['CalculationTime']
             self.simulate_data_MeasuredVelocity = self.simulate_data['MeasuredVelocity']
@@ -87,14 +82,17 @@ class Controller(object):
             self.simulate_data_lon_estimated = self.simulate_data['lon_estimated']
             self.simulate_data_status = self.simulate_data['status']
             self.simulate_data_NMEA_timestamp = self.simulate_data['NMEA_timestamp']
-            self.simulate_data_DirectionGains = self.simulate_data['DirectionGains']
-            self.simulate_data_LateralPositionGains = self.simulate_data['LateralPositionGains']
-            self.simulate_data_distance_travelled = self.simulate_data['distance_travelled']
-            self.simulate_data_x_ref = self.simulate_data['x_ref']
-            self.simulate_data_y_ref = self.simulate_data['y_ref']
-            self.simulate_data_heading_ref = self.simulate_data['heading_ref']
-            self.simulate_data_lateral_error = self.simulate_data['lateral_error']
-            self.simulate_data_heading_error = self.simulate_data['heading_error']
+            try:
+                self.simulate_data_DirectionGains = self.simulate_data['DirectionGains']
+                self.simulate_data_LateralPositionGains = self.simulate_data['LateralPositionGains']
+                self.simulate_data_distance_travelled = self.simulate_data['distance_travelled']
+                self.simulate_data_x_ref = self.simulate_data['x_ref']
+                self.simulate_data_y_ref = self.simulate_data['y_ref']
+                self.simulate_data_heading_ref = self.simulate_data['heading_ref']
+                self.simulate_data_lateral_error = self.simulate_data['lateral_error']
+                self.simulate_data_heading_error = self.simulate_data['heading_error']
+            except:
+                pass
 
         self.variable_init()
 
@@ -131,6 +129,7 @@ class Controller(object):
 
                     # Extract unique timestamps
                     _, indices = np.unique(self.path_data[:, -1], return_index=True)
+                    indices = indices[:-1]
                     self.path_data = self.path_data[indices,:]
 
                     # Compute XY path
@@ -161,11 +160,13 @@ class Controller(object):
 
                     # Compute heading
                     self.path_heading = np.arctan2(self.path_y[1:] - self.path_y[0:-1], (self.path_x[1:] - self.path_x[0:-1]))
+
                     self.path_heading = np.append(self.path_heading, self.path_heading[-1])
                     self.path_heading = np.unwrap(self.path_heading)
 
                 print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
-            except:
+            except Exception as e:
+                print(e)
                 print("Path file not found, setting all path references to 0 as default")
                 # self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
                 self.path_data = np.array([[0.0,0.0,0.0,0.0],[1000000.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
@@ -197,7 +198,7 @@ class Controller(object):
 
                 q2_dubins = (self.path_x[0],self.path_y[0],self.path_heading[0] - np.pi)
 
-                # self.path_dubins01 = dubins.shortest_path(q0_dubins, q1_dubins, path_end_uturn_radius)
+                self.path_dubins01 = dubins.shortest_path(q0_dubins, q1_dubins, path_end_uturn_radius)
                 if path_end_uturn_left:
                     self.path_dubins01 = dubins.path(q0_dubins, q1_dubins, path_end_uturn_radius,dubins.LSR)
                 else:
@@ -639,6 +640,7 @@ class Controller(object):
             # Sleep to match sampling time
             if self.loop_time < sample_time and self.simulate_file == '':
                 time.sleep((sample_time - self.loop_time))
+                print('Sleeping...')
 
             self.time_start_previous_loop = self.time_start_current_loop
 

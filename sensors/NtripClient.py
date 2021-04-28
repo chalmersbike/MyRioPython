@@ -43,7 +43,7 @@ class NtripClient(object):
                  headerOutput=False,
                  ):
         self.buffer=buffer
-        self.user=base64.b64encode(user)
+        self.user=base64.b64encode(user.encode())
         self.out=out
         self.port=port
         self.caster=caster
@@ -91,14 +91,14 @@ class NtripClient(object):
 
                     error_indicator = self.socket.connect_ex((self.caster, self.port))
                     self.socket.settimeout(10)
-                    self.socket.sendall(self.getMountPointString())
+                    self.socket.sendall(self.getMountPointString().encode())
                     # now = datetime.datetime.utcnow()
                     # test_str = "GET /MSM_GNSS HTTP/1.1\r\nUser-Agent: NTRIP sNTRIP/2.12.00n\r\nAuthorization: Basic Q2hhbG1lcnNFMlJUSzo4ODU1MTE=\r\n\r\n"
                     # self.socket.sendall(test_str)
 
                     while not found_header:
                         casterResponse = self.socket.recv(4096)  # All the data
-                        header_lines = casterResponse.split("\r\n")
+                        header_lines = casterResponse.decode().split("\r\n")
 
                         for line in header_lines:
                             if line == "":
@@ -125,15 +125,15 @@ class NtripClient(object):
                             elif line.find("ICY 200 OK") >= 0:
                                 # Request was valid
                                 sys.stderr.write("RECEIVED \"ICY 200 OK\" from NTRIP caster, reading correction data ...\n")
-                                self.socket.sendall(self.getGGAString())
+                                self.socket.sendall(self.getGGAString(lat,lon).encode())
                             elif line.find("HTTP/1.0 200 OK") >= 0:
                                 # Request was valid
                                 sys.stderr.write("RECEIVED \"HTTP/1.0 200 OK\" from NTRIP caster, reading correction data ...\n")
-                                self.socket.sendall(self.getGGAString())
+                                self.socket.sendall(self.getGGAString(lat,lon).encode())
                             elif line.find("HTTP/1.1 200 OK") >= 0:
                                 # Request was valid
                                 sys.stderr.write("RECEIVED \"HTTP/1.1 200 OK\" from NTRIP caster, reading correction data ...\n")
-                                self.socket.sendall(self.getGGAString())
+                                self.socket.sendall(self.getGGAString(lat,lon).encode())
 
                     if reconnectTry < maxReconnect:
                         sys.stderr.write("%s No Connection to NtripCaster.  Trying again in %i seconds\n" % (
@@ -186,7 +186,7 @@ class NtripClient(object):
         self.latMin=(lat-self.latDeg)*60
 
     def getMountPointString(self):
-        mountPointString = "GET /%s HTTP/1.1\r\nUser-Agent: %s\r\nAuthorization: Basic %s\r\n" % (self.mountpoint, useragent, self.user)
+        mountPointString = "GET /%s HTTP/1.1\r\nUser-Agent: %s\r\nAuthorization: Basic %s\r\n" % (self.mountpoint, useragent, self.user.decode())
         if self.host or self.V2:
            hostString = "Host: %s:%i\r\n" % (self.caster,self.port)
            mountPointString+=hostString
@@ -197,14 +197,16 @@ class NtripClient(object):
            print(mountPointString)
         return mountPointString
 
-    def getGGAString(self):
+    def getGGAString(self,lat,lon):
         now = datetime.datetime.utcnow()
         # ggaString= "GPGGA,%02d%02d%04.2f,%02d%011.8f,%1s,%03d%011.8f,%1s,1,05,0.19,+00400,M,%5.3f,M,," % \
         #     (now.hour,now.minute,now.second,self.latDeg,self.latMin,self.flagN,self.lonDeg,self.lonMin,self.flagE,self.height)
         ggaString = "GPGGA,%02d%02d%04.2f,5700.00000000,N,01200.00000000,E,4,10,1.0,0.000,M,0.0,M,," % (now.hour, now.minute, now.second)
+        # ggaString = "GPGGA,%02d%02d%04.2f,%5.8f,N,%5.8f,E,4,10,1.0,0.000,M,0.0,M,," % (now.hour, now.minute, now.second,lat,lon)
+        print("NTRIP GGA lat : %.8f ; lon : %.8f" % (lat,lon))
         checksum = self.calcultateCheckSum(ggaString)
         if self.verbose:
-            print ("$%s*%s\r\n" % (ggaString, checksum))
+            print("$%s*%s\r\n" % (ggaString, checksum))
         return "$%s*%s\r\n" % (ggaString, checksum)
 
     def calcultateCheckSum(self, stringToCheck):
@@ -220,7 +222,7 @@ class NtripClient(object):
             # self.out.write(data)
             if self.UDP_socket:
                 self.UDP_socket.sendto(data, ('<broadcast>', self.UDP_Port))
-                # print datetime.datetime.now()-connectTime
+                # print(datetime.datetime.now()-connectTime)
             return data
         except socket.timeout:
             if self.verbose:

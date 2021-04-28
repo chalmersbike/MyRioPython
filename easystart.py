@@ -32,7 +32,7 @@ try:
             print('\t-S\t\t\tread only first and last point of path to go in a straight line')
             print('\t-p\t\t\tselect reference path file name')
             print('\t-r\t\t\tselect reference roll file name')
-            print('\t-d\t\t\tselect steering angle disturbance file name')
+            print('\t-s\t\t\tselect steering angle disturbance file name')
             print('\t-m\t\t\tselect a previous experiment data file and run code using this data instead of sensor measured data')
             sys.exit()
         elif opt in ("-S", "--straight"):

@@ -239,8 +239,8 @@ pid_balance_sample_time = 1.0 / controller_frequency
 # PID Balance Outer Loop Controller Parameters
 pid_balance_outerloop_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 #pid_balance_outerloop_P = 0.57
-# pid_balance_outerloop_P = 1.0 # Gain tested with Peo
-pid_balance_outerloop_P = 1.3 # Gain tested with Peo
+pid_balance_outerloop_P = 1.0 # Gain tested with Peo
+# pid_balance_outerloop_P = 1.3 # Gain tested with Peo
 pid_balance_outerloop_I = 0.0
 pid_balance_outerloop_D = 0.0
 pid_balance_outerloop_sample_time = 1.0 / controller_frequency

@@ -13,7 +13,7 @@ balancing_controller_structure = 'technion'     # Choice of the balancing contro
                                                     # Technion Controller Structure : phidotref = PID(phi) ; deltadot = PID(phidot,phidotref)
                                                     # MDH Controller structure : delta = PID(phi) ; deltadot = PID(delta)
 
-initial_speed = 2                               # [m/s] Forward speed of the bike
+initial_speed = 3                               # [m/s] Forward speed of the bike
 
 controller_frequency = 100                      # [Hz]Controller frequency
 sample_time = 1.0 / controller_frequency        # [s] Sampling time
@@ -25,7 +25,7 @@ speed_up_time = 3.0                             # [s] Time to run the drive moto
 walk_time = 2.0                                 # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
 max_exceed_count = 10                           # Number of times where calculation time can exceed sampling time before aborting experiment
 
-path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
 path_tracking_structure = 'series'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
@@ -33,8 +33,8 @@ path_tracking_structure = 'series'              # 'parallel' : direction and lat
 lateralError_controller = 1                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 1                          # 1 = use heading controller ; 0 = do not use heading controller
 # path_end = ''                                   # WARNING : YOU WILL NEED TO CATCH THE BIKE OR IT MIGHT FALL  - Do nothing when we reach the end of the path
-# path_end = 'circle'                             # Go into a circle after we reach the end of the reference path
-path_end = 'uturn'                              # Do a U-turn and come back to start of path after we reach the end of the reference path
+path_end = 'circle'                             # Go into a circle after we reach the end of the reference path
+# path_end = 'uturn'                              # Do a U-turn and come back to start of path after we reach the end of the reference path
 path_end_circle_rollRef = -6                     # [deg] Constant roll reference to go into a circle after we reach the end of the reference path
 path_end_uturn_radius = 15                      # [m] Maximum turning radius of the U-turn to come back to start of path after we reach the end of the reference path
 path_end_uturn_stepSize = 1                     # [m] Step size of the path describing the U-turn to come back to start of path after we reach the end of the reference path
