@@ -16,6 +16,7 @@ from datetime import datetime
 import glob
 import os
 import dubins
+import codecs
 
 # Raise Numpy errors
 np.seterr(all = "raise")
@@ -1577,10 +1578,21 @@ class Controller(object):
         # results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
         self.writer = csv.writer(results_csv)
 
-        if path_tracking:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
+        # Create Hexdump of param files
+        param_file = open('param.py','rb').read()
+        if bike == 'blackbike':
+            param_bike_file = open('param_blackbike.py', 'rb').read()
+        elif bike == 'redbike':
+            param_bike_file = open('param_redbike.py', 'rb').read()
         else:
-            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time)])
+            param_bike_file = open('param_blackbike.py', 'rb').read()
+        param_hexdump = codecs.encode(param_file, 'base64')
+        param_bike_hexdump = codecs.encode(param_bike_file, 'base64')
+
+        if path_tracking:
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , param_hexdump , param_bike_hexdump])
+        else:
+            self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , param_hexdump , param_bike_hexdump])
 
         self.log_header_str = ['RealTime','Time', 'CalculationTime', 'MeasuredVelocity', 'FilteredVelocity', 'BalancingGainsInner', 'BalancingGainsOuter', 'Roll', 'SteeringAngle', 'RollRate',
                                'ControlInput', 'BalancingSetpoint', 'gy', 'gz', 'ax', 'ay', 'az', 'imu_read_timing', 'SteerMotorCurrent']

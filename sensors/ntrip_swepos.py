@@ -51,9 +51,14 @@ start_time = time.time()
 while 1:
     if ntrip_correction:
         print('NTRIP Data:')
+        time_read_NTRIP = time.time()
         ntrip_correction_data = ntripclient.readData()
+        time_read_NTRIP = time.time() - time_read_gps
         print(ntrip_correction_data)
+        time_write_NTRIP = time.time()
         gps.write_ntrip(ntrip_correction_data)
+        time_write_NTRIP = time.time() - time_write_NTRIP
+        print('time_read_NTRIP=%f ; time_write_NTRIP = %f' % (time_read_NTRIP,time_write_NTRIP))
 
     time_read_gps = time.time()
     gpspos = gps.get_position()
