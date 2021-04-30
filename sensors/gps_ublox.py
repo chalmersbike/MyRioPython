@@ -144,6 +144,26 @@ class GPS(object):
             print('GPS : GPS initialized, obtained initial latitude and longitude')
         print('GPS : GPS initialized, obtained initial latitude and longitude')
 
+        # Initialize NTRIP connection
+        ntrip_correction = True
+        if ntrip_correction:
+            print("GPS : Initializing NTRIP to improve GPS accuracy...")
+            self.ntripclient = NtripClient(user="ChalmersE2RTK:885511", caster="192.71.190.141", port=80, mountpoint="MSM_GNSS",
+                                      lat=self.lat_ini, lon=self.lon_ini, verbose=True)
+            print('GPS : Waiting for NTRIP corrections to be received and processed by GPS...')
+            self.write_ntrip(self.get_position())
+            while self.Mode_rmc!='R' and self.Mode_rmc!='F':
+                try:
+                    self.write_ntrip(self.get_position())
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    break
+                except:
+                    pass
+            time.sleep(3)
+            self.lat_ini, self.lon_ini = self.get_latlon()
+            print('GPS : GPS ready.')
+
     def get_position(self):
         lat, lon = self.get_latlon()
         if self.found_satellite == 1:
@@ -156,7 +176,6 @@ class GPS(object):
         return self.dx, self.dy, lat, lon,self.status, self.utc
 
     def get_latlon(self):
-
         # readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
 
         # Read through all received lines until we find the last (most recent) one
@@ -213,8 +232,18 @@ class GPS(object):
         #     line = line[0].split(",", 19) # Split comma-separated values
         # return line
 
-    def write_ntrip(self,ntrip_correction_data):
-        self.ser_gps.write(ntrip_correction_data)
+    def write_ntrip(self,gpspos):
+        # Read NTRIP corrections once every second
+        if ntrip_correction:
+            ntrip_correction_data = self.ntripclient.readData(gpspos[2], gpspos[3])
+            try:
+                if len(ntrip_correction_data) > 0:
+                    print('Received NTRIP data : %i bits' % (len(ntrip_correction_data)))
+                else:
+                    print('Received empty NTRIP data, possible data starvation or socket disconnection.')
+            except:
+                print('Received empty NTRIP data, possible data starvation or socket disconnection.')
+            self.ser_gps.write(ntrip_correction_data)
 
     def process_data(self,line):
         if line[0] == '$GPGGA' or line[0] == '$GNGGA':
@@ -288,7 +317,9 @@ class GPS(object):
             self.Course_over_Ground = rmc[8]
             self.Date = rmc[9]
             self.Magnetic_Variation = rmc[10]
-            self.Mode_rmc = rmc[11]
+            self.Magnetic_VariationEW = rmc[11]
+            self.Mode_rmc = rmc[12]
+            self.Nav_status = rmc[13]
         elif line[0] == '$GPVTG' or line[0] == '$GNVTG':
             vtg = line
             self.Course = vtg[1]

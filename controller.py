@@ -262,18 +262,38 @@ class Controller(object):
         # self.roll = self.bike.get_imu_data(0, self.steeringAngle, self.roll)[0]
         # self.roll = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)[0]
 
-        # Get experiment (if any) of the experiment
+        # Create log file and add header line
+        if not self.recordPath:
+            self.log_headerline()
+        else:
+            self.log_headerline_recordPath()
+
+        # Get description (if any) of the experiment
         if not self.recordPath:
             self.descr = input('\nType a description for the experiment if necessary. Press ENTER to start the experiment. ')
         else:
             self.descr = ''
             input('Press enter to start recording a path by walking the bike.')
 
-        # Create log file and add header line
-        if not self.recordPath:
-            self.log_headerline()
-        else:
-            self.log_headerline_recordPath()
+        # Verify that NTRIP correction is not too old
+        self.bike.gps.get_position()
+        if self.bike.gps.Mode_rmc != 'R' and self.bike.gps.Mode_rmc != 'F':
+            print('\nGPS: Waited too long before starting the experiment, NTRIP corrections have to be sent again to the GPS.')
+            print('GPS : Reconnecting NTRIP socket...')
+            # self.bike.gps.ntripclient.socket.connect_ex((self.bike.gps.ntripclient.caster, self.bike.gps.ntripclient.port))
+            self.bike.gps.ntripclient.reconnectNTRIPSocket()
+            print('GPS : Waiting for NTRIP corrections to be received and processed by GPS...')
+            self.bike.gps.write_ntrip(self.bike.gps.get_position())
+            while self.bike.gps.Mode_rmc != 'R' and self.bike.gps.Mode_rmc != 'F':
+                try:
+                    self.bike.gps.write_ntrip(self.bike.gps.get_position())
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    break
+                except:
+                    pass
+            time.sleep(3)
+            print('GPS : GPS ready.')
 
         # Wait before starting experiment
         print("")
@@ -352,6 +372,11 @@ class Controller(object):
                 if gps_use:
                     # if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01 or (((self.simulate_data_Time[self.idx_simulate_data] - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file!=''):
                     if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01:
+                        print(time.time(),self.time_ntrip)
+                        if ntrip_correction and time.time() - self.time_ntrip > 5:
+                            print('NTRIP')
+                            self.time_ntrip = time.time()
+                            self.bike.gps.write_ntrip(self.gpspos)
                         self.gps_timestamp_previous = self.gps_timestamp
 
                         # self.bike.get_gps_data()
@@ -693,6 +718,7 @@ class Controller(object):
 
         # GPS
         self.time_gps = 0.0
+        self.time_ntrip = 0.0
         self.gps_nmea_timestamp_ini = 0.0
         self.gps_nmea_timestamp = 0.0
         self.gpspos = 0.0

@@ -232,8 +232,8 @@ class NtripClient(object):
                     while data:
                         try:
                             data=self.socket.recv(4096)#(self.buffer)
-                            print('\nData:')
-                            print(data)
+                            # print('\nData:')
+                            # print(data)
                             self.out.write(data)
                             if self.UDP_socket:
                                 self.UDP_socket.sendto(data, ('<broadcast>', self.UDP_Port))
