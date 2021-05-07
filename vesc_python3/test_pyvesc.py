@@ -37,10 +37,17 @@ def run_motor_as_object():
     # print("Firmware: ", motor.get_firmware_version())
 
     # sweep servo through full range
-    for i in range(100):
-        time.sleep(0.01)
-        # motor.set_servo(i/100)
-        motor.set_rpm(i*40)
+    motor.set_rpm(2500)
+    tt_start = time.time()
+    while time.time()-tt_start<10:
+        print('Testing VESC...')
+        time.sleep(0.1)
+    # time.sleep(10)
+
+    # for i in range(100):
+    #     time.sleep(0.01)
+    # #     motor.set_servo(i/100)
+    #     motor.set_rpm(i*40)
 
     # IMPORTANT: YOU MUST STOP THE HEARTBEAT IF IT IS RUNNING BEFORE IT GOES OUT OF SCOPE. Otherwise, it will not
     #            clean-up properly.
@@ -56,6 +63,6 @@ def time_get_values():
 
 
 if __name__ == '__main__':
-    run_motor_using_with()
-    # run_motor_as_object()
+    # run_motor_using_with()
+    run_motor_as_object()
     # time_get_values()

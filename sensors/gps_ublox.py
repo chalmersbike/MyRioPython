@@ -5,6 +5,7 @@ import math
 import time
 import warnings
 from .NtripClient import NtripClient
+import pysnooper
 
 
 ########################################################################################################################
@@ -58,7 +59,7 @@ PMTK_API_SET_DGPS_MODE_WAAS = "$PMTK301,2*2E"  # turn on WAAS DGPS data source m
 ########################################################################################################################
 
 
-
+# @pysnooper.snoop()
 class GPS(object):
     def __init__(self):
         # Open the serial connection at the default baudrate of 38400

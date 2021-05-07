@@ -15,7 +15,7 @@ class DriveMotor(object):
         self.serial.open()
         if debug:
             print('Drive Motor : Serial port opened')
-        self.Time = -1 # Initialize time to -1 as a way to check that we correctly read from the controller after starting the logging
+        self.Time = -1  # Initialize time to -1 as a way to check that we correctly read from the controller after starting the logging
 
     def serial_write_character(self, character):
         if self.serial.isOpen():
@@ -29,7 +29,8 @@ class DriveMotor(object):
     def rear_set_rpm(self, rpm):
         # rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 5 -pi\n'
         # rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 9999 -pi\n' # '-s' sets the speed of the motor, '-f' sets the maximum torque/current. Setting '-f' to a very large value will allow the motor to use the maximum current possible
-        rpm_string = 'run -s ' + str(rpm).zfill(4) + ' -f 9999\n' # '-s' sets the speed of the motor, '-f' sets the maximum torque/current. Setting '-f' to a very large value will allow the motor to use the maximum current possible
+        rpm_string = 'run -s ' + str(rpm).zfill(
+            4) + ' -f 9999\n'  # '-s' sets the speed of the motor, '-f' sets the maximum torque/current. Setting '-f' to a very large value will allow the motor to use the maximum current possible
         self.serial.write(rpm_string.encode('utf-8'))
         # for character in pwm_string:
         #     self.serial_write_character(character)
@@ -37,7 +38,7 @@ class DriveMotor(object):
 
     def set_velocity(self, input_velocity):
         # self.rear_set_pwm(self._m_per_second_to_pwm(input_velocity))
-        self.rear_set_rpm(input_velocity*0.2)
+        self.rear_set_rpm(input_velocity * 0.2)
         # for GEAR 6Th the coef vel -> pwm = 0.31
         # self.rear_set_rpm(input_velocity * 0.31)
 
@@ -51,7 +52,7 @@ class DriveMotor(object):
     def startLog(self):
         self.logReady = False
         self.serial.reset_input_buffer()
-        startLog_string = "log -p " + str(1.0/driveMotor_logFrequency) + " -k\n"
+        startLog_string = "log -p " + str(1.0 / driveMotor_logFrequency) + " -k\n"
         self.serial.write(startLog_string.encode('utf-8'))
         while not self.logReady:
             self.readLog()
@@ -77,7 +78,7 @@ class DriveMotor(object):
             # Process data
             logData = [x.strip() for x in buffer.split('; ')]
             # print(logData)
-            self.process_logData(logData) # Process data
+            self.process_logData(logData)  # Process data
         except Exception as e:
             # print(e)
             pass
@@ -87,11 +88,11 @@ class DriveMotor(object):
             self.Time = float(line[0])
             self.refSpeed = float(line[1])
             self.averageRefSpeed = float(line[2])
-            self.SRefSpeed = float(line[3]) # What is that ? What does the 'S.' mean ?
+            self.SRefSpeed = float(line[3])  # What is that ? What does the 'S.' mean ?
             self.measSpeed = float(line[4])
             self.motorRevs = float(line[5])
             self.motorCurrent = float(line[6])
-            self.IntErr = float(line[7]) # What is that ?
+            self.IntErr = float(line[7])  # What is that ?
             self.maxBusCurrent = float(line[8])
             self.busCurrent = float(line[9])
             self.busVoltage = float(line[10])
