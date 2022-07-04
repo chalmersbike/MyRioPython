@@ -5,7 +5,7 @@ import math
 import time
 import warnings
 from NtripClient import NtripClient
-
+import pysnooper
 
 ########################################################################################################################
 ########################################################################################################################
@@ -58,11 +58,11 @@ PMTK_API_SET_DGPS_MODE_WAAS = "$PMTK301,2*2E"  # turn on WAAS DGPS data source m
 ########################################################################################################################
 
 
-
+# @pysnooper.snoop()
 class GPS(object):
     def __init__(self):
         # Open the serial connection at the default baudrate of 38400
-        self.ser_gps = serial.Serial(gps_port, 38400, timeout=1)
+        self.ser_gps = serial.Serial(gps_port, 230400, timeout=1)
 
         # if gps_baudrate == 115200:
         #     # Change the baud rate to 115200 bps
@@ -171,7 +171,8 @@ class GPS(object):
             self.dy = self.y - self.y0
         else:
             print(warnings.warn("GPS : No Satelite found !"))
-        return self.dx, self.dy, lat, lon,self.status, self.utc
+        return self.dx, self.dy, lat, lon,self.status, self.utc, self.Speed_over_Ground, self.Course_over_Ground, self.Date, self.Mode_rmc, self.NAV_Status, self.NS_indicator, self.EW_indicator, self.Magnetic_Variation, self.Magnetic_VariationEW
+
 
     def get_latlon(self):
         if ntrip_correction:
@@ -301,7 +302,9 @@ class GPS(object):
             self.Course_over_Ground = rmc[8]
             self.Date = rmc[9]
             self.Magnetic_Variation = rmc[10]
-            self.Mode_rmc = rmc[11]
+            self.Magnetic_VariationEW = rmc[11]
+            self.Mode_rmc = rmc[12]
+            self.NAV_Status = rmc[13]
         elif line[0] == '$GPVTG' or line[0] == '$GNVTG':
             vtg = line
             self.Course = vtg[1]
