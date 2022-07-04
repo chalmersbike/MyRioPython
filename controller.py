@@ -21,7 +21,7 @@ import codecs
 # Raise Numpy errors
 np.seterr(all = "raise")
 
-@pysnooper.snoop()
+# @pysnooper.snoop()
 class Controller(object):
     # @pysnooper.snoop()
     def __init__(self, bike, recordPath=False, reverse=False, straight=False,path_file_arg='',rollref_file_arg='',steeringdist_file_arg='',simulate_file=''):
@@ -276,24 +276,25 @@ class Controller(object):
             input('Press enter to start recording a path by walking the bike.')
 
         # Verify that NTRIP correction is not too old
-        self.bike.gps.get_position()
-        if self.bike.gps.Mode_rmc != 'R' and self.bike.gps.Mode_rmc != 'F':
-            print('\nGPS: Waited too long before starting the experiment, NTRIP corrections have to be sent again to the GPS.')
-            print('GPS : Reconnecting NTRIP socket...')
-            # self.bike.gps.ntripclient.socket.connect_ex((self.bike.gps.ntripclient.caster, self.bike.gps.ntripclient.port))
-            self.bike.gps.ntripclient.reconnectNTRIPSocket()
-            print('GPS : Waiting for NTRIP corrections to be received and processed by GPS...')
-            self.bike.gps.write_ntrip(self.bike.gps.get_position())
-            while self.bike.gps.Mode_rmc != 'R' and self.bike.gps.Mode_rmc != 'F':
-                try:
-                    self.bike.gps.write_ntrip(self.bike.gps.get_position())
-                    time.sleep(1)
-                except KeyboardInterrupt:
-                    break
-                except:
-                    pass
-            time.sleep(3)
-            print('GPS : GPS ready.')
+        if ntrip_correction:
+            self.bike.gps.get_position()
+            if self.bike.gps.Mode_rmc != 'R' and self.bike.gps.Mode_rmc != 'F':
+                print('\nGPS: Waited too long before starting the experiment, NTRIP corrections have to be sent again to the GPS.')
+                print('GPS : Reconnecting NTRIP socket...')
+                # self.bike.gps.ntripclient.socket.connect_ex((self.bike.gps.ntripclient.caster, self.bike.gps.ntripclient.port))
+                self.bike.gps.ntripclient.reconnectNTRIPSocket()
+                print('GPS : Waiting for NTRIP corrections to be received and processed by GPS...')
+                self.bike.gps.write_ntrip(self.bike.gps.get_position())
+                while self.bike.gps.Mode_rmc != 'R':# and self.bike.gps.Mode_rmc != 'F':
+                    try:
+                        self.bike.gps.write_ntrip(self.bike.gps.get_position())
+                        time.sleep(1)
+                    except KeyboardInterrupt:
+                        break
+                    except:
+                        pass
+                time.sleep(3)
+                print('GPS : GPS ready.')
 
         # Wait before starting experiment
         print("")
@@ -373,7 +374,7 @@ class Controller(object):
                     # if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01 or (((self.simulate_data_Time[self.idx_simulate_data] - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file!=''):
                     if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01:
                         print(time.time(),self.time_ntrip)
-                        if ntrip_correction and time.time() - self.time_ntrip > 5:
+                        if ntrip_correction and time.time() - self.time_ntrip > ntrip_delay:
                             print('NTRIP')
                             self.time_ntrip = time.time()
                             self.bike.gps.write_ntrip(self.gpspos)
@@ -486,9 +487,11 @@ class Controller(object):
                 #     print("GPS reading time : %f" %(time.time()-self.time_gps))
 
                 # PID Velocity Control
-                if pid_velocity_active:
-                    self.pid_velocity_control_signal = self.pid_velocity.update(self.velocity)
-                    self.bike.set_velocity(self.pid_velocity_control_signal)
+                if pid_velocity_active and self.time_count>20:
+#                   # # self.pid_velocity_control_signal = self.pid_velocity.update(self.velocity)
+#                   # # self.bike.set_velocity(self.pid_velocity_control_signal)
+                    self.bike.set_velocity(initial_speed - 0.5)
+                    # self.bike.set_velocity(initial_speed + 0.5)
 
                 # Let bike get up to speed for a few seconds before starting controllers
                 if (self.time_count < walk_time):
@@ -666,7 +669,7 @@ class Controller(object):
             # Sleep to match sampling time
             if self.loop_time < sample_time and self.simulate_file == '':
                 time.sleep((sample_time - self.loop_time))
-                print('Sleeping...')
+                # print('Sleeping...')
 
             self.time_start_previous_loop = self.time_start_current_loop
 
@@ -1615,10 +1618,13 @@ class Controller(object):
         param_hexdump = codecs.encode(param_file, 'base64')
         param_bike_hexdump = codecs.encode(param_bike_file, 'base64')
 
-        if self.path_file_arg == 'newest':
-            path_file = self.latest_file
+        if path_tracking:
+            if self.path_file_arg == 'newest':
+                path_file = self.latest_file
+            else:
+                path_file = self.path_file_arg
         else:
-            path_file = self.path_file_arg
+            path_file=''
 
         if path_tracking:
             self.writer.writerow(['Description : ' + str(self.descr) + ' ; walk_time = ' + str(walk_time) + ' ; speed_up_time = ' + str(speed_up_time) + ' ; balancing_time = ' + str(balancing_time) , self.reverse , self.straight , self.rollref_file_arg , self.steeringdist_file_arg , path_file , param_hexdump , param_bike_hexdump])
@@ -1631,7 +1637,7 @@ class Controller(object):
         if potentiometer_use:
             self.log_header_str += ['Potentiometer']
         if gps_use:
-            self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated', 'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'theta_GPS', 'theta_GPS_noUnwrap', 'latitude', 'longitude', 'lat_estimated', 'lon_estimated','status','NMEA timestamp']
+            self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated', 'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'theta_GPS', 'theta_GPS_noUnwrap', 'latitude', 'longitude', 'lat_estimated', 'lon_estimated','status','NMEA timestamp','RMC Mode']
         if laserRanger_use:
             self.log_header_str += ['laserRanger_dist1', 'laserRanger_dist2', 'laserRanger_y']
         if path_tracking:
@@ -1685,7 +1691,8 @@ class Controller(object):
                 "{0:.8f}".format(self.lat_estimated),
                 "{0:.8f}".format(self.lon_estimated),
                 self.gps_status,
-                self.gps_nmea_timestamp
+                self.gps_nmea_timestamp,
+                self.bike.gps.Mode_rmc
             ]
         if laserRanger_use:
             self.log_str += [

@@ -25,7 +25,7 @@ speed_up_time = 3.0                             # [s] Time to run the drive moto
 walk_time = 2.0                                 # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
 max_exceed_count = 10                           # Number of times where calculation time can exceed sampling time before aborting experiment
 
-path_tracking = 1                               # 1 = use path tracking ; 0 = do not use path tracking
+path_tracking = 0                               # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
 path_tracking_structure = 'series'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
@@ -50,6 +50,7 @@ potentiometer_use = 0   # 1 = use potentiometer ; 0 = do not use potentiometer
 # Choice to use GPS (for outdoors use only) or not
 gps_use = 1             # 1 = use GPS ; 0 = do not use GPS
 ntrip_correction = 1    # 1 = Use NTRIP correction to improve accuracy of GPS ; 0 = do not use NTRIP
+ntrip_delay = 5         # [s] Delay between sending NTRIP correction data to the GPS
 
 # Choice to use Laser Ranger (for indoors use on roller only) or not
 laserRanger_use = 0     # 1 = use laser rangers ; 0 = do not use laser rangers
@@ -96,14 +97,14 @@ path_file = 'newest'
 rollref_file = 'nofile'
 
 # Turn to RIGHT, T is the period
-rollref_file = 'roll_ref_StepT3_3deg.csv'
+# rollref_file = 'roll_ref_StepT3_3deg.csv'
 # rollref_file = 'roll_ref_StepT5_3deg.csv'
 
 # Turn to LEFT Deg can be 1-5;
 #rollref_file = 'roll_ref_StepT3_-3deg.csv'
 #rollref_file = 'roll_ref_StepT5_-3deg.csv'
 
-#rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
+rollref_file = 'roll_ref_0.csv'      # Name of the roll reference file with ".csv" extension.
 
 
 #rollref_file = 'roll_UrefBandStop23_MagPM4LP5.csv'

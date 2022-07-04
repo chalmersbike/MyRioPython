@@ -146,7 +146,6 @@ class GPS(object):
         print('GPS : GPS initialized, obtained initial latitude and longitude')
 
         # Initialize NTRIP connection
-        ntrip_correction = True
         if ntrip_correction:
             print("GPS : Initializing NTRIP to improve GPS accuracy...")
             self.ntripclient = NtripClient(user="ChalmersE2RTK:885511", caster="192.71.190.141", port=80, mountpoint="MSM_GNSS",

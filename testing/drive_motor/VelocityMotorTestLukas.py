@@ -27,8 +27,10 @@ class Test(object):
             exit()
         elif float(input1) >= 1 and float(input1) <= 5:
             input_velocity = float(input1)
-            input(
-                'You need to be careful on the velocity reading, if they deviate too much, maybe there is problem in gear setting, see rearmotordrive.py!')
+            try:
+                input('You need to be careful on the velocity reading, if they deviate too much, maybe there is problem in gear setting, see rearmotordrive.py!')
+            except:
+                pass
             start_time = time.time()
             self.rear_motor_velocity.set_velocity(int(input_velocity))
             time_now = start_time

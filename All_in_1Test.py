@@ -10,7 +10,7 @@ import time
 class Test(object):
     def __init__(self):
         self.safety_stop = SafetyStop()
-        input1 = raw_input('Press the EStop and Enter, test the emergency stop is detectable!')
+        input1 = input('Press the EStop and Enter, test the emergency stop is detectable!')
         ESign = self.safety_stop.button_check()
         # while not ESign:
         if not ESign:
@@ -20,7 +20,7 @@ class Test(object):
         if ESign:
             print('Estop detected, please reset it if you want to test the motors')
 
-        input1 = raw_input('Press ENTER or #sample to start hallsensor test,rotate the rear wheel for the reading!')
+        input1 = input('Press ENTER or #sample to start hallsensor test,rotate the rear wheel for the reading!')
 
         self.hall_sensor = HallSensor()
         start_time = time.time()
@@ -35,7 +35,7 @@ class Test(object):
                 time.sleep(0.5)
 
 
-        input1 = raw_input('Press ENTER to start Encoder test,rotate the handle bar for the reading!')
+        input1 = input('Press ENTER to start Encoder test,rotate the handle bar for the reading!')
         self.encoder = Encoder()
         start_time = time.time()
         print('ENCODER FREQNECY = %f \n' % (self.encoder.encoder.frequency))
@@ -50,7 +50,7 @@ class Test(object):
                 print('Time=%f\t delta = %f\n' % (time.time() - start_time, 57.29577 * self.encoder.get_angle()))
                 time.sleep(0.5)
 
-        input1 = raw_input('Press ENTER to start IMU test, move the bike body for the reading!')
+        input1 = input('Press ENTER to start IMU test, move the bike body for the reading!')
         self.imu = IMU(horizontal = False)
         #self.imu = IMU(horizontal = True)
 
@@ -67,9 +67,9 @@ class Test(object):
                 # self.bike.get_imu_data()
                 self.imudata = self.imu.get_imu_data(0,0,0)
 
-                print('Time=%g\t'% (time.time() - start_time))
+                print('Time=%4.4g\t'% (time.time() - start_time))
                 # print(self.imudata)
-                print('Phi_CompFilter=%g\tPhi_gyro_int = %g\tGyroX = %g\tGyroY = %g\tGyroZ = %g\tAx = %g\tAy = %g\tAz = %g\t' % (
+                print('Phi_CompFilter=%6.4g\tPhi_gyro_int = %6.4g\tGyroX = %6.4g\tGyroY = %6.4g\tGyroZ = %6.4g\tAx = %6.4g\tAy = %6.4g\tAz = %6.4g\t' % (
                     self.imudata[0], self.imudata[1], self.imudata[2], self.imudata[3],
                     self.imudata[4], self.imudata[5], self.imudata[6], self.imudata[7]))
 
@@ -77,17 +77,17 @@ class Test(object):
 
 
 
-        input1 = raw_input('If all the tests are passed, then you may check the rear motor and steering motor. HOWEVER THEY ARE RISKY! PRESS ENTER TO CONTINUE')
+        input1 = input('If all the tests are passed, then you may check the rear motor and steering motor. HOWEVER THEY ARE RISKY! PRESS ENTER TO CONTINUE')
         if not input1:
             # print 'Now we are going to test the rear motor, the gear is at LEVEL %i \t' %  RearMotorDrive().GearNr
-            input1 = raw_input('enter a velocity between 1-3.9, the test will last 30 secs')
+            input1 = input('enter a velocity between 1-3.9, the test will last 30 secs')
             self.rear_motor = DriveMotor()
             if not input1:
                 print('Press enter to exit')
                 exit()
             elif float(input1) >1 and  float(input1) < 10:
                 input_velocity = float(input1)
-                raw_input('You need to be careful on the velocity reading, if they deviate too much, maybe there is problem in gear setting, see rearmotor.py!')
+                input('You need to be careful on the velocity reading, if they deviate too much, maybe there is problem in gear setting, see rearmotor.py!')
                 start_time = time.time()
                 self.rear_motor.set_velocity(input_velocity)
                 time_now = start_time
