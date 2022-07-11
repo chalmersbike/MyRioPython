@@ -15,10 +15,11 @@ GPIO.setup(INPUT_PORT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 class Test(object):
     def __init__(self):
         # Test GPS
-        number_samples_GPS = 6000
+        number_samples_GPS = 288000
         #raw_input('Input the number of samples of press ENTER for 50 samples for the GPS test, move the GPS for the reading! ')
         gps = GPS()
         start_time = time.time()
+
         if number_samples_GPS is not 0:
         # Setup CSV file
             results_gps = open(sys.path[0]+'/ExpData/%s-RTKGPS-RECORD.csv' % timestr, 'wb')
@@ -31,6 +32,9 @@ class Test(object):
             steer_Switch = GPIO.input(INPUT_PORT)
             read_start = time.time()
             gpspos = gps.get_position()
+            while abs(gpspos[2]) < 50 or abs(gpspos[2]) > 60:
+                gpspos = gps.get_position()
+
             print(gpspos)
             writer_gps.writerow((time.time() - start_time, gpspos[0], gpspos[1], gpspos[2], gpspos[3], gpspos[4], gpspos[5],
                                  gpspos[6], gpspos[7], gpspos[8], gpspos[9], gpspos[10], gpspos[11], gpspos[12],

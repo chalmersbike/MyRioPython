@@ -134,6 +134,7 @@ class GPS(object):
         self.y0 = 0
         self.lat_ini = 0.0
         self.lon_ini = 0.0
+        self.ntrip_ini_flag = False
         while ((self.latitude <= 53) or (self.latitude >= 70) or (self.longitude <= 8) or (self.longitude >= 26)): # The location should be in SWEDEN
             self.lat_ini, self.lon_ini = self.get_latlon()
         self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
@@ -158,7 +159,9 @@ class GPS(object):
 
             self.ntripclient = NtripClient(user=ntrip_username+':'+ntrip_password, caster=ntrip_caster_address, port=ntrip_port,
 
-                                      mountpoint=ntrip_mountpoint, verbose=True, lat=lat_ini, lon=lon_ini, height=12) # Average elevation in Gothenburg is 12m, some NMEA sentences do not carry elevation so it is hard coded here
+                                      mountpoint=ntrip_mountpoint, verbose=True, lat=self.lat_ini, lon=self.lon_ini, height=12) # Average elevation in Gothenburg is 12m, some NMEA sentences do not carry elevation so it is hard coded here
+            self.ntrip_ini_flag = True
+            self.ntrip_last_time = time.time()
         else:
             self.ser_gps.write(PMTK_API_SET_DGPS_MODE_OFF + "\r\n")  # turn on RTCM DGPS data source mode
 
@@ -175,8 +178,11 @@ class GPS(object):
 
 
     def get_latlon(self):
-        if ntrip_correction:
+        if ntrip_correction and self.ntrip_ini_flag and ((time.time()-self.ntrip_last_time) > 0.99):
             self.ntrip_data = self.ntripclient.readData()
+            self.ntrip_last_time = time.time()
+            self.ser_gps.write(self.ntrip_data)
+
 
         # readall = self.ser_gps.readline().split('\r\n')  # Read data from the GPS
 
