@@ -1,6 +1,6 @@
 from math import pi as PI
 import numpy as np
-from param import initial_speed, controller_frequency
+from param import initial_speed, controller_frequency, gainScheduling_enable
 from constants import *
 
 
@@ -232,7 +232,15 @@ speed_lookup_controllergains = [3,4,5]
 pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 #pid_balance_P = 1.57
 # pid_balance_P = 5.0 # Gain tested with Peo for vel = 4
-pid_balance_P = 4.0 # when vel = 3
+if gainScheduling_enable:
+    pid_balance_P = (-0.3255 * initial_speed**3  +
+                     3.5690 *  initial_speed**2  +
+                     -14.2265 * initial_speed  +
+                     23.0496)
+    print('Gain Scheduling ON, innerloop P = ' + str(pid_balance_P))
+else:
+    pid_balance_P = 4.0  # when vel = 3
+    print('Gain Scheduling OFF, innerloop P = ' + str(pid_balance_P))
 pid_balance_I = 0.0
 pid_balance_D = 0.0
 pid_balance_sample_time = 1.0 / controller_frequency
@@ -240,7 +248,15 @@ pid_balance_sample_time = 1.0 / controller_frequency
 # PID Balance Outer Loop Controller Parameters
 pid_balance_outerloop_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 #pid_balance_outerloop_P = 0.57
-pid_balance_outerloop_P = 1.0 # Gain tested with Peo
+if gainScheduling_enable:
+    pid_balance_outerloop_P = (-0.0538 * initial_speed**3  +
+                     0.5895 *  initial_speed**2  +
+                     -2.3497 * initial_speed  +
+                     3.8070)
+    print('Gain Scheduling ON, innerloop I = ' + str(pid_balance_outerloop_P))
+else:
+    pid_balance_outerloop_P = 1.0 # Gain tested with Peo
+    print('Gain Scheduling OFF, innerloop I = ' + str(pid_balance_outerloop_P))
 #pid_balance_outerloop_P = 1.4 # Gain tested with Peo
 pid_balance_outerloop_I = 0.0
 pid_balance_outerloop_D = 0.0

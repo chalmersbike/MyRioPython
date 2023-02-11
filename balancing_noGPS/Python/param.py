@@ -16,7 +16,9 @@ drive_motor_timeout = 9999.0  # sec
 drive_motor_restart_threshold = 1.5  # m/s
 
 # [m/s] Forward speed of the bike
-initial_speed = 0.0 # 2.8
+initial_speed = 2.4  # 2.8
+gainScheduling_enable = True
+# gainScheduling_enable = False
 path_tracking = 0
 # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
