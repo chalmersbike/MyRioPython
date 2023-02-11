@@ -16,7 +16,7 @@ drive_motor_timeout = 9999.0  # sec
 drive_motor_restart_threshold = 1.5  # m/s
 
 # [m/s] Forward speed of the bike
-initial_speed = 2.4  # 2.8
+initial_speed = 0.0  # 2.8
 gainScheduling_enable = True
 # gainScheduling_enable = False
 path_tracking = 0
@@ -25,8 +25,8 @@ path_tracking = 0
 lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 0                         # 1 = use heading controller ; 0 = do not use heading controller
 roll_ref_use = 1
-rollref_multiplier = 2.0
-rollref_offset = -4.0 * deg2rad
+rollref_multiplier = 0.0  # 2.0
+rollref_offset = -0.0 * deg2rad  # -4.0 * deg2rad
 
 
 controller_frequency = 100                      # [Hz]Controller frequency
@@ -98,6 +98,8 @@ path_file = 'newest'
 # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 rollref_file = 'nofile'
 rollref_file = 'roll_MS_Mag5.csv'  # 5-7-10-15
+rollref_file = 'sqr_pm1deg_0idle.csv'
+# rollref_file = 'sqr_pm1deg_7idle.csv'
 # rollref_file = 'roll_ref_IMP1_at4_1deg.csv'  # IMP1-2 at2-4-8
 
 ####################################################################################################################
