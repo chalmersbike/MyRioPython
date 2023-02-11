@@ -1,0 +1,20 @@
+from numpy import deg2rad
+# rad2deg = float(180 / 3.1416)
+# deg2rad = float(3.1416 / 180)
+# gx_threshold = 20  # degs
+# alpha_0 = 1.0085  # degs latitude Goteborg
+# gamma_0 = 0.2229  # degs Longitude Goteborg
+gx_threshold = 20  # degs
+alpha_0 = 57.7828  # degs latitude Goteborg
+gamma_0 = 12.7712  # degs Longitude Goteborg
+a = 0.6687
+b = 1.15
+c = 0.06
+d = 0.4
+h = 0.534
+h_imu = 0.215
+g = 9.81
+lambda_ = deg2rad(66)
+r_o = 0.694 / 2
+N_rps = 9
+R_earth = 6357000
