@@ -111,4 +111,5 @@ ENV/
 .idea
 
 #.csv
-*.csv
+#*.csv
+/balancing_noGPS/Python/ExpData_blackbike/
