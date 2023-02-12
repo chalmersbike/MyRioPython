@@ -16,7 +16,7 @@ drive_motor_timeout = 9999.0  # sec
 drive_motor_restart_threshold = 1.5  # m/s
 
 # [m/s] Forward speed of the bike
-initial_speed = 0.0  # 2.8
+initial_speed = 2.4  # 2.8
 gainScheduling_enable = True
 # gainScheduling_enable = False
 path_tracking = 0
@@ -25,7 +25,7 @@ path_tracking = 0
 lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 0                         # 1 = use heading controller ; 0 = do not use heading controller
 roll_ref_use = 1
-rollref_multiplier = 0.0  # 2.0
+rollref_multiplier = 3.0  # 2.0
 rollref_offset = -0.0 * deg2rad  # -4.0 * deg2rad
 
 
@@ -107,42 +107,42 @@ rollref_file = 'sqr_pm1deg_0idle.csv'
 # Steering disturbance file
 strdistbref_file = 'nofile'
 strdistbref_multiplier = 8.0
-strdistbref_file = 'str_MS_Mag5.csv'  #5-10-15-20-25
+# strdistbref_file = 'str_MS_Mag5.csv'  #5-10-15-20-25
 
 # if path_tracking is 1:
 #     strdistbref_file = 'nofile'
 #     rollref_file = 'nofile'
 
-roll_ref_start_time = 6.0
+roll_ref_start_time = 7.0
 roll_ref_end_time = 1000.0
-if rol_ref_periodic is 1:
-    roll_ref_period = (roll_ref_end_time - roll_ref_start_time)*2
-roll_ref_Mag = -0.0 * deg2rad
-# roll_ref_Mag = -5.0 * deg2rad #  Right side
-# roll_ref_Mag = -8.0 * deg2rad
-# roll_ref_Mag = 5.0 * deg2rad   # Left Side
-#roll_ref_Mag = 8.0 * deg2rad
-
-circle_switch = False # You can't use 1 to replace True!
-if circle_switch is True:
-    rol_ref_periodic = 1
-    roll_ref_start_time1 = 6.0
-    roll_ref_Mag1 = -5.0 * deg2rad
-    roll_ref1_period = 24.06 # Time elapsed for one circle at 5.0 degs roll when v= 3
-    roll_ref_start_time2 = roll_ref_start_time1 + roll_ref1_period
-    roll_ref_Mag2 = -8.0 * deg2rad
-    roll_ref2_period = 15.0 # for one circle at 8.0 secs v = 3
-    roll_ref_totalperiod = roll_ref1_period + roll_ref2_period
-    roll_ref_end_time = roll_ref_start_time1 + roll_ref_totalperiod
-
-
-
-
-roll_ref_imp_start_time1 = 4.0
-roll_ref_imp_start_time2 = 7.0
-
-
-roll_ref_imp_Mag = 5.0 * deg2rad
+# if rol_ref_periodic is 1:
+#     roll_ref_period = (roll_ref_end_time - roll_ref_start_time)*2
+# roll_ref_Mag = -0.0 * deg2rad
+# # roll_ref_Mag = -5.0 * deg2rad #  Right side
+# # roll_ref_Mag = -8.0 * deg2rad
+# # roll_ref_Mag = 5.0 * deg2rad   # Left Side
+# #roll_ref_Mag = 8.0 * deg2rad
+#
+# circle_switch = False # You can't use 1 to replace True!
+# if circle_switch is True:
+#     rol_ref_periodic = 1
+#     roll_ref_start_time1 = 6.0
+#     roll_ref_Mag1 = -5.0 * deg2rad
+#     roll_ref1_period = 24.06 # Time elapsed for one circle at 5.0 degs roll when v= 3
+#     roll_ref_start_time2 = roll_ref_start_time1 + roll_ref1_period
+#     roll_ref_Mag2 = -8.0 * deg2rad
+#     roll_ref2_period = 15.0 # for one circle at 8.0 secs v = 3
+#     roll_ref_totalperiod = roll_ref1_period + roll_ref2_period
+#     roll_ref_end_time = roll_ref_start_time1 + roll_ref_totalperiod
+#
+#
+#
+#
+# roll_ref_imp_start_time1 = 4.0
+# roll_ref_imp_start_time2 = 7.0
+#
+#
+# roll_ref_imp_Mag = 5.0 * deg2rad
 
 
 ####################################################################################################################

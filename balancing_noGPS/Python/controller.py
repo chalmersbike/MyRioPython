@@ -236,7 +236,7 @@ class Controller(object):
         # Load roll reference
         if self.rollref_file_arg == '':
             self.rollref_file_arg = 'rollref/' + rollref_file
-        if self.rollref_file_arg != 'nofile':
+        if rollref_file != 'nofile':
             print("Loading roll reference %s ..." % (self.rollref_file_arg))
             try:
                 # self.rollref_data = np.genfromtxt('rollref/' + self.rollref_file_arg, delimiter=",", skip_header=1)
@@ -255,7 +255,7 @@ class Controller(object):
         # Load steering disturbance
         if self.steeringdist_file_arg == '':
             self.steeringdist_file_arg = 'strratedistbref/' + strdistbref_file
-        if self.steeringdist_file_arg != 'nofile':
+        if strdistbref_file != 'nofile':
             print("Loading steering rate disturbance reference %s ..." % (self.steeringdist_file_arg))
             try:
                 self.strdistbref_data = np.genfromtxt(self.steeringdist_file_arg, delimiter=",", skip_header=1)
@@ -837,12 +837,12 @@ class Controller(object):
         self.control_cal_time = 0.0
         self.exceedscount = 0.0
         self.time_start_controller = 0.0
-        self.time_pathtracking = 0.0
-        self.roll_ref_end_time = roll_ref_end_time
-        self.roll_ref_start_time = roll_ref_start_time
-        if circle_switch is True:
-            self.roll_ref_start_time1 = roll_ref_start_time1
-            self.roll_ref_start_time2 = roll_ref_start_time2
+        # self.time_pathtracking = 0.0
+        # self.roll_ref_end_time = roll_ref_end_time
+        # self.roll_ref_start_time = roll_ref_start_time
+        # if circle_switch is True:
+        #     self.roll_ref_start_time1 = roll_ref_start_time1
+        #     self.roll_ref_start_time2 = roll_ref_start_time2
 
 
         # Bike States
@@ -1479,8 +1479,8 @@ class Controller(object):
             # self.heading_error = self.heading_error % (2*np.pi)
 
             # if (time.time() - self.time_pathtracking) > 10 * sample_time:
-            if 1:
-                self.time_pathtracking = time.time()
+            if True:
+                # self.time_pathtracking = time.time()
 
                 if path_tracking_structure == 'parallel':
                     # PID Lateral Position Controller
@@ -1556,56 +1556,11 @@ class Controller(object):
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
             self.balancing_setpoint = self.pot
-        else:
-            if self.rollref_file_arg == 'nofile':
-                if roll_ref_use and not roll_ref_step_imp_flag: # Do step
-                    if not rol_ref_periodic:
-                        if self.time_count < self.roll_ref_end_time: #__(ref_start_time)------(ref_end_time)_____
-                            if self.time_count > self.roll_ref_start_time:
-                                self.balancing_setpoint = roll_ref_Mag
-                            else:
-                                self.balancing_setpoint = 0
-                            # print(self.time_count, roll_ref_start_time, roll_ref_end_time
-                        else:
-                            self.balancing_setpoint = 0
-                    else:
-                        if not circle_switch:
-                            if self.time_count < self.roll_ref_end_time:
-                                if self.time_count > self.roll_ref_start_time:
-                                    self.balancing_setpoint = roll_ref_Mag
-                                else:
-                                    self.balancing_setpoint = 0
-                                # print(self.time_count, roll_ref_start_time, roll_ref_end_time
-                            else:
-                                self.balancing_setpoint = 0
-                                self.roll_ref_start_time = self.roll_ref_start_time + roll_ref_period
-                                self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_period
-                        else:
-                            if self.time_count < self.roll_ref_end_time: # One loop Not finished yet
-                                if self.time_count > self.roll_ref_start_time1 and self.time_count < self.roll_ref_start_time2:
-                                    self.balancing_setpoint = roll_ref_Mag1
-                                elif self.time_count >= self.roll_ref_start_time2:
-                                    self.balancing_setpoint = roll_ref_Mag2
-                                else:
-                                    self.balancing_setpoint = 0
-                                # print(self.time_count, roll_ref_start_time, roll_ref_end_time
-                            else:
-                                self.balancing_setpoint = roll_ref_Mag1
-                                self.roll_ref_start_time1 = self.roll_ref_start_time1 + roll_ref_totalperiod
-                                self.roll_ref_start_time2 = self.roll_ref_start_time2 + roll_ref_totalperiod
-                                self.roll_ref_end_time = self.roll_ref_end_time + roll_ref_totalperiod
-                elif roll_ref_use and roll_ref_step_imp_flag:
-                    if not self.roll_ref_imp_doneflag1 and self.time_count > roll_ref_imp_start_time1:
-                        self.balancing_setpoint = roll_ref_imp_Mag
-                        self.roll_ref_imp_doneflag1 = True
-                    elif not self.roll_ref_imp_doneflag2 and self.time_count > roll_ref_imp_start_time2:
-                        self.balancing_setpoint = roll_ref_imp_Mag
-                        self.roll_ref_imp_doneflag2 = True
-                    else:
-                        self.balancing_setpoint = 0
-                else:
-                    self.balancing_setpoint = 0
-            else: # For pure roll-tracking
+        elif roll_ref_use:
+            # if rollref_file == 'nofile':
+            #     self.balancing_setpoint = 0
+            # else:  # For pure roll-tracking
+            if rollref_file != 'nofile':
                 idx_rollref_currentTime = bisect.bisect_right(self.rollref_time, time.time() - self.time_start_controller)+np.array([-1, 0])
                 if idx_rollref_currentTime[0]  < 0:
                     idx_rollref_currentTime[0] = 0
@@ -1659,7 +1614,7 @@ class Controller(object):
 
         # self.steering_rate = self.steering_rate_filt
 
-        if self.steeringdist_file_arg != 'nofile':
+        if strdistbref_file != 'nofile':
             # print('SteeringRate Overwritten')
             idx_strdistbref_currentTime = bisect.bisect_right(self.strdistbref_time, time.time() - self.time_start_controller) + np.array([-1, 0])
             if idx_strdistbref_currentTime[1] >= len(self.strdistbref_time):
