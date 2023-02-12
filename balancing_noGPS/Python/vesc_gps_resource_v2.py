@@ -13,7 +13,7 @@ import math
 import warnings
 from sensors.NtripClient import NtripClient
 import threading
-
+from queue import Queue
 ########################################################################################################################
 ########################################################################################################################
 # TO BE CHANGED - THESE DO NOT WORK WITH A UBLOX GPS
@@ -63,7 +63,7 @@ PMTK_API_SET_DGPS_MODE_WAAS = "$PMTK301,2*2E"  # turn on WAAS DGPS data source m
 
 ########################################################################################################################
 ########################################################################################################################
-get_position_result = [0.0, 0.0, 0.0, 0.0, 'A', '000000', 0.0, 0.0]
+# get_position_result = [0.0, 0.0, 0.0, 0.0, 'A', '000000', 0.0, 0.0]
 
 
 # @pysnooper.snoop()
@@ -358,7 +358,7 @@ class VESC_GPS(object):
         return self.latitude, self.longitude, self.speed_m_s, self.course
 
     # @pysnooper.snoop()
-    def get_position_loop(self):
+    def get_position_loop(self, qObj):
         # print("lat_ini = %f ; lon_ini = %f ;" % (self.lat_ini, self.lon_ini))
         self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
         self.y0 = R * self.lat_ini * deg2rad
@@ -372,7 +372,7 @@ class VESC_GPS(object):
         gps_read_quotient = 0
         gps_read_quotient_old = -1
         gps_sample_time = (1.0 / gps_dataUpdateRate)
-        global get_position_result
+        # global get_position_result
         while not self.stop_GPS_loop.is_set():
             gps_read_quotient = ((time.time() - start_loop)) // gps_sample_time
             if gps_read_quotient > gps_read_quotient_old:
@@ -397,6 +397,7 @@ class VESC_GPS(object):
                 else:
                     get_position_result = [self.dx, self.dy, lat, lon, self.status, self.utc, speed_m_s, course]
                     self.prev_gps_reading = get_position_result
+                qObj.put(get_position_result)
                 # get_position_result = [self.dx, self.dy, lat, lon, self.status, self.utc, speed_m_s, course]
                 # print(get_position_result)
                 sleep_proposal = gps_sample_time - (time.time() - start_loop - gps_sample_time*gps_read_quotient)
@@ -681,7 +682,7 @@ class VESC_GPS(object):
         t_last_heart = time.time()
         gps_update_current_loop = False
         vesc_query_sent = False
-        global get_position_result
+        # global get_position_result
         if gps_use:
             while ((self.latitude <= 53) or (self.latitude >= 70) or (self.longitude <= 8) or (
                     self.longitude >= 26)):  # The location should be in SWEDEN
@@ -703,8 +704,9 @@ class VESC_GPS(object):
             gps_sample_time = (1.0 / gps_dataUpdateRate)
             vesc_data_sleep_proposal = 1.0
             t_left_next_beat = 1.0
+            qGPS = Queue()
 
-            self.gps_thread = threading.Thread(target=self.get_position_loop, daemon=True)
+            self.gps_thread = threading.Thread(target=self.get_position_loop, args=(qGPS, ), daemon=True)
             self.stop_GPS_loop = threading.Event()
             self.gps_thread.start()
 
@@ -721,7 +723,8 @@ class VESC_GPS(object):
 
                 # print('SENT GPS ONCE!')
                 # print(get_position_result)
-                pipe_gps.send(get_position_result)
+                # pipe_gps.send(get_position_result)
+                pipe_gps.send(qGPS.get())
 
             if (not gps_update_current_loop) and time.time() - pipe_heart_cmd_last_read_t > 1:
                 while pipe_heart.poll():
