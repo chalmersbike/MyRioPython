@@ -749,10 +749,10 @@ class VESC_GPS(object):
                         start_vesc_data_query = False
                 pipe_data_cmd_last_read_t = time.time()
 
-                t_since_last_beat = time.time() - t_last_heart
-                if start_heart_beat and (t_since_last_beat > 0.1):
-                    self.instr_VESC.write_raw(pyvesc.messages.setters.alive_msg)
-                    t_last_heart = time.time()
+            t_since_last_beat = time.time() - t_last_heart
+            if start_heart_beat and (t_since_last_beat > 0.1):
+                self.instr_VESC.write_raw(pyvesc.messages.setters.alive_msg)
+                t_last_heart = time.time()
 
                     # print('Alive MSG Sent!!!!')
 
