@@ -540,7 +540,7 @@ class Controller(object):
                     # print(self.bike.drive_gps_joint.send_out_readings())
                     # self.rpm, self.v_in, self.avg_motor_current, self.avg_input_current = self.bike.drive_gps_joint.send_out_readings()
                     # print(self.rpm)
-                    self.rpm, self.v_in, self.avg_motor_current, self.avg_input_current = self.bike.drive_gps_joint.retrieve_vesc_data()
+                    self.rpm, self.avg_motor_current, self.v_in, self.avg_input_current = self.bike.drive_gps_joint.retrieve_vesc_data()
 
                 
                 # Compute time needed to read from all sensors
@@ -1079,8 +1079,11 @@ class Controller(object):
             self.rollRate = self.rollRate_prev
             print("rollRate_rec = %f ; rollRate = %f ; rollRate_prev = %f" % (self.rollRate_rec,self.rollRate,self.rollRate_prev))
 
-        self.X_est, self.P_est = self.bike.Klm_Estimator.estimate(self, self.time_count)
-        # print(self.X_est[2],self.X_est[1],self.X_est[0])
+        self.X_est = self.bike.Klm_Estimator.estimate(self, self.time_count)
+        # print(self.X_est[0],self.X_est[1],self.X_est[2],
+        #       self.X_est[3],self.X_est[4],self.X_est[5],
+        #       self.X_est[6],self.X_est[7])
+        # print(self.X_est[1:8])
         self.x_estimated = self.X_est[0]
         self.y_estimated = self.X_est[1]
         self.v_estimated = self.X_est[2]
@@ -1725,6 +1728,7 @@ class Controller(object):
 
         # Log data
         self.time_log = time.time()
+        # print(self.roll)
         self.log_str = [
             datetime.now().strftime("%H:%M:%S.%f"),
             "{0:.5f}".format(self.time_count),

@@ -3,7 +3,7 @@
 import cython
 # from cython.cimports.libc
 # from cython.libc.math cimport cos, sin, tan, atan2, atan, asin, sqrt, isnan
-from libc.math cimport cos, sin, tan, atan2, atan, asin, sqrt, isnan
+from libc.math cimport cos, sin, tan, atan2, atan, asin, sqrt, isnan, abs
 from .KalmanData import KalmanData as data
 import numpy as np
 cimport numpy as np
@@ -192,6 +192,7 @@ cdef class Klm_Estimator:
         cdef np.float32_t[:, :] C_obsv, K
         # cdef list  , #Xk,
         cdef dict UpdateFlg, Yks,
+        cdef int ind
 
 
 
@@ -390,6 +391,15 @@ cdef class Klm_Estimator:
         # Xk_f[0:2] = np.array([Global_X, Global_Y], dtype='float32')
         Xk_f[0] = Global_X
         Xk_f[1] = Global_Y
+
+        for ind in range(0,8):
+            # if abs(Xk[ind]) < 1e-5:
+            if isnan(Xk[ind]):
+                Xk[ind] = 0.0
+
+        if sum(np.isnan(Xk_f)):
+            print(Yks)
+
         self.X_est = Xk
 
         self.X_pred = Xkp
@@ -401,4 +411,4 @@ cdef class Klm_Estimator:
 
 
 
-        return Xk_f, self.P_est
+        return Xk_f

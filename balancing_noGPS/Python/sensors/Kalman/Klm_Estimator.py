@@ -20,13 +20,13 @@ class Klm_Estimator(object):
         # self.n = len(kalmanProfile['P0'])    # Nr of states
         n = 8
         self.stationary_kalman_ON = True
-        self.ts = np.zeros(shape=(0,1), dtype='float32')
-        self.Xs = np.zeros(shape=(0,n,1), dtype='float32')
-        self.X_est = np.zeros(shape=(n,1), dtype='float32')
+        self.ts = np.zeros(shape=(1), dtype='float32')
+        self.Xs = np.zeros(shape=(n), dtype='float32')
+        self.X_est = np.zeros(shape=(n), dtype='float32')
         self.P_est = np.ones(shape=(n,n), dtype='float32')
-        self.X_pred = np.zeros(shape=(n,1), dtype='float32')
+        self.X_pred = np.zeros(shape=(n), dtype='float32')
         self.P_pred = np.ones(shape=(n,n), dtype='float32')
-        self.X_cfs = np.zeros(shape=(0,n,1), dtype='float32')
+        self.X_cfs = np.zeros(shape=(n), dtype='float32')
 
         # self.params = black_bike_parameters().astype(np.float32)
         # self.sensors = kalmanProfile['sensors']
@@ -233,8 +233,11 @@ class Klm_Estimator(object):
             print(Yk_gps[3])
             Yk_gps[3] = psi_h
             print('Overwritten as %f' %phi_h)
-        else:
-            Yk_gps[3] = np.unwrap([psi_h, Yk_gps[3]])[-1]
+        # else:
+            # print(Yk_gps[3])
+            # print(np.unwrap([psi_h, Yk_gps[3]]))
+            # Yk_gps[3] = np.unwrap([psi_h, Yk_gps[3]])[0]
+
         heading_gps = Yk_gps[3]
 
         # IMU
@@ -419,7 +422,8 @@ class Klm_Estimator(object):
 
             Global_X = self.Global_X_prev_GPS + Xk[0] * cos(self.Psi_prev_GPS) - Xk[1] * sin(self.Psi_prev_GPS)
             Global_Y = self.Global_Y_prev_GPS + Xk[0] * sin(self.Psi_prev_GPS) + Xk[1] * cos(self.Psi_prev_GPS)
-
+        # print(Yk_gps[3], Xk[3])
+        # print(Global_X, Global_Y)
 
         Xk_f = Xk
         Xk_f[0:2] = np.array([Global_X, Global_Y])
