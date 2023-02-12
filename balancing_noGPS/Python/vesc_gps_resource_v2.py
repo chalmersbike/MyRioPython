@@ -13,7 +13,7 @@ import math
 import warnings
 from sensors.NtripClient import NtripClient
 import threading
-from queue import Queue
+# from queue import Queue
 ########################################################################################################################
 ########################################################################################################################
 # TO BE CHANGED - THESE DO NOT WORK WITH A UBLOX GPS
@@ -358,7 +358,7 @@ class VESC_GPS(object):
         return self.latitude, self.longitude, self.speed_m_s, self.course
 
     # @pysnooper.snoop()
-    def get_position_loop(self, qObj):
+    def get_position_loop(self, pipe_gps):
         # print("lat_ini = %f ; lon_ini = %f ;" % (self.lat_ini, self.lon_ini))
         self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
         self.y0 = R * self.lat_ini * deg2rad
@@ -397,7 +397,7 @@ class VESC_GPS(object):
                 else:
                     get_position_result = [self.dx, self.dy, lat, lon, self.status, self.utc, speed_m_s, course]
                     self.prev_gps_reading = get_position_result
-                qObj.put(get_position_result)
+                pipe_gps.send(get_position_result)
                 # get_position_result = [self.dx, self.dy, lat, lon, self.status, self.utc, speed_m_s, course]
                 # print(get_position_result)
                 sleep_proposal = gps_sample_time - (time.time() - start_loop - gps_sample_time*gps_read_quotient)
@@ -410,139 +410,139 @@ class VESC_GPS(object):
 
 
 
-    def _heartbeat_vsec_gps_read(self, pipe_heart, pipe_data, pipe_gps):
-        """
-        Continuous function calling that keeps the motor alive
-        """
-        # start_heart_beat = False
-        # start_vesc_data_query = False
-        start_heart_beat = False
-        start_vesc_data_query = False
-        nr_of_empty_loop = 0
-        t_last_query = time.time()
-        t_last_heart = time.time()
-        vesc_query_sent = False
-
-        while ((self.latitude <= 53) or (self.latitude >= 70) or (self.longitude <= 8) or (
-                self.longitude >= 26)):  # The location should be in SWEDEN
-            self.lat_ini, self.lon_ini, self.speed, self.course = self.get_latlon()
-
-        # print("lat_ini = %f ; lon_ini = %f ;" % (self.lat_ini, self.lon_ini))
-        self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
-        self.y0 = R * self.lat_ini * deg2rad
-        # print("lat_ini = %f ; lon_ini = %f ; x0 = %f ; y0 = %f" % (lat_ini,lon_ini,x0,y0))
-
-        # if debug:
-        #     print('GPS : GPS initialized, obtained initial latitude and longitude')
-        print('GPS : GPS initialized, obtained initial latitude and longitude')
-
-        start_loop = time.time()
-        gps_read_quotient = 0
-        gps_read_quotient_old = -1
-        gps_sample_time = (1.0 / gps_dataUpdateRate)
-
-        while not self._stop_heartbeat.is_set():
-            while pipe_heart.poll():
-                cmd_heart = pipe_heart.recv()
-                if cmd_heart == 'start_heart_beat':
-                    start_heart_beat = True
-                elif cmd_heart == 'stop_heart_beat':
-                    start_heart_beat = False
-                else:
-                    self.instr_VESC.write_raw(cmd_heart)
-
-            while pipe_data.poll():
-                cmd_data = pipe_data.recv()
-                if cmd_data == 'start_vesc_query':
-                    start_vesc_data_query = True
-                    t_last_query = time.time()
-                elif cmd_data == 'stop_vesc_query':
-                    start_vesc_data_query = False
-
-            t_since_last_beat = time.time() - t_last_heart
-            if start_heart_beat and (t_since_last_beat > 0.1):
-                self.instr_VESC.write_raw(pyvesc.messages.setters.alive_msg)
-                t_last_heart = time.time()
-                # print('Alive MSG Sent!!!!')
-
-            if start_vesc_data_query:
-                # sleep_proposal_vescdata = time.time() - t_last_vesc_query
-                if not vesc_query_sent:
-                    self.instr_VESC.write_raw(self.read_sensor_msg)
-                    vesc_query_sent = True
-                # if slp_time < 0.01:
-                #     time.sleep(0.01 - slp_time)
-                buffer_size = self.instr_VESC.bytes_in_buffer
-
-                if buffer_size == 78:
-                    t_last_vesc_query = time.time()
-                    readraw = self.instr_VESC.read_bytes(78)
-                    vesc_query_sent = False
-                    (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
-                    pipe_data.send([self.vesc_sensor_response.rpm,
-                               self.vesc_sensor_response.avg_motor_current,
-                               self.vesc_sensor_response.v_in,
-                               self.vesc_sensor_response.avg_input_current])
-                    # print('DATA Received!!!!')
-                    if nr_of_empty_loop is not 0:
-                        nr_of_empty_loop = 0
-                elif buffer_size == 156:
-                    readraw = self.instr_VESC.read_bytes(156)  # Bytes type
-
-                    warnings.warn('DOUBLE DATA Received!!!!')
-                    # print('DOUBLE DATA Received!!!!')
-                    readraw = readraw[78:156]
-                    vesc_query_sent = False
-                    t_last_vesc_query = time.time()
-                    (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
-                    if self.vesc_sensor_response is not None:
-                        pipe_data.send([self.vesc_sensor_response.rpm,
-                                        self.vesc_sensor_response.avg_motor_current,
-                                        self.vesc_sensor_response.v_in,
-                                        self.vesc_sensor_response.avg_input_current])
-
-                    if nr_of_empty_loop is not 0:
-                        nr_of_empty_loop = 0
-                elif buffer_size is not 0:
-                    nr_of_empty_loop += 1
-                    if nr_of_empty_loop >= 5:
-                        self.instr_VESC.flush(pyvisa.constants.VI_READ_BUF_DISCARD)
-                        t_last_vesc_query = time.time()
-                        vesc_query_sent = False
-                        nr_of_empty_loop = 0
-                        warnings.warn('Multiple Failure in VESC DATA!!!!')
-                        print('Multiple Failure in VESC DATA!!!!')
-
-            gps_read_quotient = ((time.time() - start_loop)) // gps_sample_time
-            if gps_read_quotient > gps_read_quotient_old:
-                self.lat, self.lon, self.speed_m_s, self.course = self.get_latlon()
-                gps_read_quotient_old = gps_read_quotient
-                # print('READ GPS ONCE!')
-                if self.found_satellite == 1:
-                    self.x = R * self.lon * deg2rad * math.cos(self.lat_ini * deg2rad)
-                    self.y = R * self.lat * deg2rad
-                    self.dx = self.x - self.x0
-                    self.dy = self.y - self.y0
-                    if self.course is not float('nan'):
-                        self.course = ((450 - self.course) / 360.0 + np.pi) % (2 * np.pi) - np.pi
-                    else:
-                        self.course = np.aRXtan2(self.dy, self.dx)
-                else:
-                    print(warnings.warn("GPS : No Satelite found !"))
-                if abs(self.dx) < 10000 and (self.utc is not None):  # Valid data
-                    self.latest_gps_reading = [self.dx, self.dy, self.lat, self.lon, self.status, self.utc,
-                                               self.speed_m_s, self.course]
-
-                pipe_gps.send(self.latest_gps_reading)
-
-                # pipe_gps.send([self.dx, self.dy, self.lat, self.lon, self.status, self.utc, self.speed_m_s, self.course])
-
-                gps_sleep_proposal = gps_sample_time - (time.time() - start_loop - gps_sample_time * gps_read_quotient)
-
-            vesc_data_sleep_proposal = 0.01 - (time.time() - t_last_vesc_query)
-            t_left_next_beat = 0.1 - (time.time() - t_last_heart)
-            if gps_sleep_proposal > 0 and vesc_data_sleep_proposal > 0 and t_left_next_beat > 0:
-                time.sleep(min(gps_sleep_proposal, vesc_data_sleep_proposal, t_left_next_beat))
+    # def _heartbeat_vsec_gps_read(self, pipe_heart, pipe_data, pipe_gps):
+    #     """
+    #     Continuous function calling that keeps the motor alive
+    #     """
+    #     # start_heart_beat = False
+    #     # start_vesc_data_query = False
+    #     start_heart_beat = False
+    #     start_vesc_data_query = False
+    #     nr_of_empty_loop = 0
+    #     t_last_query = time.time()
+    #     t_last_heart = time.time()
+    #     vesc_query_sent = False
+    #
+    #     while ((self.latitude <= 53) or (self.latitude >= 70) or (self.longitude <= 8) or (
+    #             self.longitude >= 26)):  # The location should be in SWEDEN
+    #         self.lat_ini, self.lon_ini, self.speed, self.course = self.get_latlon()
+    #
+    #     # print("lat_ini = %f ; lon_ini = %f ;" % (self.lat_ini, self.lon_ini))
+    #     self.x0 = R * self.lon_ini * deg2rad * math.cos(self.lat_ini * deg2rad)
+    #     self.y0 = R * self.lat_ini * deg2rad
+    #     # print("lat_ini = %f ; lon_ini = %f ; x0 = %f ; y0 = %f" % (lat_ini,lon_ini,x0,y0))
+    #
+    #     # if debug:
+    #     #     print('GPS : GPS initialized, obtained initial latitude and longitude')
+    #     print('GPS : GPS initialized, obtained initial latitude and longitude')
+    #
+    #     start_loop = time.time()
+    #     gps_read_quotient = 0
+    #     gps_read_quotient_old = -1
+    #     gps_sample_time = (1.0 / gps_dataUpdateRate)
+    #
+    #     while not self._stop_heartbeat.is_set():
+    #         while pipe_heart.poll():
+    #             cmd_heart = pipe_heart.recv()
+    #             if cmd_heart == 'start_heart_beat':
+    #                 start_heart_beat = True
+    #             elif cmd_heart == 'stop_heart_beat':
+    #                 start_heart_beat = False
+    #             else:
+    #                 self.instr_VESC.write_raw(cmd_heart)
+    #
+    #         while pipe_data.poll():
+    #             cmd_data = pipe_data.recv()
+    #             if cmd_data == 'start_vesc_query':
+    #                 start_vesc_data_query = True
+    #                 t_last_query = time.time()
+    #             elif cmd_data == 'stop_vesc_query':
+    #                 start_vesc_data_query = False
+    #
+    #         t_since_last_beat = time.time() - t_last_heart
+    #         if start_heart_beat and (t_since_last_beat > 0.1):
+    #             self.instr_VESC.write_raw(pyvesc.messages.setters.alive_msg)
+    #             t_last_heart = time.time()
+    #             # print('Alive MSG Sent!!!!')
+    #
+    #         if start_vesc_data_query:
+    #             # sleep_proposal_vescdata = time.time() - t_last_vesc_query
+    #             if not vesc_query_sent:
+    #                 self.instr_VESC.write_raw(self.read_sensor_msg)
+    #                 vesc_query_sent = True
+    #             # if slp_time < 0.01:
+    #             #     time.sleep(0.01 - slp_time)
+    #             buffer_size = self.instr_VESC.bytes_in_buffer
+    #
+    #             if buffer_size == 78:
+    #                 t_last_vesc_query = time.time()
+    #                 readraw = self.instr_VESC.read_bytes(78)
+    #                 vesc_query_sent = False
+    #                 (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
+    #                 pipe_data.send([self.vesc_sensor_response.rpm,
+    #                            self.vesc_sensor_response.avg_motor_current,
+    #                            self.vesc_sensor_response.v_in,
+    #                            self.vesc_sensor_response.avg_input_current])
+    #                 # print('DATA Received!!!!')
+    #                 if nr_of_empty_loop is not 0:
+    #                     nr_of_empty_loop = 0
+    #             elif buffer_size == 156:
+    #                 readraw = self.instr_VESC.read_bytes(156)  # Bytes type
+    #
+    #                 warnings.warn('DOUBLE DATA Received!!!!')
+    #                 # print('DOUBLE DATA Received!!!!')
+    #                 readraw = readraw[78:156]
+    #                 vesc_query_sent = False
+    #                 t_last_vesc_query = time.time()
+    #                 (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
+    #                 if self.vesc_sensor_response is not None:
+    #                     pipe_data.send([self.vesc_sensor_response.rpm,
+    #                                     self.vesc_sensor_response.avg_motor_current,
+    #                                     self.vesc_sensor_response.v_in,
+    #                                     self.vesc_sensor_response.avg_input_current])
+    #
+    #                 if nr_of_empty_loop is not 0:
+    #                     nr_of_empty_loop = 0
+    #             elif buffer_size is not 0:
+    #                 nr_of_empty_loop += 1
+    #                 if nr_of_empty_loop >= 5:
+    #                     self.instr_VESC.flush(pyvisa.constants.VI_READ_BUF_DISCARD)
+    #                     t_last_vesc_query = time.time()
+    #                     vesc_query_sent = False
+    #                     nr_of_empty_loop = 0
+    #                     warnings.warn('Multiple Failure in VESC DATA!!!!')
+    #                     print('Multiple Failure in VESC DATA!!!!')
+    #
+    #         gps_read_quotient = ((time.time() - start_loop)) // gps_sample_time
+    #         if gps_read_quotient > gps_read_quotient_old:
+    #             self.lat, self.lon, self.speed_m_s, self.course = self.get_latlon()
+    #             gps_read_quotient_old = gps_read_quotient
+    #             # print('READ GPS ONCE!')
+    #             if self.found_satellite == 1:
+    #                 self.x = R * self.lon * deg2rad * math.cos(self.lat_ini * deg2rad)
+    #                 self.y = R * self.lat * deg2rad
+    #                 self.dx = self.x - self.x0
+    #                 self.dy = self.y - self.y0
+    #                 if self.course is not float('nan'):
+    #                     self.course = ((450 - self.course) / 360.0 + np.pi) % (2 * np.pi) - np.pi
+    #                 else:
+    #                     self.course = np.aRXtan2(self.dy, self.dx)
+    #             else:
+    #                 print(warnings.warn("GPS : No Satelite found !"))
+    #             if abs(self.dx) < 10000 and (self.utc is not None):  # Valid data
+    #                 self.latest_gps_reading = [self.dx, self.dy, self.lat, self.lon, self.status, self.utc,
+    #                                            self.speed_m_s, self.course]
+    #
+    #             pipe_gps.send(self.latest_gps_reading)
+    #
+    #             # pipe_gps.send([self.dx, self.dy, self.lat, self.lon, self.status, self.utc, self.speed_m_s, self.course])
+    #
+    #             gps_sleep_proposal = gps_sample_time - (time.time() - start_loop - gps_sample_time * gps_read_quotient)
+    #
+    #         vesc_data_sleep_proposal = 0.01 - (time.time() - t_last_vesc_query)
+    #         t_left_next_beat = 0.1 - (time.time() - t_last_heart)
+    #         if gps_sleep_proposal > 0 and vesc_data_sleep_proposal > 0 and t_left_next_beat > 0:
+    #             time.sleep(min(gps_sleep_proposal, vesc_data_sleep_proposal, t_left_next_beat))
 
 
 
@@ -704,9 +704,10 @@ class VESC_GPS(object):
             gps_sample_time = (1.0 / gps_dataUpdateRate)
             vesc_data_sleep_proposal = 1.0
             t_left_next_beat = 1.0
-            qGPS = Queue()
 
-            self.gps_thread = threading.Thread(target=self.get_position_loop, args=(qGPS, ), daemon=True)
+            # qGPS = Queue()
+
+            self.gps_thread = threading.Thread(target=self.get_position_loop, args=(pipe_gps, ), daemon=True)
             self.stop_GPS_loop = threading.Event()
             self.gps_thread.start()
 
@@ -715,18 +716,18 @@ class VESC_GPS(object):
 
         while not self._stop_heartbeat.is_set():
 
-            gps_read_quotient = ((time.time() - start_loop)) // gps_sample_time
-            # print(gps_read_quotient)
-            if gps_read_quotient > gps_read_quotient_old:
-                gps_read_quotient_old = gps_read_quotient
-                gps_update_current_loop = True
+            # gps_read_quotient = ((time.time() - start_loop)) // gps_sample_time
+            # # print(gps_read_quotient)
+            # if gps_read_quotient > gps_read_quotient_old:
+            #     gps_read_quotient_old = gps_read_quotient
+            #     gps_update_current_loop = True
 
                 # print('SENT GPS ONCE!')
                 # print(get_position_result)
                 # pipe_gps.send(get_position_result)
-                pipe_gps.send(qGPS.get())
+                # pipe_gps.send(qGPS.get())
 
-            if (not gps_update_current_loop) and time.time() - pipe_heart_cmd_last_read_t > 1:
+            if time.time() - pipe_heart_cmd_last_read_t > 1:
                 while pipe_heart.poll():
                     cmd_heart = pipe_heart.recv()
                     if cmd_heart == 'start_heart_beat':
@@ -808,10 +809,10 @@ class VESC_GPS(object):
                 vesc_data_sleep_proposal = 0.01 - (time.time() - t_last_vesc_query)
             if start_heart_beat:
                 t_left_next_beat = 0.1 - (time.time() - t_last_heart)
-            gps_sleep_proposal = gps_sample_time - (time.time() - start_loop - gps_sample_time * gps_read_quotient)
+            # gps_sleep_proposal = gps_sample_time - (time.time() - start_loop - gps_sample_time * gps_read_quotient)
 
-            if gps_sleep_proposal > 0 and vesc_data_sleep_proposal > 0 and t_left_next_beat > 0:
-                time.sleep(min(gps_sleep_proposal, vesc_data_sleep_proposal, t_left_next_beat))
+            if vesc_data_sleep_proposal > 0 and t_left_next_beat > 0:
+                time.sleep(min(vesc_data_sleep_proposal, t_left_next_beat))
 
         self.stop_GPS_loop.set()
 
