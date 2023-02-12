@@ -10,8 +10,8 @@ cimport numpy as np
 from numpy import deg2rad, sign, unwrap
 import time
 
-# @cython.wraparound(False)
-# @cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.boundscheck(False)
 cdef class Klm_Estimator:
     cdef int n, N_rps_const
     cdef bint stationary_kalman_ON

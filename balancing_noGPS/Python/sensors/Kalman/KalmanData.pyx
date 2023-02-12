@@ -7,8 +7,8 @@ from numpy import deg2rad, rad2deg
 from libc.math cimport abs
 import cython
 
-# @cython.wraparound(False)
-# @cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.boundscheck(False)
 cdef class  KalmanData:
 
     # cdef cnp.float32_t[:] gx_imu, gy_imu, gz_imu, ax_imu, ay_imu, az_imu
@@ -38,7 +38,7 @@ cdef class  KalmanData:
         self.deltadot_ref = np.zeros(shape=(2,), dtype='float32')
         # Speed Sensor
         self.v_rps = np.zeros(shape=(2,), dtype='float32')
-        self.dT_rps = [1] * 9
+        self.dT_rps = [100] * 9
         self.sMag = 0.6
         self.sMag9 = 0.6 * 9
         self.vMA = 0.0
@@ -118,8 +118,9 @@ cdef class  KalmanData:
         """Check RPS reading """
         if self.differentRead(self.v_rps, 1):
             RPS_update = 1
-            self.dT_rps.insert(0, self.sMag / self.v_rps[1])
-            self.dT_rps.pop()
+            if self.v_rps[1] > 0.6:
+                self.dT_rps.insert(0, self.sMag / self.v_rps[1])
+                self.dT_rps.pop()
 
             self.vMA = self.sMag9 / sum(self.dT_rps)
         else:
