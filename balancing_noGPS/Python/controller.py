@@ -1233,8 +1233,8 @@ class Controller(object):
                 course_reading = self.course
             else:
                 course_reading = self.gpspos[7]
-            self.course = np.unwrap([self.course, course_reading])[-1]
-            # self.course = self.gpspos[7]
+            # self.course = np.unwrap([self.course, course_reading])[-1]
+            self.course = course_reading
 
             # Save x and y in a single vector
             self.pos_GPS = np.array([[self.x_measured_GPS],[self.y_measured_GPS]])
