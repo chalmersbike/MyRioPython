@@ -9,7 +9,7 @@ import cython
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
-cdef class  KalmanData:
+cdef class KalmanData:
 
     # cdef cnp.float32_t[:] gx_imu, gy_imu, gz_imu, ax_imu, ay_imu, az_imu
     # cdef cnp.float32_t[:] Beta, Odo_Psi, Odo_X, Odo_Y, lat_gps, lon_gps, vel_gps, heading_gps
@@ -38,7 +38,7 @@ cdef class  KalmanData:
         self.deltadot_ref = np.zeros(shape=(2,), dtype='float32')
         # Speed Sensor
         self.v_rps = np.zeros(shape=(2,), dtype='float32')
-        self.dT_rps = [100] * 9
+        self.dT_rps = [1] * 9
         self.sMag = 0.6
         self.sMag9 = 0.6 * 9
         self.vMA = 0.0
