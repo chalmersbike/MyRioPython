@@ -9,58 +9,58 @@ import cython
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
-cdef class KalmanData:
+cdef class  KalmanData:
 
     # cdef cnp.float32_t[:] gx_imu, gy_imu, gz_imu, ax_imu, ay_imu, az_imu
     # cdef cnp.float32_t[:] Beta, Odo_Psi, Odo_X, Odo_Y, lat_gps, lon_gps, vel_gps, heading_gps
     # cdef cnp.float32_t[:] deltadot_ref
     # cdef cnp.float32_t[:] v_rps,
     # cdef cnp.float32_t[:] delta_enc,
-    cdef readonly float [:] gx_imu, gy_imu, gz_imu, ax_imu, ay_imu, az_imu
-    cdef readonly float [:] Beta, Odo_Psi, Odo_X, Odo_Y, lat_gps, lon_gps, vel_gps, heading_gps
-    cdef readonly float [:] deltadot_ref
-    cdef readonly float [:] v_rps,
-    cdef readonly float [:] delta_enc,
-    cdef readonly float alpha_0, gamma_0, last_valid_gx
-    cdef float sMag, sMag9, vMA
+    cdef readonly double [:] gx_imu, gy_imu, gz_imu, ax_imu, ay_imu, az_imu
+    cdef readonly double [:] Beta, Odo_Psi, Odo_X, Odo_Y, lat_gps, lon_gps, vel_gps, heading_gps
+    cdef readonly double [:] deltadot_ref
+    cdef readonly double [:] v_rps,
+    cdef readonly double [:] delta_enc,
+    cdef readonly double alpha_0, gamma_0, last_valid_gx
+    cdef double sMag, sMag9, vMA
     cdef list dT_rps
-    cdef float gx_threshold
+    cdef double gx_threshold
 
 
-    def __init__(self, float lat_ini, float lon_ini):
+    def __init__(self, double lat_ini, double lon_ini):
 
 
-        self.Beta = np.zeros(shape=(2,), dtype='float32')
-        self.Odo_Psi = np.zeros(shape=(2,), dtype='float32')
-        self.Odo_X = np.zeros(shape=(2,), dtype='float32')
-        self.Odo_Y = np.zeros(shape=(2,), dtype='float32')
+        self.Beta = np.zeros(shape=(2,), dtype='double')
+        self.Odo_Psi = np.zeros(shape=(2,), dtype='double')
+        self.Odo_X = np.zeros(shape=(2,), dtype='double')
+        self.Odo_Y = np.zeros(shape=(2,), dtype='double')
 
-        self.deltadot_ref = np.zeros(shape=(2,), dtype='float32')
+        self.deltadot_ref = np.zeros(shape=(2,), dtype='double')
         # Speed Sensor
-        self.v_rps = np.zeros(shape=(2,), dtype='float32')
+        self.v_rps = np.zeros(shape=(2,), dtype='double')
         self.dT_rps = [1] * 9
         self.sMag = 0.6
         self.sMag9 = 0.6 * 9
         self.vMA = 0.0
 
         # Enc
-        self.delta_enc = np.zeros(shape=(2,), dtype='float32')
+        self.delta_enc = np.zeros(shape=(2,), dtype='double')
 
         # GPS
-        self.lat_gps = np.array([lat_ini, lat_ini], dtype='float32')
-        self.lon_gps = np.array([lon_ini, lon_ini], dtype='float32')
-        self.vel_gps = np.zeros(shape=(2,), dtype='float32')
-        self.heading_gps = np.zeros(shape=(2,), dtype='float32')
-        # self.last_valid_gps = np.zeros(shape=(2,), dtype='float32')
+        self.lat_gps = np.array([lat_ini, lat_ini], dtype='double')
+        self.lon_gps = np.array([lon_ini, lon_ini], dtype='double')
+        self.vel_gps = np.zeros(shape=(2,), dtype='double')
+        self.heading_gps = np.zeros(shape=(2,), dtype='double')
+        # self.last_valid_gps = np.zeros(shape=(2,), dtype='double')
         self.alpha_0 = lat_ini # Degrees
         self.gamma_0 = lon_ini
         # IMU
-        self.gx_imu = np.zeros(shape=(2,), dtype='float32')
-        self.gy_imu = np.zeros(shape=(2,), dtype='float32')
-        self.gz_imu = np.zeros(shape=(2,), dtype='float32')
-        self.ax_imu = np.zeros(shape=(2,), dtype='float32')
-        self.ay_imu = np.zeros(shape=(2,), dtype='float32')
-        self.az_imu = np.ones(shape=(2,), dtype='float32')
+        self.gx_imu = np.zeros(shape=(2,), dtype='double')
+        self.gy_imu = np.zeros(shape=(2,), dtype='double')
+        self.gz_imu = np.zeros(shape=(2,), dtype='double')
+        self.ax_imu = np.zeros(shape=(2,), dtype='double')
+        self.ay_imu = np.zeros(shape=(2,), dtype='double')
+        self.az_imu = np.ones(shape=(2,), dtype='double')
         self.last_valid_gx = 0.0
         self.gx_threshold = 20
 
@@ -125,6 +125,7 @@ cdef class KalmanData:
             self.vMA = self.sMag9 / sum(self.dT_rps)
         else:
             RPS_update = 0
+        # print(self.vMA)
 
         """Check GPS validity"""
         if ((self.differentRead(self.lat_gps, 1) or
@@ -142,17 +143,17 @@ cdef class KalmanData:
                                  self.az_imu[1],
                                  self.gx_imu[1],
                                  self.gy_imu[1],
-                                 self.gz_imu[1]], dtype = 'float32').T,
+                                 self.gz_imu[1]], dtype = 'double').T,
                 'enc': self.delta_enc[1],
                 'rps': self.vMA,
                 'gps': (np.array([self.lat_gps[1],
                                    self.lon_gps[1],
                                    self.vel_gps[1],
                                    self.heading_gps[1],
-                                        ], dtype = 'float32').T)
+                                        ], dtype = 'double').T)
             })
 
-    cdef bint differentRead(self, float[:] var, int ind):
+    cdef bint differentRead(self, double[:] var, int ind):
         if ind > 0:
             tol = 1e-7
             return abs(var[ind] - var[ind - 1]) > tol

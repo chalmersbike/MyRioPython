@@ -15,13 +15,13 @@ import time
 cdef class Klm_Estimator:
     cdef int n, N_rps_const
     cdef bint stationary_kalman_ON
-    cdef float Psi_prev, Global_X_prev_GPS, dv ,a_const ,b_const ,c_const ,d_const ,g_const ,r_o_const
-    cdef float R_e_const, alpha_0_radian, gamma_0_radian, inilon_const, inilat_const, lambda__const
-    cdef float Global_Y_prev_GPS, Psi_prev_GPS, inix_GPS, iniy_GPS
-    cdef float Global_X_prev, Global_Y_prev, X_h, Y_h, v_h, psi_h, phi_h, delta_h, phidot_h, delta0_h, Uk, dt, prev_klm_time
-    cdef readonly np.float32_t[:] ts, X_est, X_pred, Xs, X_cfs
-    cdef np.float32_t[:,:] P_est, P_pred, C_imuenc, C_rps, C_gps, C_rps_gps, Ppred_matrix, K_rps_gps_final, K_gps_final, K_rps_final, K_imu_enc_final, A_m, B_m
-    cdef np.float32_t[:,:] gps_R_highconfidence, gps_R, R_roll, Q,
+    cdef double Psi_prev, Global_X_prev_GPS, dv ,a_const ,b_const ,c_const ,d_const ,g_const ,r_o_const
+    cdef double R_e_const, alpha_0_radian, gamma_0_radian, inilon_const, inilat_const, lambda__const
+    cdef double Global_Y_prev_GPS, Psi_prev_GPS, inix_GPS, iniy_GPS
+    cdef double Global_X_prev, Global_Y_prev, X_h, Y_h, v_h, psi_h, phi_h, delta_h, phidot_h, delta0_h, Uk, dt, prev_klm_time
+    cdef readonly double[:] ts, X_est, X_pred, Xs, X_cfs
+    cdef double[:,:] P_est, P_pred, C_imuenc, C_rps, C_gps, C_rps_gps, Ppred_matrix, K_rps_gps_final, K_gps_final, K_rps_final, K_imu_enc_final, A_m, B_m
+    cdef double[:,:] gps_R_highconfidence, gps_R, R_roll, Q,
     cdef public object data
 
     def __init__(self, lat_0, lon_0):
@@ -29,13 +29,13 @@ cdef class Klm_Estimator:
         cdef int n
         n = 8
         self.stationary_kalman_ON = True
-        self.ts = np.zeros(shape=(1), dtype='float32')
-        self.Xs = np.zeros(shape=(n), dtype='float32')
-        self.X_est = np.zeros(shape=(n), dtype='float32')
-        self.P_est = np.ones(shape=(n, n), dtype='float32')
-        self.X_pred = np.zeros(shape=(n), dtype='float32')
-        self.P_pred = np.ones(shape=(n, n), dtype='float32')
-        self.X_cfs = np.zeros(shape=(n), dtype='float32')
+        self.ts = np.zeros(shape=(1), dtype='double')
+        self.Xs = np.zeros(shape=(n), dtype='double')
+        self.X_est = np.zeros(shape=(n), dtype='double')
+        self.P_est = np.ones(shape=(n, n), dtype='double')
+        self.X_pred = np.zeros(shape=(n), dtype='double')
+        self.P_pred = np.ones(shape=(n, n), dtype='double')
+        self.X_cfs = np.zeros(shape=(n), dtype='double')
 
         self.data = data(lat_0, lon_0)  # Data container
 
@@ -68,7 +68,7 @@ cdef class Klm_Estimator:
         [ 0,    0,     0,     0,     1,     0,     0,     0,],
         [ 0,    0,     0,     0,     1,     0,     0,     0,],
         [ 0,    0,     0,     0,     0,     0,     1,     0,],
-        [ 0,    0,     0,     0,     0,     1,     0,     1,],], dtype = 'float32')
+        [ 0,    0,     0,     0,     0,     1,     0,     1,],], dtype = 'double')
         self.C_rps = np.array([
         [0,     0,     0,     0,     1,     0,     0,     0,],
         [0,     0,     0,     0,     1,     0,     0,     0,],
@@ -76,7 +76,7 @@ cdef class Klm_Estimator:
         [0,     0,     0,     0,     1,     0,     0,     0,],
         [0,     0,     0,     0,     0,     0,     1,     0,],
         [0,     0,     0,     0,     0,     1,     0,     1,],
-        [0,     0,     1,     0,     0,     0,     0,     0,],] , dtype = 'float32')
+        [0,     0,     1,     0,     0,     0,     0,     0,],] , dtype = 'double')
         self.C_gps = np.array([
         [0,     0,     0,     0,     1,     0,     0,     0,],
         [0,     0,     0,     0,     1,     0,     0,     0,],
@@ -88,7 +88,7 @@ cdef class Klm_Estimator:
         [0,     1,     0,     0,     0,     0,     0,     0,],
         [0,     0,     1,     0,     0,     0,     0,     0,],
         [0,     0,     0,     1,     0,     0,     0,     0,],
-        [0,     0,     0,     0,     0,     0,     0,     1,],] , dtype = 'float32')
+        [0,     0,     0,     0,     0,     0,     0,     1,],] , dtype = 'double')
         self.C_rps_gps = np.array([
         [0,     0,     0,     0,     1,     0,     0,     0,],
         [0,     0,     0,     0,     1,     0,     0,     0,],
@@ -101,7 +101,7 @@ cdef class Klm_Estimator:
         [0,     1,     0,     0,     0,     0,     0,     0,],
         [0,     0,     1,     0,     0,     0,     0,     0,],
         [0,     0,     0,     1,     0,     0,     0,     0,],
-        [0,     0,     0,     0,     0,     0,     0,     1,],] , dtype = 'float32')
+        [0,     0,     0,     0,     0,     0,     0,     1,],] , dtype = 'double')
         self.Ppred_matrix = np.array(
         [   [ 1.5e-3,        0, 1.5e-7,       0,        0,        0,       0,       0],
             [      0,   1.5e-3,      0,  2.8e-8, -1.1e-10,   4.2e-9,  1.0e-9, -4.2e-9],
@@ -110,7 +110,7 @@ cdef class Klm_Estimator:
             [      0, -1.1e-10,      0, -3.5e-9,   1.6e-6, -5.2e-10,  1.8e-6, 5.2e-10],
             [      0,   4.2e-9,      0,  1.3e-7, -5.2e-10,   2.1e-8,  4.8e-9, -2.0e-8],
             [      0,   1.0e-9,      0,  3.2e-8,   1.8e-6,   4.8e-9,  6.4e-5, -4.8e-9],
-            [      0,  -4.2e-9,      0, -1.3e-7,  5.2e-10,  -2.0e-8, -4.8e-9,  2.0e-8],], dtype = 'float32')
+            [      0,  -4.2e-9,      0, -1.3e-7,  5.2e-10,  -2.0e-8, -4.8e-9,  2.0e-8],], dtype = 'double')
         self.K_rps_gps_final = np.array([
             [       0,        0,       0,        0,        0, -0.00014,   0.0065, 0.998,        0, 0.00001,        0,      0],
             [ 0.00001,  0.00024,       0,  0.00024, -0.00003,  0.01758, -0.00187,     0,  0.99796,       0, -0.00062,      0],
@@ -120,7 +120,7 @@ cdef class Klm_Estimator:
             [       0, -0.00007,       0, -0.00007,  0.00001,  0.99444,  0.00058,     0,  0.00001,       0,  0.00022,      0],
             [ 0.01208,  0.30206, 0.00302,  0.30206,  0.96725,  0.00835, -0.00089,     0, -0.00001,       0, -0.00029,      0],
             [       0,        0,       0,        0,        0,        0,        0,     0,        0,       0,        0, 0.0098],
-        ], dtype = 'float32')
+        ], dtype = 'double')
         self.K_gps_final = np.array([
             [       0,        0,       0,        0,        0, -0.00014, 0.998,        0,   0.0001,        0,      0],
             [ 0.00001,  0.00024,       0,  0.00024, -0.00003,  0.01767,     0,  0.99796, -0.00001, -0.00062,      0],
@@ -130,7 +130,7 @@ cdef class Klm_Estimator:
             [       0, -0.00007,       0, -0.00007,  0.00001,  0.99442,     0,  0.00001,        0,  0.00022,      0],
             [ 0.01208,  0.30206, 0.00302,  0.30206,  0.96725,  0.00838,     0, -0.00001,        0,  -0.0003,      0],
             [       0,        0,       0,        0,        0,        0,     0,        0,        0,        0, 0.0098],
-        ], dtype = 'float32')
+        ], dtype = 'double')
         self.K_rps_final = np.array([
                           [       0,        0,       0,        0,       0,        0,  0.00227],
                           [       0,        0,       0,        0,       0,  0.00013, -0.00001],
@@ -140,7 +140,7 @@ cdef class Klm_Estimator:
                           [       0, -0.00007,       0, -0.00007, 0.00001,  0.99455,  0.00058],
                           [ 0.01208,  0.30206, 0.00302,  0.30206, 0.96725,  0.00822, -0.00089],
                           [       0,        0,       0,        0,       0,        0,        0],
-                                    ], dtype = 'float32')
+                                    ], dtype = 'double')
         self.K_imu_enc_final = np.array([
             [       0,        0,       0,        0,       0,        0],
             [       0,        0,       0,        0,       0,  0.00013],
@@ -150,7 +150,7 @@ cdef class Klm_Estimator:
             [       0, -0.00007,       0, -0.00007, 0.00001,  0.99453],
             [ 0.01208,  0.30206, 0.00302,  0.30206, 0.96725,  0.00824],
             [       0,        0,       0,        0,       0,        0],
-        ], dtype = 'float32')
+        ], dtype = 'double')
 
         self.Global_X_prev = 0
         self.Global_Y_prev = 0
@@ -172,8 +172,8 @@ cdef class Klm_Estimator:
                     [   0,   0,            0,   0,     1.0,     0,   self.dt ,   0],
                     [   0,   0,            0,   0,       0,   1.0,   0,   0],
                     [   0,   0,     0.993* self.dt * self.Uk +  self.dt *(0.993* self.Uk + 2.97*self.delta_h*self.v_h),   0, 18.4* self.dt ,              self.dt *(1.49*self.v_h ** 2 - 1.09), 1.0,   0],
-                    [   0,   0,     0,   0,       0,     0,   0, 1.0],], dtype = 'float32')
-        self.B_m = np.array([[0, 0, 0 ,0 ,0 , 2*self.dt, (2* self.dt * self.v_h), 0]], dtype = 'float32').T
+                    [   0,   0,     0,   0,       0,     0,   0, 1.0],], dtype = 'double')
+        self.B_m = np.array([[0, 0, 0 ,0 ,0 , 2*self.dt, (2* self.dt * self.v_h), 0]], dtype = 'double').T
 
         # print('Kalman : Searching for calibration file %s/sensors/Acc_Cali.txt' %(os.getcwd()))
         # with open('./sensors/Acc_Cali.txt', 'r') as f:
@@ -181,15 +181,15 @@ cdef class Klm_Estimator:
         self.prev_klm_time = time.time()
 
     cpdef estimate(self, controllerOBJ, int time_count):
-        cdef float start_time, X_h ,Y_h ,v_h ,psi_h ,phi_h ,delta_h ,phidot_h ,delta0_h, deltadot_ref, Yk_rps, Yk_enc,
-        cdef float[:]  Yk_imu,
-        cdef float v_rps, delta_enc, lat_gps, lon_gps, vel_gps, heading_gps
-        cdef float gx_imu, gy_imu, gz_imu, ax_imu, ay_imu, az_imu, Centrip, phi_dot_sensor
-        cdef float x_GPS_NED, y_GPS_NED, x_GPS_glb, y_GPS_glb, dX_global, dY_global, dX_local , dY_local
-        cdef float dv, time_now, dt
+        cdef double start_time, X_h ,Y_h ,v_h ,psi_h ,phi_h ,delta_h ,phidot_h ,delta0_h, deltadot_ref, Yk_rps, Yk_enc,
+        cdef double[:]  Yk_imu,
+        cdef double v_rps, delta_enc, lat_gps, lon_gps, vel_gps, heading_gps
+        cdef double gx_imu, gy_imu, gz_imu, ax_imu, ay_imu, az_imu, Centrip, phi_dot_sensor
+        cdef double x_GPS_NED, y_GPS_NED, x_GPS_glb, y_GPS_glb, dX_global, dY_global, dX_local , dY_local
+        cdef double dv, time_now, dt
         cdef bint update_rps, update_enc, update_gps, update_imu
-        cdef np.float32_t[:] Xk, roll_virtual_sensor, Yk_gps, sensor_out, hx, Xk_f, f_m, Xkp
-        cdef np.float32_t[:, :] C_obsv, K
+        cdef double[:] Xk, roll_virtual_sensor, Yk_gps, sensor_out, hx, Xk_f, f_m, Xkp
+        cdef double[:, :] C_obsv, K
         # cdef list  , #Xk,
         cdef dict UpdateFlg, Yks,
         cdef int ind
@@ -260,8 +260,8 @@ cdef class Klm_Estimator:
 
 
 
-        # roll_virtual_sensor = np.zeros(shape=(0, 4), dtype='float32')
-        roll_virtual_sensor = np.zeros(shape=(4), dtype='float32')
+        # roll_virtual_sensor = np.zeros(shape=(0, 4), dtype='double')
+        roll_virtual_sensor = np.zeros(shape=(4), dtype='double')
         Centrip = v_h ** 2 * tan(delta_h * sin(1.1519)) / self.b_const / self.g_const
         roll_virtual_sensor[0] = atan2(ay_imu - Centrip * cos(phi_h), az_imu + Centrip * sin(phi_h))
         roll_virtual_sensor[1] = -atan(gz_imu * v_h / self.g_const)
@@ -300,7 +300,7 @@ cdef class Klm_Estimator:
                                     Yk_rps,
                                     Yk_gps,
                                     delta_0_sensor,
-                                    )).T.astype('float32')
+                                    )).T.astype('double')
             C_obsv = self.C_rps_gps
         elif not update_rps and update_gps:
             sensor_out = np.hstack((roll_virtual_sensor,
@@ -308,17 +308,17 @@ cdef class Klm_Estimator:
                                     Yk_enc,
                                     Yk_gps,
                                     delta_0_sensor,
-                                    )).T.astype('float32')
+                                    )).T.astype('double')
             C_obsv = self.C_gps
         elif update_rps and not update_gps:
             sensor_out = np.hstack((roll_virtual_sensor,
                                     phi_dot_sensor,
                                     Yk_enc,
                                     Yk_rps,
-                                    )).T.astype('float32')
+                                    )).T.astype('double')
             C_obsv = self.C_rps
         else:
-            sensor_out = np.hstack((roll_virtual_sensor, phi_dot_sensor, Yk_enc )).T.astype('float32')
+            sensor_out = np.hstack((roll_virtual_sensor, phi_dot_sensor, Yk_enc )).T.astype('double')
             C_obsv = self.C_imuenc
 
         if update_rps and update_gps:
@@ -360,7 +360,7 @@ cdef class Klm_Estimator:
                         psi_h + 0.87*dt*v_h*tan(0.91*delta_h),
                         phi_h + dt*phidot_h ,delta_h + 2.0*dt*self.Uk,
                         phidot_h + dt*(18.0*phi_h + 0.99*self.Uk*v_h + delta_h*(1.5*v_h ** 2 - 1.1)) + 0.99*dt*self.Uk*v_h,
-                        delta0_h], dtype = 'float32')
+                        delta0_h], dtype = 'double')
         # f_m = self.A_m * Xk + self.B_m * self.Uk
         Xkp = f_m
         Xkp[6] = phi_dot_sensor  # Overwrite the rollrate
@@ -388,7 +388,7 @@ cdef class Klm_Estimator:
 
 
         Xk_f = Xk
-        # Xk_f[0:2] = np.array([Global_X, Global_Y], dtype='float32')
+        # Xk_f[0:2] = np.array([Global_X, Global_Y], dtype='double')
         Xk_f[0] = Global_X
         Xk_f[1] = Global_Y
 
