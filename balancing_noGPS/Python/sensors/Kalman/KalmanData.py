@@ -92,6 +92,8 @@ class KalmanData(object):
             RPS_update = 0
 
         """Check GPS validity"""
+        # print(self.lat_gps[1], self.alpha_0)
+        # print(self.lon_gps[1], self.gamma_0)
         if ((self.differentRead(self.lat_gps, 1) or
              self.differentRead(self.lon_gps, 1) or
              self.differentRead(self.heading_gps, 1)) and

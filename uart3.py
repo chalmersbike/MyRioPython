@@ -9,5 +9,3 @@ while True :
     motor.set_velocity(3)
     time.sleep(5)
     motor.stop()
-
-

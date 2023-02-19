@@ -33,10 +33,14 @@ class Bike(object):
                     self.steering_motor = SteeringMotor(session)
                     if gps_use:
                         # ini_gps_output = self.drive_gps_joint.get_latlon()
-                        ini_gps_output = self.drive_gps_joint.get_position()
-                        lat_0 = ini_gps_output[2]
-                        lon_0 = ini_gps_output[3]
-                        print([lat_0, lon_0])
+                        lat_0 = 0.0
+                        lon_0 = 0.0
+                        print('Waiting for valid GPS data for State Estimator')
+                        while lat_0 == 0.0 and lon_0 == 0.0:
+                            ini_gps_output = self.drive_gps_joint.get_position()
+                            lat_0 = ini_gps_output[2]
+                            lon_0 = ini_gps_output[3]
+                            print([lat_0, lon_0])
                         self.Klm_Estimator = Klm_Estimator(lat_0, lon_0)
 
                 # Run bike and controllers

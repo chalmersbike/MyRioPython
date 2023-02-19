@@ -187,6 +187,7 @@ class Klm_Estimator(object):
         #     self.acc_roll_offset = float(f.read())
         self.prev_klm_time = time.time()
 
+    # @pysnooper.snoop()
     def estimate(self, controllerOBJ, time_count):
 
         (UpdateFlg, Yks) = self.data.update_check(controllerOBJ)
@@ -354,11 +355,11 @@ class Klm_Estimator(object):
             # f_m = np.array([[X_h + (dt*v_h)/(0.34*tan(0.91*delta_h) ** 2 + 1.0) ** (1/2) ,Y_h + (0.58*dt*v_h*tan(0.91*delta_h))/(0.34*tan(0.91*delta_h) ** 2 + 1.0) ** (1/2) ,v_h + dt*dv ,psi_h + 0.87*dt*v_h*tan(0.91*delta_h) ,phi_h + dt*phidot_h ,delta_h + 2.0*dt*self.Uk ,phidot_h + dt*(18.0*phi_h + 0.99*self.Uk*v_h + delta_h*(1.5*v_h ** 2 - 1.1)) + 0.99*dt*self.Uk*v_h ,delta0_h]])
             f_m = self.A_m * Xk + self.B_m * self.Uk
             Xkp = f_m
-            Pkp = np.dot(self.A_m, np.dot(Pk, self.A_m.T)) + np.dot(dt**2, self.Q)
+            # Pkp = np.dot(self.A_m, np.dot(Pk, self.A_m.T)) + np.dot(dt**2, self.Q)
 
             # Ensure Covariance matrix is symmetrical
             # https://stackoverflow.com/a/30010778/4255176
-            Pkp = (Pkp + np.transpose(Pkp)) / 2
+            # Pkp = (Pkp + np.transpose(Pkp)) / 2
         else:
             if update_rps and update_gps:
                 K = self.K_rps_gps_final
@@ -402,12 +403,13 @@ class Klm_Estimator(object):
             Xkp = f_m[0]
             Xkp[6] = phi_dot_sensor  # Overwrite the rollrate
             # print(Xkp)
-            Pkp = self.P_est
-
+            # Pkp = self.P_est
+        # print(update_gps)
         if update_gps:
 
             Global_X = self.Global_X_prev_GPS + Xk[0] * cos(self.Psi_prev_GPS) - Xk[1] * sin(self.Psi_prev_GPS)
             Global_Y = self.Global_Y_prev_GPS + Xk[0] * sin(self.Psi_prev_GPS) + Xk[1] * cos(self.Psi_prev_GPS)
+            # print('GPS UPDATE!!' + str(Global_X) + ' ' + str(Global_Y))
 
             # Xkp[0][0:2] = Xkp[0][0:2] - np.expand_dims(Xk[0:2], axis=0)
             # Xkp[0][0:2] = Xkp[0][0:2] - np.expand_dims(Xk[0:2], axis=0)
@@ -431,7 +433,7 @@ class Klm_Estimator(object):
         self.X_est = Xk
 
         self.X_pred = Xkp
-        self.P_pred = Pkp
+        # self.P_pred = Pkp
 
         # print(self.X_est[0:2])
 
