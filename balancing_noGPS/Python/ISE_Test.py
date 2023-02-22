@@ -28,6 +28,7 @@ EMERGENCY = 0
 GPS_USE = 1
 from sensors import GPS
 from vesc_gps_resource_v2 import VESC_GPS
+from numpy import rad2deg
 
 # with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingnoG_yn8cRoiCUew.lvbitx", "RIO0") as session:
 # with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingnoG_wV6o5H-69rg.lvbitx", "RIO0") as session:
@@ -45,9 +46,12 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
         # fpga_SteeringWriteDutyCycle = session.registers['Duty Cycle (%)']
         # fpga_SteeringWriteFrequency = session.registers['Frequency (Hz)']
         # fpga_SteeringEnable = session.registers['Write']
-        fpga_SteeringWriteDutyCycle = session.registers['Steering PWM Duty Cycle']
-        fpga_SteeringWriteFrequency = session.registers['Steering PWM Frequency']
-        fpga_SteeringEnable = session.registers['Steering Enable']
+        # fpga_SteeringWriteDutyCycle = session.registers['Steering PWM Duty Cycle']
+        # fpga_SteeringWriteFrequency = session.registers['Steering PWM Frequency']
+        # fpga_SteeringEnable = session.registers['Steering Enable']
+        strMotorObj = SteeringMotor(session)
+        PositiveStrSpeed = 0.1
+        NegativeStrSpeed = -0.8
 
     if IMU_SWITCH:
         ###################################################################
@@ -95,28 +99,25 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
     print("Session is running")
     # Steering loop
     if STR_SWITCH:
-        fpga_SteeringEnable.write(False)
+        strMotorObj.stop()
+        # fpga_SteeringEnable.write(False)
         print("Steering is desactivated")
         time.sleep(3)
 
-
-        fpga_SteeringEnable.write(True)
+        strMotorObj.set_angular_velocity(0)
+        strMotorObj.enable()
+        # fpga_SteeringEnable.write(True)
         print("Steering is NOW activated")
-        fpga_SteeringWriteDutyCycle.write(50)
-        fpga_SteeringWriteFrequency.write(5000)
-        dc = 50
-        print('Ramping between 30-70 duty cycle!!!!')
+        PrevStrSpeed = PositiveStrSpeed
+        # fpga_SteeringWriteDutyCycle.write(50)
+        # fpga_SteeringWriteFrequency.write(5000)
+        # dc = 50
+        # print('Ramping between 30-70 duty cycle!!!!')
 
 
     try:
         while True:
-            if STR_SWITCH:
-                dc += 0.1
-                fpga_SteeringWriteDutyCycle.write(dc)
-                if dc > 50.5:
-                    dc = 49.5
-                print('STR PWM Duty Cycle:')
-                print(dc)
+
             if IMU_SWITCH:
                 t_startLoop = time.time()
 
@@ -180,8 +181,25 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 print('ENC Reading: \n')
                 # fpga_EncoderCounts.read()
                 # print(rad2deg(-fpga_EncoderCounts.read() * steeringEncoder_TicksToRadianRatio))
-                print(encoder_object.get_angle())
+                steeringAngle = encoder_object.get_angle()
+                print(rad2deg(steeringAngle))
             # time.sleep(0.1)
+
+            if STR_SWITCH:
+                steeringAngleDeg = rad2deg(steeringAngle)
+
+                if steeringAngleDeg > 30:
+                    PrevStrSpeed = NegativeStrSpeed
+                elif steeringAngleDeg < -30:
+                    PrevStrSpeed = PositiveStrSpeed
+
+                strMotorObj.set_angular_velocity(PrevStrSpeed)
+
+                # fpga_SteeringWriteDutyCycle.write(dc)
+                # if dc > 50.5:
+                #     dc = 49.5
+                # print('STR PWM Duty Cycle:')
+                # print(dc)
 
             if HALLSENSOR:
                 print("Speed Measured:")

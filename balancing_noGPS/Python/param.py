@@ -16,9 +16,11 @@ drive_motor_timeout = 9999.0  # sec
 drive_motor_restart_threshold = 1.5  # m/s
 
 # [m/s] Forward speed of the bike
-initial_speed = 2.4  # 2.8
+initial_speed = 1.8  # 2.8
 gainScheduling_enable = True
 # gainScheduling_enable = False
+# dynamicalGainScheduling = True
+dynamicalGainScheduling = False
 path_tracking = 0
 # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
@@ -38,7 +40,7 @@ start_up_interval = 5                           # [s] Time to wait before runnin
 speed_up_time = 3.0                             # [s] Time to run the drive motor without steering controller to get bike up to speed
 walk_time = 5.0                                 # [s] Time to walk the bike while manually controlling steering to get an estimate of the steering angle offset
 max_exceed_count = 10000                           # Number of times where calculation time can exceed sampling time before aborting experiment
-read_vesc_data = 0
+read_vesc_data = 1
 
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
 path_tracking_structure = 'series'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
@@ -97,7 +99,7 @@ path_file = 'newest'
 # Must be a CSV with 2 columns : Time, rollref. Must contain "rollref" in the name
 # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 rollref_file = 'nofile'
-rollref_file = 'roll_MS_Mag5.csv'  # 5-7-10-15
+# rollref_file = 'roll_MS_Mag5.csv'  # 5-7-10-15
 rollref_file = 'sqr_pm1deg_0idle.csv'
 # rollref_file = 'sqr_pm1deg_7idle.csv'
 # rollref_file = 'roll_ref_IMP1_at4_1deg.csv'  # IMP1-2 at2-4-8

@@ -6,6 +6,7 @@ from controller import Controller
 from vesc_gps_resource_v2 import VESC_GPS
 import pysnooper
 from nifpga import Session
+from GainScheduling import GainScheduling as GS
 
 class Bike(object):
     # @pysnooper.snoop()
@@ -42,6 +43,9 @@ class Bike(object):
                             lon_0 = ini_gps_output[3]
                             print([lat_0, lon_0])
                         self.Klm_Estimator = Klm_Estimator(lat_0, lon_0)
+                    if dynamicalGainScheduling:
+                        self.GainSche = GS()
+                        
 
                 # Run bike and controllers
                 self.controller = Controller(self,recordPath,reverse,straight,path_file_arg,rollref_file_arg,steeringdist_file_arg,simulate_file)

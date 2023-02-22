@@ -779,7 +779,7 @@ class Controller(object):
 
         self.roll_ref_imp_doneflag1 = False
         self.roll_ref_imp_doneflag2 = False
-
+        self.last_ctrl_update_speed = initial_speed
         # Potentiometer
         self.pot = 0.0
 
@@ -1577,6 +1577,16 @@ class Controller(object):
     ####################################################################################################################
     # Balancing controller
     def keep_the_bike_stable(self):
+        if dynamicalGainScheduling and self.v_estimated > 1 and abs(self.v_estimated-self.last_ctrl_update_speed) > 0.1:
+            # if self.v_estimated > 1.3:
+            CtrlVars = self.bike.GainSche.calculatePolynomials(self.v_estimated)
+            self.pid_balance.setKd(CtrlVars[0])
+            self.pid_balance.setKi(CtrlVars[1])
+            self.pid_balance_outerloop.setKi(CtrlVars[2])
+            print('ControllerGain Updated!')
+            self.last_ctrl_update_speed = self.v_estimated
+
+
         # self.get_balancing_setpoint()
         if gps_use:
             rollrate_for_control = self.rollRate_est
