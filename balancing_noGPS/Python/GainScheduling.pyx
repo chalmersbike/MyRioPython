@@ -9,7 +9,7 @@ cdef class GainScheduling:
     cdef list PiPoly, IiPoly, PoPoly
     cdef bint P_innerON, I_innerON, P_outerON
     def __init__(self, PiPoly = [ -0.3250, 3.5636, -14.2051, 23.0150],
-        IiPoly = [0, 0, 0, 0],
+        IiPoly = [0.0, 0.0, 0.0, 0.0],
         PoPoly = [-0.0113, 0.1233, -0.4798, 1.6257]):
 
         # PiPoly = [-0.3255, 3.5690, -14.2265, 23.0496],

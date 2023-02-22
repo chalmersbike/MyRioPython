@@ -232,17 +232,17 @@ speed_lookup_controllergains = [3,4,5]
 pid_balance_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 #pid_balance_P = 1.57
 # pid_balance_P = 5.0 # Gain tested with Peo for vel = 4
-PiPoly = [ -0.3250, 3.5636, -14.2051, 23.0150],
-IiPoly = [0, 0, 0, 0],
+PiPoly = [ -0.3250, 3.5636, -14.2051, 23.0150]
+IiPoly = [0.0, 0.0, 0.0, 0.0]
 PoPoly = [-0.0113, 0.1233, -0.4798, 1.6257]
 if gainScheduling_enable:
-    pid_balance_P = (PiPoly[0] * v**3  +
-                     PiPoly[1] *  v**2  +
-                     PiPoly[2] * v  +
+    pid_balance_P = (PiPoly[0] * initial_speed**3  +
+                     PiPoly[1] *  initial_speed**2  +
+                     PiPoly[2] * initial_speed  +
                      PiPoly[3])
-    pid_balance_I = (IiPoly[0] * v ** 3 +
-                     IiPoly[1] * v ** 2 +
-                     IiPoly[2] * v +
+    pid_balance_I = (IiPoly[0] * initial_speed ** 3 +
+                     IiPoly[1] * initial_speed ** 2 +
+                     IiPoly[2] * initial_speed +
                      IiPoly[3])
     print('Gain Scheduling ON for v = ',str(initial_speed) ,'m/s innerloop P = '
           + str(pid_balance_P))
@@ -267,9 +267,9 @@ pid_balance_sample_time = 1.0 / controller_frequency
 pid_balance_outerloop_reference = 0.0  # error = Reference - feedback_value. In Simulink error is directly lateral error so we set Reference = zero and feeback_value = - lateral_error.
 #pid_balance_outerloop_P = 0.57
 if gainScheduling_enable:
-    pid_balance_outerloop_P = (PoPoly[0] * v ** 3 +
-                               PoPoly[1] * v ** 2 +
-                               PoPoly[2] * v +
+    pid_balance_outerloop_P = (PoPoly[0] * initial_speed ** 3 +
+                               PoPoly[1] * initial_speed ** 2 +
+                               PoPoly[2] * initial_speed +
                                PoPoly[3])
     print('Gain Scheduling ON for v = ',str(initial_speed) ,'m/s outerloop P = '
           + str(pid_balance_outerloop_P))
