@@ -1580,10 +1580,10 @@ class Controller(object):
         if dynamicalGainScheduling and self.v_estimated > 1 and abs(self.v_estimated-self.last_ctrl_update_speed) > 0.1:
             # if self.v_estimated > 1.3:
             CtrlVars = self.bike.GainSche.calculatePolynomials(self.v_estimated)
-            self.pid_balance.setKd(CtrlVars[0])
-            self.pid_balance.setKi(CtrlVars[1])
-            self.pid_balance_outerloop.setKi(CtrlVars[2])
-            print('ControllerGain Updated!')
+            self.pid_balance.setKp(CtrlVars[0])
+            # self.pid_balance.setKi(CtrlVars[1])
+            self.pid_balance_outerloop.setKp(CtrlVars[2])
+            # print('ControllerGain Updated!')
             self.last_ctrl_update_speed = self.v_estimated
 
 

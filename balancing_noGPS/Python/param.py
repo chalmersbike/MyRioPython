@@ -19,8 +19,8 @@ drive_motor_restart_threshold = 1.5  # m/s
 initial_speed = 1.8  # 2.8
 gainScheduling_enable = True
 # gainScheduling_enable = False
-# dynamicalGainScheduling = True
-dynamicalGainScheduling = False
+dynamicalGainScheduling = True
+# dynamicalGainScheduling = False
 path_tracking = 0
 # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0

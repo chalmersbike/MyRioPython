@@ -386,9 +386,11 @@ class VESC_GPS(object):
                     self.y = R * lat * deg2rad
                     self.dx = self.x - self.x0
                     self.dy = self.y - self.y0
-                    if course is not float('nan'):
-                        course = ((450 - course) / 360.0 + np.pi) % (2 * np.pi) - np.pi
-                    else:
+                    # if course is not float('nan'):
+                    #     course = ((450 - course) / 360.0 + np.pi) % (2 * np.pi) - np.pi
+                    # else:
+                    #     course = np.aRXtan2(self.dy, self.dx)
+                    if course is float('nan'):
                         course = np.aRXtan2(self.dy, self.dx)
                 else:
                     print(warnings.warn("GPS : No Satelite found !"))

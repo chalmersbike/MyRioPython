@@ -44,7 +44,12 @@ class Bike(object):
                             print([lat_0, lon_0])
                         self.Klm_Estimator = Klm_Estimator(lat_0, lon_0)
                     if dynamicalGainScheduling:
-                        self.GainSche = GS()
+                        # self.GainSche = GS(PiPoly = [ -0.3250, 3.5636, -14.2051, 23.0150],
+                        #                    IiPoly = [0.0, 0.0, 0.0, 0.0],
+                        #                    PoPoly = [-0.0113, 0.1233, -0.4798, 1.6257])
+                        self.GainSche = GS(PiPoly = [ -0.3250, 3.5636, -14.2051, 23.0150],
+                                           IiPoly = [0.0, 0.0, 0.0, 0.0],
+                                           PoPoly = [-0.0133, 0.1453, -0.5710, 2.0043])
                         
 
                 # Run bike and controllers
