@@ -291,7 +291,7 @@ cdef class Klm_Estimator:
                 print('Warning: dX_Local > 10 m, something is wrong in GPS reading!')
 
 
-        delta_0_sensor = delta0_h - 0.01 * (Yk_gps[1] - Y_h)
+        delta_0_sensor = delta0_h - 0.5 * (Yk_gps[1] - Y_h)
 
         if update_rps and update_gps:
             sensor_out = np.hstack((roll_virtual_sensor,
