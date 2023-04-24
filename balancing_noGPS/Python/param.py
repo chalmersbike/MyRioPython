@@ -103,6 +103,8 @@ rollref_file = 'nofile'
 rollref_file = 'sqr_pm1deg_0idle.csv'
 # rollref_file = 'sqr_pm1deg_7idle.csv'
 # rollref_file = 'roll_ref_IMP1_at4_1deg.csv'  # IMP1-2 at2-4-8
+# rollref_file = 'roll_ref_spiral1deg30s.csv'
+
 
 ####################################################################################################################
 ####################################################################################################################

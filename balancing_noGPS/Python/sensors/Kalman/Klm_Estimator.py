@@ -3,7 +3,7 @@
 
 from .KalmanData import KalmanData as data
 # from .kalmanProfile import *
-#
+
 # from .stateestimator_setting import black_bike_parameters
 import numpy as np
 from math import cos, sin, tan, atan2, atan, asin, sqrt, isnan
@@ -20,13 +20,13 @@ class Klm_Estimator(object):
         # self.n = len(kalmanProfile['P0'])    # Nr of states
         n = 8
         self.stationary_kalman_ON = True
-        self.ts = np.zeros(shape=(1), dtype='float32')
-        self.Xs = np.zeros(shape=(n), dtype='float32')
-        self.X_est = np.zeros(shape=(n), dtype='float32')
+        self.ts = np.zeros(shape=(0,1), dtype='float32')
+        self.Xs = np.zeros(shape=(0,n,1), dtype='float32')
+        self.X_est = np.zeros(shape=(n,1), dtype='float32')
         self.P_est = np.ones(shape=(n,n), dtype='float32')
-        self.X_pred = np.zeros(shape=(n), dtype='float32')
+        self.X_pred = np.zeros(shape=(n,1), dtype='float32')
         self.P_pred = np.ones(shape=(n,n), dtype='float32')
-        self.X_cfs = np.zeros(shape=(n), dtype='float32')
+        self.X_cfs = np.zeros(shape=(0,n,1), dtype='float32')
 
         # self.params = black_bike_parameters().astype(np.float32)
         # self.sensors = kalmanProfile['sensors']
@@ -107,44 +107,43 @@ class Klm_Estimator(object):
             [      0,   1.0e-9,      0,  3.2e-8,   1.8e-6,   4.8e-9,  6.4e-5, -4.8e-9],
             [      0,  -4.2e-9,      0, -1.3e-7,  5.2e-10,  -2.0e-8, -4.8e-9,  2.0e-8],])
         self.K_rps_gps_final = np.array([
-            [       0,        0,       0,        0,        0, -0.00014,   0.0065, 0.998,        0, 0.00001,        0,      0],
-            [ 0.00001,  0.00024,       0,  0.00024, -0.00003,  0.01758, -0.00187,     0,  0.99796,       0, -0.00062,      0],
-            [       0,        0,       0,        0,        0,   0.0003,  0.65093,     0,        0, 0.00121, -0.00001,      0],
-            [       0,        0,       0,        0,        0, -0.20239, -0.00002,     0,        0,       0,  0.38196,      0],
-            [ 0.01279,  0.31971,  0.0032,  0.31971,  0.00095, -0.00022,  0.00002,     0,        0,       0,  0.00001,      0],
-            [       0, -0.00007,       0, -0.00007,  0.00001,  0.99444,  0.00058,     0,  0.00001,       0,  0.00022,      0],
-            [ 0.01208,  0.30206, 0.00302,  0.30206,  0.96725,  0.00835, -0.00089,     0, -0.00001,       0, -0.00029,      0],
-            [       0,        0,       0,        0,        0,        0,        0,     0,        0,       0,        0, 0.0098],
+            [       0,       0,        0,       0,       0,       0, 4.6e-3,   0.55,       0, 9.5e-5,       0,       0],
+            [ -6.3e-9, -6.3e-7, -2.5e-10, -6.3e-7,  2.7e-6,  1.9e-4,      0,      0,    0.55,      0,  1.6e-4, -2.4e-8],
+            [       0,       0,        0,       0,       0,       0,  0.069, 5.3e-5,       0, 1.4e-3,       0,       0],
+            [ -3.5e-7, -3.5e-5,  -1.4e-8, -3.5e-5,  1.5e-4,  6.0e-4,      0,      0,  9.8e-6,      0,   0.043, -1.3e-6],
+            [  1.6e-4,   0.016,   6.4e-6,   0.016,  8.4e-3, -2.7e-5,      0,      0, -3.9e-8,      0, -3.5e-5,  5.3e-9],
+            [ -5.3e-8, -5.3e-6,  -2.1e-9, -5.3e-6,  2.3e-5,    0.97,      0,      0,  1.5e-6,      0,  1.3e-3, -2.1e-7],
+            [  1.7e-4,   0.017,   6.7e-6,   0.017,    0.35,  2.1e-3,      0,      0,  3.4e-7,      0,  3.0e-4, -4.6e-8],
+            [  5.3e-8,  5.3e-6,   2.1e-9,  5.3e-6, -2.3e-5,  9.8e-5,      0,      0, -1.5e-6,      0, -1.3e-3,  2.1e-7],
         ])
         self.K_gps_final = np.array([
-            [       0,        0,       0,        0,        0, -0.00014, 0.998,        0,   0.0001,        0,      0],
-            [ 0.00001,  0.00024,       0,  0.00024, -0.00003,  0.01767,     0,  0.99796, -0.00001, -0.00062,      0],
-            [       0,        0,       0,        0,        0,  0.00011,     0,        0,   0.0098,        0,      0],
-            [       0,        0,       0,        0,        0, -0.20239,     0,        0,        0,  0.38196,      0],
-            [ 0.01279,  0.31971,  0.0032,  0.31971,  0.00095, -0.00022,     0,        0,        0,  0.00001,      0],
-            [       0, -0.00007,       0, -0.00007,  0.00001,  0.99442,     0,  0.00001,        0,  0.00022,      0],
-            [ 0.01208,  0.30206, 0.00302,  0.30206,  0.96725,  0.00838,     0, -0.00001,        0,  -0.0003,      0],
-            [       0,        0,       0,        0,        0,        0,     0,        0,        0,        0, 0.0098],
+            [       0,       0,        0,       0,       0,       0,   0.67,       0, 1.1e-4,       0,       0],
+            [ -7.6e-9, -7.6e-7, -3.0e-10, -7.6e-7,  3.1e-6,  5.4e-5,      0,    0.67,      0,  1.9e-4, -2.9e-8],
+            [       0,       0,        0,       0,       0,       0, 6.4e-5,       0, 1.4e-3,       0,       0],
+            [ -3.5e-7, -3.5e-5,  -1.4e-8, -3.5e-5,  1.4e-4,  2.3e-4,      0,  1.2e-5,      0,   0.044, -1.3e-6],
+            [  1.6e-4,   0.016,   6.5e-6,   0.016,  7.7e-3, -9.6e-6,      0, -4.7e-8,      0, -3.5e-5,  5.2e-9],
+            [ -5.2e-8, -5.2e-6,  -2.1e-9, -5.2e-6,  2.1e-5,    0.99,      0,  1.8e-6,      0,  1.3e-3, -2.0e-7],
+            [  1.5e-4,   0.015,   6.1e-6,   0.015,    0.42,  7.3e-4,      0,  3.9e-7,      0,  2.9e-4, -4.3e-8],
+            [  5.2e-8,  5.2e-6,   2.1e-9,  5.2e-6, -2.1e-5,  9.9e-5,      0, -1.8e-6,      0, -1.3e-3,  2.0e-7],
         ])
         self.K_rps_final = np.array([
-                          [       0,        0,       0,        0,       0,        0,  0.00227],
-                          [       0,        0,       0,        0,       0,  0.00013, -0.00001],
-                          [       0,        0,       0,        0,       0,  0.00029,  0.65188],
-                          [       0,        0,       0,        0,       0,   0.0001, -0.00001],
-                          [ 0.01279,  0.31971,  0.0032,  0.31971, 0.00095, -0.00021,  0.00002],
-                          [       0, -0.00007,       0, -0.00007, 0.00001,  0.99455,  0.00058],
-                          [ 0.01208,  0.30206, 0.00302,  0.30206, 0.96725,  0.00822, -0.00089],
-                          [       0,        0,       0,        0,       0,        0,        0],
-                                    ])
+                          [       0,       0,        0,       0,       0,       0, 0.016],
+                          [ -2.3e-8, -2.3e-6, -9.1e-10, -2.3e-6,  1.1e-5,  4.5e-4,     0],
+                          [       0,       0,        0,       0,       0,       0, 0.068],
+                          [ -3.7e-7, -3.7e-5,  -1.5e-8, -3.7e-5,  1.7e-4,  6.7e-4,     0],
+                          [  1.6e-4,   0.016,   6.3e-6,   0.016,  9.0e-3, -3.1e-5,     0],
+                          [ -5.3e-8, -5.3e-6,  -2.1e-9, -5.3e-6,  2.5e-5,    0.97,     0],
+                          [  1.8e-4,   0.018,   7.2e-6,   0.018,    0.32,  2.3e-3,     0],
+                          [  5.3e-8,  5.3e-6,   2.1e-9,  5.3e-6, -2.5e-5,  9.7e-5,     0],])
         self.K_imu_enc_final = np.array([
-            [       0,        0,       0,        0,       0,        0],
-            [       0,        0,       0,        0,       0,  0.00013],
-            [       0,        0,       0,        0,       0,   0.0001],
-            [       0,        0,       0,        0,       0,   0.0001],
-            [ 0.01279,  0.31971,  0.0032,  0.31971, 0.00095, -0.00021],
-            [       0, -0.00007,       0, -0.00007, 0.00001,  0.99453],
-            [ 0.01208,  0.30206, 0.00302,  0.30206, 0.96725,  0.00824],
-            [       0,        0,       0,        0,       0,        0],
+            [       0,       0,        0,       0,       0,       0],
+            [ -1.1e-8, -1.1e-6, -4.3e-10, -1.1e-6,  5.0e-6,  4.1e-4],
+            [       0,       0,        0,       0,       0,       0],
+            [ -3.5e-7, -3.5e-5,  -1.4e-8, -3.5e-5,  1.6e-4,  6.2e-4],
+            [  1.6e-4,   0.016,   6.4e-6,   0.016,  8.9e-3, -2.8e-5],
+            [ -5.2e-8, -5.2e-6,  -2.1e-9, -5.2e-6,  2.4e-5,    0.97],
+            [  1.8e-4,   0.018,   7.1e-6,   0.018,    0.32,  2.1e-3],
+            [  5.2e-8,  5.2e-6,   2.1e-9,  5.2e-6, -2.4e-5,  9.7e-5],
         ])
         self.P_est = self.Ppred_matrix
         self.R_roll = np.diag([0.1, 0.01, 1, 1e-1]) ** 2
@@ -187,7 +186,6 @@ class Klm_Estimator(object):
         #     self.acc_roll_offset = float(f.read())
         self.prev_klm_time = time.time()
 
-    # @pysnooper.snoop()
     def estimate(self, controllerOBJ, time_count):
 
         (UpdateFlg, Yks) = self.data.update_check(controllerOBJ)
@@ -234,11 +232,8 @@ class Klm_Estimator(object):
             print(Yk_gps[3])
             Yk_gps[3] = psi_h
             print('Overwritten as %f' %phi_h)
-        # else:
-            # print(Yk_gps[3])
-            # print(np.unwrap([psi_h, Yk_gps[3]]))
-            # Yk_gps[3] = np.unwrap([psi_h, Yk_gps[3]])[0]
-
+        else:
+            Yk_gps[3] = np.unwrap([psi_h, Yk_gps[3]])[-1]
         heading_gps = Yk_gps[3]
 
         # IMU
@@ -355,11 +350,11 @@ class Klm_Estimator(object):
             # f_m = np.array([[X_h + (dt*v_h)/(0.34*tan(0.91*delta_h) ** 2 + 1.0) ** (1/2) ,Y_h + (0.58*dt*v_h*tan(0.91*delta_h))/(0.34*tan(0.91*delta_h) ** 2 + 1.0) ** (1/2) ,v_h + dt*dv ,psi_h + 0.87*dt*v_h*tan(0.91*delta_h) ,phi_h + dt*phidot_h ,delta_h + 2.0*dt*self.Uk ,phidot_h + dt*(18.0*phi_h + 0.99*self.Uk*v_h + delta_h*(1.5*v_h ** 2 - 1.1)) + 0.99*dt*self.Uk*v_h ,delta0_h]])
             f_m = self.A_m * Xk + self.B_m * self.Uk
             Xkp = f_m
-            # Pkp = np.dot(self.A_m, np.dot(Pk, self.A_m.T)) + np.dot(dt**2, self.Q)
+            Pkp = np.dot(self.A_m, np.dot(Pk, self.A_m.T)) + np.dot(dt**2, self.Q)
 
             # Ensure Covariance matrix is symmetrical
             # https://stackoverflow.com/a/30010778/4255176
-            # Pkp = (Pkp + np.transpose(Pkp)) / 2
+            Pkp = (Pkp + np.transpose(Pkp)) / 2
         else:
             if update_rps and update_gps:
                 K = self.K_rps_gps_final
@@ -403,13 +398,12 @@ class Klm_Estimator(object):
             Xkp = f_m[0]
             Xkp[6] = phi_dot_sensor  # Overwrite the rollrate
             # print(Xkp)
-            # Pkp = self.P_est
-        # print(update_gps)
+            Pkp = self.P_est
+
         if update_gps:
 
             Global_X = self.Global_X_prev_GPS + Xk[0] * cos(self.Psi_prev_GPS) - Xk[1] * sin(self.Psi_prev_GPS)
             Global_Y = self.Global_Y_prev_GPS + Xk[0] * sin(self.Psi_prev_GPS) + Xk[1] * cos(self.Psi_prev_GPS)
-            # print('GPS UPDATE!!' + str(Global_X) + ' ' + str(Global_Y))
 
             # Xkp[0][0:2] = Xkp[0][0:2] - np.expand_dims(Xk[0:2], axis=0)
             # Xkp[0][0:2] = Xkp[0][0:2] - np.expand_dims(Xk[0:2], axis=0)
@@ -424,8 +418,7 @@ class Klm_Estimator(object):
 
             Global_X = self.Global_X_prev_GPS + Xk[0] * cos(self.Psi_prev_GPS) - Xk[1] * sin(self.Psi_prev_GPS)
             Global_Y = self.Global_Y_prev_GPS + Xk[0] * sin(self.Psi_prev_GPS) + Xk[1] * cos(self.Psi_prev_GPS)
-        # print(Yk_gps[3], Xk[3])
-        # print(Global_X, Global_Y)
+
 
         Xk_f = Xk
         Xk_f[0:2] = np.array([Global_X, Global_Y])
@@ -433,12 +426,13 @@ class Klm_Estimator(object):
         self.X_est = Xk
 
         self.X_pred = Xkp
-        # self.P_pred = Pkp
+        self.P_pred = Pkp
 
         # print(self.X_est[0:2])
 
         # print('Kalman Time : \n')
         # print(time.time() - start_time)
 
-        return Xk_f
-        # return Xk_f, self.P_est
+
+
+        return Xk_f, self.P_est
