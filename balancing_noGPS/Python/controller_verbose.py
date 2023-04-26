@@ -37,7 +37,64 @@ class Controller(object):
 
         # Load data from previous experiment if simulating to debug the code
         if self.simulate_file != '':
-           self.init_for_simulate_file()
+            print("Loading data from experiment %s ..." % (self.simulate_file))
+            # self.simulate_data = np.genfromtxt(self.simulate_file,
+            #     names=True,  # If `names` is True, the field names are read from the first valid line
+            #     delimiter=",",  # tab separated values
+            #     skip_header = 1, # Skip first line of experiment description
+            #     dtype=None,  # guess the dtype of each column
+            #     )
+
+            self.simulate_data = np.genfromtxt(("\t".join(i).encode('ascii') for i in csv.reader(open(self.simulate_file))),names=True,delimiter="\t",skip_header=1,dtype=None)
+
+            self.idx_simulate_data = 0
+            self.simulate_data_RealTime = self.simulate_data['RealTime'].astype('U13')
+            self.simulate_data_Time = self.simulate_data['Time']
+            self.simulate_data_CalculationTime = self.simulate_data['CalculationTime']
+            self.simulate_data_MeasuredVelocity = self.simulate_data['MeasuredVelocity']
+            self.simulate_data_FilteredVelocity = self.simulate_data['FilteredVelocity']
+            self.simulate_data_BalancingGainsInner = self.simulate_data['BalancingGainsInner']
+            self.simulate_data_BalancingGainsOuter = self.simulate_data['BalancingGainsOuter']
+            self.simulate_data_Roll = self.simulate_data['Roll']
+            self.simulate_data_SteeringAngle = self.simulate_data['SteeringAngle']
+            self.simulate_data_RollRate = self.simulate_data['RollRate']
+            self.simulate_data_ControlInput = self.simulate_data['ControlInput']
+            self.simulate_data_BalancingSetpoint = self.simulate_data['BalancingSetpoint']
+            self.simulate_data_gy = self.simulate_data['gy']
+            self.simulate_data_gz = self.simulate_data['gz']
+            self.simulate_data_ax = self.simulate_data['ax']
+            self.simulate_data_ay = self.simulate_data['ay']
+            self.simulate_data_az = self.simulate_data['az']
+            self.simulate_data_imu_read_timing = self.simulate_data['imu_read_timing']
+            self.simulate_data_SteerMotorCurrent = self.simulate_data['SteerMotorCurrent']
+            self.simulate_data_v_estimated = self.simulate_data['v_estimated']
+            self.simulate_data_yaw_estimated = self.simulate_data['yaw_estimated']
+            self.simulate_data_heading_estimated = self.simulate_data['heading_estimated']
+            self.simulate_data_x_estimated = self.simulate_data['x_estimated']
+            self.simulate_data_y_estimated = self.simulate_data['y_estimated']
+            self.simulate_data_GPS_timestamp = self.simulate_data['GPS_timestamp']
+            self.simulate_data_x_GPS = self.simulate_data['x_GPS']
+            self.simulate_data_y_GPS = self.simulate_data['y_GPS']
+            self.simulate_data_theta_GPS = self.simulate_data['theta_GPS']
+            self.simulate_data_theta_GPS_noUnwrap = self.simulate_data['theta_GPS_noUnwrap']
+            self.simulate_data_latitude = self.simulate_data['latitude']
+            self.simulate_data_longitude = self.simulate_data['longitude']
+            self.simulate_data_lat_estimated = self.simulate_data['lat_estimated']
+            self.simulate_data_lon_estimated = self.simulate_data['lon_estimated']
+            self.simulate_data_status = self.simulate_data['status']
+            self.simulate_data_NMEA_timestamp = self.simulate_data['NMEA_timestamp']
+            try:
+                self.simulate_data_DirectionGains = self.simulate_data['DirectionGains']
+                self.simulate_data_LateralPositionGains = self.simulate_data['LateralPositionGains']
+                self.simulate_data_distance_travelled = self.simulate_data['distance_travelled']
+                self.simulate_data_x_ref = self.simulate_data['x_ref']
+                self.simulate_data_y_ref = self.simulate_data['y_ref']
+                self.simulate_data_heading_ref = self.simulate_data['heading_ref']
+                self.simulate_data_lateral_error = self.simulate_data['lateral_error']
+                self.simulate_data_heading_error = self.simulate_data['heading_error']
+            except:
+                pass
+
         self.variable_init()
 
         # Check Estop before starting the experiment
@@ -51,21 +108,172 @@ class Controller(object):
             else:
                 self.path_file_arg = 'newest'
         if path_tracking and self.path_file_arg != 'pot' and not self.recordPath:
-            self.init_load_path()
+            try:
+                if self.path_file_arg == 'newest':
+                    list_of_files = glob.glob('./paths/*.csv')
+                    self.latest_file = max(list_of_files, key=os.path.getctime)
+                    print("Loading newest path %s ..." % (self.latest_file))
+                    self.path_data = np.genfromtxt(self.latest_file, delimiter=",", skip_header=1)
+                else:
+                    print("Loading path %s ..." % (self.path_file_arg))
+                    # self.path_data = np.genfromtxt('paths/' + self.path_file_arg, delimiter=",", skip_header=1)
+                    self.path_data = np.genfromtxt(self.path_file_arg, delimiter=",")
+                self.path_time = self.path_data[:,0]
+                # if self.path_data[0, 3] == 0:
+                if self.path_data.shape[1] <= 3:
+                    # Case if the path in defined in (x,y,psi)
+                    self.path_x = self.path_data[:,1]
+                    self.path_y = self.path_data[:,2]
+                    self.path_heading = self.path_data[:,3]
+                else:
+                    # Case if the path in defined in (lat,lon)
+
+                    # Extract unique timestamps
+                    _, indices = np.unique(self.path_data[:, -1], return_index=True)
+                    indices = indices[:-1]
+                    self.path_data = self.path_data[indices,:]
+
+                    # Compute XY path
+                    self.path_lat = self.path_data[:,3]
+                    self.path_lon = self.path_data[:,4]
+                    print(self.path_lat)
+                    # Reverse path is needed
+                    if self.reverse:
+                        print('Reading path in reverse ...')
+                        self.path_lon = self.path_lon[::-1]
+                        self.path_lat = self.path_lat[::-1]
+
+                    self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
+                    self.path_y = R * self.path_lat * deg2rad
+                    print(self.path_lon)
+                    print(self.path_lat)
+                    print(self.path_x)
+                    print(self.path_y)
+                    print(self.path_heading)
+                    self.path_x = self.path_x - self.path_x[0]
+                    self.path_y = self.path_y - self.path_y[0]
+                    # print(self.path_x)
+                    # print(self.path_y)
+                    # print(self.path_heading)
+                    # self.path_x = self.path_x - self.bike.drive_gps_joint.x0
+                    # self.path_y = self.path_y - self.bike.drive_gps_joint.y0
+
+                    # Downsample from 10Hz to 1Hz
+                    self.path_x = self.path_x[0::10]
+                    self.path_y = self.path_y[0::10]
+
+                    if self.straight:
+                        print('Using only first and last points of path to get a straight line ...')
+                        self.path_x = np.array([self.path_x[0],self.path_x[-1]])
+                        self.path_y = np.array([self.path_y[0],self.path_y[-1]])
+
+                    # Compute heading
+                    self.path_heading = np.arctan2(self.path_y[1:] - self.path_y[0:-1], (self.path_x[1:] - self.path_x[0:-1]))
+
+                    self.path_heading = np.append(self.path_heading, self.path_heading[-1])
+                    self.path_heading = np.unwrap(self.path_heading)
+
+                print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
+            except Exception as e:
+                print(e)
+                print("Path file not found, setting all path references to 0 as default")
+                # self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
+                self.path_data = np.array([[0.0,0.0,0.0,0.0],[1000000.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
+                self.path_time = self.path_data[:,0]
+                self.path_x = self.path_data[:,1]
+                self.path_y = self.path_data[:,2]
+                self.path_heading = self.path_data[:,3]
+
+            self.path_distanceTravelled = np.cumsum(np.sqrt((self.path_x[1:] - self.path_x[0:-1])**2 + (self.path_y[1:] - self.path_y[0:-1])**2))
+            self.path_distanceTravelled = np.append(0,self.path_distanceTravelled)
+
+            # print(self.path_x)
+            # print(self.path_y)
+            # print(self.path_heading)
+
+            if path_end == 'uturn':
+                print("Adding a U-turn at the end of the reference path to bring the bike back to its start point")
+                # if path_end_uturn_left:
+                #     q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1] + 0.1)
+                # else:
+                #     q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1] - 0.1)
+                q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1])
+
+                idx_path_currentDistanceTravelled = bisect.bisect_right(self.path_distanceTravelled,self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath ) + np.array([-1, 0])
+                x1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath ,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_x[idx_path_currentDistanceTravelled])
+                y1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath ,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_y[idx_path_currentDistanceTravelled])
+                theta1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath ,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_heading[idx_path_currentDistanceTravelled]) - np.pi
+                q1_dubins = (x1_dubins,y1_dubins,theta1_dubins)
+
+                q2_dubins = (self.path_x[0],self.path_y[0],self.path_heading[0] - np.pi)
+
+                self.path_dubins01 = dubins.shortest_path(q0_dubins, q1_dubins, path_end_uturn_radius)
+                if path_end_uturn_left:
+                    self.path_dubins01 = dubins.path(q0_dubins, q1_dubins, path_end_uturn_radius,dubins.LSR)
+                else:
+                    self.path_dubins01 = dubins.path(q0_dubins, q1_dubins, path_end_uturn_radius,dubins.RSL)
+                self.configurations_dubins01, _ = self.path_dubins01.sample_many(path_end_uturn_stepSize)
+                self.configurations_dubins01 = zip(*self.configurations_dubins01)
+
+                self.path_dubins12 = dubins.shortest_path(q1_dubins, q2_dubins, path_end_uturn_radius)
+                self.configurations_dubins12, _ = self.path_dubins12.sample_many(path_end_uturn_stepSize)
+                self.configurations_dubins12 = zip(*self.configurations_dubins12)
+
+                self.path_x = np.append(self.path_x,self.configurations_dubins01[0] + self.configurations_dubins12[0])
+                self.path_y = np.append(self.path_y,self.configurations_dubins01[1] + self.configurations_dubins12[1])
+                self.path_heading = np.append(self.path_heading,self.configurations_dubins01[2] + self.configurations_dubins12[2])
+                self.path_heading = np.unwrap(self.path_heading)
+                # self.path_heading = np.unwrap(self.path_heading)
+
+
+                self.path_distanceTravelled = np.cumsum(np.sqrt((self.path_x[1:] - self.path_x[0:-1]) ** 2 + (self.path_y[1:] - self.path_y[0:-1]) ** 2))
+                self.path_distanceTravelled = np.append(0, self.path_distanceTravelled)
+
+            print(self.path_x)
+            print(self.path_y)
+            print(self.path_heading)
+
         # Load roll reference
         if self.rollref_file_arg == '':
             self.rollref_file_arg = 'rollref/' + rollref_file
-        # if rollref_file != 'nofile' or roll_ref_use:
-        self.init_load_roll()  # Regardless of roll_ref_use
+        if rollref_file != 'nofile':
+            print("Loading roll reference %s ..." % (self.rollref_file_arg))
+            try:
+                # self.rollref_data = np.genfromtxt('rollref/' + self.rollref_file_arg, delimiter=",", skip_header=1)
+                self.rollref_data = np.genfromtxt(self.rollref_file_arg, delimiter=",", skip_header=1)
+                self.rollref_time = self.rollref_data[:, 0]
+                self.rollref_roll = self.rollref_data[:, 1] * rollref_multiplier + rollref_offset
+                print(self.rollref_roll)
+                print("Roll reference loaded, starting experiment.")
+            except:
+                print([self.rollref_file_arg, "Path file not found, setting roll reference to 0 as default"])
+                # self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
+                self.rollref_data = np.array([[0.0, 0.0], [1000000.0, 0.0],]) # Using three rows with zeros for np.interp to work
+                self.rollref_time = self.rollref_data[:, 0]
+                self.rollref_roll = self.rollref_data[:, 1] * rollref_multiplier + rollref_offset
 
         # Load steering disturbance
         if self.steeringdist_file_arg == '':
             self.steeringdist_file_arg = 'strratedistbref/' + strdistbref_file
         if strdistbref_file != 'nofile':
-            self.init_load_strdistbref()
+            print("Loading steering rate disturbance reference %s ..." % (self.steeringdist_file_arg))
+            try:
+                self.strdistbref_data = np.genfromtxt(self.steeringdist_file_arg, delimiter=",", skip_header=1)
+                self.strdistbref_time = self.strdistbref_data[:, 0]
+                self.strdistbref_str = self.strdistbref_data[:, 1] * strdistbref_multiplier
+                print(self.strdistbref_str)
+                print("Steering rate disturbance reference loaded, starting experiment.")
+            except:
+                print([self.steeringdist_file_arg, "Steering rate disturbance file not found, setting roll reference to 0 as default"])
+                # self.strdistbref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
+                self.strdistbref_data = np.array([[0.0, 0.0], [1000000.0, 0.0],]) # Using three rows with zeros for np.interp to work
+                self.strdistbref_time = self.strdistbref_data[:, 0]
+                self.strdistbref_str = self.strdistbref_data[:, 1] * strdistbref_multiplier
+
         # Read the IMU complementary filter Phi as the initial phi estimation
         # self.roll = self.bike.get_imu_data(0, self.steeringAngle, self.roll)[0]
         # self.roll = self.bike.get_imu_data(self.velocity, self.steeringAngle, self.roll)[0]
+
 
 
         # Get description (if any) of the experiment
@@ -81,15 +289,35 @@ class Controller(object):
         else:
             self.log_headerline_recordPath()
 
-        # Start the heartbeat
         self.bike.drive_gps_joint.heart_pipe_parent.send('start_heart_beat')
         self.heartbeat_on_flag = True
         print('Heart Beat STARTS!!!')
         self.time_run_start = time.time() # Reset the starting time, BECAUSE Used in gps_read()
         # Verify that NTRIP correction is not too old
         if gps_use:
-            self.init_GPS()
-
+            self.gps_read()
+            if ntrip_correction:
+                if self.bike.drive_gps_joint.Mode_rmc != 'R' and self.bike.drive_gps_joint.Mode_rmc != 'F':
+                    print(self.bike.drive_gps_joint.Mode_rmc)
+                    print('\nGPS: Waited too long before starting the experiment, NTRIP corrections have to be sent again to the GPS.')
+                    print('GPS : Reconnecting NTRIP socket...')
+                    # self.bike.drive_gps_joint.ntripclient.socket.connect_ex((self.bike.drive_gps_joint.ntripclient.caster, self.bike.drive_gps_joint.ntripclient.port))
+                    self.bike.drive_gps_joint.ntripclient.reconnectNTRIPSocket()
+                    print('GPS : Waiting for NTRIP corrections to be received and processed by GPS...')
+                    self.gps_read()
+                    self.bike.drive_gps_joint.write_ntrip(self.gpspos)
+                    while self.bike.drive_gps_joint.Mode_rmc != 'R' and self.bike.drive_gps_joint.Mode_rmc != 'F':
+                        try:
+                            self.gps_read()
+                            self.bike.drive_gps_joint.write_ntrip(self.gpspos)
+                            time.sleep(1)
+                        except KeyboardInterrupt:
+                            break
+                        except:
+                            pass
+                    time.sleep(3)
+                    print('GPS : GPS ready.')
+                # print(self.gps_timestamp)
         # Wait before starting experiment
         print("")
         for i in range(0,int(math.ceil(start_up_interval))):
@@ -113,6 +341,7 @@ class Controller(object):
         self.pid_steeringangle.clear()
         self.pid_lateral_position.clear()
         self.pid_direction.clear()
+
         self.bike.steering_motor.enable()
 
 
@@ -133,15 +362,397 @@ class Controller(object):
         if read_vesc_data:
             self.bike.drive_gps_joint.vescdata_pipe_parent.send('start_vesc_query')
             
-        while (not self.breaktheloop) and (self.controller_active or not self.gainingSpeedOver_flag):
-            self.run_loop()
+        while self.controller_active or not self.gainingSpeedOver_flag:
+            if self.simulate_file == '':
+                self.time_start_current_loop = time.time()
+            else:
+                self.time_start_current_loop = self.simulate_data_Time[self.idx_simulate_data]
+
+            try:
+                # Get velocity
+                self.velocity_previous = self.velocity
+                if self.simulate_file == '':
+                    self.velocity = self.bike.get_velocity(initial_speed)
+                else:
+                    self.velocity = self.simulate_data_MeasuredVelocity[self.idx_simulate_data]
+                self.velocity_rec = self.velocity
+                if abs(self.velocity) > 1.25*abs(initial_speed):
+                    print('[%f] WARNING : Measured speed larger than 1.25 times reference speed' % (
+                                time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                if self.velocity-self.velocity_previous > 1.5:
+                    print('[%f] WARNING : Measured speed change between two samples too large' % (
+                            time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                    self.velocity = 1.5 + self.velocity
+                    self.velocity = self.velocity_previous
+                if (self.time_count >= speed_up_time + walk_time) and self.velocity < 0.8:
+                    print('[%f] WARNING : Measured velocity lower than 0.8m/s after speed-up, setting the measured speed to the reference' % (
+                            time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                    self.velocity = initial_speed
+                if self.broken_speed_flag:
+                    self.velocity = initial_speed
+
+                # Get states
+                self.time_get_states = time.time()
+                self.get_states()
+                self.time_get_states = time.time() - self.time_get_states
+
+
+                self.sensor_reading_time = time.time()
+                # Get position from GPS
+                if gps_use:
+                    # print(time.time(), self.time_run_start,  self.gps_timestamp)
+                    # if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01 or (((self.simulate_data_Time[self.idx_simulate_data] - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file!=''):
+                    # if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01:
+                    self.gps_read_quotient = ((time.time() - self.time_run_start) ) // (gps_sampling_time)   # The Quotient in GPS time
+                    # print('GPS quotient: \n')
+                    # print(self.gps_read_quotient, self.gps_read_quotient_old)
+                    if (self.gps_read_quotient > self.gps_read_quotient_old and self.simulate_file=='') or self.gps_timestamp <= 0.01:
+                        # print(time.time(),self.time_ntrip)
+                        if ntrip_correction and time.time() - self.time_ntrip > 5:
+                            self.time_ntrip = time.time()
+                            self.bike.drive_gps_joint.write_ntrip(self.gpspos)
+                            print("NTRIP Requested!!!")
+                        self.gps_timestamp_previous = self.gps_timestamp
+                        self.gps_read_quotient_old = self.gps_read_quotient
+
+                        # self.bike.get_gps_data()
+                        self.time_gps = time.time()
+                        self.gps_read()
+
+                        # self.compute_steering_offset_flag = True
+
+                        if self.gps_nmea_timestamp_ini == '000000':
+                            self.gps_nmea_timestamp_ini = self.gps_nmea_timestamp
+                            # warnings.warn('RESET NEMA INI!!!!!')
+
+                        # # Set flag to compute estimated states at next time step
+                        # self.compute_estimators_flag = False
+
+                        # Check if GPS NMEA timestamp is more than 1s away from BeagleBone timestamp
+                        if self.simulate_file == '':
+                            # print(self.gps_nmea_timestamp)
+                            if self.gps_nmea_timestamp is not None and self.gps_nmea_timestamp_ini is not None:
+                                # print(self.gps_nmea_timestamp)
+                                # print(self.gps_nmea_timestamp_ini)
+                                # print(type(self.gps_nmea_timestamp))
+                                est_gps_lag = (datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count
+                                # print(est_gps_lag)
+                                if abs(est_gps_lag) > 1 and (est_gps_lag < 4.9 or est_gps_lag > 5.4):
+                                    print(est_gps_lag)
+
+                                    print("[%f] WARNING : the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised." % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                            else:
+                                print(self.gps_nmea_timestamp)
+                                print(type(self.gps_nmea_timestamp))
+                                print(self.gps_nmea_timestamp_ini)
+                                print(
+                                    "[%f] WARNING : timestamp received is NONE!!!!" % (
+                                        time.time() - self.time_run_start if self.simulate_file == '' else
+                                        self.simulate_data_Time[self.idx_simulate_data]))
+
+                        if self.lat_estimated == 0.0:# and self.recordPath:
+                            # Set initial conditions of estimators
+                            self.lat_estimated = self.lat_measured_GPS
+                            self.lon_estimated = self.lon_measured_GPS
+                            self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
+                            self.beta_previous = self.beta
+                            self.v_estimated = self.velocity
+                            self.v_estimated_previous = self.v_estimated
+                            self.pos_estimated = self.pos_GPS
+                            self.pos_estimated_previous = self.pos_estimated
+                            self.x_estimated = np.asscalar(self.pos_estimated[0])
+                            self.y_estimated = np.asscalar(self.pos_estimated[1])
+                            self.x_estimated_previous = self.x_estimated
+                            self.y_estimated_previous = self.y_estimated
+                            self.heading_estimated = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)  # Heading computed between initial (0,0) position and position at end of walk
+                            self.heading_estimated_previous = self.heading_estimated
+                            self.yaw_estimated = self.heading_estimated - self.beta
+                            self.yaw_estimated_previous = self.yaw_estimated
+
+                        # Estimate steering angle offset from GPS position
+                        if not self.steering_angle_offset_computed_flag:
+                            try:
+                                # Rotate path to get small heading angle
+                                self.y_GPS_rot_previous = self.y_GPS_rot
+                                rotMatrix = np.array([[np.cos(-self.theta_measured_GPS), -np.sin(-self.theta_measured_GPS)], [np.sin(-self.theta_measured_GPS), np.cos(-self.theta_measured_GPS)]])
+                                self.pos_GPS_rot = np.dot(rotMatrix,self.pos_GPS)
+                                self.y_GPS_rot = self.pos_GPS_rot[1,:]
+
+                                # self.velocity_previous = 1.5
+                                # self.velocity = 1.5
+                                # # self.steeringAngle_previous = 0.02
+                                # # self.steeringAngle = 0.02
+                                # # self.y_measured_GPS_previous = self.y_measured_GPS - 0.03
+                                # # self.gps_timestamp_previous = self.gps_timestamp - 0.1
+
+                                self.steering_angle_offset += (1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_GPS_rot - self.y_GPS_rot_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt))
+                                self.cumsum_v_dt += self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous)
+                                self.cumsum_delta_v_dt += self.steeringAngle_previous * self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous)
+
+                                self.steering_angle_offset_count = self.steering_angle_offset_count + 1
+
+                                # print(self.velocity_previous)
+                                # print(self.steeringAngle_previous)
+                                # print((self.gps_timestamp - self.gps_timestamp_previous))
+                                # print(self.cumsum_v_dt)
+                                # print(self.cumsum_delta_v_dt)
+                                # print(self.y_GPS_rot)
+                                # print((self.y_GPS_rot - self.y_GPS_rot_previous))
+                                # print((1 / ((LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((self.y_measured_GPS - self.y_measured_GPS_previous) / (self.velocity_previous * (self.gps_timestamp - self.gps_timestamp_previous))) - (LENGTH_A * self.steeringAngle_previous / LENGTH_B) - ((np.sin(lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt))))
+                                # print(self.steering_angle_offset_count)
+                                # print(self.steering_angle_offset)
+
+                                self.compute_steering_offset_flag = False
+                            except:
+                                # self.steering_angle_offset += 0.0
+                                # self.steering_angle_offset_count = self.steering_angle_offset_count #+ 1
+
+                                self.compute_steering_offset_flag = False
+                else:
+                    self.x_measured_GPS = 0.0
+                    self.y_measured_GPS = 0.0
+                    self.lat_measured_GPS = 0.0
+                    self.lon_measured_GPS = 0.0
+                    self.gps_timestamp = 0.0
+
+
+                # Estimate states (v, yaw, heading, x, y)
+                # if self.compute_estimators_flag:# and (self.time_count >= walk_time):
+                    # self.estimate_states()
+                    # self.compute_estimators_flag = False
+
+                # Get laser ranger position (y position on the roller)
+                if laserRanger_use:
+                    #if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
+                    if (time.time() - self.time_laserranger) > 10 * sample_time:
+                        self.time_laserranger = time.time()
+                        self.y_laser_ranger = self.bike.get_laserRanger_data()
+                        if abs(self.y_laser_ranger)>0.25:
+                            print('[%f] WARNING : Laser ranger position outside of roller' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                else:
+                    self.y_laser_ranger = 0
+
+
+                # Read the VESC data
+                if read_vesc_data:
+                    # print(self.bike.get_vesc_data())
+                    # self.rpm, self.v_in, self.avg_motor_current, self.avg_input_current = self.bike.get_vesc_data()
+                    # print(self.bike.drive_gps_joint.send_out_readings())
+                    # self.rpm, self.v_in, self.avg_motor_current, self.avg_input_current = self.bike.drive_gps_joint.send_out_readings()
+                    # print(self.rpm)
+                    self.rpm, self.avg_motor_current, self.v_in, self.avg_input_current = self.bike.drive_gps_joint.retrieve_vesc_data()
+
+                
+                # Compute time needed to read from all sensors
+                self.sensor_reading_time = time.time() - self.sensor_reading_time + self.time_get_states
+
+                # if laserRanger_use:
+                #     print("Laser ranger reading time : %f" %(time.time()-self.time_laserranger))
+                # if gps_use:
+                #     print("GPS reading time : %f" %(time.time()-self.time_gps))
+                if self.time_count > drive_motor_timeout and self.heartbeat_on_flag and self.velocity > initial_speed-0.1:
+                    self.bike.drive_gps_joint.heart_pipe_parent.send('stop_heart_beat')
+                    self.heartbeat_on_flag = False
+                    print('Stop Heart Beat!')
+                elif self.time_count > drive_motor_timeout and self.heartbeat_on_flag and self.velocity < drive_motor_restart_threshold:
+                    self.bike.drive_gps_joint.heart_pipe_parent.send('start_heart_beat')
+                    self.heartbeat_on_flag = True
+                    print('Start Heart Beat!')
+
+
+                # PID Velocity Control
+                if pid_velocity_active:
+                    self.pid_velocity_control_signal = self.pid_velocity.update(self.velocity)
+                    self.bike.set_velocity(self.pid_velocity_control_signal)
+
+                # Let bike get up to speed for a few seconds before starting controllers
+                if (self.time_count < walk_time):
+                    if not self.walk_message_printed_flag:
+                        self.walk_message_printed_flag = True
+                        print("[%f] Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+
+                    if self.simulate_file == '':
+                        self.bike.steering_motor.disable()
+
+                    # [OLD METHOD - CHANGED TO USE GPS POSITION OVER 5s] Estimate steering angle offset from mean of steering angle during walk
+                    # self.steering_angle_offset = self.steering_angle_offset + self.steeringAngle
+                    # self.steering_angle_offset_count = self.steering_angle_offset_count + 1
+
+                elif (self.time_count < speed_up_time+walk_time and self.time_count >= walk_time) and not self.gainingSpeedOver_flag:
+                    # Do not start controllers until bike ran for enough time to get up to speed
+                    # self.bike.steering_motor.enable()
+                    if self.simulate_file == '':
+                        self.bike.steering_motor.disable()
+
+                    if not self.speed_up_message_printed_flag:
+                        self.speed_up_message_printed_flag = True
+                        print('[%f] Gaining speed ...' % (time.time() - self.time_run_start) if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
+
+                    if not self.recordPath and self.simulate_file == '':
+                        self.bike.set_velocity(initial_speed)
+                elif (self.time_count >= speed_up_time+walk_time) and not self.gainingSpeedOver_flag:
+                    # Compute mean of steering angle during first 5s
+                    if not self.steering_angle_offset_computed_flag:
+                        self.steering_angle_offset_computed_flag = True
+                        try:
+                            self.steering_angle_offset = float(self.steering_angle_offset) / self.steering_angle_offset_count
+                        except:
+                            print('[%f] WARNING : Cannot compute steering angle offset, setting it to 0.0' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                            self.steering_angle_offset = 0.0
+                        print('[%f] Steering angle offset : %.2f deg' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],self.steering_angle_offset))
+
+                        # Set initial conditions of estimators
+                        self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
+                        self.beta_previous = self.beta
+                        self.v_estimated = self.velocity
+                        self.v_estimated_previous = self.v_estimated
+                        self.pos_estimated = self.pos_GPS
+                        self.pos_estimated_previous = self.pos_estimated
+                        self.x_estimated = np.asscalar(self.pos_estimated[0])
+                        self.y_estimated = np.asscalar(self.pos_estimated[1])
+                        self.x_estimated_previous = self.x_estimated
+                        self.y_estimated_previous = self.y_estimated
+                        self.heading_estimated = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)  # Heading computed between initial (0,0) position and position at end of walk
+                        self.heading_estimated_previous = self.heading_estimated
+                        self.yaw_estimated = self.heading_estimated - self.beta
+                        self.yaw_estimated_previous = self.yaw_estimated
+
+                        # Set GPS heading
+                        # self.theta_measured_GPS = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)
+                    # Once enough time has passed, start controller
+                    self.gainingSpeedOver_flag = True
+                    print('[%f] Gaining speed phase over' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+
+                    # Check that speed if high enough
+                    if self.velocity < 0.3*initial_speed:
+                        print("[%f] WARNING : speed is lower than one third the reference speed. Hall sensors or drive motor might be faulty. Will use reference speed instead of measured speed in calculations." % (time.time() - self.time_run_start) if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
+                        self.broken_speed_flag = True
+
+                    self.controller_active = True
+
+                    # Clear PID controllers memory
+                    self.pid_velocity.clear()
+                    self.pid_balance.clear()
+                    self.pid_balance_outerloop.clear()
+                    self.pid_steeringangle.clear()
+                    self.pid_lateral_position.clear()
+                    self.pid_direction.clear()
+
+                    # Enable steering motor
+                    if not self.recordPath and self.simulate_file == '':
+                        self.bike.steering_motor.enable()
+
+                    # Time at which the controller starts running
+                    self.time_start_controller = time.time()
+
+                    # Abort experiment if bike is in unsafe conditions at this point
+                    # if (abs(self.roll)>20*deg2rad or abs(self.rollRate)>20*deg2rad or abs(self.steeringAngle)>20*deg2rad):
+                    if (abs(self.roll) > 20*deg2rad or abs(self.steeringAngle) > 20*deg2rad):
+                        exc_msg = ('[%f] Bike is in unsafe conditions, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                        print(exc_msg)
+                        self.exception_log(-1, exc_msg)
+                        break
+
+                    # Reset estimated roll to zero
+                    self.roll = 0
+                    if self.simulate_file == '':
+                        self.bike.imu.phi = 0
+                elif self.controller_active:
+                    # Check steering angle
+                    self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
+
+                    # Balancing and path tracking control
+                    # self.bike.steering_motor.enable()
+                    # self.controller_set_handlebar_angular_velocity(0)
+                    # self.update_controller_gains()
+                    if not self.recordPath:
+                        self.get_balancing_setpoint()
+                        self.keep_the_bike_stable()
+
+
+                # Compute time needed to run controllers
+                self.control_cal_time = time.time() - self.time_start_current_loop - self.sensor_reading_time
+            #except (ValueError, KeyboardInterrupt):
+            except Exception as e:
+                print("[%f] Number of times sampling time was exceeded : %d" % (self.exceedscount,time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+
+                # e = sys.exc_info()[0]
+                print("[%f] Detected error :" % (time.time() - self.time_run_start) if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
+                print(e)
+                print(traceback.print_exc())
+
+                self.safe_stop()
+                exc_msg = ('[%f] Error or keyboard interrupt, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                print(exc_msg)
+                self.exception_log(-2, exc_msg)
+
+
+            # Control Frequency
+            self.loop_time = time.time() - self.time_start_current_loop
+            if self.simulate_file == '':
+                self.time_count = time.time() - self.time_run_start
+            else:
+                # self.time_count = self.simulate_data_Time[self.idx_simulate_data] - self.simulate_data_Time[self.idx_simulate_data-1]
+                self.time_count = self.simulate_data_Time[self.idx_simulate_data]
+
+
+            if not self.recordPath:
+                # Check for ESTOP
+                if self.simulate_file == '':
+                    self.ESTOP = self.bike.emergency_stop_check()
+                    if self.ESTOP:
+                        exc_msg = '[%f] Emergency stop pressed, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data])
+                        print(exc_msg)
+                        self.exception_log(0,exc_msg)
+                        self.safe_stop()
+                        break
+
+                # Check for extreme PHI
+                if self.roll > MAX_LEAN_ANGLE or self.roll < MIN_LEAN_ANGLE:
+                    self.safe_stop()
+                    exc_msg = ('[%f] Exceeded min/max lean (roll) angle abs %3f > abs %3f, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],self.roll, MAX_LEAN_ANGLE))
+                    print(exc_msg)
+                    self.exception_log(2, exc_msg)
+
+
+                # End test time condition
+                if self.time_count > test_duration:
+                    # Print number of times sampling time was exceeded if experiment is aborted early
+                    self.safe_stop()
+                    exc_msg = ('[%f] Exceeded test duration, aborting the experiment' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
+                    print(exc_msg)
+                    self.exception_log(-1, exc_msg)
+                    break
+
+            # Log data
+            if not self.recordPath:
+                self.log_regular()
+            # else:
+            else:
+                self.log_regular_recordPath()
+
+            # Compute total time for current loop
+            self.loop_time = time.time() - self.time_start_current_loop
+            # Sleep to match sampling time
+            if self.loop_time < sample_time and self.simulate_file == '':
+                time.sleep((sample_time - self.loop_time))
+                if debug:
+                    print('Sleeping...')
+
+            self.time_start_previous_loop = self.time_start_current_loop
+
+            # Distance travelled
+            if self.simulate_file == '':
+                self.distance_travelled += self.velocity * (time.time() - self.time_start_current_loop)
+            else:
+                self.distance_travelled += self.velocity * (self.simulate_data_Time[self.idx_simulate_data] - self.simulate_data_Time[max(0,self.idx_simulate_data-1)])
+
+            # Increase index for simulation using prerecorded data
+            if self.simulate_file != '':
+                self.idx_simulate_data += 1
 
         # Print number of times sampling time was exceeded after experiment is over
-        print("[%f] Number of times sampling time was exceeded : %d" % (
-            time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                self.idx_simulate_data],
-            self.exceedscount))
-
+        print("[%f] Number of times sampling time was exceeded : %d" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],self.exceedscount))
 
     ####################################################################################################################
     ####################################################################################################################
@@ -171,9 +782,6 @@ class Controller(object):
         self.last_ctrl_update_speed = initial_speed
         # Potentiometer
         self.pot = 0.0
-
-        # Path length
-        self.traj_size = 0
 
         # Laser Ranger
         self.time_laserranger = 0.0
@@ -275,7 +883,6 @@ class Controller(object):
         self.yaw_estimated_previous = 0.0
         self.heading_estimated_previous = 0.0
         self.time_estimate_previous = 0.0
-        self.breaktheloop = False
 
         # Steering angle offset esimation
         self.steering_angle_offset = 0
@@ -316,7 +923,6 @@ class Controller(object):
         self.heading_ref = 0.0
         self.lateral_error = 0.0
         self.heading_error = 0.0
-        self.idx_nearestpath = 0
         self.path_tracking_engaged = False
         # self.roll_ref_period_mod_switch = False
         # self.roll_ref_period_mod_switch_time = 0.0
@@ -812,32 +1418,26 @@ class Controller(object):
                 else:
                     self.y_ref = 0.0
             else:
-
-
                 # print(self.distance_travelled, self.path_distanceTravelled[-1])
                 if self.distance_travelled >= self.path_distanceTravelled[-1]:
                     self.x_ref = self.path_x[-1]
                     self.y_ref = self.path_y[-1]
                     self.heading_ref = self.path_heading[-1]
                 else:
-                    # Nearest reference point
-                    while ((self.path_x[self.idx_nearestpath] - self.x_estimated) ** 2 + (
-                            self.path_y[self.idx_nearestpath] - self.y_estimated) ** 2 >=
-                           (self.path_x[self.idx_nearestpath + 1] - self.x_estimated) ** 2 + (
-                                   self.path_y[self.idx_nearestpath + 1] - self.y_estimated) ** 2 and
-                           self.idx_nearestpath <= self.traj_size - 2):
-                        self.idx_nearestpath += 1
-
-
-                    self.x_ref = self.path_x[self.idx_nearestpath]
-                    self.y_ref = self.path_y[self.idx_nearestpath]
-                    self.heading_ref = self.path_heading[self.idx_nearestpath]
-                    self.D_psiref = self.path_heading[self.idx_nearestpath+1] - self.path_heading[self.idx_nearestpath]
-
-                    # idx_path_currentDistanceTravelled = bisect.bisect_right(self.path_distanceTravelled,self.distance_travelled)+np.array([-1,0])
-                    # self.x_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_x[idx_path_currentDistanceTravelled])
-                    # self.y_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_y[idx_path_currentDistanceTravelled])
-                    # self.heading_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_heading[idx_path_currentDistanceTravelled])
+                    idx_path_currentDistanceTravelled = bisect.bisect_right(self.path_distanceTravelled,self.distance_travelled)+np.array([-1,0])
+                    self.x_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_x[idx_path_currentDistanceTravelled])
+                    self.y_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_y[idx_path_currentDistanceTravelled])
+                    self.heading_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_heading[idx_path_currentDistanceTravelled])
+            # else:
+            #     if (time.time() - self.time_start_controller) > self.path_time[-1]:
+            #         self.x_ref = self.path_x[-1]
+            #         self.y_ref = self.path_y[-1]
+            #         self.heading_ref = self.path_heading[-1]
+            #     else:
+            #         idx_path_currentTime = bisect.bisect_right(self.path_time,time.time() - self.time_start_controller)+np.array([-1,0])
+            #         self.x_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_x[idx_path_currentTime])
+            #         self.y_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_y[idx_path_currentTime])
+            #         self.heading_ref = np.interp(time.time() - self.time_start_controller,self.path_time[idx_path_currentTime],self.path_heading[idx_path_currentTime])
 
             # Compute position and heading errors
             try:
@@ -848,20 +1448,38 @@ class Controller(object):
                 self.x_error = 0
                 self.y_error = 0
                 self.heading_error = 0
+            # if virtual_odometer:
+            #     # Using virtual Odometer to do heading control/position control
+            #     # WHILE it is highly imprecise!!!
+            #     self.x_error = self.x_ref - self.x_estimated
+            #     self.y_error = self.y_ref - self.y_estimated
+            #     self.heading_error = self.heading_ref - self.psi_estimated
+            # elif gps_use:
+            #     # We are outside so we get the position and heading measurement from the GPS
+            #     self.x_error = self.x_ref - self.x_measured_GPS
+            #     self.y_error = self.y_ref - self.y_measured_GPS
+            #     self.heading_error = self.heading_ref - self.theta_measured_GPS
+            # elif laserRanger_use:
+            #     # We are on the roller so we neglect the angular error and the lateral error is given by the position
+            #     # measured by the laser rangers
+            #     self.x_error = 0
+            #     self.y_error = self.y_ref - self.y_laser_ranger
+            #     self.heading_error = 0
+            # else:
+            #     self.x_error = 0
+            #     self.y_error = 0
+            #     self.heading_error = 0
+
+            # print('x_ref = %f ; x_GPS = %f ; x_error = %f' % (self.x_ref,self.x_measured_GPS,self.x_error))
+            # print('y_ref = %f ; y_GPS = %f ; y_error = %f' % (self.y_ref,self.y_measured_GPS,self.y_error))
+            # print('heading_ref = %f ; psi_GPS = %f ; heading_error = %f' % (self.heading_ref,self.theta_measured_GPS,self.heading_error))
+            # print('')
 
             # Compute lateral and heading errors
             # self.lateral_error = self.x_error * np.sin(self.heading_ref) + self.y_error * np.cos(self.heading_ref)
             self.lateral_error = -self.x_error * np.sin(self.heading_ref) + self.y_error * np.cos(self.heading_ref)
-            # self.heading_error = self.heading_error
+            self.heading_error = self.heading_error
             # self.heading_error = self.heading_error % (2*np.pi)
-            
-            # dis = np.sqrt((self.path_x[self.idx_nearestpath+1] - self.path_x[self.idx_nearestpath]) ** 2
-            #                 + (self.path_y[self.idx_nearestpath+1] - self.path_y[self.idx_nearestpath])  ** 2)
-            # Ts_psi = dis / self.velocity
-            # d_psiref = self.D_psiref / Ts_psi
-
-            # delta_ref_error = -k1 * sign(e1) * min(abs(e1), e1_max) - k2 * e2
-
 
             # if (time.time() - self.time_pathtracking) > 10 * sample_time:
             if True:
@@ -873,22 +1491,18 @@ class Controller(object):
                     # PID Direction/Heading Controller
                     self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not measurement
                     # Compute balancing setpoint
-                    if roll_ref_use:
-                        idx_rollref_currentTime = bisect.bisect_right(self.rollref_time,
-                                                                      time.time() - self.time_start_controller) + np.array(
-                            [-1, 0])
-                        if idx_rollref_currentTime[0] < 0:
-                            idx_rollref_currentTime[0] = 0
-                        if time.time() - self.time_start_controller >= self.rollref_time[-1]:
-                            self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal + self.rollref_roll[-1]
-                        else:
-                            self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal + np.interp(
-                                time.time() - self.time_start_controller,
-                                self.rollref_time[idx_rollref_currentTime],
-                                self.rollref_roll[idx_rollref_currentTime])
+                    idx_rollref_currentTime = bisect.bisect_right(self.rollref_time,
+                                                                  time.time() - self.time_start_controller) + np.array(
+                        [-1, 0])
+                    if idx_rollref_currentTime[0] < 0:
+                        idx_rollref_currentTime[0] = 0
+                    if time.time() - self.time_start_controller >= self.rollref_time[-1]:
+                        self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal + self.rollref_roll[-1]
                     else:
-                        self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
-
+                        self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal + np.interp(
+                            time.time() - self.time_start_controller,
+                            self.rollref_time[idx_rollref_currentTime],
+                            self.rollref_roll[idx_rollref_currentTime])
                     # self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal
                 elif path_tracking_structure == 'series':
                     # PID Lateral Position Controller
@@ -899,36 +1513,30 @@ class Controller(object):
                         self.pid_direction.setReference(-lateralError_controller * self.pid_lateral_position_control_signal)
                         self.pid_direction_control_signal = self.pid_direction.update(-self.heading_error) # Minus sign due to using error and not measurement
                         # Compute balancing setpoint
-                        if roll_ref_use:
-                            idx_rollref_currentTime = bisect.bisect_right(self.rollref_time,
-                                                                          time.time() - self.time_start_controller) + np.array(
-                                [-1, 0])
-                            if idx_rollref_currentTime[0] < 0:
-                                idx_rollref_currentTime[0] = 0
-                            if time.time() - self.time_start_controller >= self.rollref_time[-1]:
-                                self.balancing_setpoint = self.pid_direction_control_signal + self.rollref_roll[-1]
-                            else:
-                                self.balancing_setpoint = self.pid_direction_control_signal + np.interp(time.time() - self.time_start_controller,
-                                                                    self.rollref_time[idx_rollref_currentTime],
-                                                                    self.rollref_roll[idx_rollref_currentTime])
+                        idx_rollref_currentTime = bisect.bisect_right(self.rollref_time,
+                                                                      time.time() - self.time_start_controller) + np.array(
+                            [-1, 0])
+                        if idx_rollref_currentTime[0] < 0:
+                            idx_rollref_currentTime[0] = 0
+                        if time.time() - self.time_start_controller >= self.rollref_time[-1]:
+                            self.balancing_setpoint = self.pid_direction_control_signal + self.rollref_roll[-1]
                         else:
-                            self.balancing_setpoint = self.pid_direction_control_signal
+                            self.balancing_setpoint = self.pid_direction_control_signal + np.interp(time.time() - self.time_start_controller,
+                                                                self.rollref_time[idx_rollref_currentTime],
+                                                                self.rollref_roll[idx_rollref_currentTime])
                     else: # Path-Tracking
                         # Compute balancing setpoint
-                        if roll_ref_use:
-                            idx_rollref_currentTime = bisect.bisect_right(self.rollref_time,
-                                                                          time.time() - self.time_start_controller) + np.array(
-                                [-1, 0])
-                            if idx_rollref_currentTime[0] < 0:
-                                idx_rollref_currentTime[0] = 0
-                            if time.time() - self.time_start_controller >= self.rollref_time[-1]:
-                                self.balancing_setpoint = self.pid_lateral_position_control_signal + self.rollref_roll[-1]
-                            else:
-                                self.balancing_setpoint = self.pid_lateral_position_control_signal + np.interp(time.time() - self.time_start_controller,
-                                                                    self.rollref_time[idx_rollref_currentTime],
-                                                                    self.rollref_roll[idx_rollref_currentTime])
+                        idx_rollref_currentTime = bisect.bisect_right(self.rollref_time,
+                                                                      time.time() - self.time_start_controller) + np.array(
+                            [-1, 0])
+                        if idx_rollref_currentTime[0] < 0:
+                            idx_rollref_currentTime[0] = 0
+                        if time.time() - self.time_start_controller >= self.rollref_time[-1]:
+                            self.balancing_setpoint = self.pid_lateral_position_control_signal + self.rollref_roll[-1]
                         else:
-                            self.balancing_setpoint = self.pid_lateral_position_control_signal
+                            self.balancing_setpoint = self.pid_lateral_position_control_signal + np.interp(time.time() - self.time_start_controller,
+                                                                self.rollref_time[idx_rollref_currentTime],
+                                                                self.rollref_roll[idx_rollref_currentTime])
                 else:
                     print("Path tracking controller structure choice is not valid : \"%s\"; Using parallel structure as default.\n" % (balancing_controller_structure))
                     # PID Lateral Position Controller
@@ -1038,6 +1646,10 @@ class Controller(object):
         if self.simulate_file == '':
             self.controller_set_handlebar_angular_velocity(self.steering_rate)
 
+        # if self.pid_balance_control_signal > deadband or self.pid_balance_control_signal < -deadband:
+        #     self.controller_set_handlebar_angular_velocity(self.steering_rate)
+        # else:
+        #     self.controller_set_handlebar_angular_velocity(0)
 
 
     ####################################################################################################################
@@ -1091,6 +1703,8 @@ class Controller(object):
             param_bike_file = open('param_blackbike.py', 'rb').read()
         param_hexdump = codecs.encode(param_file, 'base64')
         param_bike_hexdump = codecs.encode(param_bike_file, 'base64')
+
+
 
         if path_tracking:
             if self.path_file_arg == 'newest':
@@ -1173,6 +1787,28 @@ class Controller(object):
                 "{0:.5f}".format(self.steeringAngle_est),
                 "{0:.8f}".format(self.rollRate_est)
             ]
+            # print(self.x_estimated, self.y_estimated)
+            # self.log_str += [
+            #     "{0:.5f}".format(self.v_estimated),
+            #     "{0:.5f}".format(self.yaw_estimated),
+            #     "{0:.5f}".format(self.heading_estimated),
+            #     "{0:.5f}".format(self.x_estimated),
+            #     "{0:.5f}".format(self.y_estimated),
+            #     "{0:.5f}".format(self.steering_offset),
+            #     "{0:.5f}".format(self.gps_timestamp),
+            #     "{0:.5f}".format(self.x_measured_GPS),
+            #     "{0:.5f}".format(self.y_measured_GPS),
+            #     "{0:.5f}".format(self.theta_measured_GPS),
+            #     "{0:.5f}".format(self.theta_measured_GPS_noUnwrap),
+            #     "{0:.8f}".format(self.lat_measured_GPS),
+            #     "{0:.8f}".format(self.lon_measured_GPS),
+            #     "{0:.8f}".format(self.lat_estimated),
+            #     "{0:.8f}".format(self.lon_estimated),
+            #     "{0:.8f}".format(self.speed_m_s),
+            #     "{0:.8f}".format(self.course),
+            #     self.gps_status,
+            #     self.gps_nmea_timestamp
+            # ]
         if laserRanger_use:
             self.log_str += [
                 "{0:.5f}".format(self.bike.laser_ranger.distance1),
@@ -1198,6 +1834,21 @@ class Controller(object):
             if self.loop_time > sample_time:
                 # print("[%f] WARNING : The calculation time exceeds the sampling time!" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
                 self.exceedscount += 1
+
+            # Print sensor reading time, control calculation time, IMU data reading time and logging time
+            #     print("[%f] sensor_reading_time \t control calculation \t IMU \t log = %g \t %g \t %g \t %g \t" % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data],
+            #                                                                                                        self.sensor_reading_time, self.control_cal_time, self.time_get_states,
+            #                                                                                                        self.time_log))
+
+            # Stop experiment if exceeded sampling time too many times
+        #     if self.exceedscount > max_exceed_count:
+        #         print("")
+        #         self.safe_stop()
+        #     exc_msg = 'Calculation time exceeded sampling time too often (%d times) , aborting the experiment' % (max_exceed_count)
+        #     print(exc_msg)
+        #     self.exception_log(3, exc_msg)
+        # self.rollRate_prev = self.rollRate
+
 
     def reset_global_angles_and_coordinates(self):
         self.x_estimated = initial_speed * (time.time() - self.time_start_controller)
@@ -1316,680 +1967,3 @@ class Controller(object):
         #     print(exc_msg)
         #     self.exception_log(3, exc_msg)
         # self.rollRate_prev = self.rollRate
-
-    def init_for_simulate_file(self):
-        print("Loading data from experiment %s ..." % (self.simulate_file))
-
-        self.simulate_data = np.genfromtxt(
-            ("\t".join(i).encode('ascii') for i in csv.reader(open(self.simulate_file))),
-            names=True, delimiter="\t", skip_header=1, dtype=None)
-
-        self.idx_simulate_data = 0
-        self.simulate_data_RealTime = self.simulate_data['RealTime'].astype('U13')
-        self.simulate_data_Time = self.simulate_data['Time']
-        self.simulate_data_CalculationTime = self.simulate_data['CalculationTime']
-        self.simulate_data_MeasuredVelocity = self.simulate_data['MeasuredVelocity']
-        self.simulate_data_FilteredVelocity = self.simulate_data['FilteredVelocity']
-        self.simulate_data_BalancingGainsInner = self.simulate_data['BalancingGainsInner']
-        self.simulate_data_BalancingGainsOuter = self.simulate_data['BalancingGainsOuter']
-        self.simulate_data_Roll = self.simulate_data['Roll']
-        self.simulate_data_SteeringAngle = self.simulate_data['SteeringAngle']
-        self.simulate_data_RollRate = self.simulate_data['RollRate']
-        self.simulate_data_ControlInput = self.simulate_data['ControlInput']
-        self.simulate_data_BalancingSetpoint = self.simulate_data['BalancingSetpoint']
-        self.simulate_data_gy = self.simulate_data['gy']
-        self.simulate_data_gz = self.simulate_data['gz']
-        self.simulate_data_ax = self.simulate_data['ax']
-        self.simulate_data_ay = self.simulate_data['ay']
-        self.simulate_data_az = self.simulate_data['az']
-        self.simulate_data_imu_read_timing = self.simulate_data['imu_read_timing']
-        self.simulate_data_SteerMotorCurrent = self.simulate_data['SteerMotorCurrent']
-        self.simulate_data_v_estimated = self.simulate_data['v_estimated']
-        self.simulate_data_yaw_estimated = self.simulate_data['yaw_estimated']
-        self.simulate_data_heading_estimated = self.simulate_data['heading_estimated']
-        self.simulate_data_x_estimated = self.simulate_data['x_estimated']
-        self.simulate_data_y_estimated = self.simulate_data['y_estimated']
-        self.simulate_data_GPS_timestamp = self.simulate_data['GPS_timestamp']
-        self.simulate_data_x_GPS = self.simulate_data['x_GPS']
-        self.simulate_data_y_GPS = self.simulate_data['y_GPS']
-        self.simulate_data_theta_GPS = self.simulate_data['theta_GPS']
-        self.simulate_data_theta_GPS_noUnwrap = self.simulate_data['theta_GPS_noUnwrap']
-        self.simulate_data_latitude = self.simulate_data['latitude']
-        self.simulate_data_longitude = self.simulate_data['longitude']
-        self.simulate_data_lat_estimated = self.simulate_data['lat_estimated']
-        self.simulate_data_lon_estimated = self.simulate_data['lon_estimated']
-        self.simulate_data_status = self.simulate_data['status']
-        self.simulate_data_NMEA_timestamp = self.simulate_data['NMEA_timestamp']
-        try:
-            self.simulate_data_DirectionGains = self.simulate_data['DirectionGains']
-            self.simulate_data_LateralPositionGains = self.simulate_data['LateralPositionGains']
-            self.simulate_data_distance_travelled = self.simulate_data['distance_travelled']
-            self.simulate_data_x_ref = self.simulate_data['x_ref']
-            self.simulate_data_y_ref = self.simulate_data['y_ref']
-            self.simulate_data_heading_ref = self.simulate_data['heading_ref']
-            self.simulate_data_lateral_error = self.simulate_data['lateral_error']
-            self.simulate_data_heading_error = self.simulate_data['heading_error']
-        except:
-            pass
-
-    def init_load_path(self):
-        try:
-            if self.path_file_arg == 'newest':
-                list_of_files = glob.glob('./paths/*.csv')
-                self.latest_file = max(list_of_files, key=os.path.getctime)
-                print("Loading newest path %s ..." % (self.latest_file))
-                self.path_data = np.genfromtxt(self.latest_file, delimiter=",", skip_header=1)
-            else:
-                print("Loading path %s ..." % (self.path_file_arg))
-                # self.path_data = np.genfromtxt('paths/' + self.path_file_arg, delimiter=",", skip_header=1)
-                self.path_data = np.genfromtxt(self.path_file_arg, delimiter=",")
-            self.path_time = self.path_data[:, 0]
-            # if self.path_data[0, 3] == 0:
-            if self.path_data.shape[1] <= 3:
-                # Case if the path in defined in (x,y,psi)
-                self.path_x = self.path_data[:, 1]
-                self.path_y = self.path_data[:, 2]
-                self.path_heading = self.path_data[:, 3]
-            else:
-                # Case if the path in defined in (lat,lon)
-
-                # Extract unique timestamps
-                _, indices = np.unique(self.path_data[:, -1], return_index=True)
-                indices = indices[:-1]
-                self.path_data = self.path_data[indices, :]
-
-                # Compute XY path
-                self.path_lat = self.path_data[:, 3]
-                self.path_lon = self.path_data[:, 4]
-                print(self.path_lat)
-                # Reverse path is needed
-                if self.reverse:
-                    print('Reading path in reverse ...')
-                    self.path_lon = self.path_lon[::-1]
-                    self.path_lat = self.path_lat[::-1]
-
-                self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
-                self.path_y = R * self.path_lat * deg2rad
-                print(self.path_lon)
-                print(self.path_lat)
-                print(self.path_x)
-                print(self.path_y)
-                print(self.path_heading)
-                self.path_x = self.path_x - self.path_x[0]
-                self.path_y = self.path_y - self.path_y[0]
-                # print(self.path_x)
-                # print(self.path_y)
-                # print(self.path_heading)
-                # self.path_x = self.path_x - self.bike.drive_gps_joint.x0
-                # self.path_y = self.path_y - self.bike.drive_gps_joint.y0
-
-                # Downsample from 10Hz to 1Hz
-                self.path_x = self.path_x[0::10]
-                self.path_y = self.path_y[0::10]
-
-
-                if self.straight:
-                    print('Using only first and last points of path to get a straight line ...')
-                    self.path_x = np.array([self.path_x[0], self.path_x[-1]])
-                    self.path_y = np.array([self.path_y[0], self.path_y[-1]])
-
-                # Compute heading
-                self.path_heading = np.arctan2(self.path_y[1:] - self.path_y[0:-1],
-                                               (self.path_x[1:] - self.path_x[0:-1]))
-
-                self.path_heading = np.append(self.path_heading, self.path_heading[-1])
-                self.path_heading = np.unwrap(self.path_heading)
-            self.traj_size = len(self.path_y)
-            print("Path loaded, loading roll reference if needed, otherwise starting experiment ...")
-        except Exception as e:
-            print(e)
-            print("Path file not found, setting all path references to 0 as default")
-            # self.path_data = np.array([[0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0]]) # Using two rows with zeros for np.interp to work
-            self.path_data = np.array(
-                [[0.0, 0.0, 0.0, 0.0],
-                 [1000000.0, 0.0, 0.0, 0.0]])  # Using two rows with zeros for np.interp to work
-            self.path_time = self.path_data[:, 0]
-            self.path_x = self.path_data[:, 1]
-            self.path_y = self.path_data[:, 2]
-            self.path_heading = self.path_data[:, 3]
-
-        self.path_distanceTravelled = np.cumsum(
-            np.sqrt((self.path_x[1:] - self.path_x[0:-1]) ** 2 + (self.path_y[1:] - self.path_y[0:-1]) ** 2))
-        self.path_distanceTravelled = np.append(0, self.path_distanceTravelled)
-
-        # print(self.path_x)
-        # print(self.path_y)
-        # print(self.path_heading)
-
-        if path_end == 'uturn':
-            print("Adding a U-turn at the end of the reference path to bring the bike back to its start point")
-            # if path_end_uturn_left:
-            #     q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1] + 0.1)
-            # else:
-            #     q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1] - 0.1)
-            q0_dubins = (self.path_x[-1], self.path_y[-1], self.path_heading[-1])
-
-            idx_path_currentDistanceTravelled = bisect.bisect_right(self.path_distanceTravelled,
-                                                                    self.path_distanceTravelled[
-                                                                        -1] - path_end_uturn_distanceEndPath) + np.array(
-                [-1, 0])
-            x1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath,
-                                  self.path_distanceTravelled[idx_path_currentDistanceTravelled],
-                                  self.path_x[idx_path_currentDistanceTravelled])
-            y1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath,
-                                  self.path_distanceTravelled[idx_path_currentDistanceTravelled],
-                                  self.path_y[idx_path_currentDistanceTravelled])
-            theta1_dubins = np.interp(self.path_distanceTravelled[-1] - path_end_uturn_distanceEndPath,
-                                      self.path_distanceTravelled[idx_path_currentDistanceTravelled],
-                                      self.path_heading[idx_path_currentDistanceTravelled]) - np.pi
-            q1_dubins = (x1_dubins, y1_dubins, theta1_dubins)
-
-            q2_dubins = (self.path_x[0], self.path_y[0], self.path_heading[0] - np.pi)
-
-            self.path_dubins01 = dubins.shortest_path(q0_dubins, q1_dubins, path_end_uturn_radius)
-            if path_end_uturn_left:
-                self.path_dubins01 = dubins.path(q0_dubins, q1_dubins, path_end_uturn_radius, dubins.LSR)
-            else:
-                self.path_dubins01 = dubins.path(q0_dubins, q1_dubins, path_end_uturn_radius, dubins.RSL)
-            self.configurations_dubins01, _ = self.path_dubins01.sample_many(path_end_uturn_stepSize)
-            self.configurations_dubins01 = zip(*self.configurations_dubins01)
-
-            self.path_dubins12 = dubins.shortest_path(q1_dubins, q2_dubins, path_end_uturn_radius)
-            self.configurations_dubins12, _ = self.path_dubins12.sample_many(path_end_uturn_stepSize)
-            self.configurations_dubins12 = zip(*self.configurations_dubins12)
-
-            self.path_x = np.append(self.path_x, self.configurations_dubins01[0] + self.configurations_dubins12[0])
-            self.path_y = np.append(self.path_y, self.configurations_dubins01[1] + self.configurations_dubins12[1])
-            self.path_heading = np.append(self.path_heading,
-                                          self.configurations_dubins01[2] + self.configurations_dubins12[2])
-            self.path_heading = np.unwrap(self.path_heading)
-            # self.path_heading = np.unwrap(self.path_heading)
-
-            self.path_distanceTravelled = np.cumsum(
-                np.sqrt((self.path_x[1:] - self.path_x[0:-1]) ** 2 + (self.path_y[1:] - self.path_y[0:-1]) ** 2))
-            self.path_distanceTravelled = np.append(0, self.path_distanceTravelled)
-
-        print(self.path_x)
-        print(self.path_y)
-        print(self.path_heading)
-
-    def init_load_roll(self):
-        if roll_ref_use:
-            print("Loading roll reference %s ..." % (self.rollref_file_arg))
-            try:
-                # self.rollref_data = np.genfromtxt('rollref/' + self.rollref_file_arg, delimiter=",", skip_header=1)
-                self.rollref_data = np.genfromtxt(self.rollref_file_arg, delimiter=",", skip_header=1)
-                self.rollref_time = self.rollref_data[:, 0]
-                self.rollref_roll = self.rollref_data[:, 1] * rollref_multiplier + rollref_offset
-                print(self.rollref_roll)
-                print("Roll reference loaded, starting experiment.")
-            except:
-                print([self.rollref_file_arg, "Path file not found, setting roll reference to 0 as default"])
-                # self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
-                self.rollref_data = np.array(
-                    [[0.0, 0.0], [1000000.0, 0.0], ])  # Using three rows with zeros for np.interp to work
-                self.rollref_time = self.rollref_data[:, 0]
-                self.rollref_roll = self.rollref_data[:, 1] * rollref_multiplier + rollref_offset
-        else:
-            print([self.rollref_file_arg, "roll Tracking disabled"])
-            # self.rollref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
-            self.rollref_data = np.array(
-                [[0.0, 0.0], [1000000.0, 0.0], ])  # Using three rows with zeros for np.interp to work
-            self.rollref_time = self.rollref_data[:, 0]
-            self.rollref_roll = self.rollref_data[:, 1] * rollref_multiplier + rollref_offset
-
-    def init_load_strdistbref(self):
-        print("Loading steering rate disturbance reference %s ..." % (self.steeringdist_file_arg))
-        try:
-            self.strdistbref_data = np.genfromtxt(self.steeringdist_file_arg, delimiter=",", skip_header=1)
-            self.strdistbref_time = self.strdistbref_data[:, 0]
-            self.strdistbref_str = self.strdistbref_data[:, 1] * strdistbref_multiplier
-            print(self.strdistbref_str)
-            print("Steering rate disturbance reference loaded, starting experiment.")
-        except:
-            print([self.steeringdist_file_arg,
-                   "Steering rate disturbance file not found, setting roll reference to 0 as default"])
-            # self.strdistbref_data = np.array([[0.0, 0.0], [0.0, 0.0]]) # Using two rows with zeros for np.interp to work
-            self.strdistbref_data = np.array(
-                [[0.0, 0.0], [1000000.0, 0.0], ])  # Using three rows with zeros for np.interp to work
-            self.strdistbref_time = self.strdistbref_data[:, 0]
-            self.strdistbref_str = self.strdistbref_data[:, 1] * strdistbref_multiplier
-
-    def init_GPS(self):
-        self.gps_read()
-        if ntrip_correction:
-            if self.bike.drive_gps_joint.Mode_rmc != 'R' and self.bike.drive_gps_joint.Mode_rmc != 'F':
-                print(self.bike.drive_gps_joint.Mode_rmc)
-                print(
-                    '\nGPS: Waited too long before starting the experiment, NTRIP corrections have to be sent again to the GPS.')
-                print('GPS : Reconnecting NTRIP socket...')
-                # self.bike.drive_gps_joint.ntripclient.socket.connect_ex((self.bike.drive_gps_joint.ntripclient.caster, self.bike.drive_gps_joint.ntripclient.port))
-                self.bike.drive_gps_joint.ntripclient.reconnectNTRIPSocket()
-                print('GPS : Waiting for NTRIP corrections to be received and processed by GPS...')
-                self.gps_read()
-                self.bike.drive_gps_joint.write_ntrip(self.gpspos)
-                while self.bike.drive_gps_joint.Mode_rmc != 'R' and self.bike.drive_gps_joint.Mode_rmc != 'F':
-                    try:
-                        self.gps_read()
-                        self.bike.drive_gps_joint.write_ntrip(self.gpspos)
-                        time.sleep(1)
-                    except KeyboardInterrupt:
-                        break
-                    except:
-                        pass
-                time.sleep(3)
-                print('GPS : GPS ready.')
-
-
-    def run_loop(self):
-        if self.simulate_file == '':
-            self.time_start_current_loop = time.time()
-        else:
-            self.time_start_current_loop = self.simulate_data_Time[self.idx_simulate_data]
-
-        try:
-            # Get velocity
-            self.velocity_previous = self.velocity
-            if self.simulate_file == '':
-                self.velocity = self.bike.get_velocity(initial_speed)
-            else:
-                self.velocity = self.simulate_data_MeasuredVelocity[self.idx_simulate_data]
-            self.velocity_rec = self.velocity
-            if abs(self.velocity) > 1.25 * abs(initial_speed):
-                print('[%f] WARNING : Measured speed larger than 1.25 times reference speed' % (
-                    time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                        self.idx_simulate_data]))
-            if self.velocity - self.velocity_previous > 1.5:
-                print('[%f] WARNING : Measured speed change between two samples too large' % (
-                    time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                        self.idx_simulate_data]))
-                self.velocity = 1.5 + self.velocity
-                self.velocity = self.velocity_previous
-            if (self.time_count >= speed_up_time + walk_time) and self.velocity < 0.8:
-                print(
-                    '[%f] WARNING : Measured velocity lower than 0.8m/s after speed-up, setting the measured speed to the reference' % (
-                        time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                            self.idx_simulate_data]))
-                self.velocity = initial_speed
-            if self.broken_speed_flag:
-                self.velocity = initial_speed
-
-            # Get states
-            self.time_get_states = time.time()
-            self.get_states()
-            self.time_get_states = time.time() - self.time_get_states
-
-            self.sensor_reading_time = time.time()
-            # Get position from GPS
-            if gps_use:
-                # print(time.time(), self.time_run_start,  self.gps_timestamp)
-                # if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01 or (((self.simulate_data_Time[self.idx_simulate_data] - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file!=''):
-                # if (((time.time() - self.time_run_start) - self.gps_timestamp) > 1.0 / gps_dataUpdateRate and self.simulate_file=='') or self.gps_timestamp <= 0.01:
-                self.gps_read_quotient = ((time.time() - self.time_run_start)) // (
-                    gps_sampling_time)  # The Quotient in GPS time
-                # print('GPS quotient: \n')
-                # print(self.gps_read_quotient, self.gps_read_quotient_old)
-                if (
-                        self.gps_read_quotient > self.gps_read_quotient_old and self.simulate_file == '') or self.gps_timestamp <= 0.01:
-                    # print(time.time(),self.time_ntrip)
-                    if ntrip_correction and time.time() - self.time_ntrip > 5:
-                        self.time_ntrip = time.time()
-                        self.bike.drive_gps_joint.write_ntrip(self.gpspos)
-                        print("NTRIP Requested!!!")
-                    self.gps_timestamp_previous = self.gps_timestamp
-                    self.gps_read_quotient_old = self.gps_read_quotient
-
-                    # self.bike.get_gps_data()
-                    self.time_gps = time.time()
-                    self.gps_read()
-
-                    # self.compute_steering_offset_flag = True
-
-                    if self.gps_nmea_timestamp_ini == '000000':
-                        self.gps_nmea_timestamp_ini = self.gps_nmea_timestamp
-                        # warnings.warn('RESET NEMA INI!!!!!')
-
-                    # # Set flag to compute estimated states at next time step
-                    # self.compute_estimators_flag = False
-
-                    # Check if GPS NMEA timestamp is more than 1s away from BeagleBone timestamp
-                    if self.simulate_file == '':
-                        # print(self.gps_nmea_timestamp)
-                        if self.gps_nmea_timestamp is not None and self.gps_nmea_timestamp_ini is not None:
-                            # print(self.gps_nmea_timestamp)
-                            # print(self.gps_nmea_timestamp_ini)
-                            # print(type(self.gps_nmea_timestamp))
-                            est_gps_lag = (datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(
-                                self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count
-                            # print(est_gps_lag)
-                            if abs(est_gps_lag) > 1 and (est_gps_lag < 4.9 or est_gps_lag > 5.4):
-                                print(est_gps_lag)
-
-                                print(
-                                    "[%f] WARNING : the GPS NMEA timestamp is more than 1s away from BeagleBone timestamp. Check GPS data, it might be compromised." % (
-                                        time.time() - self.time_run_start if self.simulate_file == '' else
-                                        self.simulate_data_Time[self.idx_simulate_data]))
-                        else:
-                            print(self.gps_nmea_timestamp)
-                            print(type(self.gps_nmea_timestamp))
-                            print(self.gps_nmea_timestamp_ini)
-                            print(
-                                "[%f] WARNING : timestamp received is NONE!!!!" % (
-                                    time.time() - self.time_run_start if self.simulate_file == '' else
-                                    self.simulate_data_Time[self.idx_simulate_data]))
-
-                    if self.lat_estimated == 0.0:  # and self.recordPath:
-                        # Set initial conditions of estimators
-                        self.lat_estimated = self.lat_measured_GPS
-                        self.lon_estimated = self.lon_measured_GPS
-                        self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
-                        self.beta_previous = self.beta
-                        self.v_estimated = self.velocity
-                        self.v_estimated_previous = self.v_estimated
-                        self.pos_estimated = self.pos_GPS
-                        self.pos_estimated_previous = self.pos_estimated
-                        self.x_estimated = np.asscalar(self.pos_estimated[0])
-                        self.y_estimated = np.asscalar(self.pos_estimated[1])
-                        self.x_estimated_previous = self.x_estimated
-                        self.y_estimated_previous = self.y_estimated
-                        self.heading_estimated = np.arctan2(self.y_measured_GPS,
-                                                            self.x_measured_GPS)  # Heading computed between initial (0,0) position and position at end of walk
-                        self.heading_estimated_previous = self.heading_estimated
-                        self.yaw_estimated = self.heading_estimated - self.beta
-                        self.yaw_estimated_previous = self.yaw_estimated
-
-                    # Estimate steering angle offset from GPS position
-                    if not self.steering_angle_offset_computed_flag:
-                        try:
-                            # Rotate path to get small heading angle
-                            self.y_GPS_rot_previous = self.y_GPS_rot
-                            rotMatrix = np.array([[np.cos(-self.theta_measured_GPS), -np.sin(-self.theta_measured_GPS)],
-                                                  [np.sin(-self.theta_measured_GPS), np.cos(-self.theta_measured_GPS)]])
-                            self.pos_GPS_rot = np.dot(rotMatrix, self.pos_GPS)
-                            self.y_GPS_rot = self.pos_GPS_rot[1, :]
-
-                            self.steering_angle_offset += (1 / (
-                                        (LENGTH_A + np.sin(lambda_bike) * self.cumsum_v_dt) / LENGTH_B)) * (((
-                                                                                                                         self.y_GPS_rot - self.y_GPS_rot_previous) / (
-                                                                                                                         self.velocity_previous * (
-                                                                                                                             self.gps_timestamp - self.gps_timestamp_previous))) - (
-                                                                                                                        LENGTH_A * self.steeringAngle_previous / LENGTH_B) - (
-                                                                                                                        (
-                                                                                                                                    np.sin(
-                                                                                                                                        lambda_bike) / LENGTH_B) * self.cumsum_delta_v_dt))
-                            self.cumsum_v_dt += self.velocity_previous * (
-                                        self.gps_timestamp - self.gps_timestamp_previous)
-                            self.cumsum_delta_v_dt += self.steeringAngle_previous * self.velocity_previous * (
-                                        self.gps_timestamp - self.gps_timestamp_previous)
-
-                            self.steering_angle_offset_count = self.steering_angle_offset_count + 1
-
-
-                            self.compute_steering_offset_flag = False
-                        except:
-                            self.compute_steering_offset_flag = False
-            else:
-                self.x_measured_GPS = 0.0
-                self.y_measured_GPS = 0.0
-                self.lat_measured_GPS = 0.0
-                self.lon_measured_GPS = 0.0
-                self.gps_timestamp = 0.0
-
-            # Get laser ranger position (y position on the roller)
-            if laserRanger_use:
-                # if (time.time() - self.time_laserranger) > 1.1 * self.bike.laser_ranger.timing:
-                if (time.time() - self.time_laserranger) > 10 * sample_time:
-                    self.time_laserranger = time.time()
-                    self.y_laser_ranger = self.bike.get_laserRanger_data()
-                    if abs(self.y_laser_ranger) > 0.25:
-                        print('[%f] WARNING : Laser ranger position outside of roller' % (
-                            time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                                self.idx_simulate_data]))
-            else:
-                self.y_laser_ranger = 0
-
-            # Read the VESC data
-            if read_vesc_data:
-                # print(self.bike.get_vesc_data())
-                # self.rpm, self.v_in, self.avg_motor_current, self.avg_input_current = self.bike.get_vesc_data()
-                # print(self.bike.drive_gps_joint.send_out_readings())
-                # self.rpm, self.v_in, self.avg_motor_current, self.avg_input_current = self.bike.drive_gps_joint.send_out_readings()
-                # print(self.rpm)
-                self.rpm, self.avg_motor_current, self.v_in, self.avg_input_current = self.bike.drive_gps_joint.retrieve_vesc_data()
-
-            # Compute time needed to read from all sensors
-            self.sensor_reading_time = time.time() - self.sensor_reading_time + self.time_get_states
-
-            if self.time_count > drive_motor_timeout and self.heartbeat_on_flag and self.velocity > initial_speed - 0.1:
-                self.bike.drive_gps_joint.heart_pipe_parent.send('stop_heart_beat')
-                self.heartbeat_on_flag = False
-                print('Stop Heart Beat!')
-            elif self.time_count > drive_motor_timeout and self.heartbeat_on_flag and self.velocity < drive_motor_restart_threshold:
-                self.bike.drive_gps_joint.heart_pipe_parent.send('start_heart_beat')
-                self.heartbeat_on_flag = True
-                print('Start Heart Beat!')
-
-            # PID Velocity Control
-            if pid_velocity_active:
-                self.pid_velocity_control_signal = self.pid_velocity.update(self.velocity)
-                self.bike.set_velocity(self.pid_velocity_control_signal)
-
-            # Let bike get up to speed for a few seconds before starting controllers
-            if (self.time_count < walk_time):
-                if not self.walk_message_printed_flag:
-                    self.walk_message_printed_flag = True
-                    print(
-                        "[%f] Please walk the bike as straight as possible and let go of the handle bar as soon as it gets stiff" % (
-                            time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                                self.idx_simulate_data]))
-
-                if self.simulate_file == '':
-                    self.bike.steering_motor.disable()
-                # [OLD METHOD - CHANGED TO USE GPS POSITION OVER 5s] Estimate steering angle offset from mean of steering angle during walk
-                # self.steering_angle_offset = self.steering_angle_offset + self.steeringAngle
-                # self.steering_angle_offset_count = self.steering_angle_offset_count + 1
-            elif (
-                    self.time_count < speed_up_time + walk_time and self.time_count >= walk_time) and not self.gainingSpeedOver_flag:
-                # Do not start controllers until bike ran for enough time to get up to speed
-                # self.bike.steering_motor.enable()
-                if self.simulate_file == '':
-                    self.bike.steering_motor.disable()
-
-                if not self.speed_up_message_printed_flag:
-                    self.speed_up_message_printed_flag = True
-                    print(
-                        '[%f] Gaining speed ...' % (time.time() - self.time_run_start) if self.simulate_file == '' else
-                        self.simulate_data_Time[self.idx_simulate_data])
-
-                if not self.recordPath and self.simulate_file == '':
-                    self.bike.set_velocity(initial_speed)
-            elif (self.time_count >= speed_up_time + walk_time) and not self.gainingSpeedOver_flag:
-                self.speed_up_finished()
-            elif self.controller_active:
-                # Check steering angle
-                self.keep_handlebar_angle_within_safety_margins(self.steeringAngle)
-
-                # Balancing and path tracking control
-                # self.bike.steering_motor.enable()
-                # self.controller_set_handlebar_angular_velocity(0)
-                # self.update_controller_gains()
-                if not self.recordPath:
-                    self.get_balancing_setpoint()
-                    self.keep_the_bike_stable()
-
-            # Compute time needed to run controllers
-            self.control_cal_time = time.time() - self.time_start_current_loop - self.sensor_reading_time
-            # except (ValueError, KeyboardInterrupt):
-        except Exception as e:
-            print("[%f] Number of times sampling time was exceeded : %d" % (self.exceedscount,
-                                                                            time.time() - self.time_run_start if self.simulate_file == '' else
-                                                                            self.simulate_data_Time[
-                                                                                self.idx_simulate_data]))
-
-            # e = sys.exc_info()[0]
-            print("[%f] Detected error :" % (time.time() - self.time_run_start) if self.simulate_file == '' else
-                  self.simulate_data_Time[self.idx_simulate_data])
-            print(e)
-            print(traceback.print_exc())
-
-            self.safe_stop()
-            exc_msg = ('[%f] Error or keyboard interrupt, aborting the experiment' % (
-                time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                    self.idx_simulate_data]))
-            print(exc_msg)
-            self.exception_log(-2, exc_msg)
-
-            # Control Frequency
-        self.loop_time = time.time() - self.time_start_current_loop
-        if self.simulate_file == '':
-            self.time_count = time.time() - self.time_run_start
-        else:
-            # self.time_count = self.simulate_data_Time[self.idx_simulate_data] - self.simulate_data_Time[self.idx_simulate_data-1]
-            self.time_count = self.simulate_data_Time[self.idx_simulate_data]
-
-        if not self.recordPath:
-            # Check for ESTOP
-            self.check_critical_status()
-
-        # Log data
-        if not self.recordPath:
-            self.log_regular()
-        # else:
-        else:
-            self.log_regular_recordPath()
-
-        # Compute total time for current loop
-        self.loop_time = time.time() - self.time_start_current_loop
-        # Sleep to match sampling time
-        if self.loop_time < sample_time and self.simulate_file == '':
-            time.sleep((sample_time - self.loop_time))
-            if debug:
-                print('Sleeping...')
-
-        self.time_start_previous_loop = self.time_start_current_loop
-
-        # Distance travelled
-        if self.simulate_file == '':
-            self.distance_travelled += self.velocity * (time.time() - self.time_start_current_loop)
-        else:
-            self.distance_travelled += self.velocity * (
-                        self.simulate_data_Time[self.idx_simulate_data] - self.simulate_data_Time[
-                    max(0, self.idx_simulate_data - 1)])
-
-        # Increase index for simulation using prerecorded data
-        if self.simulate_file != '':
-            self.idx_simulate_data += 1
-
-
-    def check_critical_status(self):
-        if self.simulate_file == '':
-            self.ESTOP = self.bike.emergency_stop_check()
-            if self.ESTOP:
-                exc_msg = '[%f] Emergency stop pressed, aborting the experiment' % (
-                    time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                        self.idx_simulate_data])
-                print(exc_msg)
-                self.exception_log(0, exc_msg)
-                self.safe_stop()
-                self.breaktheloop = True
-
-        # Check for extreme PHI
-        if self.roll > MAX_LEAN_ANGLE or self.roll < MIN_LEAN_ANGLE:
-            self.safe_stop()
-            exc_msg = ('[%f] Exceeded min/max lean (roll) angle abs %3f > abs %3f, aborting the experiment' % (
-                time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                    self.idx_simulate_data], self.roll, MAX_LEAN_ANGLE))
-            print(exc_msg)
-            self.exception_log(2, exc_msg)
-
-        # End test time condition
-        if self.time_count > test_duration:
-            # Print number of times sampling time was exceeded if experiment is aborted early
-            self.safe_stop()
-            exc_msg = ('[%f] Exceeded test duration, aborting the experiment' % (
-                time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                    self.idx_simulate_data]))
-            print(exc_msg)
-            self.exception_log(-1, exc_msg)
-            self.breaktheloop = True
-
-    def speed_up_finished(self):
-        # Compute mean of steering angle during first 5s
-        if not self.steering_angle_offset_computed_flag:
-            self.steering_angle_offset_computed_flag = True
-            try:
-                self.steering_angle_offset = float(
-                    self.steering_angle_offset) / self.steering_angle_offset_count
-            except:
-                print('[%f] WARNING : Cannot compute steering angle offset, setting it to 0.0' % (
-                    time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                        self.idx_simulate_data]))
-                self.steering_angle_offset = 0.0
-            print('[%f] Steering angle offset : %.2f deg' % (
-                time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                    self.idx_simulate_data], self.steering_angle_offset))
-
-            # Set initial conditions of estimators
-            self.beta = np.arctan((LENGTH_A / LENGTH_B) * np.tan(self.steeringAngle))
-            self.beta_previous = self.beta
-            self.v_estimated = self.velocity
-            self.v_estimated_previous = self.v_estimated
-            self.pos_estimated = self.pos_GPS
-            self.pos_estimated_previous = self.pos_estimated
-            self.x_estimated = np.asscalar(self.pos_estimated[0])
-            self.y_estimated = np.asscalar(self.pos_estimated[1])
-            self.x_estimated_previous = self.x_estimated
-            self.y_estimated_previous = self.y_estimated
-            self.heading_estimated = np.arctan2(self.y_measured_GPS,
-                                                self.x_measured_GPS)  # Heading computed between initial (0,0) position and position at end of walk
-            self.heading_estimated_previous = self.heading_estimated
-            self.yaw_estimated = self.heading_estimated - self.beta
-            self.yaw_estimated_previous = self.yaw_estimated
-
-            # Set GPS heading
-            # self.theta_measured_GPS = np.arctan2(self.y_measured_GPS,self.x_measured_GPS)
-        # Once enough time has passed, start controller
-        self.gainingSpeedOver_flag = True
-        print('[%f] Gaining speed phase over' % (
-            time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                self.idx_simulate_data]))
-
-        # Check that speed if high enough
-        if self.velocity < 0.3 * initial_speed:
-            print(
-                "[%f] WARNING : speed is lower than one third the reference speed. Hall sensors or drive motor might be faulty. Will use reference speed instead of measured speed in calculations." % (
-                        time.time() - self.time_run_start) if self.simulate_file == '' else
-                self.simulate_data_Time[self.idx_simulate_data])
-            self.broken_speed_flag = True
-
-        self.controller_active = True
-
-        # Clear PID controllers memory
-        self.pid_velocity.clear()
-        self.pid_balance.clear()
-        self.pid_balance_outerloop.clear()
-        self.pid_steeringangle.clear()
-        self.pid_lateral_position.clear()
-        self.pid_direction.clear()
-
-        # Enable steering motor
-        if not self.recordPath and self.simulate_file == '':
-            self.bike.steering_motor.enable()
-
-        # Time at which the controller starts running
-        self.time_start_controller = time.time()
-
-        # Abort experiment if bike is in unsafe conditions at this point
-        # if (abs(self.roll)>20*deg2rad or abs(self.rollRate)>20*deg2rad or abs(self.steeringAngle)>20*deg2rad):
-        if (abs(self.roll) > 20 * deg2rad or abs(self.steeringAngle) > 20 * deg2rad):
-            exc_msg = ('[%f] Bike is in unsafe conditions, aborting the experiment' % (
-                time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
-                    self.idx_simulate_data]))
-            print(exc_msg)
-            self.exception_log(-1, exc_msg)
-            self.breaktheloop = True
-
-        # Reset estimated roll to zero
-        self.roll = 0
-        if self.simulate_file == '':
-            self.bike.imu.phi = 0

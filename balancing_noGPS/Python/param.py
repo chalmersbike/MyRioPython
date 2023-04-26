@@ -21,11 +21,14 @@ gainScheduling_enable = True
 # gainScheduling_enable = False
 dynamicalGainScheduling = True
 # dynamicalGainScheduling = False
-path_tracking = 0
+path_tracking = 1
 # 1 = use path tracking ; 0 = do not use path tracking
 # path_tracking_engaged = 0
+
+# ONLY FOR path_tracking_structure == 'series'!!!!!
 lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
 heading_controller = 0                         # 1 = use heading controller ; 0 = do not use heading controller
+
 roll_ref_use = 1
 rollref_multiplier = 3.0  # 2.0
 rollref_offset = -0.0 * deg2rad  # -4.0 * deg2rad
@@ -43,7 +46,7 @@ max_exceed_count = 10000                           # Number of times where calcu
 read_vesc_data = 1
 
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
-path_tracking_structure = 'series'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
+path_tracking_structure = 'parallel'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
                                                 # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
 
 # path_end = ''                                   # WARNING : YOU WILL NEED TO CATCH THE BIKE OR IT MIGHT FALL  - Do nothing when we reach the end of the path
@@ -100,7 +103,7 @@ path_file = 'newest'
 # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
 rollref_file = 'nofile'
 # rollref_file = 'roll_MS_Mag5.csv'  # 5-7-10-15
-rollref_file = 'sqr_pm1deg_0idle.csv'
+# rollref_file = 'sqr_pm1deg_0idle.csv'
 # rollref_file = 'sqr_pm1deg_7idle.csv'
 # rollref_file = 'roll_ref_IMP1_at4_1deg.csv'  # IMP1-2 at2-4-8
 # rollref_file = 'roll_ref_spiral1deg30s.csv'

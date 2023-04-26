@@ -58,6 +58,7 @@ coverage.xml
 *.log
 local_settings.py
 
+
 # Flask stuff:
 instance/
 .webassets-cache
@@ -113,3 +114,9 @@ ENV/
 #.csv
 #*.csv
 /balancing_noGPS/Python/ExpData_blackbike/
+
+
+# sandboxFiles
+controller_compact.py
+Controller_v2.py
+controllerCompact.py
