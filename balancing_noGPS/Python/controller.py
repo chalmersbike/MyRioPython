@@ -815,24 +815,28 @@ class Controller(object):
 
 
                 # print(self.distance_travelled, self.path_distanceTravelled[-1])
-                if self.distance_travelled >= self.path_distanceTravelled[-1]:
-                    self.x_ref = self.path_x[-1]
-                    self.y_ref = self.path_y[-1]
-                    self.heading_ref = self.path_heading[-1]
-                else:
+                # if self.distance_travelled >`= self.path_distanceTravelled[-1]:
+                #     self.x_ref = self.path_x[-1]
+                #     self.y_ref = self.path_y[-1]
+                #     self.heading_ref = self.path_heading[-1]
+
+                if self.idx_nearestpath <= self.traj_size - 2:
                     # Nearest reference point
                     while ((self.path_x[self.idx_nearestpath] - self.x_estimated) ** 2 + (
                             self.path_y[self.idx_nearestpath] - self.y_estimated) ** 2 >=
                            (self.path_x[self.idx_nearestpath + 1] - self.x_estimated) ** 2 + (
-                                   self.path_y[self.idx_nearestpath + 1] - self.y_estimated) ** 2 and
-                           self.idx_nearestpath <= self.traj_size - 2):
+                                   self.path_y[self.idx_nearestpath + 1] - self.y_estimated) ** 2):
                         self.idx_nearestpath += 1
-
-
                     self.x_ref = self.path_x[self.idx_nearestpath]
                     self.y_ref = self.path_y[self.idx_nearestpath]
                     self.heading_ref = self.path_heading[self.idx_nearestpath]
                     self.D_psiref = self.path_heading[self.idx_nearestpath+1] - self.path_heading[self.idx_nearestpath]
+                else:
+                    self.x_ref = self.path_x[-1]
+                    self.y_ref = self.path_y[-1]
+                    self.heading_ref = self.path_heading[-1]
+
+
 
                     # idx_path_currentDistanceTravelled = bisect.bisect_right(self.path_distanceTravelled,self.distance_travelled)+np.array([-1,0])
                     # self.x_ref = np.interp(self.distance_travelled,self.path_distanceTravelled[idx_path_currentDistanceTravelled],self.path_x[idx_path_currentDistanceTravelled])
