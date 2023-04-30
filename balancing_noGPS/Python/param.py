@@ -16,18 +16,12 @@ drive_motor_timeout = 9999.0  # sec
 drive_motor_restart_threshold = 1.5  # m/s
 
 # [m/s] Forward speed of the bike
-initial_speed = 1.8  # 2.8
+initial_speed = 2.4  # 2.8
 gainScheduling_enable = True
 # gainScheduling_enable = False
 dynamicalGainScheduling = True
 # dynamicalGainScheduling = False
-path_tracking = 1
-# 1 = use path tracking ; 0 = do not use path tracking
-# path_tracking_engaged = 0
 
-# ONLY FOR path_tracking_structure == 'series'!!!!!
-lateralError_controller = 0                     # 1 = use lateral error controller ; 0 = do not use lateral error controller
-heading_controller = 0                         # 1 = use heading controller ; 0 = do not use heading controller
 
 roll_ref_use = 1
 rollref_multiplier = 3.0  # 2.0
@@ -46,8 +40,18 @@ max_exceed_count = 10000                           # Number of times where calcu
 read_vesc_data = 1
 
 balancing_time = 0.0                            # The time elapsed for balancing before the path tracking is engaged.
-path_tracking_structure = 'parallel'              # 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
-                                                # 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
+# 'parallel' : direction and lateral controller in parallel : phiref = PID(heading) + PID(lateral)
+# 'series' : direction and lateral controller in series : phiref = PID(heading) ; headingref = PID(lateral)
+# Yixiao: for missile tracking, use Parallel and heading_control (p_t = 1, h_c = 1, l_c = 0, 'parallel') only!
+path_tracking_structure = 'parallel'
+
+# Path Tracking is the total switch, containing lateralError and heading, two controllers.
+path_tracking = 1
+# 1 = use path tracking ; 0 = do not use path tracking
+# 1 = use lateral error controller ; 0 = do not use lateral error controller
+lateralError_controller = 0
+# 1 = use heading controller ; 0 = do not use heading controller
+heading_controller = 1
 
 # path_end = ''                                   # WARNING : YOU WILL NEED TO CATCH THE BIKE OR IT MIGHT FALL  - Do nothing when we reach the end of the path
 path_end = 'circle'                             # Go into a circle after we reach the end of the reference path

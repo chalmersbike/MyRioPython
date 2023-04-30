@@ -19,7 +19,7 @@ import pyvisa
 import warnings
 
 # Raise Numpy errors
-np.seterr(all = "raise")
+# np.seterr(all = "raise")
 
 # @pysnooper.snoop()
 class Controller(object):
@@ -196,7 +196,7 @@ class Controller(object):
         self.gps_read_quotient = 0
         self.gps_read_quotient_old = 0
         self.theta_measured_GPS = 0.0
-        self.theta_measured_GPS_noUnwrap = 0.0
+        # self.theta_measured_GPS_noUnwrap = 0.0
         self.x_measured_GPS_previous = 0.0
         self.y_measured_GPS_previous = 0.0
         self.pos_GPS_previous = np.matrix([[self.x_measured_GPS_previous],[self.y_measured_GPS_previous]])
@@ -318,6 +318,7 @@ class Controller(object):
         self.heading_error = 0.0
         self.idx_nearestpath = 0
         self.path_tracking_engaged = False
+        self.missle_course = 0.0
         # self.roll_ref_period_mod_switch = False
         # self.roll_ref_period_mod_switch_time = 0.0
 
@@ -626,12 +627,14 @@ class Controller(object):
             # if len(self.gpspos) >= 6:
             self.gps_nmea_timestamp = self.gpspos[5]
             self.speed_m_s = self.gpspos[6]
-            if math.isnan(self.gpspos[7]) :
-                course_reading = self.course
-            else:
-                course_reading = self.gpspos[7]
-            # self.course = np.unwrap([self.course, course_reading])[-1]
-            self.course = course_reading
+            if not math.isnan(self.gpspos[7]):
+                self.course = np.unwrap([self.course, np.deg2rad(-self.gpspos[7]+90)])[1]
+            # if math.isnan(self.gpspos[7]) :
+            #     course_reading = self.course
+            # else:
+            #     course_reading = self.gpspos[7]
+            # # self.course = np.unwrap([self.course, course_reading])[-1]
+            # self.course = course_reading
 
             # Save x and y in a single vector
             self.pos_GPS = np.array([[self.x_measured_GPS],[self.y_measured_GPS]])
@@ -821,12 +824,14 @@ class Controller(object):
                 #     self.heading_ref = self.path_heading[-1]
 
                 if self.idx_nearestpath <= self.traj_size - 2:
-                    # Nearest reference point
-                    while ((self.path_x[self.idx_nearestpath] - self.x_estimated) ** 2 + (
-                            self.path_y[self.idx_nearestpath] - self.y_estimated) ** 2 >=
-                           (self.path_x[self.idx_nearestpath + 1] - self.x_estimated) ** 2 + (
-                                   self.path_y[self.idx_nearestpath + 1] - self.y_estimated) ** 2):
-                        self.idx_nearestpath += 1
+                    path_horizonSquare = (self.velocity * 4) ** 2 # 4 seconds in look-ahead
+                    for ind in range(0, 50):
+                        if ((self.path_x[self.idx_nearestpath+1] - self.x_estimated) ** 2 + (
+                            self.path_y[self.idx_nearestpath+1] - self.y_estimated) ** 2 <= path_horizonSquare):
+                            self.idx_nearestpath += 1
+                        else:
+                            break
+
                     self.x_ref = self.path_x[self.idx_nearestpath]
                     self.y_ref = self.path_y[self.idx_nearestpath]
                     self.heading_ref = self.path_heading[self.idx_nearestpath]
@@ -847,7 +852,10 @@ class Controller(object):
             try:
                 self.x_error = self.x_ref - self.x_estimated
                 self.y_error = self.y_ref - self.y_estimated
-                self.heading_error = self.heading_ref - self.heading_estimated
+                self.missle_course = np.mean(np.unwrap([self.heading_ref, np.arctan2(self.y_error, self.x_error)]))
+                self.heading_error = self.missle_course - self.heading_estimated
+                # self.unwrapped_error_vector_angle = unwraperror_vector_angles[1]
+                # self.heading_error = self.heading_ref - self.heading_estimated
             except:
                 self.x_error = 0
                 self.y_error = 0
@@ -856,9 +864,9 @@ class Controller(object):
             # Compute lateral and heading errors
             # self.lateral_error = self.x_error * np.sin(self.heading_ref) + self.y_error * np.cos(self.heading_ref)
             self.lateral_error = -self.x_error * np.sin(self.heading_ref) + self.y_error * np.cos(self.heading_ref)
+
             # self.heading_error = self.heading_error
             # self.heading_error = self.heading_error % (2*np.pi)
-            
             # dis = np.sqrt((self.path_x[self.idx_nearestpath+1] - self.path_x[self.idx_nearestpath]) ** 2
             #                 + (self.path_y[self.idx_nearestpath+1] - self.path_y[self.idx_nearestpath])  ** 2)
             # Ts_psi = dis / self.velocity
@@ -885,6 +893,8 @@ class Controller(object):
                             idx_rollref_currentTime[0] = 0
                         if time.time() - self.time_start_controller >= self.rollref_time[-1]:
                             self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal + self.rollref_roll[-1]
+                            print('No roll ref added')
+                            print(self.balancing_setpoint)
                         else:
                             self.balancing_setpoint = lateralError_controller * self.pid_lateral_position_control_signal + heading_controller * self.pid_direction_control_signal + np.interp(
                                 time.time() - self.time_start_controller,
@@ -947,10 +957,13 @@ class Controller(object):
                 self.balancing_setpoint = path_end_circle_rollRef*deg2rad
 
                 # Saturation of balancing setpoint
-            self.balancing_setpoint_sat = max(min(self.balancing_setpoint,max_rollref*deg2rad),-max_rollref*deg2rad)
+            self.balancing_setpoint_sat = max(min(self.balancing_setpoint,max_rollref*deg2rad), -max_rollref*deg2rad)
             if self.balancing_setpoint_sat != self.balancing_setpoint:
                 print('[%f] WARNING : Balancing setpoint saturated' % (time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[self.idx_simulate_data]))
             self.balancing_setpoint = self.balancing_setpoint_sat + self.rollref_roll[-1]
+
+            # print(self.balancing_setpoint)
+            # print(self.rollref_roll[-1])
 
         elif potentiometer_use:
             self.pot = -((self.bike.get_potentiometer_value() / potentiometer_maxVoltage) * 2.5 - 1.25) * deg2rad * 2 # Potentiometer gives a position reference between -2.5deg and 2.5deg
@@ -1252,7 +1265,7 @@ class Controller(object):
 
         if gps_use:
             self.log_header_str += ['v_estimated', 'yaw_estimated', 'heading_estimated', 'x_estimated',
-                                    'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'theta_GPS', 'theta_GPS_noUnwrap', 'status', 'NMEA timestamp']
+                                    'y_estimated', 'GPS_timestamp', 'x_GPS', 'y_GPS', 'theta_GPS', 'course_gps', 'status', 'NMEA timestamp']
 
         self.writer.writerow(self.log_header_str)
 
@@ -1293,7 +1306,7 @@ class Controller(object):
                 "{0:.5f}".format(self.x_measured_GPS),
                 "{0:.5f}".format(self.y_measured_GPS),
                 "{0:.5f}".format(self.theta_measured_GPS),
-                "{0:.5f}".format(self.theta_measured_GPS_noUnwrap),
+                "{0:.5f}".format(self.course),
                 self.gps_status,
                 self.gps_nmea_timestamp
             ]

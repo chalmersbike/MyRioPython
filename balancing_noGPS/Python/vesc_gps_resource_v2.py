@@ -194,9 +194,9 @@ class VESC_GPS(object):
                     time.sleep(0.01 - slp_time)
                 buffer_size = self.instr_VESC.bytes_in_buffer
                 print(buffer_size)
-                if buffer_size == 78:
+                if buffer_size == 79:
                     t_last_query = time.time()
-                    readraw = self.instr_VESC.read_bytes(78)
+                    readraw = self.instr_VESC.read_bytes(79)
                     query_sent = False
                     (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
                     pipe_data.send([self.vesc_sensor_response.rpm,
@@ -206,12 +206,12 @@ class VESC_GPS(object):
                     # print('DATA Received!!!!')
                     if nr_of_empty_loop is not 0:
                         nr_of_empty_loop = 0
-                elif buffer_size == 156:
-                    readraw = self.instr_VESC.read_bytes(156)  # Bytes type
+                elif buffer_size == 158:
+                    readraw = self.instr_VESC.read_bytes(158)  # Bytes type
 
                     warnings.warn('DOUBLE DATA Received!!!!')
                     # print('DOUBLE DATA Received!!!!')
-                    readraw = readraw[78:156]
+                    readraw = readraw[79:158]
                     query_sent = False
                     t_last_query = time.time()
                     (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
@@ -476,9 +476,9 @@ class VESC_GPS(object):
     #             #     time.sleep(0.01 - slp_time)
     #             buffer_size = self.instr_VESC.bytes_in_buffer
     #
-    #             if buffer_size == 78:
+    #             if buffer_size == 79:
     #                 t_last_vesc_query = time.time()
-    #                 readraw = self.instr_VESC.read_bytes(78)
+    #                 readraw = self.instr_VESC.read_bytes(79)
     #                 vesc_query_sent = False
     #                 (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
     #                 pipe_data.send([self.vesc_sensor_response.rpm,
@@ -488,12 +488,12 @@ class VESC_GPS(object):
     #                 # print('DATA Received!!!!')
     #                 if nr_of_empty_loop is not 0:
     #                     nr_of_empty_loop = 0
-    #             elif buffer_size == 156:
-    #                 readraw = self.instr_VESC.read_bytes(156)  # Bytes type
+    #             elif buffer_size == 158:
+    #                 readraw = self.instr_VESC.read_bytes(158)  # Bytes type
     #
     #                 warnings.warn('DOUBLE DATA Received!!!!')
     #                 # print('DOUBLE DATA Received!!!!')
-    #                 readraw = readraw[78:156]
+    #                 readraw = readraw[79:158]
     #                 vesc_query_sent = False
     #                 t_last_vesc_query = time.time()
     #                 (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
@@ -767,9 +767,9 @@ class VESC_GPS(object):
                 #     time.sleep(0.01 - slp_time)
                 buffer_size = self.instr_VESC.bytes_in_buffer
 
-                if buffer_size == 78:
+                if buffer_size == 79:
                     t_last_vesc_query = time.time()
-                    readraw = self.instr_VESC.read_bytes(78)
+                    readraw = self.instr_VESC.read_bytes(79)
                     vesc_query_sent = False
                     (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
                     pipe_data.send([self.vesc_sensor_response.rpm,
@@ -779,12 +779,12 @@ class VESC_GPS(object):
                     # print('DATA Received!!!!')
                     if nr_of_empty_loop is not 0:
                         nr_of_empty_loop = 0
-                elif buffer_size == 156:
-                    readraw = self.instr_VESC.read_bytes(156)  # Bytes type
+                elif buffer_size == 158:
+                    readraw = self.instr_VESC.read_bytes(158)  # Bytes type
 
                     warnings.warn('DOUBLE DATA Received!!!!')
                     # print('DOUBLE DATA Received!!!!')
-                    readraw = readraw[78:156]
+                    readraw = readraw[79:158]
                     vesc_query_sent = False
                     t_last_vesc_query = time.time()
                     (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
