@@ -824,14 +824,15 @@ class Controller(object):
                 #     self.heading_ref = self.path_heading[-1]
 
                 if self.idx_nearestpath < self.traj_size - 1:
-                    path_horizon = (self.velocity * 3)  # 3 seconds in look-ahead
+                    path_horizon = (self.velocity * 4)  # 4 seconds in look-ahead
                     path_horizonSquare = path_horizon ** 2
                     current_idx_path = self.idx_nearestpath
-                    for ind in range(0, 50):
+                    for ind in range(0, 10):
                         if (self.idx_nearestpath+1 < self.traj_size - 1) and ((self.path_x[self.idx_nearestpath+1] - self.x_estimated) ** 2 + (
-                            self.path_y[self.idx_nearestpath+1] - self.y_estimated) ** 2 <= path_horizonSquare) and (
+                            self.path_y[self.idx_nearestpath+1] - self.y_estimated) ** 2 < path_horizonSquare) and (
                                 (self.path_distanceTravelled[self.idx_nearestpath+1] - self.path_distanceTravelled[current_idx_path]
                                 < path_horizon)):
+                            # Not the end of ref AND Current Pos still close the ref AND limit ref change
                             self.idx_nearestpath += 1
                         else:
                             break
