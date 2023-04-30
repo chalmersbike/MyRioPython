@@ -823,11 +823,15 @@ class Controller(object):
                 #     self.y_ref = self.path_y[-1]
                 #     self.heading_ref = self.path_heading[-1]
 
-                if self.idx_nearestpath <= self.traj_size - 2:
-                    path_horizonSquare = (self.velocity * 4) ** 2 # 4 seconds in look-ahead
+                if self.idx_nearestpath < self.traj_size - 1:
+                    path_horizon = (self.velocity * 3)  # 3 seconds in look-ahead
+                    path_horizonSquare = path_horizon ** 2
+                    current_idx_path = self.idx_nearestpath
                     for ind in range(0, 50):
-                        if ((self.path_x[self.idx_nearestpath+1] - self.x_estimated) ** 2 + (
-                            self.path_y[self.idx_nearestpath+1] - self.y_estimated) ** 2 <= path_horizonSquare):
+                        if (self.idx_nearestpath+1 < self.traj_size - 1) and ((self.path_x[self.idx_nearestpath+1] - self.x_estimated) ** 2 + (
+                            self.path_y[self.idx_nearestpath+1] - self.y_estimated) ** 2 <= path_horizonSquare) and (
+                                (self.path_distanceTravelled[self.idx_nearestpath+1] - self.path_distanceTravelled[current_idx_path]
+                                < path_horizon)):
                             self.idx_nearestpath += 1
                         else:
                             break

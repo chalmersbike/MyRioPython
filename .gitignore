@@ -113,10 +113,13 @@ ENV/
 
 #.csv
 #*.csv
-/balancing_noGPS/Python/ExpData_blackbike/
+balancing_noGPS/Python/ExpData_blackbike/
 
 
 # sandboxFiles
-controller_compact.py
-Controller_v2.py
-controllerCompact.py
+balancing_noGPS/Python/controller_compact.py
+balancing_noGPS/Python/Controller_v2.py
+balancing_noGPS/Python/controllerCompact.py
+balancing_noGPS/Python/controller-C19MTYO.py
+balancing_noGPS/Python/controller-C19MTYO-2.py
+balancing_noGPS/Python/controller_verbose-C19MTYO.py
