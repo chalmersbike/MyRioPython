@@ -857,7 +857,11 @@ class Controller(object):
             try:
                 self.x_error = self.x_ref - self.x_estimated
                 self.y_error = self.y_ref - self.y_estimated
-                self.missle_course = np.mean(np.unwrap([self.heading_ref, np.arctan2(self.y_error, self.x_error)]))
+
+
+                self.missle_course = np.unwrap([self.heading_ref,
+                                                np.arctan2(path_horizon * np.sin(self.heading_ref) + self.y_error,
+                                                           path_horizon * np.cos(self.heading_ref) + self.x_error)])[1]
                 self.heading_error = self.missle_course - self.heading_estimated
                 # self.unwrapped_error_vector_angle = unwraperror_vector_angles[1]
                 # self.heading_error = self.heading_ref - self.heading_estimated
