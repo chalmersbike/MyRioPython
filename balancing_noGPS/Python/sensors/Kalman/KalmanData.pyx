@@ -87,8 +87,8 @@ cdef class  KalmanData:
         # self.vel_gps[1] = controllerOBJ.v_estimated
         # self.heading_gps[1] = controllerOBJ.theta_measured_GPS
         self.vel_gps[1] = controllerOBJ.speed_m_s
-        # self.heading_gps[1] = controllerOBJ.course
-        self.heading_gps[1] = controllerOBJ.theta_measured_GPS
+        self.heading_gps[1] = controllerOBJ.course
+        # self.heading_gps[1] = controllerOBJ.theta_measured_GPS
         # print(self.heading_gps[1])
         # self.last_valid_gps[1] =
         # IMU
