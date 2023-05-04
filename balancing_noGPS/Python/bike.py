@@ -93,6 +93,9 @@ class Bike(object):
     def set_velocity(self, input_velocity):
         self.drive_gps_joint.set_velocity(input_velocity)
 
+    def set_current_const6_5A(self):
+        self.drive_gps_joint.heart_pipe_parent.send(b'\x02\x05\x06\x00\x00\x19dXL\x03')
+
     # Steering Motor
     def set_handlebar_angular_velocity(self, angular_velocity):
         self.steering_motor.set_angular_velocity(angular_velocity)

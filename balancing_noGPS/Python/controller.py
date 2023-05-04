@@ -2019,3 +2019,6 @@ class Controller(object):
         self.roll = 0
         if self.simulate_file == '':
             self.bike.imu.phi = 0
+
+        # Set a constant current to VESC, i.e. 6.5 A
+        self.bike.set_current_const6_5A()
