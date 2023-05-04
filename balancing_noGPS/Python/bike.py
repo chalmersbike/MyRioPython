@@ -67,6 +67,7 @@ class Bike(object):
         return self.encoder.get_angle()
 
     # Hall Sensor
+    # @pysnooper.snoop()
     def get_velocity(self, ref_velocity):
         return self.hall_sensor.get_velocity(ref_velocity)
 
@@ -95,6 +96,7 @@ class Bike(object):
 
     def set_current_const6_5A(self):
         self.drive_gps_joint.heart_pipe_parent.send(b'\x02\x05\x06\x00\x00\x19dXL\x03')
+        print('6.5 A current set for drive motor!!!')
 
     # Steering Motor
     def set_handlebar_angular_velocity(self, angular_velocity):

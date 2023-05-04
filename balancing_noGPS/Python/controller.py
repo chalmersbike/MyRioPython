@@ -827,11 +827,13 @@ class Controller(object):
                     path_horizon = (self.velocity * 4)  # 4 seconds in look-ahead
                     path_horizonSquare = path_horizon ** 2
                     current_idx_path = self.idx_nearestpath
+                    path_error_square_now = (self.path_x[self.idx_nearestpath] - self.x_estimated) ** 2 + (self.path_y[self.idx_nearestpath] - self.y_estimated) ** 2
                     for ind in range(0, 10):
-                        if (self.idx_nearestpath+1 < self.traj_size - 1) and ((self.path_x[self.idx_nearestpath+1] - self.x_estimated) ** 2 + (
-                            self.path_y[self.idx_nearestpath+1] - self.y_estimated) ** 2 < path_horizonSquare) and (
-                                (self.path_distanceTravelled[self.idx_nearestpath+1] - self.path_distanceTravelled[current_idx_path]
-                                < path_horizon)):
+                        path_error_square_next = (self.path_x[self.idx_nearestpath+1] - self.x_estimated) ** 2 + (self.path_y[self.idx_nearestpath+1] - self.y_estimated) ** 2
+
+                        if (self.idx_nearestpath+1 < self.traj_size - 1) and (
+                                path_error_square_next < max(path_horizonSquare, path_error_square_now)
+                        ) and (self.path_distanceTravelled[self.idx_nearestpath+1] - self.path_distanceTravelled[current_idx_path] < path_horizon):
                             # Not the end of ref AND Current Pos still close the ref AND limit ref change
                             self.idx_nearestpath += 1
                         else:
@@ -859,9 +861,11 @@ class Controller(object):
                 self.y_error = self.y_ref - self.y_estimated
 
 
+                # self.missle_course = np.unwrap([self.heading_ref,
+                #                                 np.arctan2(path_horizon * np.sin(self.heading_ref) + self.y_error,
+                #                                            path_horizon * np.cos(self.heading_ref) + self.x_error)])[1]
                 self.missle_course = np.unwrap([self.heading_ref,
-                                                np.arctan2(path_horizon * np.sin(self.heading_ref) + self.y_error,
-                                                           path_horizon * np.cos(self.heading_ref) + self.x_error)])[1]
+                                                np.arctan2(self.y_error, self.x_error)])[1]
                 self.heading_error = self.missle_course - self.heading_estimated
                 # self.unwrapped_error_vector_angle = unwraperror_vector_angles[1]
                 # self.heading_error = self.heading_ref - self.heading_estimated
@@ -1449,9 +1453,9 @@ class Controller(object):
                 # self.path_x = self.path_x - self.bike.drive_gps_joint.x0
                 # self.path_y = self.path_y - self.bike.drive_gps_joint.y0
 
-                # Downsample from 10Hz to 1Hz
-                self.path_x = self.path_x[0::10]
-                self.path_y = self.path_y[0::10]
+                # Downsample from 10Hz to 2Hz
+                self.path_x = self.path_x[0::5]
+                self.path_y = self.path_y[0::5]
 
 
                 if self.straight:
@@ -1625,20 +1629,22 @@ class Controller(object):
                 print('[%f] WARNING : Measured speed larger than 1.25 times reference speed' % (
                     time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
                         self.idx_simulate_data]))
+                # self.velocity = self.velocity_previous
+                # print(self.velocity, initial_speed)
             if self.velocity - self.velocity_previous > 1.5:
-                print('[%f] WARNING : Measured speed change between two samples too large' % (
+                print('[%f] WARNING : Measured speed change between two samples too large -- 1.5 m/s' % (
                     time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
                         self.idx_simulate_data]))
-                self.velocity = 1.5 + self.velocity
-                self.velocity = self.velocity_previous
+                # self.velocity = 1.5 + self.velocity
+                # self.velocity = self.velocity_previous
             if (self.time_count >= speed_up_time + walk_time) and self.velocity < 0.8:
                 print(
-                    '[%f] WARNING : Measured velocity lower than 0.8m/s after speed-up, setting the measured speed to the reference' % (
+                    '[%f] WARNING : Measured velocity lower than 0.8m/s after speed-up' % (
                         time.time() - self.time_run_start if self.simulate_file == '' else self.simulate_data_Time[
                             self.idx_simulate_data]))
-                self.velocity = initial_speed
-            if self.broken_speed_flag:
-                self.velocity = initial_speed
+                # self.velocity = initial_speed
+            # if self.broken_speed_flag:
+                # self.velocity = initial_speed
 
             # Get states
             self.time_get_states = time.time()
@@ -1983,7 +1989,7 @@ class Controller(object):
         # Check that speed if high enough
         if self.velocity < 0.3 * initial_speed:
             print(
-                "[%f] WARNING : speed is lower than one third the reference speed. Hall sensors or drive motor might be faulty. Will use reference speed instead of measured speed in calculations." % (
+                "[%f] WARNING : speed is lower than one third the reference speed. Hall sensors or drive motor might be faulty. MAY use reference speed instead of measured speed in calculations." % (
                         time.time() - self.time_run_start) if self.simulate_file == '' else
                 self.simulate_data_Time[self.idx_simulate_data])
             self.broken_speed_flag = True

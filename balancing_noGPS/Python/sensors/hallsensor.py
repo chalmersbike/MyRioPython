@@ -40,8 +40,8 @@ class HallSensor(object):
                              else 0.0 if self.elapse > hallSensor_maxElapseBetweenPulses
             else (hall_Sensor_distanceBetweenMagnets / self.elapse) * tyre_ratio)
         # print(self.velocity)
-        if self.velocity > 1.2 * ref_velocity:
-            self.velocity = ref_velocity
+        # if self.velocity > 1.2 * ref_velocity:
+        #     self.velocity = ref_velocity
         return self.velocity
 
     def get_velocity_kmh(self):
