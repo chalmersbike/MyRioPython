@@ -95,7 +95,23 @@ class Bike(object):
         self.drive_gps_joint.set_velocity(input_velocity)
 
     def set_current_const6_5A(self):
-        self.drive_gps_joint.heart_pipe_parent.send(b'\x02\x05\x06\x00\x00\x19dXL\x03')
+        # current_binary = b'\x02\x05\x06\x00\x00\x13\x88\x8b%\x03'  # 5.0
+        # current_binary = b'\x02\x05\x06\x00\x00\x13\xec\xa7\x07\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x14PX\xc7\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x14\xb4\xe5m\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x15\x18\xa2:\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x15|\x8e\x18\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x15\xe0\xcc-\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x16Dl\x10\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x16\xa8P\xb2\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x17\x0c\x96\xed\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x17p)\xf6\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x17\xd4\xdc\x98\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x188\xf0\x04\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x18\x9c\x05j\x03'
+        # current_binary = b'\x02\x05\x06\x00\x00\x19\x00tn\x03'
+        current_binary = b'\x02\x05\x06\x00\x00\x19dXL\x03'  # 6.5
+        self.drive_gps_joint.heart_pipe_parent.send(current_binary)
         print('6.5 A current set for drive motor!!!')
 
     # Steering Motor

@@ -318,7 +318,7 @@ class Controller(object):
         self.heading_error = 0.0
         self.idx_nearestpath = 0
         self.path_tracking_engaged = False
-        self.missle_course = 0.0
+        self.missile_course = 0.0
         # self.roll_ref_period_mod_switch = False
         # self.roll_ref_period_mod_switch_time = 0.0
 
@@ -861,12 +861,12 @@ class Controller(object):
                 self.y_error = self.y_ref - self.y_estimated
 
 
-                # self.missle_course = np.unwrap([self.heading_ref,
+                # self.missile_course = np.unwrap([self.heading_ref,
                 #                                 np.arctan2(path_horizon * np.sin(self.heading_ref) + self.y_error,
                 #                                            path_horizon * np.cos(self.heading_ref) + self.x_error)])[1]
-                self.missle_course = np.unwrap([self.heading_ref,
+                self.missile_course = np.unwrap([self.heading_estimated,
                                                 np.arctan2(self.y_error, self.x_error)])[1]
-                self.heading_error = self.missle_course - self.heading_estimated
+                self.heading_error = self.missile_course - self.heading_estimated
                 # self.unwrapped_error_vector_angle = unwraperror_vector_angles[1]
                 # self.heading_error = self.heading_ref - self.heading_estimated
             except:
