@@ -260,14 +260,11 @@ class VESC_GPS(object):
         #     self.heart_pipe_parent.send('stop_heart_beat')
 
     def set_velocity(self, input_velocity):
-        # self.rear_set_pwm(self._m_per_second_to_pwm(input_velocity))
-        self.rear_set_rpm(input_velocity*600) # Maxime's previous setting, might work for RED bike
-        # self.rear_set_rpm(input_velocity * 900)
-        # self.rear_set_rpm(input_velocity * 1300)
-        # print('VESC : Set speed')
-        # self.VESCmotor.start_heartbeat()
-        # for GEAR 6Th the coef vel -> pwm = 0.31
-        # self.rear_set_rpm(input_velocity * 0.31)
+        self.rear_set_rpm(input_velocity*600)
+
+    def set_current_binary(self, ref_current):
+        current_msg_binary = pyvesc.protocol.interface.encode(pyvesc.messages.setters.SetCurrent(ref_current))
+        return current_msg_binary
 
     def stop(self):
         print('VESC : Stop')

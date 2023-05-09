@@ -17,6 +17,8 @@ drive_motor_restart_threshold = 1.5  # m/s
 
 # [m/s] Forward speed of the bike
 initial_speed = 2.4  # 2.8
+current_control_enable = True
+drive_current_ref = 5.0
 gainScheduling_enable = True
 # gainScheduling_enable = False
 dynamicalGainScheduling = True
@@ -46,7 +48,7 @@ balancing_time = 0.0                            # The time elapsed for balancing
 path_tracking_structure = 'parallel'
 
 # Path Tracking is the total switch, containing lateralError and heading, two controllers.
-path_tracking = 1
+path_tracking = 0
 # 1 = use path tracking ; 0 = do not use path tracking
 # 1 = use lateral error controller ; 0 = do not use lateral error controller
 lateralError_controller = 0

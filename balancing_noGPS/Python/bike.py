@@ -111,8 +111,10 @@ class Bike(object):
         # current_binary = b'\x02\x05\x06\x00\x00\x18\x9c\x05j\x03'
         # current_binary = b'\x02\x05\x06\x00\x00\x19\x00tn\x03'
         current_binary = b'\x02\x05\x06\x00\x00\x19dXL\x03'  # 6.5
-        self.drive_gps_joint.heart_pipe_parent.send(current_binary)
-        print('6.5 A current set for drive motor!!!')
+        current_binary = self.drive_gps_joint.set_current_binary(drive_current_ref)
+        if current_control_enable:
+            self.drive_gps_joint.heart_pipe_parent.send(current_binary)
+            print(' --> %f  A current set for drive motor!!!' % (drive_current_ref) )
 
     # Steering Motor
     def set_handlebar_angular_velocity(self, angular_velocity):
