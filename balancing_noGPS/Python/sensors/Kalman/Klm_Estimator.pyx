@@ -181,14 +181,14 @@ cdef class Klm_Estimator:
         self.prev_klm_time = time.time()
 
     cpdef estimate(self, controllerOBJ, int time_count):
-        cdef double start_time, X_h ,Y_h ,v_h ,psi_h ,phi_h ,delta_h ,phidot_h ,delta0_h, deltadot_ref, Yk_rps, Yk_enc,
-        cdef double[:]  Yk_imu,
-        cdef double v_rps, delta_enc, lat_gps, lon_gps, vel_gps, heading_gps
+        cdef double start_time, X_h ,Y_h ,v_h ,psi_h ,phi_h ,delta_h ,phidot_h ,delta0_h, deltadot_ref
+        cdef double[:]  Yk_imu, Yk_gps
+        cdef double v_rps, delta_enc, lat_gps, lon_gps, vel_gps, heading_gps, Yk_enc, Yk_rps
         cdef double gx_imu, gy_imu, gz_imu, ax_imu, ay_imu, az_imu, Centrip, phi_dot_sensor
-        cdef double x_GPS_NED, y_GPS_NED, x_GPS_glb, y_GPS_glb, dX_global, dY_global, dX_local , dY_local
+        cdef double x_GPS_NED, y_GPS_NED, x_GPS_glb, y_GPS_glb, dX_global, dY_global, dX_local , dY_local, delta_0_sensor
         cdef double dv, time_now, dt
         cdef bint update_rps, update_enc, update_gps, update_imu
-        cdef double[:] Xk, roll_virtual_sensor, Yk_gps, sensor_out, hx, Xk_f, f_m, Xkp
+        cdef double[:] Xk, roll_virtual_sensor, sensor_out, hx, Xk_f, f_m, Xkp
         cdef double[:, :] C_obsv, K
         # cdef list  , #Xk,
         cdef dict UpdateFlg, Yks,
@@ -289,9 +289,7 @@ cdef class Klm_Estimator:
             # Yk_gps = Yk_gps.reshape((4,))
             if dX_local > 10:
                 print('Warning: dX_Local > 10 m, something is wrong in GPS reading!')
-
-
-        delta_0_sensor = delta0_h - 0.5 * (Yk_gps[1] - Y_h)
+            delta_0_sensor = delta0_h - 0.5 * (Yk_gps[1] - Y_h)
 
         if update_rps and update_gps:
             sensor_out = np.hstack((roll_virtual_sensor,

@@ -18,7 +18,7 @@ drive_motor_restart_threshold = 1.5  # m/s
 # [m/s] Forward speed of the bike
 initial_speed = 2.4  # 2.8
 current_control_enable = True
-drive_current_ref = 5.0
+drive_current_ref = 5.5
 gainScheduling_enable = True
 # gainScheduling_enable = False
 dynamicalGainScheduling = True
@@ -113,14 +113,15 @@ rollref_file = 'nofile'
 # rollref_file = 'sqr_pm1deg_7idle.csv'
 # rollref_file = 'roll_ref_IMP1_at4_1deg.csv'  # IMP1-2 at2-4-8
 # rollref_file = 'roll_ref_spiral1deg30s.csv'
-
+# rollref_file = 'roll_ref_doublespiral1deg30s.csv'
 
 ####################################################################################################################
 ####################################################################################################################
 # Steering disturbance file
 strdistbref_file = 'nofile'
 strdistbref_multiplier = 8.0
-# strdistbref_file = 'str_MS_Mag5.csv'  #5-10-15-20-25
+# strdistbref_file = 'str_MS_Mag5.csv'  
+#5-10-15-20-25
 
 # if path_tracking is 1:
 #     strdistbref_file = 'nofile'
