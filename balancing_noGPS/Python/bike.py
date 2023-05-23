@@ -34,15 +34,15 @@ class Bike(object):
                     self.steering_motor = SteeringMotor(session)
                     if gps_use:
                         # ini_gps_output = self.drive_gps_joint.get_latlon()
-                        lat_0 = 0.0
-                        lon_0 = 0.0
+                        self.lat_0 = 0.0
+                        self.lon_0 = 0.0
                         print('Waiting for valid GPS data for State Estimator')
-                        while lat_0 == 0.0 and lon_0 == 0.0:
+                        while self.lat_0 == 0.0 and self.lon_0 == 0.0:
                             ini_gps_output = self.drive_gps_joint.get_position()
-                            lat_0 = ini_gps_output[2]
-                            lon_0 = ini_gps_output[3]
-                            print([lat_0, lon_0])
-                        self.Klm_Estimator = Klm_Estimator(lat_0, lon_0)
+                            self.lat_0 = ini_gps_output[2]
+                            self.lon_0 = ini_gps_output[3]
+                            print([self.lat_0, self.lon_0])
+                        self.Klm_Estimator = Klm_Estimator(self.lat_0, self.lon_0)
                     if dynamicalGainScheduling:
                         # self.GainSche = GS(PiPoly = [ -0.3250, 3.5636, -14.2051, 23.0150],
                         #                    IiPoly = [0.0, 0.0, 0.0, 0.0],

@@ -1354,7 +1354,7 @@ class Controller(object):
                 self.path_data = np.genfromtxt(self.path_file_arg, delimiter=",")
             self.path_time = self.path_data[:, 0]
             # if self.path_data[0, 3] == 0:
-            if self.path_data.shape[1] <= 3:
+            if self.path_data.shape[1] <= 3: # For relative position compatibility.
                 # Case if the path in defined in (x,y,psi)
                 self.path_x = self.path_data[:, 1]
                 self.path_y = self.path_data[:, 2]
@@ -1377,15 +1377,17 @@ class Controller(object):
                     self.path_lon = self.path_lon[::-1]
                     self.path_lat = self.path_lat[::-1]
 
-                self.path_x = R * self.path_lon * deg2rad * np.cos(self.path_lat[0] * deg2rad)
-                self.path_y = R * self.path_lat * deg2rad
+                self.path_x = R * (self.path_lon - self.bike.lon_0) * deg2rad * np.cos(self.path_lat[0] * deg2rad)
+                self.path_y = R * (self.path_lat - self.bike.lat_0) * deg2rad
+                # self.path_x = self.path_x - R * self.bike.lon_0 * deg2rad * np.cos(self.path_lat[0] * deg2rad)
+                # self.path_y = self.path_y - R * self.bike.lat_0 * deg2rad
                 print(self.path_lon)
                 print(self.path_lat)
                 print(self.path_x)
                 print(self.path_y)
                 print(self.path_heading)
-                self.path_x = self.path_x - self.path_x[0]
-                self.path_y = self.path_y - self.path_y[0]
+                # self.path_x = self.path_x - self.path_x[0]
+                # self.path_y = self.path_y - self.path_y[0]
                 # print(self.path_x)
                 # print(self.path_y)
                 # print(self.path_heading)
