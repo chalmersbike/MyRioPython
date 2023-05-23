@@ -767,7 +767,7 @@ class Controller(object):
                 #     self.heading_ref = self.path_heading[-1]
 
                 if self.idx_nearestpath < self.traj_size - 1:
-                    path_horizon = (self.velocity * 4)  # 4 seconds in look-ahead
+                    path_horizon = (self.velocity * 8)  # 4 seconds in look-ahead
                     path_horizonSquare = path_horizon ** 2
                     current_idx_path = self.idx_nearestpath
                     path_error_square_now = (self.path_x[self.idx_nearestpath] - self.x_estimated) ** 2 + (self.path_y[self.idx_nearestpath] - self.y_estimated) ** 2
