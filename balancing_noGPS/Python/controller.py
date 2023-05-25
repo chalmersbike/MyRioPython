@@ -229,6 +229,8 @@ class Controller(object):
         self.control_cal_time = 0.0
         self.exceedscount = 0.0
         self.time_start_controller = 0.0
+        self.latest_speed_cmd_update = 0.0
+
         # self.time_pathtracking = 0.0
         # self.roll_ref_end_time = roll_ref_end_time
         # self.roll_ref_start_time = roll_ref_start_time
@@ -569,6 +571,7 @@ class Controller(object):
             # Read GPS NMEA timestamp if it exists
             # if len(self.gpspos) >= 6:
             self.gps_nmea_timestamp = self.gpspos[5]
+            # print(self.gpspos[5])
             self.speed_m_s = self.gpspos[6]
             if not math.isnan(self.gpspos[7]):
                 self.course = np.unwrap([self.course, np.deg2rad(-self.gpspos[7]+90)])[1]
@@ -767,7 +770,7 @@ class Controller(object):
                 #     self.heading_ref = self.path_heading[-1]
 
                 if self.idx_nearestpath < self.traj_size - 1:
-                    path_horizon = (self.velocity * 8)  # 4 seconds in look-ahead
+                    path_horizon = (self.velocity * 3)  # 3 seconds in look-ahead
                     path_horizonSquare = path_horizon ** 2
                     current_idx_path = self.idx_nearestpath
                     path_error_square_now = (self.path_x[self.idx_nearestpath] - self.x_estimated) ** 2 + (self.path_y[self.idx_nearestpath] - self.y_estimated) ** 2
@@ -947,6 +950,11 @@ class Controller(object):
             self.pid_balance_outerloop.setKp(CtrlVars[2])
             # print('ControllerGain Updated!')
             self.last_ctrl_update_speed = self.v_estimated
+
+        if constCenterSpeed and self.time_count - self.latest_speed_cmd_update > 0.2:
+            self.keep_const_center_speed(initial_speed, self.steeringAngle, self.roll)
+            self.latest_speed_cmd_update = self.time_count
+
 
 
         # self.get_balancing_setpoint()
@@ -1634,7 +1642,8 @@ class Controller(object):
                             # print(type(self.gps_nmea_timestamp))
                             est_gps_lag = (datetime.strptime(self.gps_nmea_timestamp, '%H%M%S.%f') - datetime.strptime(
                                 self.gps_nmea_timestamp_ini, '%H%M%S.%f')).total_seconds() - self.time_count
-                            # print(est_gps_lag)
+                            # print(self.gps_nmea_timestamp)
+
                             if abs(est_gps_lag) > 1 and (est_gps_lag < 4.9 or est_gps_lag > 5.4):
                                 print(est_gps_lag)
 
@@ -1961,3 +1970,13 @@ class Controller(object):
 
         # Set a constant current to VESC, i.e. 6.5 A
         self.bike.set_current_const6_5A()
+
+    def keep_const_center_speed(self, v_ref, steeringAngle, rollAngle):
+        v_center = v_ref
+        radius_rearwheel = LENGTH_B / np.tan(abs(steeringAngle))
+        radius_frontwheel = np.sqrt(radius_rearwheel ** 2 + (LENGTH_B) ** 2)
+        approx_reduced_radius_GPS = HEIGHT_GPS * rollAngle
+        radius_GPS = np.sqrt(radius_rearwheel ** 2 + (LENGTH_A) ** 2) - approx_reduced_radius_GPS
+        omega = v_center / radius_GPS
+        v_front = omega * radius_frontwheel
+        self.bike.drive_gps_joint.heart_pipe_parent.send(v_front)

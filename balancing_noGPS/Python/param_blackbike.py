@@ -10,6 +10,7 @@ from constants import *
 # LENGTH_A = 0.325  # [m] Distance from rear wheel to COM
 LENGTH_A = 0.6687  # [m] Distance from rear wheel to COM
 LENGTH_B = 1.15   # [m] Distance between wheel centers
+HEIGHT_GPS = 1  # [m]
 lambda_bike = 66*deg2rad # [rad] Angle of the fork axis
 
 # Wheel

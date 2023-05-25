@@ -147,94 +147,102 @@ class VESC_GPS(object):
         # self.v_in = 0
         # self.avg_input_current = 0
     # @pysnooper.snoop()
-    def _heartbeat_vsec_read(self, pipe_heart, pipe_data):
-        """
-        Continuous function calling that keeps the motor alive
-        """
-        # start_heart_beat = False
-        # start_vesc_data_query = False
-        start_heart_beat = False
-        start_vesc_data_query = False
-        nr_of_empty_loop = 0
-        t_last_query = time.time()
-        t_last_heart = time.time()
-        vesc_query_sent = False
-
-        while not self._stop_heartbeat.is_set():
-            while pipe_heart.poll():
-                cmd_heart = pipe_heart.recv()
-                if cmd_heart == 'start_heart_beat':
-                    start_heart_beat = True
-                elif cmd_heart == 'stop_heart_beat':
-                    start_heart_beat = False
-                else:
-                    self.instr_VESC.write_raw(cmd_heart)
-
-            while pipe_data.poll():
-                cmd_data = pipe_data.recv()
-                if cmd_data == 'start_vesc_query':
-                    start_vesc_data_query = True
-                    t_last_query = time.time()
-                elif cmd_data == 'stop_vesc_query':
-                    start_vesc_data_query = False
-
-
-            t_left_next_beat = time.time() - t_last_heart
-            if start_heart_beat and (t_left_next_beat > 0.1):
-                self.instr_VESC.write_raw(pyvesc.messages.setters.alive_msg)
-                t_last_heart = time.time()
-                print('Alive MSG Sent!!!!')
-
-            if start_vesc_data_query:
-                slp_time = time.time() - t_last_query
-                if not query_sent:
-                    self.instr_VESC.write_raw(self.read_sensor_msg)
-                    query_sent = True
-                if slp_time < 0.01:
-                    time.sleep(0.01 - slp_time)
-                buffer_size = self.instr_VESC.bytes_in_buffer
-                print(buffer_size)
-                if buffer_size == 79:
-                    t_last_query = time.time()
-                    readraw = self.instr_VESC.read_bytes(79)
-                    query_sent = False
-                    (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
-                    pipe_data.send([self.vesc_sensor_response.rpm,
-                               self.vesc_sensor_response.avg_motor_current,
-                               self.vesc_sensor_response.v_in,
-                               self.vesc_sensor_response.avg_input_current])
-                    # print('DATA Received!!!!')
-                    if nr_of_empty_loop is not 0:
-                        nr_of_empty_loop = 0
-                elif buffer_size == 158:
-                    readraw = self.instr_VESC.read_bytes(158)  # Bytes type
-
-                    warnings.warn('DOUBLE DATA Received!!!!')
-                    # print('DOUBLE DATA Received!!!!')
-                    readraw = readraw[79:158]
-                    query_sent = False
-                    t_last_query = time.time()
-                    (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
-                    if self.vesc_sensor_response is not None:
-                        pipe_data.send([self.vesc_sensor_response.rpm,
-                                        self.vesc_sensor_response.avg_motor_current,
-                                        self.vesc_sensor_response.v_in,
-                                        self.vesc_sensor_response.avg_input_current])
-
-                    if nr_of_empty_loop is not 0:
-                        nr_of_empty_loop = 0
-                else:
-                    nr_of_empty_loop += 1
-                    if nr_of_empty_loop >= 5:
-                        self.instr_VESC.flush(pyvisa.constants.VI_READ_BUF_DISCARD)
-                        t_last_query = time.time()
-                        query_sent = False
-                        nr_of_empty_loop = 0
-                        warnings.warn('Multiple Failure in VESC DATA!!!!')
-                        print('Multiple Failure in VESC DATA!!!!')
-
-            else:
-                time.sleep(0.1)
+    # def _heartbeat_vsec_read(self, pipe_heart, pipe_data):
+    #     """
+    #     Continuous function calling that keeps the motor alive
+    #     """
+    #     # start_heart_beat = False
+    #     # start_vesc_data_query = False
+    #     start_heart_beat = False
+    #     start_vesc_data_query = False
+    #     nr_of_empty_loop = 0
+    #     t_last_query = time.time()
+    #     t_last_heart = time.time()
+    #     vesc_query_sent = False
+    #     heart_beat_msg = pyvesc.messages.setters.alive_msg
+    #
+    #     while not self._stop_heartbeat.is_set():
+    #         while pipe_heart.poll():
+    #             cmd_heart = pipe_heart.recv()
+    #             type_msg = type(cmd_heart)
+    #             if type_msg is str:
+    #                 if cmd_heart == 'start_heart_beat':
+    #                     start_heart_beat = True
+    #                 elif cmd_heart == 'stop_heart_beat':
+    #                     start_heart_beat = False
+    #                 else:
+    #                     self.instr_VESC.write_raw(cmd_heart)
+    #             elif type_msg is float:
+    #                 heart_beat_msg = pyvesc.protocol.interface.encode(pyvesc.messages.setters.SetRPM(int(600*cmd_heart)))
+    #                 # self.instr_VESC.write_raw(heart_beat_msg)
+    #                 # self.set_velocity(cmd_heart)
+    #
+    #         while pipe_data.poll():
+    #             cmd_data = pipe_data.recv()
+    #             if cmd_data == 'start_vesc_query':
+    #                 start_vesc_data_query = True
+    #                 t_last_query = time.time()
+    #             elif cmd_data == 'stop_vesc_query':
+    #                 start_vesc_data_query = False
+    #
+    #
+    #         t_left_next_beat = time.time() - t_last_heart
+    #         if start_heart_beat and (t_left_next_beat > 0.1):
+    #             self.instr_VESC.write_raw(heart_beat_msg)
+    #             t_last_heart = time.time()
+    #             # warnings.warn(self.heart_beat_msg)
+    #             # print('Alive MSG Sent!!!!')
+    #
+    #         if start_vesc_data_query:
+    #             slp_time = time.time() - t_last_query
+    #             if not query_sent:
+    #                 self.instr_VESC.write_raw(self.read_sensor_msg)
+    #                 query_sent = True
+    #             if slp_time < 0.01:
+    #                 time.sleep(0.01 - slp_time)
+    #             buffer_size = self.instr_VESC.bytes_in_buffer
+    #             print(buffer_size)
+    #             if buffer_size == 79:
+    #                 t_last_query = time.time()
+    #                 readraw = self.instr_VESC.read_bytes(79)
+    #                 query_sent = False
+    #                 (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
+    #                 pipe_data.send([self.vesc_sensor_response.rpm,
+    #                            self.vesc_sensor_response.avg_motor_current,
+    #                            self.vesc_sensor_response.v_in,
+    #                            self.vesc_sensor_response.avg_input_current])
+    #                 # print('DATA Received!!!!')
+    #                 if nr_of_empty_loop is not 0:
+    #                     nr_of_empty_loop = 0
+    #             elif buffer_size == 158:
+    #                 readraw = self.instr_VESC.read_bytes(158)  # Bytes type
+    #
+    #                 warnings.warn('DOUBLE DATA Received!!!!')
+    #                 # print('DOUBLE DATA Received!!!!')
+    #                 readraw = readraw[79:158]
+    #                 query_sent = False
+    #                 t_last_query = time.time()
+    #                 (self.vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
+    #                 if self.vesc_sensor_response is not None:
+    #                     pipe_data.send([self.vesc_sensor_response.rpm,
+    #                                     self.vesc_sensor_response.avg_motor_current,
+    #                                     self.vesc_sensor_response.v_in,
+    #                                     self.vesc_sensor_response.avg_input_current])
+    #
+    #                 if nr_of_empty_loop is not 0:
+    #                     nr_of_empty_loop = 0
+    #             else:
+    #                 nr_of_empty_loop += 1
+    #                 if nr_of_empty_loop >= 5:
+    #                     self.instr_VESC.flush(pyvisa.constants.VI_READ_BUF_DISCARD)
+    #                     t_last_query = time.time()
+    #                     query_sent = False
+    #                     nr_of_empty_loop = 0
+    #                     warnings.warn('Multiple Failure in VESC DATA!!!!')
+    #                     print('Multiple Failure in VESC DATA!!!!')
+    #
+    #         else:
+    #             time.sleep(0.1)
 
 
 
@@ -252,7 +260,9 @@ class VESC_GPS(object):
 
     def rear_set_rpm(self, rpm):
         # self.VESCmotor.set_rpm(int(rpm))
-        self.heart_pipe_parent.send(pyvesc.protocol.interface.encode(pyvesc.messages.setters.SetRPM(int(rpm))))
+        self.heart_beat_msg = pyvesc.protocol.interface.encode(pyvesc.messages.setters.SetRPM(int(rpm)))
+        self.heart_pipe_parent.send(self.heart_beat_msg)
+
         # self.instr_VESC.write_raw(pyvesc.protocol.interface.encode(pyvesc.messages.setters.SetRPM(int(rpm))))
         # if input_velocity > 0:
         #     self.heart_pipe_parent.send('start_heart_beat')
@@ -712,7 +722,7 @@ class VESC_GPS(object):
 
         pipe_heart_cmd_last_read_t = time.time()
         pipe_data_cmd_last_read_t = time.time()
-
+        heart_beat_msg = pyvesc.messages.setters.alive_msg
         while not self._stop_heartbeat.is_set():
 
             # gps_read_quotient = ((time.time() - start_loop)) // gps_sample_time
@@ -729,13 +739,19 @@ class VESC_GPS(object):
             if time.time() - pipe_heart_cmd_last_read_t > 1:
                 while pipe_heart.poll():
                     cmd_heart = pipe_heart.recv()
-                    if cmd_heart == 'start_heart_beat':
-                        start_heart_beat = True
-                        print('HEARTBEAT  START!')
-                    elif cmd_heart == 'stop_heart_beat':
-                        start_heart_beat = False
-                    else:
-                        self.instr_VESC.write_raw(cmd_heart)
+                    type_msg = type(cmd_heart)
+                    if type_msg is str:
+                        if cmd_heart == 'start_heart_beat':
+                            start_heart_beat = True
+                            print('HEARTBEAT  START!')
+                        elif cmd_heart == 'stop_heart_beat':
+                            start_heart_beat = False
+                        else:
+                            self.instr_VESC.write_raw(cmd_heart)
+                    elif type_msg is float:
+                        heart_beat_msg = pyvesc.protocol.interface.encode(
+                            pyvesc.messages.setters.SetRPM(int(600 * cmd_heart)))
+
                 pipe_heart_cmd_last_read_t = time.time()
 
                 while pipe_data.poll():
@@ -750,7 +766,7 @@ class VESC_GPS(object):
 
             t_since_last_beat = time.time() - t_last_heart
             if start_heart_beat and (t_since_last_beat > 0.1):
-                self.instr_VESC.write_raw(pyvesc.messages.setters.alive_msg)
+                self.instr_VESC.write_raw(heart_beat_msg)
                 t_last_heart = time.time()
 
                     # print('Alive MSG Sent!!!!')

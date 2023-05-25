@@ -17,12 +17,14 @@ drive_motor_restart_threshold = 1.5  # m/s
 
 # [m/s] Forward speed of the bike
 initial_speed = 2.4  # 2.8
-current_control_enable = True
+current_control_enable = 0
 drive_current_ref = 5.5
 gainScheduling_enable = True
 # gainScheduling_enable = False
 dynamicalGainScheduling = True
 # dynamicalGainScheduling = False
+constCenterSpeed = True
+# constCenterSpeed = False
 
 
 roll_ref_use = 1
@@ -49,6 +51,7 @@ path_tracking_structure = 'parallel'
 
 # Path Tracking is the total switch, containing lateralError and heading, two controllers.
 path_tracking = 0
+
 # 1 = use path tracking ; 0 = do not use path tracking
 # 1 = use lateral error controller ; 0 = do not use lateral error controller
 lateralError_controller = 0
@@ -113,7 +116,7 @@ rollref_file = 'nofile'
 # rollref_file = 'sqr_pm1deg_7idle.csv'
 # rollref_file = 'roll_ref_IMP1_at4_1deg.csv'  # IMP1-2 at2-4-8
 # rollref_file = 'roll_ref_spiral1deg30s.csv'
-# rollref_file = 'roll_ref_doublespiral1deg30s.csv'
+rollref_file = 'roll_ref_doublespiral1deg30s.csv'
 
 ####################################################################################################################
 ####################################################################################################################
