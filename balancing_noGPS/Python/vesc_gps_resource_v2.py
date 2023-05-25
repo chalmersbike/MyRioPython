@@ -722,7 +722,7 @@ class VESC_GPS(object):
 
         pipe_heart_cmd_last_read_t = time.time()
         pipe_data_cmd_last_read_t = time.time()
-        heart_beat_msg = pyvesc.messages.setters.alive_msg
+        self.heart_beat_msg = pyvesc.messages.setters.alive_msg
         while not self._stop_heartbeat.is_set():
 
             # gps_read_quotient = ((time.time() - start_loop)) // gps_sample_time
@@ -749,7 +749,7 @@ class VESC_GPS(object):
                         else:
                             self.instr_VESC.write_raw(cmd_heart)
                     elif type_msg is float:
-                        heart_beat_msg = pyvesc.protocol.interface.encode(
+                        self.heart_beat_msg = pyvesc.protocol.interface.encode(
                             pyvesc.messages.setters.SetRPM(int(600 * cmd_heart)))
 
                 pipe_heart_cmd_last_read_t = time.time()
@@ -766,7 +766,7 @@ class VESC_GPS(object):
 
             t_since_last_beat = time.time() - t_last_heart
             if start_heart_beat and (t_since_last_beat > 0.1):
-                self.instr_VESC.write_raw(heart_beat_msg)
+                self.instr_VESC.write_raw(self.heart_beat_msg)
                 t_last_heart = time.time()
 
                     # print('Alive MSG Sent!!!!')
