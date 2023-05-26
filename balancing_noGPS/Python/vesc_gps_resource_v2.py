@@ -740,17 +740,17 @@ class VESC_GPS(object):
                 while pipe_heart.poll():
                     cmd_heart = pipe_heart.recv()
                     type_msg = type(cmd_heart)
-                    if type_msg is str:
+                    if type_msg is bytes:
+                        self.instr_VESC.write_raw(cmd_heart)
+                    elif type_msg is float:
+                        self.heart_beat_msg = pyvesc.protocol.interface.encode(
+                            pyvesc.messages.setters.SetRPM(int(600 * cmd_heart)))
+                    elif type_msg is str:
                         if cmd_heart == 'start_heart_beat':
                             start_heart_beat = True
                             print('HEARTBEAT  START!')
                         elif cmd_heart == 'stop_heart_beat':
                             start_heart_beat = False
-                        else:
-                            self.instr_VESC.write_raw(cmd_heart)
-                    elif type_msg is float:
-                        self.heart_beat_msg = pyvesc.protocol.interface.encode(
-                            pyvesc.messages.setters.SetRPM(int(600 * cmd_heart)))
 
                 pipe_heart_cmd_last_read_t = time.time()
 

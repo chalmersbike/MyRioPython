@@ -951,9 +951,10 @@ class Controller(object):
             # print('ControllerGain Updated!')
             self.last_ctrl_update_speed = self.v_estimated
 
-        if constCenterSpeed and self.time_count - self.latest_speed_cmd_update > 0.2:
+        if constCenterSpeed and abs(self.steeringAngle) > 0.087 and self.time_count - self.latest_speed_cmd_update > 0.2:
             self.keep_const_center_speed(initial_speed, self.steeringAngle, self.roll)
             self.latest_speed_cmd_update = self.time_count
+            # print('motor speed updated!')
 
 
 
@@ -1973,10 +1974,12 @@ class Controller(object):
 
     def keep_const_center_speed(self, v_ref, steeringAngle, rollAngle):
         v_center = v_ref
-        radius_rearwheel = LENGTH_B / np.tan(abs(steeringAngle))
-        radius_frontwheel = np.sqrt(radius_rearwheel ** 2 + (LENGTH_B) ** 2)
+        pathradius_rearwheel = LENGTH_B / np.tan(abs(steeringAngle))
+        pathradius_frontwheel = np.sqrt(pathradius_rearwheel ** 2 + (LENGTH_B) ** 2)
         approx_reduced_radius_GPS = HEIGHT_GPS * rollAngle
-        radius_GPS = np.sqrt(radius_rearwheel ** 2 + (LENGTH_A) ** 2) - approx_reduced_radius_GPS
-        omega = v_center / radius_GPS
-        v_front = omega * radius_frontwheel
+        pathradius_GPS = np.sqrt(pathradius_rearwheel ** 2 + (LENGTH_A) ** 2) - approx_reduced_radius_GPS
+        omega = v_center / pathradius_GPS
+        v_front = float(omega * pathradius_frontwheel)
+        print(v_front)
+        # print(type(v_front))
         self.bike.drive_gps_joint.heart_pipe_parent.send(v_front)
