@@ -16,7 +16,7 @@ drive_motor_timeout = 9999.0  # sec
 drive_motor_restart_threshold = 1.5  # m/s
 
 # [m/s] Forward speed of the bike
-initial_speed = 2.4  # 2.8
+initial_speed = 2.0  # 2.8
 current_control_enable = 0
 drive_current_ref = 5.5
 gainScheduling_enable = True
@@ -25,10 +25,12 @@ dynamicalGainScheduling = True
 # dynamicalGainScheduling = False
 constCenterSpeed = True
 # constCenterSpeed = False
+currentControlVESC = True  # False leads to speed control
+
 
 
 roll_ref_use = 1
-rollref_multiplier = 3.0  # 2.0
+rollref_multiplier = 4.0  # 2.0
 rollref_offset = -0.0 * deg2rad  # -4.0 * deg2rad
 
 
@@ -114,9 +116,11 @@ rollref_file = 'nofile'
 # rollref_file = 'roll_MS_Mag5.csv'  # 5-7-10-15
 # rollref_file = 'sqr_pm1deg_0idle.csv'
 # rollref_file = 'sqr_pm1deg_7idle.csv'
-# rollref_file = 'roll_ref_IMP1_at4_1deg.csv'  # IMP1-2 at2-4-8
+# rollref_file = 'roll_ref_IMP1_at8_1deg.csv'  # IMP1-2 at2-4-8
 # rollref_file = 'roll_ref_spiral1deg30s.csv'
 # rollref_file = 'roll_ref_doublespiral1deg30s.csv'
+# rollref_file = 'roll_ref_doublespiral1deg2Steps25s.csv'
+# 2-3 Steps, 20-25-30 s
 
 ####################################################################################################################
 ####################################################################################################################

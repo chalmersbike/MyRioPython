@@ -15,20 +15,25 @@ import signal
 import threading
 import sys
 import pyvisa
+import csv
 # import pysnooper
 # with Session("./FPGA Bitfiles/fpgadrivesteerin_FPGATarget_FPGAdrivesteerin_O+w-wwa0L-U.lvbitx", "RIO0") as session:
 #with Session("./FPGA Bitfiles/fpgadrivesteerin_FPGATarget_FPGAdrivesteerin_9KQYwNHlq+s.lvbitx", "RIO0") as session:
 
-IMU_SWITCH = 0
+IMU_SWITCH = 1
 STR_SWITCH = 0
 ENC_SWITCH = 0
-DRIVE_SWITCH = 0
+DRIVE_SWITCH = 1
 HALLSENSOR = 0
 EMERGENCY = 0
 GPS_USE = 1
+RECORD_DATA = 1
 from sensors import GPS
-from vesc_gps_resource_v2 import VESC_GPS
+# from vesc_gps_resource_v2 import VESC_GPS
+from vesc_gps_resource_v3 import VESC_GPS
 from numpy import rad2deg
+
+drive_current = 12.0
 
 # with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingnoG_yn8cRoiCUew.lvbitx", "RIO0") as session:
 # with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingnoG_wV6o5H-69rg.lvbitx", "RIO0") as session:
@@ -41,7 +46,7 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
     print("Session started, Wait for 3 secs")
     # time.sleep(3)
 #Declaration of the session registers
-
+    rm = pyvisa.ResourceManager()
     if STR_SWITCH:
         # fpga_SteeringWriteDutyCycle = session.registers['Duty Cycle (%)']
         # fpga_SteeringWriteFrequency = session.registers['Frequency (Hz)']
@@ -69,29 +74,46 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
         # fpga_EncoderCounts = session.registers['Encoder Counts']
         # fpga_EncoderPositionReset = session.registers['Encoder Position Reset']
         # fpga_EncoderPositionReset.write(True)
-    if DRIVE_SWITCH:
-        Drive_Speed = 3
-        Drive = DriveMotor(session)
-        # Drive = DriveMotor()
-        print('DRIVE MOTOR will start in 3 secs')
+    if DRIVE_SWITCH or GPS_USE:
+        gps_object = VESC_GPS(session)
+        # gps_object.heart_pipe_parent.send('start_heart_beat')
+        # gps_object.heart_pipe_parent.send(2.0)
+        print("wait for 3 secs for VESC initialization!")
         time.sleep(3)
-        Drive.set_velocity(Drive_Speed)
-        time.sleep(0.1)
-        Drive.heart_pipe_parent.send('start_heart_beat')
-        time.sleep(0.1)
-        Drive.vescdata_pipe_parent.send('start_vesc_query')
+        gps_object.heart_pipe_parent.send(drive_current)
+        StopFlag = False
+        # # For v 2
+        # # Drive_Speed = 3
+        # # Drive = DriveMotor(session, rm)
+        # # # Drive = DriveMotor()
+        # # print('DRIVE MOTOR will start in 3 secs')
+        # # time.sleep(3)
+        # # Drive.set_velocity(Drive_Speed)
+        # # time.sleep(0.1)
+        # # Drive.heart_pipe_parent.send('start_heart_beat')
+        # # time.sleep(0.1)
+        # # Drive.vescdata_pipe_parent.send('start_vesc_query')
+
+        # Drive.heart_pipe_parent.send('start_heart_beat')
+        # Drive.heart_pipe_parent.send(0.0)
+
 
     if HALLSENSOR:
         hall_sensor = HallSensor(session)
         HallSpeedFPGA = session.registers['Speed m/s']
         session.registers['Hall Edge Detection '] = "rising"
         session.registers['Bounce time (uSec)'] = 0
-    if EMERGENCY:
+    if EMERGENCY or DRIVE_SWITCH or RECORD_DATA:
         fpga_ESTOP = session.registers['ESTOP']
-    if GPS_USE:
+    if RECORD_DATA:
+        log_header_str = ['Time']
+        if DRIVE_SWITCH:
+            log_header_str += ['speed', 'Current', 'V_in']
+        if IMU_SWITCH:
+            log_header_str += ['ax', 'ay', 'az', 'gx', 'gy', 'gz']
         # rm = pyvisa.ResourceManager()
         # gps_object = GPS(session, rm)
-        gps_object = VESC_GPS(session)
+
         # gps_object.heart_pipe_child.send('start_heart_beat')
 #Begin the execution of the FPGA VI
     session.abort()
@@ -114,10 +136,20 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
         # dc = 50
         # print('Ramping between 30-70 duty cycle!!!!')
 
+    if RECORD_DATA:
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        csv_path = './ExpData_%s/I_test_loaded_%sA_%s.csv' % (bike, "{:.2f}".format(drive_current).replace(".", "_"), timestr)
+        results_csv = open(csv_path, 'w')
+        # results_csv = open('./ExpData_%s/BikeData_%s.csv' % (bike, timestr), 'wb')
+        writer = csv.writer(results_csv)
+
+        writer.writerow(log_header_str)
 
     try:
-        while True:
-
+        start_time_exp = time.time()
+        # while True:
+        while not fpga_ESTOP.read():
+            loop_start_time = time.time()
             if IMU_SWITCH:
                 t_startLoop = time.time()
 
@@ -131,7 +163,7 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 print('\n')
                 # Read gyro to buffer
                 buf = fpga_GyroData_value
-                print(buf)
+                # print(buf)
                 buf = buf[:7]
 
                 # Calculate gyro values from buffer
@@ -157,7 +189,7 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 # Read accel to buffer
                 buf = fpga_AccData_value
                 buf = buf[:7]
-                print(buf)
+                # print(buf)
                 # Calculate accel values from buffer
                 ax = (buf[2] << 8) | buf[1]
                 ay = (buf[4] << 8) | buf[3]
@@ -175,7 +207,7 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 ay *= accel_sensitivity
                 az *= accel_sensitivity
 
-                print('IMU : t = %f ; gx = %f ; gy = %f ; gz = %f ; ax = %f ; ay = %f ; az = %f' %(time.time()-t_start,gx,gy,gz,ax,ay,az))
+                # print('IMU : t = %f ; gx = %f ; gy = %f ; gz = %f ; ax = %f ; ay = %f ; az = %f' %(time.time()-t_start,gx,gy,gz,ax,ay,az))
                 t_end_IMU = time.time()
             if ENC_SWITCH:
                 print('ENC Reading: \n')
@@ -222,16 +254,48 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 # Drive.set_velocity(Drive_Speed)
             #     # Drive.serial_write_character('ident \n')
             #     print('Sending Drive Ident Commands!')
-                print(Drive.last_vesc_data)
+            #     if gps_object.heart_pipe_child.poll():
+            #         last_vesc_data = gps_object.heart_pipe_child.recv()
+                rpm, avg_motor_current, v_in, avg_input_current = gps_object.retrieve_vesc_data()
+                print(rpm, v_in, avg_motor_current)
 
             # Read the data from VESC!
 
+            if RECORD_DATA:
 
-            
-            time.sleep(0.1)
+                log_str = [
+                    "{0:.5f}".format(time.time()-start_time_exp),
+                ]
+
+                if DRIVE_SWITCH:
+                    log_str += [
+                        "{0:.5f}".format(rpm / 608.0),
+                        "{0:.5f}".format(avg_motor_current),
+                        "{0:.5f}".format(v_in),
+                    ]
+                if IMU_SWITCH:
+                    log_str += [
+                        "{0:.5f}".format(ax),
+                        "{0:.5f}".format(ay),
+                        "{0:.5f}".format(az),
+                        "{0:.5f}".format(gx),
+                        "{0:.5f}".format(gy),
+                        "{0:.5f}".format(gz),
+                    ]
+                writer.writerow(log_str)
+            # if fpga_ESTOP.read():
+            #     raise Exception
+            t_sleep = (0.01-time.time()+loop_start_time)
+            if t_sleep > 0:
+                time.sleep(t_sleep)
+            if not StopFlag and time.time() - start_time_exp > 15:
+                gps_object.heart_pipe_parent.send(0.0)
+                StopFlag = True
+
 
 
     except Exception as e:
+        print(e)
         if STR_SWITCH:
             fpga_SteeringEnable.write(False)
             fpga_SteeringWriteDutyCycle.write(50)
