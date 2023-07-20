@@ -8,7 +8,7 @@ from time import sleep
 from PID import PID
 import time
 from nifpga import Session
-from numpy import rad2deg, deg2rad
+from numpy import rad2deg, deg2rad, sign
 import math
 import re
 import traceback
@@ -17,23 +17,28 @@ import threading
 import sys
 import pyvisa
 import csv
+# import pysnooper
 from sensors import GPS
 # from vesc_gps_resource_v2 import VESC_GPS
 from vesc_gps_resource_v3 import VESC_GPS
 from numpy import rad2deg
 
-drive_current = 12.0
-idle_drive_current = 2.20
+# drive_current = 12.0
+drive_current = 0.0
+idle_drive_current = 2.20  # A
 ctrl_switch_speed = 2.2  # Switch to balancing Controller
 slowdown_speed = 2.6
-Kp_roll_str = 7.0
+Kp_roll_str = 8.0
 Ki_roll_str = 0.0
 Kp_balancing = 5.0
-Kp_strAngle = 15.0
-Ki_strAngle = 1
+# Kp_strAngle = 15.0
+# Ki_strAngle = 1
+Kp_strAngle = 6.0
+Ki_strAngle = 0.2
 start_up_interval = 5.0  # Seconds
+ACCELERATING_FLAG = True
 
-MAX_HANDLEBAR_ANGLE = deg2rad(50)
+MAX_HANDLEBAR_ANGLE = deg2rad(60)
 MAX_HANDLEBAR_SPEED = 1
 
 
@@ -46,8 +51,10 @@ HALLSENSOR = False
 EMERGENCY = 1
 GPS_USE = 1
 RECORD_DATA = 1
-ROLL_CTRL_SWITCH = False
+ROLL_CTRL_SWITCH = True
+
 with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbitx", "RIO0") as session:  # balancing Control V5
+
 
     # print("Session started, Wait for 3 secs")
 #Declaration of the session registers
@@ -77,7 +84,7 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
         steeringSpeedCmd = 0.0
         strMotorObj.stop()
         strMotorObj.set_angular_velocity(steeringSpeedCmd)
-        strMotorObj.enable()
+
         # fpga_SteeringEnable.write(True)
         # print("Steering is NOW activated")
         # PrevStrSpeed = PositiveStrSpeed
@@ -108,9 +115,6 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
         rollrate_inner_ctrl.setKp(Kp_balancing)
 
 
-
-
-
     if RECORD_DATA:
         log_header_str = ['Time']
         if IMU_SWITCH:
@@ -127,7 +131,6 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                                ]
         if STR_SWITCH:
             log_header_str += ['ControlInput', 'SteerMotorCurrent']
-
 
 
         # rm = pyvisa.ResourceManager()
@@ -157,7 +160,7 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
         results_csv = open(csv_path, 'w')
         writer = csv.writer(results_csv)
         writer.writerow(log_header_str)
-
+    strMotorObj.enable()
     try:
         start_time_exp = time.time()
         # while True:
@@ -167,6 +170,7 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 # t_startLoop = time.time()
                  phi, phi_gyro, gx, gy, gz, ax, ay, az, sensor_read_timing = \
                      imu_object.get_imu_data(vesc_speed, steeringAngle, phi)
+                 # print(phi)
                 # t_start_IMU = time.time()
                 #
                 # # print('IMU : t = %f ; gx = %f ; gy = %f ; gz = %f ; ax = %f ; ay = %f ; az = %f' %(time.time()-t_start,gx,gy,gz,ax,ay,az))
@@ -179,14 +183,20 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 # print(rad2deg(steeringAngle))
             # time.sleep(0.1)
             if ROLL_CTRL_SWITCH:
-                if vesc_speed < ctrl_switch_speed:
+                # print(ACCELERATING_FLAG)
+                # print(vesc_speed < ctrl_switch_speed)
+                if ACCELERATING_FLAG and vesc_speed < ctrl_switch_speed:
+                    # print('phi = ')
+                    # print(phi)
                     ref_strAngle = roll_ctrl.update(phi)
+                    # print(ref_strAngle)
                     if abs(ref_strAngle) > MAX_HANDLEBAR_ANGLE:
                         ref_strAngle = sign(ref_strAngle) * MAX_HANDLEBAR_ANGLE
+                        print('Out of Str Angle Range!!!!')
                     strAngle_ctrl.setReference(ref_strAngle)
                     steeringSpeedCmd = strAngle_ctrl.update(steeringAngle)
                 else:
-                    strAngle_ctrl.clear()
+
                     steeringSpeedCmd = rollrate_inner_ctrl.update(gx)
 
 
@@ -195,6 +205,7 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 #     strMotorObj.set_angular_velocity(steeringSpeedCmd)
                 # else:
                 #     strMotorObj.set_angular_velocity(0.0)
+                # print(steeringSpeedCmd)
                 strMotorObj.set_angular_velocity(steeringSpeedCmd)
                 steeringCurrent = strMotorObj.read_steer_current()
             # if HALLSENSOR:
@@ -226,6 +237,8 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 if not StopFlag:
                     gps_vesc_object.heart_pipe_parent.send(drive_current)
                 else:
+                    ACCELERATING_FLAG = False
+                    strAngle_ctrl.clear()
                     gps_vesc_object.heart_pipe_parent.send(idle_drive_current)
 
             # Read the data from VESC!
@@ -279,17 +292,28 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
             if t_sleep > 0:
                 time.sleep(t_sleep)
             if not StopFlag and vesc_speed > slowdown_speed:
+                print('Stop Flag TRUE!!!')
                 StopFlag = True
+        if STR_SWITCH:
+            strMotorObj.stop()
+            strMotorObj.set_angular_velocity(0.0)
+        if DRIVE_SWITCH:
+            gps_vesc_object.stop()
+            gps_vesc_object.stop_GPS_loop.set()
+            time.sleep(3)
 
     except Exception as e:
-        print(e)
         if STR_SWITCH:
-            fpga_SteeringEnable.write(False)
-            fpga_SteeringWriteDutyCycle.write(50)
-            if DRIVE_SWITCH:
-                Drive.stop()
+            strMotorObj.stop()
+            strMotorObj.set_angular_velocity(0.0)
+        if DRIVE_SWITCH:
+            gps_vesc_object.stop()
+            gps_vesc_object.stop_GPS_loop.set()
             time.sleep(3)
+
             print('Steering Control terminated')
+        print(e)
+
         print('str(Exception):\t', str(Exception))
         print('str(e):\t\t', str(e))
         print('repr(e):\t', repr(e))
