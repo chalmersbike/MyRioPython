@@ -9,7 +9,7 @@ from nifpga import Session
 from numpy import rad2deg
 import math
 import re
-from vesc_gps_resource import VESC_GPS
+from vesc_gps_resource_v3 import VESC_GPS
 # import pysnooper
 # with Session("./FPGA Bitfiles/fpgadrivesteerin_FPGATarget_FPGAdrivesteerin_O+w-wwa0L-U.lvbitx", "RIO0") as session:
 #with Session("./FPGA Bitfiles/fpgadrivesteerin_FPGATarget_FPGAdrivesteerin_9KQYwNHlq+s.lvbitx", "RIO0") as session:

@@ -171,7 +171,8 @@ class VESC_GPS(object):
 
     def set_current_binary(self, ref_current):
         current_msg_binary = pyvesc.protocol.interface.encode(pyvesc.messages.setters.SetCurrent(ref_current))
-        return current_msg_binary
+        read_sensor_msg = pyvesc.protocol.interface.encode_request(pyvesc.messages.getters.GetValues())
+        return read_sensor_msg + current_msg_binary
 
     def stop(self):
         print('VESC : Stop')
@@ -458,7 +459,8 @@ class VESC_GPS(object):
                     cmd_heart = pipe_heart.recv()
                     type_msg = type(cmd_heart)
                     if type_msg is bytes:
-                        self.instr_VESC.write_raw(cmd_heart)
+                        # self.instr_VESC.write_raw(cmd_heart)
+                        self.heart_beat_msg = cmd_heart
                     elif type_msg is float:
                         self.heart_beat_msg = self.interpolate(self.lookup_table, self.lut_start, self.lut_step, cmd_heart)
                     elif type_msg is str:
@@ -468,6 +470,7 @@ class VESC_GPS(object):
                             print('HEARTBEAT  START!')
                         elif cmd_heart == 'stop_heart_beat':
                             start_heart_beat = False
+                            self.heart_beat_msg = self.interpolate(self.lookup_table, self.lut_start, self.lut_step, 0)
                             self.heart_beat_msg = self.read_sensor_msg
 
                 pipe_heart_cmd_last_read_t = time.time()

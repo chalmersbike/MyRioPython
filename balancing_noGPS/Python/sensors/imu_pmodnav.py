@@ -216,7 +216,7 @@ class IMU(object):
         # }
         #
         # self.phi = Estimators.get(Estimator_option, None)
-        self.phi = self.complementary_filter(dT, gx, ay, az, phi, delta_state, velocity)
+        self.phi = self.complementary_filter(dT, gx, ay, az, phi, delta_state, velocity, gz)
         # self.phi = self.complementary_filter_gz_acc(dT, gx, gz, ay, az, delta_state, self.phi, velocity, 0.99)
         self.phi_gyro += dT * gx
         self.prev_reading = [self.phi, self.phi_gyro, gx, gy, gz, ax, ay, az]
@@ -302,12 +302,13 @@ class IMU(object):
         #print('END OF PROGRAM')
         return time.time() - time_loop, ax, ay, az, gx, gy, gz
 
-    def complementary_filter(self, dT, gx, ay, az, phi, delta_state, velocity):
-        CP_acc_g = ((velocity ** 2) / LENGTH_B) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
+    def complementary_filter(self, dT, gx, ay, az, phi, delta_state, velocity, gz):
+        # CP_acc_g = ((velocity ** 2) / LENGTH_B) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
+        CP_acc_g = (velocity * gz) / 9.81  # Unit (g)
         # dT = self.dT_reading
         # CP_acc_g = 0
         # Roll acceleration
-        phiddot = (gx - self.gx_prev) / dT
+        # phiddot = (gx - self.gx_prev) / dT
 
         # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi) + imu_height*phiddot, az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
         # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi), az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
@@ -318,8 +319,11 @@ class IMU(object):
             print('WARNING : Spike in accelerometer detected, calculated acc roll is  %g deg. \n using previous reading' % (self.phi_acc * rad2deg))
             self.phi_acc = self.prev_reading[0]
 
-
-        Phi_m = self.phi_acc * (1-imu_complementaryFilterRatio) + (phi + gx * (dT)) * imu_complementaryFilterRatio
+        if velocity < 1.0:
+            Phi_m = self.phi_acc * (1-imu_complementaryFilterRatio) + (phi + gx * (dT)) * imu_complementaryFilterRatio
+        else:
+            Phi_gz = -math.atan(gz * velocity / 9.81)
+            Phi_m = Phi_gz * (1 - imu_complementaryFilterRatio) + (phi + gx * (dT)) * imu_complementaryFilterRatio
         return Phi_m
 
     def kalman_schwab(self, dT, gx, gy, gz, velocity):
@@ -350,11 +354,12 @@ class IMU(object):
         # print(self.X_k)
 
     def complementary_filter_gz_acc(self, dT, gx, gz, ay, az, delta_state, phi, velocity, W_Rollest):
-        CP_acc_g = ((velocity ** 2) / LENGTH_B) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
+        # CP_acc_g = ((velocity ** 2) / LENGTH_B) * math.tan(delta_state * 0.94) * (1 / 9.81)  # 0.94 = sin( lambda ) where lambda = 70 deg
+        CP_acc_g = ( velocity * gz / 9.81 )  # Use Gyro-Z
         # dT = self.dT_reading
         # CP_acc_g = 0
         # Roll acceleration
-        phiddot = (gx - self.gx_prev) / dT
+        # phiddot = (gx - self.gx_prev) / dT
 
         # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi) + imu_height*phiddot, az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
         # self.phi_acc = math.atan2(ay - CP_acc_g * math.cos(phi), az + CP_acc_g * math.sin(phi)) - self.acc_roll_offset  # Making the signs consistent with mathematic model, counterclockwise positive, rear to front view
@@ -364,7 +369,7 @@ class IMU(object):
             print('WARNING : Spike in accelerometer detected, calculated acc roll is  %g deg. \n using previous reading' % (self.phi_acc * rad2deg))
             self.phi_acc = self.prev_reading[0]
 
-        Phi_d = np.arctan(-gz * velocity/ 9.81)
+        Phi_d = np.arctan(gz * velocity/ 9.81)
         Phi_m = W_Rollest * Phi_d + (1-W_Rollest) * self.phi_acc
         return Phi_m
 

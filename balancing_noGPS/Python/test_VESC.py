@@ -30,7 +30,7 @@ if CURRENT_CONTROL:
     lookup_table, params = load_lookup_table('./actuators/lookup_table_current.pkl')
     start, stop, step = params
     print(start, stop, step)
-    interp_value = 2.0
+    interp_value = 0.0
     combined_command = interpolate(lookup_table, start, step, interp_value)
 elif SPEED_CONTROL:
     lookup_table, params = load_lookup_table('./actuators/lookup_table_speed.pkl')
@@ -49,12 +49,15 @@ elif SPEED_CONTROL:
 print(combined_command)
 for ind in range(0,200):
     instr_VESC.write_raw(combined_command)
-    # print(instr_VESC.bytes_in_buffer)
+    time.sleep(0.1)
+    print('Received Bytes')
+    print(instr_VESC.bytes_in_buffer)
     readraw = instr_VESC.read_bytes(79)
     # readraw = instr_VESC.read_raw()
     (vesc_sensor_response, consumed) = pyvesc.protocol.interface.decode(readraw)
+    # print(vesc_sensor_response.rotor_pos)
     # print(instr_VESC.bytes_in_buffer)
     print(vesc_sensor_response.v_in)
     print(vesc_sensor_response.rpm)
+    # time.sleep(5)
     time.sleep(0.01)
-
