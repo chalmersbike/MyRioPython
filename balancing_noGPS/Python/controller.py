@@ -1781,7 +1781,10 @@ class Controller(object):
                         self.simulate_data_Time[self.idx_simulate_data])
 
                 if not self.recordPath and self.simulate_file == '':
-                    self.bike.set_velocity(initial_speed)
+                    if currentControlVESC:
+                        self.bike.set_current_or_speed(drive_current_ref)
+                    else:
+                        self.bike.set_current_or_speed(initial_speed)
             elif (self.time_count >= speed_up_time + walk_time) and not self.gainingSpeedOver_flag:
                 self.speed_up_finished()
             elif self.controller_active:
@@ -1970,7 +1973,12 @@ class Controller(object):
             self.bike.imu.phi = 0
 
         # Set a constant current to VESC, i.e. 6.5 A
-        self.bike.set_current_const6_5A()
+        # self.bike.set_current_const6_5A()
+        if currentControlVESC:
+            self.bike.set_current_or_speed(drive_current_ref)
+        else:
+            self.bike.set_current_or_speed(initial_speed)
+
 
     def keep_const_center_speed(self, v_ref, steeringAngle, rollAngle):
         if abs(steeringAngle) > 0.087:
@@ -1980,9 +1988,10 @@ class Controller(object):
             approx_reduced_radius_GPS = HEIGHT_GPS * abs(rollAngle)
             pathradius_GPS = np.sqrt(pathradius_rearwheel ** 2 + (LENGTH_A) ** 2) - approx_reduced_radius_GPS
             omega = v_center / pathradius_GPS
-            v_front = float(omega * pathradius_frontwheel)
-        # print(v_front)
-        # print(type(v_front))
+            # v_front = float(omega * pathradius_frontwheel)
+            v_rear = float(omega * pathradius_rearwheel)
         else:
-            v_front = float(v_ref)
-        self.bike.drive_gps_joint.heart_pipe_parent.send(v_front)
+            # v_front = float(v_ref)
+            v_rear = float(v_ref)
+        self.bike.set_current_or_speed(v_rear)
+        # self.bike.drive_gps_joint.heart_pipe_parent.send(v_front)

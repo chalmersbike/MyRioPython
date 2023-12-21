@@ -21,11 +21,13 @@ current_control_enable = 0
 drive_current_ref = 5.5
 gainScheduling_enable = True
 # gainScheduling_enable = False
-dynamicalGainScheduling = True
-# dynamicalGainScheduling = False
-constCenterSpeed = True
-# constCenterSpeed = False
-currentControlVESC = True  # False leads to speed control
+# dynamicalGainScheduling = True
+dynamicalGainScheduling = False
+# constCenterSpeed = True
+constCenterSpeed = False
+
+currentControlVESC = False  # False leads to speed control
+# currentControlVESC = True  # False leads to speed control
 
 
 
@@ -112,8 +114,11 @@ path_file = 'newest'
 # Name of the roll reference file with ".csv" extension. Must be placed in "rollref" folder.
 # Must be a CSV with 2 columns : Time, rollref. Must contain "rollref" in the name
 # Can also be 'nofile' to use not read a CSV file and use a roll reference defined in the Python code
+
 rollref_file = 'nofile'
-# rollref_file = 'roll_MS_Mag5.csv'  # 5-7-10-15
+
+# 5-7-10-15
+rollref_file = 'roll_MS_Mag5.csv'
 # rollref_file = 'sqr_pm1deg_0idle.csv'
 # rollref_file = 'sqr_pm1deg_7idle.csv'
 # rollref_file = 'roll_ref_IMP1_at8_1deg.csv'  # IMP1-2 at2-4-8
@@ -127,7 +132,8 @@ rollref_file = 'nofile'
 # Steering disturbance file
 strdistbref_file = 'nofile'
 strdistbref_multiplier = 8.0
-# strdistbref_file = 'str_MS_Mag5.csv'  
+
+strdistbref_file = 'str_MS_Mag5.csv'
 #5-10-15-20-25
 
 # if path_tracking is 1:

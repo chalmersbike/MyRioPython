@@ -174,6 +174,11 @@ class VESC_GPS(object):
         read_sensor_msg = pyvesc.protocol.interface.encode_request(pyvesc.messages.getters.GetValues())
         return read_sensor_msg + current_msg_binary
 
+    def set_velocity_binary(self, ref_velocity):
+        current_msg_binary = pyvesc.protocol.interface.encode(pyvesc.messages.setters.SetRPM(int(ref_velocity * 608.0)))
+        read_sensor_msg = pyvesc.protocol.interface.encode_request(pyvesc.messages.getters.GetValues())
+        return read_sensor_msg + current_msg_binary
+
     def stop(self):
         print('VESC : Stop')
         self.set_velocity(0)

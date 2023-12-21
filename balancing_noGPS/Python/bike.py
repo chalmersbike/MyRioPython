@@ -3,7 +3,7 @@ from param import *
 from sensors import Encoder, HallSensor, IMU, SafetyStop, Klm_Estimator #, Potentiometer, DualLaserRanger
 from actuators import SteeringMotor
 from controller import Controller
-from vesc_gps_resource_v2 import VESC_GPS
+from vesc_gps_resource_v3 import VESC_GPS
 import pysnooper
 from nifpga import Session
 from GainScheduling import GainScheduling as GS
@@ -93,6 +93,9 @@ class Bike(object):
     # Drive Motor
     def set_velocity(self, input_velocity):
         self.drive_gps_joint.set_velocity(input_velocity)
+
+    def set_current_or_speed(self, input_current_or_speed):
+        self.drive_gps_joint.heart_pipe_parent.send(input_current_or_speed)
 
     def set_current_const6_5A(self):
         # current_binary = b'\x02\x05\x06\x00\x00\x13\x88\x8b%\x03'  # 5.0

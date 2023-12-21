@@ -294,7 +294,7 @@ class IMU(object):
         az_raw = az
         ax = cos(self.acc_pitch_offset) * ax_raw+ sin(self.acc_pitch_offset) * az_raw
         ay = sin(self.acc_roll_offset)*sin(self.acc_pitch_offset) * ax_raw + cos(self.acc_roll_offset) * ay_raw - cos(self.acc_pitch_offset) * sin(self.acc_roll_offset) * az_raw
-        az = -cos(self.acc_roll_offset)*sin(self.acc_pitch_offset) * ax_raw + sin(self.acc_roll_offset) * ay_raw +  cos(self.acc_roll_offset) * cos(self.acc_pitch_offset) * az_raw
+        az = -cos(self.acc_roll_offset)*sin(self.acc_pitch_offset) * ax_raw + sin(self.acc_roll_offset) * ay_raw + cos(self.acc_roll_offset) * cos(self.acc_pitch_offset) * az_raw
 
         # Print data
         # print 'i = %d ; t = %f ; ax = %f ; ay = %f ; az = %f ; gx = %f ; gy = %f ; gz = %f' % (

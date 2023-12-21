@@ -24,22 +24,44 @@ from sensors import GPS
 from vesc_gps_resource_v3 import VESC_GPS
 from numpy import rad2deg
 
-drive_current = 9.0
-# drive_current = 6.0
-break_drive_current = -10.0
-# break_drive_current = -2.0
-# startup_current = 40  # A
-startup_current = 10  # A
-idle_drive_current = 0.0  # A
+GAIN_SCHEDULING_K = True
+# GAIN_SCHEDULING_K = False
+
+a_x_assumed = 0.5  # m/s^2
+drive_current = 11.0
+# drive_current = 13.0
+# break_drive_current = -10.0
+break_drive_current = 0.0
+startup_current = 40  # A
+# startup_current = 10  # A
+# idle_drive_current = 0.0  # A
 idle_drive_current = break_drive_current  # A
 
+# Roll-Steering Angle
 Kp_roll_str = 7.0
 Ki_roll_str = 0.0
+
+# Rollrate-steering rate Inner loop
 Kp_balancing = 5.0
 # Kp_strAngle = 15.0
 # Ki_strAngle = 1
-Kp_strAngle = 6.0
-Ki_strAngle = 0.2
+
+# Roll angle - Roll rate ref Outer loop
+Kp_roll_outer_strrate = 1.3
+
+# Steering Angle controller
+Kp_strAngle = 4.0
+Ki_strAngle = 0.1
+
+# An instance of K_1 and K_2 for acceleration control
+# K_1_rollstr = 20.2644 / (2.1563 * 0.3 ** 2 + 0.9069 * a_x_assumed)
+K_1_rollstr = 7.0
+# K_2_rollratestr = 3.0
+K_2_rollratestr = 0.0
+# GAIN_SCHEDULING_K = True
+# GAIN_SCHEDULING_K = False
+
+
 start_up_interval = 5.0  # Seconds
 ACCELERATING_FLAG = True
 DECELERATING_FLAG = False
@@ -47,14 +69,18 @@ EXP_STOP_FLAG = False
 REPEAT_ACC_BREAK_FLAG = True
 
 # switch to acceleration mode when lower than it
-acceleration_start_speed = 0.6
+acceleration_start_speed = 0.8
 # Use High startup current when lower than it
 stationary_threshold_speed = 0.3
 # Once reached, switch to idle current (But not deceleration)
-acceleration_stop_speed = 2
-# acceleration_stop_speed = 2.6
+# acceleration_stop_speed = 2
+acceleration_stop_speed = 2.6
+
 # Start breaking if lower than it
-breaking_start_speed = acceleration_stop_speed
+# breaking_start_speed = acceleration_stop_speed
+breaking_start_speed = 10.0
+
+
 
 
 # Threshold switching to balancing Controller
@@ -63,10 +89,17 @@ ctrl_switch_speed = acceleration_stop_speed
 
 
 
+# Switch when low speed and STR or Roll is too high
+MAX_ROLL_DECELERATION = deg2rad(5.0)
+LOW_SPEED_FOR_STR_ROLL = 1.4
+ACC_SWITCHING_STR_ANGLE = deg2rad(25)
 
-MAX_HANDLEBAR_ANGLE = deg2rad(50)
-MAX_HANDLEBAR_SPEED = 1
+
+MAX_HANDLEBAR_ANGLE = deg2rad(45)
+MAX_HANDLEBAR_SPEED = 0.7
 MAX_ROLL_ANGLE = deg2rad(20)
+
+
 rollrate_balancing_start_time = time.time()
 rollrate_balancing_duration = 8  # secs
 
@@ -76,7 +109,7 @@ IMU_SWITCH = 1
 STR_SWITCH = 1
 ENC_SWITCH = 1
 DRIVE_SWITCH = 1
-HALLSENSOR = False
+HALLSENSOR = 1
 EMERGENCY = 1
 GPS_USE = 1
 RECORD_DATA = 1
@@ -109,8 +142,10 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
         # time.sleep(3)
         # gps_vesc_object.heart_pipe_parent.send(drive_current)
         gps_vesc_object.heart_pipe_parent.send(0.0)
-        
-        acceleration_binary_code = gps_vesc_object.set_current_binary(startup_current)
+
+        # acceleration_binary_code = gps_vesc_object.set_current_binary(startup_current)
+        acceleration_binary_code = gps_vesc_object.set_velocity_binary(acceleration_start_speed+0.1)
+        print(acceleration_binary_code)
     if STR_SWITCH:
         steeringSpeedCmd = 0.0
         strMotorObj.stop()
@@ -147,6 +182,12 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
         rollrate_inner_ctrl.setReference(pid_balance_reference)
         rollrate_inner_ctrl.setKp(Kp_balancing)
 
+        roll_outer_ctrl = PID()
+        roll_outer_ctrl.setSampleTime(pid_balance_sample_time)
+        roll_outer_ctrl.setReference(pid_balance_outerloop_reference)
+        roll_outer_ctrl.setKp(Kp_roll_outer_strrate)
+
+
 
     if RECORD_DATA:
         log_header_str = ['Time']
@@ -166,16 +207,10 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
             log_header_str += ['ControlInput', 'SteerMotorCurrent']
         if HALLSENSOR:
             log_header_str += ['MeasuredVelocity']
+        if ROLL_CTRL_SWITCH:
+            log_header_str += ['a_x_guessed', 'K_1_phi', 'K_2_phidot', 'SteeringAngleRef']
 
 
-        # rm = pyvisa.ResourceManager()
-        # gps_vesc_object = GPS(session, rm)
-        # gps_vesc_object.heart_pipe_child.send('start_heart_beat')
-#Begin the execution of the FPGA VI
-    # session.abort()
-    # session.run()
-    # print("Session is running")
-    # print("Calibrating the Roll estimation")
     descr = input('\nPress ENTER to calibrate roll estimation for 3 secs. ')
     # Steering loop
     for i in range(0, 300):
@@ -222,63 +257,52 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                     print('TOO HIGH STEERING ANGLE!!!')
                     EXP_STOP_FLAG = True
                     print(rad2deg(steeringAngle))
-            # time.sleep(0.1)
+
             if ROLL_CTRL_SWITCH:
                 if ACCELERATING_FLAG and vesc_speed < ctrl_switch_speed:
                     # print(phi)
                     ref_strAngle = roll_ctrl.update(phi)
                     # print(ref_strAngle)
+                    if GAIN_SCHEDULING_K:
+                        K_1_rollstr = 9.3980/(vesc_speed ** 2 + 0.4206 * a_x_assumed)
+                    K_2_rollratestr = 0.0
+                    ref_strAngle = -(K_1_rollstr * phi + K_2_rollratestr * gx)
+
                     if abs(ref_strAngle) > MAX_HANDLEBAR_ANGLE:
                         ref_strAngle = sign(ref_strAngle) * MAX_HANDLEBAR_ANGLE
-                        print('Out of Str Angle Range!!!!')
+                        print('COMMAND Str Angle Out of Range!!!!')
                     strAngle_ctrl.setReference(ref_strAngle)
                     steeringSpeedCmd = strAngle_ctrl.update(steeringAngle)
                 elif vesc_speed > ctrl_switch_speed:
+                    roll_outer_ctrl.setReference(0.0)
+                    rollrate_inner_ctrl.setReference(roll_outer_ctrl.update(phi))
                     steeringSpeedCmd = rollrate_inner_ctrl.update(gx)
+                    K_1_rollstr = Kp_roll_outer_strrate
+                    K_2_rollratestr = Kp_balancing
                 elif DECELERATING_FLAG:
-                    ref_strAngle = roll_ctrl.update(-phi)
-                    # print(ref_strAngle)
-                    if abs(ref_strAngle) > MAX_HANDLEBAR_ANGLE:
-                        ref_strAngle = sign(ref_strAngle) * MAX_HANDLEBAR_ANGLE
-                        print('Out of Str Angle Range!!!!')
-                    strAngle_ctrl.setReference(ref_strAngle)
-                    steeringSpeedCmd = strAngle_ctrl.update(steeringAngle)
+                    roll_outer_ctrl.setReference(-deg2rad(1.0))
+                    rollrate_inner_ctrl.setReference(roll_outer_ctrl.update(phi))
+                    steeringSpeedCmd = rollrate_inner_ctrl.update(gx)
+                    if abs(steeringAngle) > MAX_HANDLEBAR_ANGLE:
+                        if sign(steeringSpeedCmd) == sign(steeringAngle):
+                            steeringSpeedCmd = 0.0
                 else:
                     print('STRANGE that slow speed <2.0 but not in deceleration mode')
 
 
 
             if STR_SWITCH:
-                # if abs(steeringSpeedCmd) < MAX_HANDLEBAR_SPEED:
-                #     strMotorObj.set_angular_velocity(steeringSpeedCmd)
-                # else:
-                #     strMotorObj.set_angular_velocity(0.0)
-                # print(steeringSpeedCmd)
+
                 strMotorObj.set_angular_velocity(steeringSpeedCmd)
                 steeringCurrent = strMotorObj.read_steer_current()
-            # if HALLSENSOR:
-            #     print("Speed Measured:")
-            #     print(hall_sensor.get_velocity(Drive_Speed))
-            #     # print('FPGA Measurement')
-            #     # print(HallSpeedFPGA.read())
+
             if GPS_USE:
                 # gpsStartTime = time.time()
                 dx, dy, lat, lon, gpsstatus, utc, speed_m_s, course = \
                     gps_vesc_object.get_position()
 
-                # # gps_vesc_object.get_latlon
-                # # print(gps_vesc_object.get_position())
-                # GPS_time_cost = time.time() - gpsStartTime
-                # if GPS_time_cost > 2e-3:
-                #     print('GPS Read costs' + str(GPS_time_cost))
-                # # print(gps_vesc_object.Speed_over_Ground)
-                # # print(gps_vesc_object.Course_over_Ground)
             if DRIVE_SWITCH:
-                # Drive.set_velocity(Drive_Speed)
-            #     # Drive.serial_write_character('ident \n')
-            #     print('Sending Drive Ident Commands!')
-            #     if gps_vesc_object.heart_pipe_child.poll():
-            #         last_vesc_data = gps_vesc_object.heart_pipe_child.recv()
+
                 rpm, avg_motor_current, v_in, avg_input_current = gps_vesc_object.retrieve_vesc_data()
                 vesc_speed = rpm / 608.0
                 # print(rpm, v_in, avg_motor_current)
@@ -344,6 +368,13 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                     log_str += [
                         "{0:.5f}".format(hall_sensor_speed),
                     ]
+                if ROLL_CTRL_SWITCH:
+                    log_str += [
+                        "{0:.5f}".format(a_x_assumed),
+                        "{0:.5f}".format(K_1_rollstr),
+                        "{0:.5f}".format(K_2_rollratestr),
+                        "{0:.5f}".format(ref_strAngle),
+                    ]
                 writer.writerow(log_str)
 
             # if fpga_ESTOP.read():
@@ -360,7 +391,11 @@ with Session("../FPGA Bitfiles/balancingnogps_FPGATarget_FPGAbalancingV6_5.lvbit
                 print('Decelerating TRUE!!!')
                 DECELERATING_FLAG = True
                 ACCELERATING_FLAG = False
-            if REPEAT_ACC_BREAK_FLAG and not ACCELERATING_FLAG and vesc_speed < acceleration_start_speed:
+            if REPEAT_ACC_BREAK_FLAG and not ACCELERATING_FLAG and \
+                    (vesc_speed < acceleration_start_speed+0.2 or
+                     ((abs(phi) > MAX_ROLL_DECELERATION or
+                       abs(steeringAngle) > ACC_SWITCHING_STR_ANGLE) and
+                      vesc_speed < LOW_SPEED_FOR_STR_ROLL)):
                 print('Reset to Acceleration!')
                 DECELERATING_FLAG = False
                 ACCELERATING_FLAG = True
